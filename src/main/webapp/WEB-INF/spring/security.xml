@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bean:beans
+	xmlns:bean ="http://www.springframework.org/schema/beans"
+	xmlns:xsi ="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns ="http://www.springframework.org/schema/security"
+	xsi:schemaLocation ="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+						http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+	<!-- Taking of any security for resource files like CSS, images, javascript -->
+	<!--  
+	<http pattern="/resources/**" security="none" />
+	-->
+	
+	<!-- Creates a servlet filter,ensures that the currently logged-in user is associated to the
+		appropiate role.The intercept url is applied in order of precedence only applying the first
+		occurence, and at the end the rule /** applies for anything that didn't match the previous -->
+	<!--  	
+	<http auto-config="true"
+		  use-expressions="true">
+		<intercept-url pattern="/" access="permitAll"/>	
+		<intercept-url pattern="/login/*" access="permitAll"/> 
+		<intercept-url pattern="/logout" access="permitAll"/>
+		<intercept-url pattern="/events/" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+		<form-login 
+			login-page="/login/form"
+			login-processing-url="/login"
+			username-parameter="username"
+			password-parameter="password"
+			authentication-failure-url="/login/form?error"
+			default-target-url="/default" />
+		<logout logout-url="/logout"
+				logout-success-url="/login/form?logout"/>	
+	</http>
+	-->
+	<!-- This is how Spring authenticates the user, currently using an in memory data -->
+	<!-- 
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+			<user name = "user1@example.com"
+			 	  password = "123456"	
+			 authorities="ROLE_USER"/>
+			 <user name = "admin1@example.com"
+			 	  password = "admin1"	
+			 authorities="ROLE_USER,ROLE_ADMIN"/>
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+	-->						
+</bean:beans>
