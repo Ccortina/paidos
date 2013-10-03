@@ -1,5 +1,7 @@
 package com.carloscortina.demo.model;
 
+@Entity
+@Table(name="user")
 public class User {
 
 	private int id;
