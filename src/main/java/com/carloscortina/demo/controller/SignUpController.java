@@ -42,7 +42,7 @@ public class SignUpController
 	 
 	
 	@RequestMapping(value="new", method=RequestMethod.POST)
-	public String signup(@Valid StaffRegistrationForm signupForm, BindingResult result)
+	public String signup(@ModelAttribute("form") @Valid StaffRegistrationForm form, BindingResult result)
 	{
 		System.out.println("Hola-------");
 		/*
@@ -58,8 +58,7 @@ public class SignUpController
 		return "";
 		*/
 		//convertPasswordError(result);
-		//return (result.hasErrors() ? "signup/staffRegistrationForm" : "signup/RegistrationOk");
-		return "signup/staffRegistrationForm";
+		return (result.hasErrors() ? "signup/staffRegistrationForm" : "signup/RegistrationOk");
 	}
 	
 	private static void convertPasswordError(BindingResult result)
