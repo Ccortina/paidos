@@ -1,7 +1,12 @@
 package com.carloscortina.demo.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,13 +18,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.carloscortina.demo.model.Role;
 import com.carloscortina.demo.model.StaffRegistrationForm;
 import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.service.RoleService;
 
 @Controller
 @RequestMapping(value="/signup")
 public class SignUpController 
 {
+	@Autowired
+	private RoleService roleService;
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -37,6 +47,7 @@ public class SignUpController
 	 {
 		 	System.out.println("creando forma");
 		 	model.addAttribute("form",new StaffRegistrationForm());
+		 	model.addAttribute("roles",roles());
 	        return "signup/staffRegistrationForm";
 	 }
 	 
@@ -77,6 +88,16 @@ public class SignUpController
 		newUser.setEmail(form.getEmail());
 		return null;
 		
+	}
+	
+	private Map<String,String> roles(){
+		List<Role> lista = roleService.getRoles();
+		
+		Map<String,String> roles = new HashMap<String, String>();
+		for (Role role : lista) {
+			roles.put(Integer.toString(role.getId()), role.getRole());
+		}
+		return roles;
 	}
 	
 }

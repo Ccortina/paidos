@@ -118,6 +118,14 @@
 	    				<form:input id="professionalNumber" path="professionalNumber" class="form-control" placeholder="Cedula Profesional" cssStyle="width: 30%"/>
 	    			</div>
 	    		</div>
+	    		<div class="form-group">
+	    			<label for="role" class="col-lg-2 control-label">Rol</label>
+	    			<div class="col-lg-10">
+	    				<form:select path="role" cssClass="form-control">
+	    					<form:options items="roles" />
+	    				</form:select>
+	    			</div>
+	    		</div>
 	    		<div>
 		    		<form:errors path="professionalNumber">
 		    			<div class="alert alert-danger"><form:errors path="professionalNumber" htmlEscape="false" /></div>
