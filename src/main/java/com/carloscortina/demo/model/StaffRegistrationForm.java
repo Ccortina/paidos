@@ -66,6 +66,7 @@ public class StaffRegistrationForm {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	
 	@NotNull
 	@Size(min = 6,max = 50)
 	@Email

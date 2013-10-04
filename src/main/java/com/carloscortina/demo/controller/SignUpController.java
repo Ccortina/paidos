@@ -44,20 +44,12 @@ public class SignUpController
 	@RequestMapping(value="new", method=RequestMethod.POST)
 	public String signup(@ModelAttribute("form") @Valid StaffRegistrationForm form, BindingResult result)
 	{
-		System.out.println("Hola-------");
-		/*
-		if(result.hasErrors()) 
-		{
-            return "signup/form";
-        }
 		
-		User newUser = new User();
-		newUser.setUsername(signupForm.getUsername());
-		newUser.setPassword(signupForm.getPassword());
-		newUser.setEmail(signupForm.getEmail());
-		return "";
-		*/
-		//convertPasswordError(result);
+		
+		
+		
+		
+		convertPasswordError(result);
 		return (result.hasErrors() ? "signup/staffRegistrationForm" : "signup/RegistrationOk");
 	}
 	
@@ -74,6 +66,16 @@ public class SignUpController
 				}
 			}
 		}
+		
+	}
+	
+	private User toUser(StaffRegistrationForm form)
+	{
+		User newUser = new User();
+		newUser.setUsername(form.getUsername());
+		newUser.setPassword(form.getPassword());
+		newUser.setEmail(form.getEmail());
+		return null;
 		
 	}
 	
