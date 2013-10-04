@@ -122,7 +122,7 @@
 	    			<label for="role" class="col-lg-2 control-label">Rol</label>
 	    			<div class="col-lg-10">
 	    				<form:select path="role" cssClass="form-control">
-	    					<form:options items="roles" />
+	    					<form:options items="${roles}" />
 	    				</form:select>
 	    			</div>
 	    		</div>

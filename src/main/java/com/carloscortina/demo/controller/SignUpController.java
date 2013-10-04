@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.carloscortina.demo.model.Role;
 import com.carloscortina.demo.model.StaffRegistrationForm;
@@ -55,11 +54,6 @@ public class SignUpController
 	@RequestMapping(value="new", method=RequestMethod.POST)
 	public String signup(@ModelAttribute("form") @Valid StaffRegistrationForm form, BindingResult result)
 	{
-		
-		
-		
-		
-		
 		convertPasswordError(result);
 		return (result.hasErrors() ? "signup/staffRegistrationForm" : "signup/RegistrationOk");
 	}
@@ -92,7 +86,6 @@ public class SignUpController
 	
 	private Map<String,String> roles(){
 		List<Role> lista = roleService.getRoles();
-		
 		Map<String,String> roles = new HashMap<String, String>();
 		for (Role role : lista) {
 			roles.put(Integer.toString(role.getId()), role.getRole());

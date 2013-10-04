@@ -5,9 +5,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.carloscortina.demo.model.Role;
 
+@Repository
 public class HbnRoleDao implements RoleDao {
 
 	@Autowired
@@ -31,6 +33,7 @@ public class HbnRoleDao implements RoleDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Role> getRoles() {
+		System.out.println("getting roles list");
 		// TODO Auto-generated method stub
 		return ( getSession().createQuery("from Role").list());
 	}

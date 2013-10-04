@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.dao.RoleDao;
 import com.carloscortina.demo.model.Role;
 
 @Service
+@Transactional
 public class RoleServiceImp implements RoleService {
 
 	@Autowired
@@ -21,6 +23,7 @@ public class RoleServiceImp implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public List<Role> getRoles() {
 		// TODO Auto-generated method stub
 		return ( roleDao.getRoles() );
