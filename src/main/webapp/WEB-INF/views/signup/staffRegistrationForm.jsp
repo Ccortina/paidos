@@ -13,10 +13,10 @@
         
         	<c:url var="cssUrl" value="/resources/CSS/bootstrap.min.css"/>
         	<c:url var="jsUrl" value="/resources/js/bootstrap.min.js"/>
-        	<c:url var="jqueryUrl" value="/resources/js/jQuery.js"/>
+        	<c:url var="jqueryUrl" value="/resources/js/jquery-2-1.0.3.js" />
         	<link href="${cssUrl}" rel="stylesheet"/>
-        	<link href="${jsUrl}" rel="stylesheet"/>
-        	<link href="${jqueryUrl}" rel="stylesheet"/>
+        	
+			<script src="${jqueryUrl}" type="text/javascript"></script>
         	
         	<style>
         	  	body 
@@ -24,6 +24,7 @@
            	 		padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
           	 	}
         	</style>
+        
 	</head>
     <body>
     	<c:set var="pageTitle" value="Staff Registration" scope="request"/>
@@ -113,19 +114,19 @@
 	    			</div>
 	    		</div>
 	    		<div class="form-group">
-	    			<label for="professionalNumber" class="col-lg-2 control-label">ProfessionalNumber</label>
-	    			<div class="col-lg-10">	
-	    				<form:input id="professionalNumber" path="professionalNumber" class="form-control" placeholder="Cedula Profesional" cssStyle="width: 30%"/>
-	    			</div>
-	    		</div>
-	    		<div class="form-group">
 	    			<label for="role" class="col-lg-2 control-label">Rol</label>
 	    			<div class="col-lg-10">
-	    				<form:select path="role" cssClass="form-control">
+	    				<form:select path="role" id="selectRole" name ="selectRole" cssClass="form-control" cssStyle="width:30%">
 	    					<form:options items="${roles}" />
 	    				</form:select>
 	    			</div>
 	    		</div>
+		    	<div class="form-group" style="display: none;" id="inputProfessionalNumber">
+		    			<label for="professionalNumber" class="col-lg-2 control-label">ProfessionalNumber</label>
+		    			<div class="col-lg-10">	
+		    				<form:input id="professionalNumber" path="professionalNumber" class="form-control" placeholder="Cedula Profesional" cssStyle="width: 30%"/>
+		    			</div>
+		    	</div>
 	    		<div>
 		    		<form:errors path="professionalNumber">
 		    			<div class="alert alert-danger"><form:errors path="professionalNumber" htmlEscape="false" /></div>
@@ -140,3 +141,16 @@
 		</div>
 	</body>
 </html>
+
+<script type="text/javascript">
+	$("#selectRole").change(function(){
+    	if($(this).val() == 1 || $(this).val() == 2)
+    	{
+    		$("#inputProfessionalNumber").show();
+    	}
+    	else
+    	{
+    		$("#inputProfessionalNumber").hide();
+    	}
+	})
+</script>

@@ -32,7 +32,7 @@ public class StaffMember {
 	
 	@NotNull
 	@Size(min=3,max=20)
-	@Column(name="firstName")
+	@Column(name="Name")
 	public String getFirstName() {
 		return firstName;
 	}
@@ -66,7 +66,7 @@ public class StaffMember {
 		this.cellPhone = cellPhone;
 	}
 	
-	@Column(name="professionalNumer")
+	@Column(name="ProfessionalNumber")
 	public String getProfessionalNumber() {
 		return professionalNumber;
 	}

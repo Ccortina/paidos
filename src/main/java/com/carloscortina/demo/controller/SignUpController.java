@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.carloscortina.demo.model.Role;
+import com.carloscortina.demo.model.StaffMember;
 import com.carloscortina.demo.model.StaffRegistrationForm;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.RoleService;
+import com.carloscortina.demo.service.StaffMemberService;
+import com.carloscortina.demo.service.UserService;
 
 @Controller
 @RequestMapping(value="/signup")
@@ -28,6 +31,12 @@ public class SignUpController
 {
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private StaffMemberService staffMemberService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -37,7 +46,7 @@ public class SignUpController
 				{
 					"username","password","confirmPassword","email",
 					"firstName","lastName","phone","cellPhone",
-					"professionalNumber"
+					"professionalNumber","role"
 				});
 	}
 	
@@ -46,7 +55,7 @@ public class SignUpController
 	 {
 		 	System.out.println("creando forma");
 		 	model.addAttribute("form",new StaffRegistrationForm());
-		 	model.addAttribute("roles",roles());
+		 	//model.addAttribute("roles",roles());
 	        return "signup/staffRegistrationForm";
 	 }
 	 
@@ -54,8 +63,22 @@ public class SignUpController
 	@RequestMapping(value="new", method=RequestMethod.POST)
 	public String signup(@ModelAttribute("form") @Valid StaffRegistrationForm form, BindingResult result)
 	{
-		convertPasswordError(result);
-		return (result.hasErrors() ? "signup/staffRegistrationForm" : "signup/RegistrationOk");
+		convertPasswordError(result);	//Verify if the passwords match
+		if (!result.hasErrors())	// The validation was correct?
+		{
+			StaffMember staff = toStaffMember(form);
+			staffMemberService.createStaffMember(staff);	
+			
+			Role role = roleService.getRole(Integer.parseInt(form.getRole()));
+			
+			User user = toUser(form,role,staff);
+			
+			userService.registerUser(user, result);
+			
+			return ( "redirect:registrationOk" );
+		}
+		
+		return ("signup/staffRegistrationForm");
 	}
 	
 	private static void convertPasswordError(BindingResult result)
@@ -74,16 +97,32 @@ public class SignUpController
 		
 	}
 	
-	private User toUser(StaffRegistrationForm form)
+	private User toUser(StaffRegistrationForm form,Role role,StaffMember staff)
 	{
 		User newUser = new User();
 		newUser.setUsername(form.getUsername());
 		newUser.setPassword(form.getPassword());
 		newUser.setEmail(form.getEmail());
-		return null;
+		newUser.setRole(role);
+		newUser.setStaff(staff);
+		
+		return newUser;
 		
 	}
 	
+	private StaffMember toStaffMember(StaffRegistrationForm form)
+	{
+		StaffMember staff = new StaffMember();
+		staff.setFirstName(form.getFirstName());
+		staff.setLastName(form.getLastName());
+		staff.setPhone(form.getPhone());
+		staff.setCellPhone(form.getCellPhone());
+		staff.setProfessionalNumber(form.getProfessionalNumber());
+		return staff;
+		
+	}
+	
+	@ModelAttribute("roles")
 	private Map<String,String> roles(){
 		List<Role> lista = roleService.getRoles();
 		Map<String,String> roles = new HashMap<String, String>();

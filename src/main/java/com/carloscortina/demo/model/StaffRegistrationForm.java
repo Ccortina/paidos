@@ -23,8 +23,7 @@ public class StaffRegistrationForm {
 	private String phone;
 	private String cellPhone;
 	private String professionalNumber;
-	private Role role;
-	private StaffMember staff;
+	private String role;
 	
 	public StaffRegistrationForm(){
 		this.username = "";
@@ -36,8 +35,7 @@ public class StaffRegistrationForm {
 		this.phone = "";
 		this.cellPhone = "";
 		this.professionalNumber = "";
-		this.role = null;
-		this.staff = null;
+		this.role = "";
 	}
 	
 	@NotNull
@@ -120,19 +118,11 @@ public class StaffRegistrationForm {
 	}
 	
 	@NotNull
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
-	}
-	
-	@NotNull
-	public StaffMember getStaff() {
-		return staff;
-	}
-	public void setStaff(StaffMember staff) {
-		this.staff = staff;
 	}
 	
 	@Override
@@ -142,7 +132,7 @@ public class StaffRegistrationForm {
 				+ ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", phone=" + phone + ", cellPhone=" + cellPhone
 				+ ", professionalNumber=" + professionalNumber + ", role="
-				+ role + ", staff=" + staff ;
+				+ role ;
 	}
 	
 	

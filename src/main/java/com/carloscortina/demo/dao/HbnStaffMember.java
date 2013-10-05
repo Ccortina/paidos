@@ -5,10 +5,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.model.StaffMember;
 
 @Repository
-public class HbnUserDao implements UserDao {
+public class HbnStaffMember implements StaffMemberDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -18,10 +18,9 @@ public class HbnUserDao implements UserDao {
 	}
 	
 	@Override
-	public void createUser(User user) {
+	public void createStaffMember(StaffMember staff) {
 		// TODO Auto-generated method stub
-		System.out.println("-----------"+user.getRole().getId());
-		getSession().save(user);
+		getSession().save(staff);
 	}
 
 }
