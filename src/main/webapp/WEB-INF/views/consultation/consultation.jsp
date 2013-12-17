@@ -66,18 +66,18 @@
 					<!-- Left column of the grid Row2 -->
 					<div class="col-md-6">
 						<div class="from-group">
-							<label for="bithday">Fecha Nacimiento :</label>
-							<input class="form-control input-sm" id="birthday" type="text" 
-								value="${birthday}" />
-						</div>
-					</div>
-					<!-- Right column of the grid Row2-->
-					<div class="col-md-6">
-						<div class="from-group">
 							<label for="age">Edad :</label>
 							<input class="form-control input-sm" id="age" type="text" value="${age[0]} A ${age[1]} M ${age[2]} D " />
 						</div>
 					</div>
+					<!-- Right column of the grid Row2-->
+                                        <div class="col-md-6">
+						<div class="from-group">
+							<label for="bithday">Fecha Nacimiento :</label>
+							<input class="form-control input-sm" id="birthday" type="text" 
+								value="${birthday}" />
+						</div>
+					</div>        
 				</div>
 				<div class="row">
 					<!-- Just one column -->
