@@ -5,29 +5,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <spring:message var="msgAllFieldsRequired" code="newUserRegistration.message.allFieldsRequired" />
+<c:set var="pageTitle" value="Staff Registration" scope="request"/>
 
-<html>
-	<head>
-  		<title>PaidosDemo: <c:out value="${pageTitle}"/> </title>
-    		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        
-        	<c:url var="cssUrl" value="/resources/CSS/bootstrap.min.css"/>
-        	<c:url var="jsUrl" value="/resources/js/bootstrap.min.js"/>
-        	<c:url var="jqueryUrl" value="/resources/js/jquery-2-1.0.3.js" />
-        	<link href="${cssUrl}" rel="stylesheet"/>
-        	
-			<script src="${jqueryUrl}" type="text/javascript"></script>
-        	
-        	<style>
-        	  	body 
-        	  	{
-           	 		padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-          	 	}
-        	</style>
-        
-	</head>
+<jsp:include page="../Includes/header.jsp"/>
+
     <body>
-    	<c:set var="pageTitle" value="Staff Registration" scope="request"/>
 		<div class="container">
         	<h1 id="title"><c:out value="${pageTitle}"/></h1>
 		

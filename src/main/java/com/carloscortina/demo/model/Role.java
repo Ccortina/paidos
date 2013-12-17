@@ -1,10 +1,10 @@
 package com.carloscortina.demo.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,8 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="role")
-public class Role {
+public class Role implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 689838359954516615L;
 	private int id;
 	private String role;
 	private String description;
@@ -47,7 +51,7 @@ public class Role {
 		this.description = description;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@JoinColumn(name="idRole")
 	public Set<User> getUsers() {
 		return users;

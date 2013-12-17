@@ -26,5 +26,9 @@ public class UserServiceImp implements UserService {
 		
 		return valid;
 	}
+	
+	public User getUserByUsername(String username){
+		return userDao.getUserByUsername(username);
+	}
 
 }

@@ -6,6 +6,8 @@
 
 <c:set var="pageTitle" value="RegistrationFormOk" />
 
+<jsp:include page="../Includes/header.jsp"/>
+
 <html>
 	<head>
   		<title>PaidosDemo: <c:out value="${pageTitle}"/> </title>

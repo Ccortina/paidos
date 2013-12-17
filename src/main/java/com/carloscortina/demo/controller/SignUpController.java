@@ -55,7 +55,6 @@ public class SignUpController
 	 {
 		 	System.out.println("creando forma");
 		 	model.addAttribute("form",new StaffRegistrationForm());
-		 	//model.addAttribute("roles",roles());
 	        return "signup/staffRegistrationForm";
 	 }
 	 
