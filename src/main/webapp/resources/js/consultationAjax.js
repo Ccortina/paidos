@@ -25,17 +25,6 @@ $(document).ready(function(){
                 "bSort":false
         });
 
-        //Frequent diagnostics Table initialization
-        frequentDiagnosticTable = $('#fdTable').dataTable( {
-                "bSort":false,
-                "sAjaxSource":"./frequentDiagnostics",
-        "aoColumns":[
-                     {"mDataProp":"idCIE10"
-                         ,"bVisible":false},   
-                     {"mDataProp":"diagnostic"}
-                     ]
-    } );
-
         //Diagnostics Table Initialization
         diagnosticsTable = $('#diagnosticsTable').dataTable( {
                 "aaSorting": [[ 1, "desc" ]],
@@ -45,19 +34,6 @@ $(document).ready(function(){
                      {"mDataProp":"lastUsed",
                          "bVisible":false}
                      ]
-    } );
-
-        //Frequent diagnostics table  adding row selection
-        $('#fdTable tbody').on( 'click', 'tr', function (e) {
-                if ( $(this).hasClass('row_selected') ) {
-            $(this).removeClass('row_selected');
-        }
-        else {
-            frequentDiagnosticTable.$('tr.row_selected').removeClass('row_selected');
-            $(this).addClass('row_selected');
-            rowSelectedData = frequentDiagnosticTable.fnGetData( this );
-            //alert(rowSelectedData["idCIE10"]);
-        }
         } );
 
         //Diagnostics table  adding row selection
