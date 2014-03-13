@@ -25,38 +25,9 @@ $(document).ready(function(){
                 "bSort":false
         });
 
-        //Diagnostics Table Initialization
-        diagnosticsTable = $('#diagnosticsTable').dataTable( {
-                "aaSorting": [[ 1, "desc" ]],
-                "sAjaxSource":"./diagnostics",
-                "aoColumns":[
-                     {"mDataProp":"diagnostic"},
-                     {"mDataProp":"lastUsed",
-                         "bVisible":false}
-                     ]
-        } );
+        initializeDiagnosticsTable();
 
-        //Diagnostics table  adding row selection
-        $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
-            if ( $(this).hasClass('row_selected') ) {
-                $(this).removeClass('row_selected');
-            }
-            else 
-            {
-                diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
-                $(this).addClass('row_selected');
-                rowSelectedData = diagnosticsTable.fnGetData( this );
-                if(!treatmentsTable){
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
-                    addRowSelectionTreatments();
-                }else{
-                    treatmentsTable.fnClearTable();
-                    destroyTreatmentsTable("treatmentsDiv");
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
-                    addRowSelectionTreatments();
-                }
-            }
-        });   
+        addRowSelectionDiagnosticsTable();   
         
 });
 
@@ -89,8 +60,41 @@ $.fn.serializeObject = function()
     return o;
 };
 
+//Diagnostics Table Initialization
 function initializeDiagnosticsTable(){
-    
+    diagnosticsTable = $('#diagnosticsTable').dataTable( {
+                "aaSorting": [[ 1, "desc" ]],
+                "sAjaxSource":"./diagnostics",
+                "aoColumns":[
+                     {"mDataProp":"diagnostic"},
+                     {"mDataProp":"lastUsed",
+                         "bVisible":false}
+                     ]
+    } );
+}
+
+//Diagnostics table  adding row selection
+function addRowSelectionDiagnosticsTable(){
+    $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
+        if ( $(this).hasClass('row_selected') ) {
+            $(this).removeClass('row_selected');
+        }
+        else 
+        {
+            diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+            rowSelectedData = diagnosticsTable.fnGetData( this );
+            if(!treatmentsTable){
+                initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                addRowSelectionTreatments();
+            }else{
+                treatmentsTable.fnClearTable();
+                destroyTreatmentsTable("treatmentsDiv");
+                initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                addRowSelectionTreatments();
+            }
+        }
+    });
 }
 
 function initializeTreatmentsTable(id){
