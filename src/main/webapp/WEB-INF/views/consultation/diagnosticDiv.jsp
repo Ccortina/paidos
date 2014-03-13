@@ -39,7 +39,18 @@
 				
 				<div class="tab-content">
 					<div id="diagnosticos" class="tab-pane active">
-						<jsp:include page="modalDiagDiagnostics.jsp" />
+                                            <div class="row">
+                                                <table id="diagnosticsTable">
+                                                        <thead>
+                                                                <tr>
+                                                                        <th>Diagnostico</th>
+                                                                        <th>Ultima fecha</th>
+                                                                </tr>	
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                </table>
+                                            </div>
 					</div>
 					<div id="treatmentsDiv" class="tab-pane">
                                             <div class="row">
