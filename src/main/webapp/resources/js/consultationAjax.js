@@ -28,6 +28,7 @@ $(document).ready(function(){
         //Diagnostics Table Initialization
         diagnosticsTable = $('#diagnosticsTable').dataTable( {
                 "aaSorting": [[ 1, "desc" ]],
+                "iDeferLoading": 57,
                 "sAjaxSource":"./diagnostics",
                 "aoColumns":[
                      {"mDataProp":"diagnostic"},

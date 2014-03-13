@@ -31,18 +31,14 @@
 			<div id="diagTabPane" class="modal-body">
 			
 				<ul class="nav nav-tabs">
-				  <li class="active"><a href="#frecuentes" data-toggle="tab">Diagnósticos frecuentes</a></li>
-				  <li><a href="#diagnosticos" data-toggle="tab">Diagnósticos</a></li>
+				  <li class="active"><a href="#diagnosticos" data-toggle="tab">Diagnósticos</a></li>
 				  <li><a href="#treatmentsDiv" data-toggle="tab">Tratamientos</a></li>
 				  <li><a href="#drugsDiv" data-toggle="tab">Medicamentos</a></li>
 				  <li><a href="#comerciales" data-toggle="tab">Nombres Comerciales</a></li>
 				</ul>
 				
 				<div class="tab-content">
-					<div id="frecuentes" class="tab-pane active">
-						<jsp:include page="modalDiagFreq.jsp"/>
-					</div>
-					<div id="diagnosticos" class="tab-pane">
+					<div id="diagnosticos" class="tab-pane active">
 						<jsp:include page="modalDiagDiagnostics.jsp" />
 					</div>
 					<div id="treatmentsDiv" class="tab-pane">
