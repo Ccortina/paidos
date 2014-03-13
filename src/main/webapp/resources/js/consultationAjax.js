@@ -9,53 +9,10 @@ var json;
 var rowSelectedData;
 var diagnosticsTable;
 var treatmentsTable = false;
+var commercialNamesTable = false;
 var selectedDiagnosticId;
 var reload;
-
-$.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
-{
-    if ( typeof sNewSource != 'undefined' && sNewSource != null )
-    {
-        oSettings.sAjaxSource = sNewSource;
-    }
-    this.oApi._fnProcessingDisplay( oSettings, true );
-    var that = this;
-    var iStart = oSettings._iDisplayStart;
-    var aData = [];
-
-    this.oApi._fnServerParams( oSettings, aData );
-
-    oSettings.fnServerData( oSettings.sAjaxSource, aData, function(json) {
-        /* Clear the old information from the table */
-        that.oApi._fnClearTable( oSettings );
-
-        /* Got the data - add it to the table */
-        var aData =  (oSettings.sAjaxDataProp !== "") ?
-            that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
-
-        for ( var i=0 ; i<aData.length ; i++ )
-        {
-            that.oApi._fnAddData( oSettings, aData[i] );
-        }
-
-        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-        that.fnDraw();
-
-        if ( typeof bStandingRedraw != 'undefined' && bStandingRedraw === true )
-        {
-            oSettings._iDisplayStart = iStart;
-            that.fnDraw( false );
-        }
-
-        that.oApi._fnProcessingDisplay( oSettings, false );
-
-        /* Callback user function - for event handlers etc */
-        if ( typeof fnCallback == 'function' && fnCallback != null )
-        {
-            fnCallback( oSettings );
-        }
-    }, oSettings );
-}
+var drugsTable = false;
 
 $(document).ready(function(){
         $('#sibilingsTable tbody tr').dblclick(function(e){
@@ -68,6 +25,7 @@ $(document).ready(function(){
                 "bSort":false
         });
 
+        //Frequent diagnostics Table initialization
         frequentDiagnosticTable = $('#fdTable').dataTable( {
                 "bSort":false,
                 "sAjaxSource":"./frequentDiagnostics",
@@ -78,6 +36,7 @@ $(document).ready(function(){
                      ]
     } );
 
+        //Diagnostics Table Initialization
         diagnosticsTable = $('#diagnosticsTable').dataTable( {
                 "bSort":false,
                 "sAjaxSource":"./diagnostics",
@@ -88,6 +47,7 @@ $(document).ready(function(){
                      ]
     } );
 
+        //Frequent diagnostics table  adding row selection
         $('#fdTable tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('row_selected') ) {
             $(this).removeClass('row_selected');
@@ -96,25 +56,32 @@ $(document).ready(function(){
             frequentDiagnosticTable.$('tr.row_selected').removeClass('row_selected');
             $(this).addClass('row_selected');
             rowSelectedData = frequentDiagnosticTable.fnGetData( this );
-            alert(rowSelectedData["idCIE10"]);
+            //alert(rowSelectedData["idCIE10"]);
         }
         } );
 
+        //Diagnostics table  adding row selection
         $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
-                if ( $(this).hasClass('row_selected') ) {
-        $(this).removeClass('row_selected');
-        }
-        else {
+            if ( $(this).hasClass('row_selected') ) {
+                $(this).removeClass('row_selected');
+            }
+            else 
+            {
                 diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
-        $(this).addClass('row_selected');
-        rowSelectedData = frequentDiagnosticTable.fnGetData( this );
-        if(!treatmentsTable){
-                initializeTreatmentsTable(rowSelectedData["idCIE10"]);
-        }else{
-                treatmensTable.fnReloadAjax();
-        }
-        }
-        });
+                $(this).addClass('row_selected');
+                rowSelectedData = diagnosticsTable.fnGetData( this );
+                if(!treatmentsTable){
+                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    addRowSelectionTreatments();
+                }else{
+                    treatmentsTable.fnClearTable();
+                    destroyTreatmentsTable("treatmentsDiv");
+                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    addRowSelectionTreatments();
+                }
+            }
+        });   
+        
 });
 
 function ajaxCall(ID){
@@ -126,11 +93,6 @@ function ajaxCall(ID){
                         $('#ajaxMessage').html(response);
                 }
                 });	
-}
-
-function fnGetSelectedRow(oTableLocal)
-{
-        return alert(oTableLocal.$('tr.row_selected'));
 }
 
 //This function converts a form in a json acceptedString
@@ -151,17 +113,128 @@ $.fn.serializeObject = function()
     return o;
 };
 
+function initializeDiagnosticsTable(){
+    
+}
+
 function initializeTreatmentsTable(id){
         treatmentsTable = $('#treatmentsTable').dataTable( {
                 "bSort":false,
                 "sAjaxSource":"./diagnosticTreatment",
-        "aoColumns":[
-                     {"mDataProp":"idTreatment"
-                         ,"bVisible":false},   
-                     {"mDataProp":"treatment"}
-                     ],
-        "fnServerParams": function ( aoData ) {
-                         aoData.push( {name:"diagnosticId",value:id} );
-                                        }             
+                "fnServerParams": function ( aoData ) { aoData.push( {name:"diagnosticId",value:id} ); },
+                "aoColumns": [
+                             {   "bVisible": false,
+                                 "mRender": function(data,type,full){
+                                    return data.idTreatment;}
+                             },
+                             { "mRender": function(data,type,full){
+                                     return full[0].treatment;
+                             } }
+                             ]
     });
+}
+
+function addRowSelectionTreatments(){
+     $('#treatmentsTable tbody').on( 'click', 'tr', function (e){
+            if ( $(this).hasClass('row_selected')){
+                $(this).removeClass('row_selected');
+            }
+            else
+                {
+                    treatmentsTable.$('tr.row_selected').removeClass('row_selected');
+                    $(this).addClass('row_selected');
+                    rowSelectedData = treatmentsTable.fnGetData( this );
+                    if(!drugsTable){
+                        initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
+                    }
+                    else
+                    {
+                        destroyDrugsTable("drugsDiv");
+                        initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
+                        addRowSelectionDrugs();
+                    }
+                }
+        });
+}
+
+function destroyTreatmentsTable(id){
+    $('#'+id).html("<div class='row'><table id='treatmentsTable'><thead>\n\
+                    <tr><th>Id</th><th>Tratamiento</th></tr></thead><tbody>\n\
+                    </tbody></table></div>");
+}
+
+function initializeDrugsTable(id){
+        drugsTable = $('#drugsTable').dataTable( {
+                "bSort":true,
+                "sAjaxSource":"./drugsByTreatment",
+                "fnServerParams": function ( aoData ) { aoData.push( {name:"treatmentId",value:id} ); },
+                "aoColumns": [
+                             { "mRender": function(data,type,full){
+                                     return data.drug;
+                             } },
+                             { "mRender": function(data,type,full){
+                                    return full[0].drugPresentationId.presentation;
+                             } }
+                             ]
+    });
+}
+
+function addRowSelectionDrugs(){
+     $('#drugsTable tbody').on( 'click', 'tr', function (e){
+            if ( $(this).hasClass('row_selected')){
+                $(this).removeClass('row_selected');
+            }
+            else
+                {
+                    drugsTable.$('tr.row_selected').removeClass('row_selected');
+                    $(this).addClass('row_selected');
+                    rowSelectedData = drugsTable.fnGetData( this );
+                    if(!commercialNamesTable){
+                        initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
+                        addRowSelectionCommercialNamesTable();
+                    }
+                    else
+                    {
+                       commercialNamesTable.fnClearTable();
+                       destroyCommercialNamesTable("nombresComerciales");
+                       initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
+                       addRowSelectionCommercialNamesTable();
+                    }
+                }
+        });
+}
+
+function destroyDrugsTable(id){
+    $('#'+id).html("<div class='row'><table id='drugsTable'><thead>\n\
+                    <tr><th>Id</th><th>Medicamento</th></tr></thead><tbody>\n\
+                    </tbody></table></div>");
+}
+
+function initializeCommercialNamesTable(id){
+    commercialNamesTable = $('#commercialNamesTable').dataTable( {
+                "bSort":true,
+                "sAjaxSource":"./drugsCommercialNames",
+                "fnServerParams": function ( aoData ) { aoData.push( {name:"drugId",value:id} ); },
+                "aoColumns":[{"mDataProp":"commercialName"}]
+    });
+}
+
+function addRowSelectionCommercialNamesTable(){
+     $('#commercialNamesTable tbody').on( 'click', 'tr', function (e){
+            if ( $(this).hasClass('row_selected')){
+                $(this).removeClass('row_selected');
+            }
+            else
+                {
+                    commercialNamesTable.$('tr.row_selected').removeClass('row_selected');
+                    $(this).addClass('row_selected');
+                    rowSelectedData = commercialNamesTable.fnGetData( this );
+                }
+        });
+}
+
+function destroyCommercialNamesTable(id){
+    $('#'+id).html("<div class='row'><table id='commercialNamesTable'><thead>\n\
+                    <tr><th>Medicamento</th></tr></thead><tbody>\n\
+                    </tbody></table></div>");
 }

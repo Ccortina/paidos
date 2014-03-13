@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <div class="row">
 	<ul class="nav nav-pills">
-		<li class="active"><a href="#pnpatologicos" data-toggle="tab">Personales no patologicos</a></li>
+		<li class="active"><a href="#pnpatologicos" data-toggle="tab">No patológicos</a></li>
 		<li><a href="#alergicos" data-toggle="tab">Alérgicos</a></li>
 		<li><a href="#patologicos" data-toggle="tab">Patológicos</a></li>
 		<li><a href="#perinatales" data-toggle="tab">Perinatales</a></li>
@@ -22,10 +22,8 @@
 							<div class="row">
 								<div class="col-sm-3">
 									<div class="row">
-										<div class ="col-sm-6">
+										<div class ="col-sm-12">
 											<label for="birthweight">Peso al nacer :</label>
-										</div>
-										<div class="col-sm-6">
 											<form:input class="form-control input-sm" id="birthweight" type="text" path="birthweight" />
 										</div>
 									</div>
@@ -290,8 +288,7 @@
 			</form:form>						
 		</div>
 		<div id="alergicos" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes Alérgicos</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="alergicBackgroundForm" role="form" method="post" modelAttribute="record" action="./saveAlergicBackground">
 						<form:hidden path="idRecord" />
@@ -308,8 +305,7 @@
 			</div>
 		</div>	
 		<div id="patologicos" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes Patológicos</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="pathologicalBackgroundForm" role="form" method="post" modelAttribute="record" action="./savePathologicalBackground">
 						<form:hidden path="idRecord" />
@@ -326,8 +322,7 @@
 			</div>
 		</div>
 		<div id="perinatales" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes Perinatales</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="perinatalBackgroundForm" role="form" method="post" modelAttribute="record" action="./savePerinatalBackground">
 						<form:hidden path="idRecord" />
@@ -344,8 +339,7 @@
 			</div>
 		</div>
 		<div id="desarrollo" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes de Desarrollo</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="developmentBackgroundForm" role="form" method="post" modelAttribute="record" action="./saveDevelopmentBackground">
 						<form:hidden path="idRecord" />
@@ -362,8 +356,7 @@
 			</div>
 		</div>
 		<div id="quirurgicos" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes Quirúrgicos</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="surgicalHistoryForm" role="form" method="post" modelAttribute="record" action="./saveSurgicalHistory">
 						<form:hidden path="idRecord" />
@@ -379,9 +372,9 @@
 				</div>
 			</div>
 		</div>
+            <!-- Tab for hereditary background -->
 		<div id="hereditarios" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Antecedentes Hereditarios y Familiares</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="hereditaryAndFamilyBackgroundForm" role="form" method="post" modelAttribute="record" action="./saveHereditaryAndFamilyBackground">
 						<form:hidden path="idRecord" />
@@ -397,9 +390,9 @@
 				</div>
 			</div>
 		</div>
+            <!-- Tab of other backgrounds -->
 		<div id="otros" class="tab-pane">
-			<div class="panel panel-info">
-				<div class="panel-heading">Otros Antecedentes</div>
+			<div class="panel panel-default">
 				<div class="panel-body">
 					<form:form id="othersForm" role="form" method="post" modelAttribute="record" action="./saveOthers">
 						<form:hidden path="idRecord" />

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Cie10;
+import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.Patient_Relative;
 import com.carloscortina.demo.model.PerBackNoPat;
@@ -30,6 +32,8 @@ import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.Cie10Service;
+import com.carloscortina.demo.service.CommercialNameService;
+import com.carloscortina.demo.service.DrugService;
 import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.PerBackNoPatService;
 import com.carloscortina.demo.service.RecordService;
@@ -55,6 +59,11 @@ public class ConsultationController {
 	private Cie10Service cie10Service;
 	@Autowired
 	private TreatmentService treatmentService;
+        @Autowired
+	private DrugService drugService;
+        @Autowired
+        private CommercialNameService commercialNameService;
+        
 	
 	@RequestMapping(value="appointments")
 	public String loadAppointments(Model model){
@@ -190,7 +199,7 @@ public class ConsultationController {
 	@RequestMapping(value="frequentDiagnostics")
 	public @ResponseBody JsonPack<Cie10> frequentDiagnostics()
 	{
-		String query = "FROM Cie10 c WHERE (day(current_date()) - day(c.lastUsed)) <= 50 AND c.active = 1";
+		String query = "FROM Cie10 c WHERE (day(current_date()) - day(c.lastUsed)) <= 3 AND c.active = 1";
 		JsonPack<Cie10> result = new JsonPack<Cie10>(cie10Service.getListOfItem(query));
 		return result;
 	}
@@ -207,7 +216,28 @@ public class ConsultationController {
 	public @ResponseBody JsonPack<Treatment> allDiagnostics(@RequestParam int diagnosticId)
 	{
 		String query = "FROM Treatment t join t.cie10Collection d WHERE d.idCIE10 = "+diagnosticId;
+                
 		JsonPack<Treatment> result = new JsonPack<Treatment>(treatmentService.getListOfItem(query));
+		return result;
+	}
+        
+        //This method gives a json response with all the drugs related to the treatment
+        @RequestMapping(value="drugsByTreatment")
+	public @ResponseBody JsonPack<Drug> allDrugs(@RequestParam int treatmentId)
+	{
+		String query = "FROM Drug t join t.treatmentCollection d WHERE d.idTreatment = "+treatmentId;
+                
+		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
+		return result;
+	}
+	
+        //This method gives a json response with all the commercial names related to a drug
+        @RequestMapping(value="drugsCommercialNames")
+	public @ResponseBody JsonPack<CommercialName> allDrugCommercialNames(@RequestParam int drugId)
+	{
+		String query = "FROM CommercialName t WHERE t.drugId = "+drugId;
+                
+		JsonPack<CommercialName> result = new JsonPack<CommercialName>(commercialNameService.getListOfItem(query));
 		return result;
 	}
 	

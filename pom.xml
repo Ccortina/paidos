@@ -12,7 +12,6 @@
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
-	 <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -183,6 +182,22 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+	 <dependency>
+	  <groupId>org.eclipse.persistence</groupId>
+	  <artifactId>eclipselink</artifactId>
+	  <version>2.5.0-SNAPSHOT</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.eclipse.persistence</groupId>
+	  <artifactId>javax.persistence</artifactId>
+	  <version>2.1.0-SNAPSHOT</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>javax.annotation</groupId>
+	  <artifactId>jsr250-api</artifactId>
+	  <version>1.0</version>
+	  <scope>provided</scope>
+	 </dependency>
 	</dependencies>
     <build>
         <plugins>
@@ -222,4 +237,23 @@
             </plugin>
         </plugins>
     </build>
+ <repositories>
+  <repository>
+   <url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+   <id>eclipselink</id>
+   <layout>default</layout>
+   <name>Repository for library EclipseLink (JPA 2.1)</name>
+  </repository>
+ </repositories>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -20,7 +21,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  *
@@ -34,6 +34,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
     @NamedQuery(name = "Treatment.findByIdTreatment", query = "SELECT t FROM Treatment t WHERE t.idTreatment = :idTreatment"),
     @NamedQuery(name = "Treatment.findByActive", query = "SELECT t FROM Treatment t WHERE t.active = :active")})
 public class Treatment implements Serializable {
+    @ManyToMany(mappedBy = "treatmentCollection")
+    @JsonIgnore
+    private Collection<Drug> drugCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,11 +59,11 @@ public class Treatment implements Serializable {
     @Column(name = "active")
     private String active;
     //fetch=FetchType.EAGER
-    @JsonIgnore
     @JoinTable(name = "diagnosticTreatment", joinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")}, inverseJoinColumns = {
         @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")})
     @ManyToMany()
+    @JsonIgnore
     private Collection<Cie10> cie10Collection;
 
     public Treatment() {
@@ -140,6 +143,16 @@ public class Treatment implements Serializable {
     @Override
     public String toString() {
         return "diagnostic.Treatment[ idTreatment=" + idTreatment + " ]";
+    }
+
+    @XmlTransient
+    @org.codehaus.jackson.annotate.JsonIgnore
+    public Collection<Drug> getDrugCollection() {
+        return drugCollection;
+    }
+
+    public void setDrugCollection(Collection<Drug> drugCollection) {
+        this.drugCollection = drugCollection;
     }
     
 }

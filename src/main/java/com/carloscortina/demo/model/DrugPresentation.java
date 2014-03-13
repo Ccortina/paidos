@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -41,10 +42,12 @@ public class DrugPresentation implements Serializable {
     @Size(min = 1, max = 60)
     @Column(name = "presentation")
     private String presentation;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
     private short active;
+    @JsonIgnore
     @OneToMany(mappedBy = "drugPresentationId")
     private Collection<Drug> drugCollection;
 

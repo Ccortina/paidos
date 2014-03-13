@@ -10,7 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,6 +21,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  *
@@ -36,6 +39,21 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Drug.findByDailyFrequency", query = "SELECT d FROM Drug d WHERE d.dailyFrequency = :dailyFrequency"),
     @NamedQuery(name = "Drug.findByActive", query = "SELECT d FROM Drug d WHERE d.active = :active")})
 public class Drug implements Serializable {
+    @JoinTable(name = "treatmentDrug", joinColumns = {
+        @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+        @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
+    @ManyToMany
+    @JsonIgnore
+    private Collection<Treatment> treatmentCollection;
+    @JoinTable(name = "incompatibleDrugs", joinColumns = {
+        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+        @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idDrug")})
+    @ManyToMany
+    @JsonIgnore
+    private Collection<Drug> drugCollection;
+    @ManyToMany(mappedBy = "drugCollection")
+    @JsonIgnore
+    private Collection<Drug> drugCollection1;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,20 +81,25 @@ public class Drug implements Serializable {
     @Column(name = "active")
     private Short active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
+    @JsonIgnore
     private Collection<Diagnostic> diagnosticCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
+    @JsonIgnore
     private Collection<CommercialName> commercialNameCollection;
     @JoinColumn(name = "drugPresentationId", referencedColumnName = "drugPresentationId")
     @ManyToOne
     private DrugPresentation drugPresentationId;
     @JoinColumn(name = "doseCalculationCriteriaId", referencedColumnName = "idDoseCalculationCriteria")
     @ManyToOne
+    @JsonIgnore
     private DoseCalculationCriteria doseCalculationCriteriaId;
     @JoinColumn(name = "applicationMethodId", referencedColumnName = "idApplicationMethod")
     @ManyToOne
+    @JsonIgnore
     private ApplicationMethod applicationMethodId;
     @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
     @ManyToOne
+    @JsonIgnore
     private AdministrationUnit administrationUnitId;
 
     public Drug() {
@@ -223,6 +246,36 @@ public class Drug implements Serializable {
     @Override
     public String toString() {
         return "diagnostic.Drug[ idDrug=" + idDrug + " ]";
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public Collection<Treatment> getTreatmentCollection() {
+        return treatmentCollection;
+    }
+
+    public void setTreatmentCollection(Collection<Treatment> treatmentCollection) {
+        this.treatmentCollection = treatmentCollection;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public Collection<Drug> getDrugCollection() {
+        return drugCollection;
+    }
+
+    public void setDrugCollection(Collection<Drug> drugCollection) {
+        this.drugCollection = drugCollection;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public Collection<Drug> getDrugCollection1() {
+        return drugCollection1;
+    }
+
+    public void setDrugCollection1(Collection<Drug> drugCollection1) {
+        this.drugCollection1 = drugCollection1;
     }
     
 }

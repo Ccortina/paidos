@@ -192,3 +192,11 @@
 </div><!--/.container-->
 
 <script src="${consultationAjax}" type="text/javascript"></script>
+
+<!-- The style for the nav pills -->
+<style type="text/css">
+    .red .active a,
+    .red .active a:hover {
+        background-color: red;
+    }
+</style>
