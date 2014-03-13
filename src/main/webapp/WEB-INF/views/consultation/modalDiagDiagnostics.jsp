@@ -2,8 +2,8 @@
 	<table id="diagnosticsTable">
 		<thead>
 			<tr>
-				<th>ID</th>
 				<th>Diagnostico</th>
+                                <th>Ultima fecha</th>
 			</tr>	
 		</thead>
 		<tbody>

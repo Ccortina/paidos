@@ -38,12 +38,12 @@ $(document).ready(function(){
 
         //Diagnostics Table Initialization
         diagnosticsTable = $('#diagnosticsTable').dataTable( {
-                "bSort":false,
+                "aaSorting": [[ 1, "desc" ]],
                 "sAjaxSource":"./diagnostics",
-        "aoColumns":[
-                     {"mDataProp":"idCIE10"
-                         ,"bVisible":false},   
-                     {"mDataProp":"diagnostic"}
+                "aoColumns":[
+                     {"mDataProp":"diagnostic"},
+                     {"mDataProp":"lastUsed",
+                         "bVisible":false}
                      ]
     } );
 
