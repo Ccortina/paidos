@@ -26,38 +26,10 @@ $(document).ready(function(){
         });
 
         //Diagnostics Table Initialization
-        diagnosticsTable = $('#diagnosticsTable').dataTable( {
-                "aaSorting": [[ 1, "desc" ]],
-                "iDeferLoading": 57,
-                "sAjaxSource":"./diagnostics",
-                "aoColumns":[
-                     {"mDataProp":"diagnostic"},
-                     {"mDataProp":"lastUsed",
-                         "bVisible":false}
-                     ]
-        } );
+        initializeDiagnosticsTable();
 
         //Diagnostics table  adding row selection
-        $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
-            if ( $(this).hasClass('row_selected') ) {
-                $(this).removeClass('row_selected');
-            }
-            else 
-            {
-                diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
-                $(this).addClass('row_selected');
-                rowSelectedData = diagnosticsTable.fnGetData( this );
-                if(!treatmentsTable){
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
-                    addRowSelectionTreatments();
-                }else{
-                    treatmentsTable.fnClearTable();
-                    destroyTreatmentsTable("treatmentsDiv");
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
-                    addRowSelectionTreatments();
-                }
-            }
-        });   
+        addRowSelectionDiagnosticsTable();   
         
 });
 
@@ -91,23 +63,55 @@ $.fn.serializeObject = function()
 };
 
 function initializeDiagnosticsTable(){
-    
+    diagnosticsTable = $('#diagnosticsTable').dataTable( {
+        "aaSorting": [[ 1, "desc" ]],
+        "iDeferLoading": 57,
+        "sAjaxSource":"./diagnostics",
+        "aoColumns":[
+             {"mDataProp":"diagnostic"},
+             {"mDataProp":"lastUsed",
+                 "bVisible":false}
+             ]
+    } );
+}
+
+function addRowSelectionDiagnosticsTable(){
+    $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
+            if ( $(this).hasClass('row_selected') ) {
+                $(this).removeClass('row_selected');
+            }
+            else 
+            {
+                diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
+                $(this).addClass('row_selected');
+                rowSelectedData = diagnosticsTable.fnGetData( this );
+                if(!treatmentsTable){
+                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    addRowSelectionTreatments();
+                }else{
+                    treatmentsTable.fnClearTable();
+                    destroyTreatmentsTable("treatmentsDiv");
+                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    addRowSelectionTreatments();
+                }
+            }
+        });
 }
 
 function initializeTreatmentsTable(id){
-        treatmentsTable = $('#treatmentsTable').dataTable( {
-                "bSort":false,
-                "sAjaxSource":"./diagnosticTreatment",
-                "fnServerParams": function ( aoData ) { aoData.push( {name:"diagnosticId",value:id} ); },
-                "aoColumns": [
-                             {   "bVisible": false,
-                                 "mRender": function(data,type,full){
-                                    return data.idTreatment;}
-                             },
-                             { "mRender": function(data,type,full){
-                                     return full[0].treatment;
-                             } }
-                             ]
+    treatmentsTable = $('#treatmentsTable').dataTable( {
+        "bSort":false,
+        "sAjaxSource":"./diagnosticTreatment",
+        "fnServerParams": function ( aoData ) { aoData.push( {name:"diagnosticId",value:id} ); },
+        "aoColumns": [
+                     {   "bVisible": false,
+                         "mRender": function(data,type,full){
+                            return data.idTreatment;}
+                     },
+                     { "mRender": function(data,type,full){
+                             return full[0].treatment;
+                     } }
+                     ]
     });
 }
 
@@ -123,6 +127,7 @@ function addRowSelectionTreatments(){
                     rowSelectedData = treatmentsTable.fnGetData( this );
                     if(!drugsTable){
                         initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
+                        addRowSelectionDrugs();
                     }
                     else
                     {
