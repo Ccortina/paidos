@@ -178,7 +178,7 @@ function addRowSelectionDrugs(){
                     else
                     {
                        commercialNamesTable.fnClearTable();
-                       destroyCommercialNamesTable("nombresComerciales");
+                       destroyCommercialNamesTable("commercialNamesTab");
                        initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
                        addRowSelectionCommercialNamesTable();
                     }
@@ -211,7 +211,8 @@ function addRowSelectionCommercialNamesTable(){
                     commercialNamesTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
                     rowSelectedData = commercialNamesTable.fnGetData( this );
-                }
+                    }
+                
         });
 }
 

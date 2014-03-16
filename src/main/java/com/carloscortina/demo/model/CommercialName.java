@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -48,6 +49,7 @@ public class CommercialName implements Serializable {
     @NotNull
     @Column(name = "active")
     private short active;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commercialName")
     private Collection<Diagnostic> diagnosticCollection;
     @JoinColumn(name = "drugId", referencedColumnName = "idDrug")
