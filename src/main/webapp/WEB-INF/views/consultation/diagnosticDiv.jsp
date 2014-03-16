@@ -42,10 +42,10 @@
                                     <div class="row">
                                         <table id="diagnosticsTable">
                                                 <thead>
-                                                        <tr>
-                                                                <th>Diagnostico</th>
-                                                                <th>Ultima fecha</th>
-                                                        </tr>	
+                                                    <tr>
+                                                        <th>Diagnostico</th>
+                                                        <th>Ultima fecha</th>
+                                                    </tr>	
                                                 </thead>
                                                 <tbody>
                                                 </tbody>
@@ -91,6 +91,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
 			</div><!-- Final de pestañas y su contenido -->
 			<div class="modal-footer">
 				<div class="row">

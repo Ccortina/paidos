@@ -14,6 +14,10 @@
 <c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
 <c:url var="offcanvasCss" value="/resources/CSS/offcanvas.css" />
 
+<!-- File for bootstrapWizard -->
+<c:url var="wizardJs" value="/resources/js/jquery.bootstrap.wizard.min.js" />
+
+
 <script src="${dataTablesJS}" type="text/javascript"></script>
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
@@ -21,6 +25,8 @@
 <script src="${offcanvasJs}" type="text/javascript"></script>
 
 <link href="${offcanvasCss}" rel="stylesheet" />
+
+<script src="${wizardJs}" type="text/javascript"></script>
 
 <!-- Make modal diagnostic bigger -->
 <style type="text/css">

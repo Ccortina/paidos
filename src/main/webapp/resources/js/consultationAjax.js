@@ -29,7 +29,9 @@ $(document).ready(function(){
         initializeDiagnosticsTable();
 
         //Diagnostics table  adding row selection
-        addRowSelectionDiagnosticsTable();   
+        addRowSelectionDiagnosticsTable();
+        
+        $('#diagTabPane').bootstrapWizard({'tabClass':'nav nav-pills'});
         
 });
 
@@ -88,11 +90,13 @@ function addRowSelectionDiagnosticsTable(){
                 if(!treatmentsTable){
                     initializeTreatmentsTable(rowSelectedData["idCIE10"]);
                     addRowSelectionTreatments();
+                    $('#diagTabPane').bootstrapWizard('next');
                 }else{
                     treatmentsTable.fnClearTable();
                     destroyTreatmentsTable("treatmentsDiv");
                     initializeTreatmentsTable(rowSelectedData["idCIE10"]);
                     addRowSelectionTreatments();
+                    $('#diagTabPane').bootstrapWizard('next');
                 }
             }
         });
@@ -128,12 +132,14 @@ function addRowSelectionTreatments(){
                     if(!drugsTable){
                         initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
                         addRowSelectionDrugs();
+                        $('#diagTabPane').bootstrapWizard('next');
                     }
                     else
                     {
                         destroyDrugsTable("drugsDiv");
                         initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
                         addRowSelectionDrugs();
+                        $('#diagTabPane').bootstrapWizard('next');
                     }
                 }
         });
@@ -174,6 +180,7 @@ function addRowSelectionDrugs(){
                     if(!commercialNamesTable){
                         initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
                         addRowSelectionCommercialNamesTable();
+                        $('#diagTabPane').bootstrapWizard('next');
                     }
                     else
                     {
@@ -181,6 +188,7 @@ function addRowSelectionDrugs(){
                        destroyCommercialNamesTable("commercialNamesTab");
                        initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
                        addRowSelectionCommercialNamesTable();
+                       $('#diagTabPane').bootstrapWizard('next');
                     }
                 }
         });
