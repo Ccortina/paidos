@@ -66,6 +66,7 @@ $.fn.serializeObject = function()
 
 function initializeDiagnosticsTable(){
     diagnosticsTable = $('#diagnosticsTable').dataTable( {
+        "sDom":'<"top"f>rt<"bottom"lip><"clear">',
         "aaSorting": [[ 1, "desc" ]],
         "iDeferLoading": 57,
         "sAjaxSource":"./diagnostics",
@@ -104,6 +105,7 @@ function addRowSelectionDiagnosticsTable(){
 
 function initializeTreatmentsTable(id){
     treatmentsTable = $('#treatmentsTable').dataTable( {
+        "sDom":'<"top"f>rt<"bottom"lip><"clear">',
         "bSort":false,
         "sAjaxSource":"./diagnosticTreatment",
         "fnServerParams": function ( aoData ) { aoData.push( {name:"diagnosticId",value:id} ); },
@@ -153,17 +155,18 @@ function destroyTreatmentsTable(id){
 
 function initializeDrugsTable(id){
         drugsTable = $('#drugsTable').dataTable( {
-                "bSort":true,
-                "sAjaxSource":"./drugsByTreatment",
-                "fnServerParams": function ( aoData ) { aoData.push( {name:"treatmentId",value:id} ); },
-                "aoColumns": [
-                             { "mRender": function(data,type,full){
-                                     return data.drug;
-                             } },
-                             { "mRender": function(data,type,full){
-                                    return full[0].drugPresentationId.presentation;
-                             } }
-                             ]
+            "sDom":'<"top"f>rt<"bottom"lip><"clear">',
+            "bSort":true,
+            "sAjaxSource":"./drugsByTreatment",
+            "fnServerParams": function ( aoData ) { aoData.push( {name:"treatmentId",value:id} ); },
+            "aoColumns": [
+                         { "mRender": function(data,type,full){
+                                 return data.drug;
+                         } },
+                         { "mRender": function(data,type,full){
+                                return full[0].drugPresentationId.presentation;
+                         } }
+                         ]
     });
 }
 
@@ -202,10 +205,11 @@ function destroyDrugsTable(id){
 
 function initializeCommercialNamesTable(id){
     commercialNamesTable = $('#commercialNamesTable').dataTable( {
-                "bSort":true,
-                "sAjaxSource":"./drugsCommercialNames",
-                "fnServerParams": function ( aoData ) { aoData.push( {name:"drugId",value:id} ); },
-                "aoColumns":[{"mDataProp":"commercialName"}]
+        "sDom":'<"top"f>rt<"bottom"lip><"clear">',
+        "bSort":true,
+        "sAjaxSource":"./drugsCommercialNames",
+        "fnServerParams": function ( aoData ) { aoData.push( {name:"drugId",value:id} ); },
+        "aoColumns":[{"mDataProp":"commercialName"}]
     });
 }
 

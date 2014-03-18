@@ -37,7 +37,7 @@
                               <li><a href="#commercialNamesTab" data-toggle="tab">Nombres Comerciales</a></li>
                             </ul>
 
-                            <div class="tab-content">
+                            <div class="tab-content"><br>
                                 <div id="diagnosticos" class="tab-pane active">
                                     <div class="row">
                                         <table id="diagnosticsTable">
@@ -94,28 +94,54 @@
                             
 			</div><!-- Final de pestañas y su contenido -->
 			<div class="modal-footer">
-				<div class="row">
-					<div class="col-sm-9">
-						<fieldset disabled>
-						<legend>Seleccion que se agregara a la consulta</legend>
-							<form>
-							</form>
-						</fieldset>
-					</div>
-					<div class="col-sm-3">
-						<div class="row">
-							<div class="col-sm-12">
-								<button type="button" class="btn btn-primary">Agregar</button>
-          					</div>
-          				</div>	
-          				<div class="row">
-          					<div class="col-sm-12">	
-          						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                        <fieldset disabled>
+                                            <form class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label for="selectedDiagnostic" class="col-sm-2 control-label">Diagnóstico</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="selectedDiagnostic" placeholder="Diagnóstico Seleccionado"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="selectedTreatment" class="col-sm-2 control-label">Tratamiento</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="selectedTreatment" placeholder="Tratamiento Seleccionado"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="selectedDrug" class="col-sm-2 control-label">Medicamento</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="selectedDrug" placeholder="Medicamento Seleccionado"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="selectedCommercialName" class="col-sm-2 control-label">Nombre comercial</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="selectedCommercialName" placeholder="Nombre comercial Seleccionado"/>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </fieldset>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                                <button type="button" class="btn btn-primary">Agregar</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <br>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">	
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+			</div> <!-- Close Modal Footer -->
+		</div><!-- End modal content -->
 	</div>
 </div>
