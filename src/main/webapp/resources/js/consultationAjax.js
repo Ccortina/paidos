@@ -6,7 +6,10 @@
 var oTable;
 var frequentDiagnosticTable;
 var json;
-var rowSelectedData;
+var selectedDiagnosticData;
+var selectedTreatmentData;
+var selectedDrugData;
+var selectedCommercialNamesData;
 var diagnosticsTable;
 var treatmentsTable = false;
 var commercialNamesTable = false;
@@ -32,6 +35,9 @@ $(document).ready(function(){
         addRowSelectionDiagnosticsTable();
         
         $('#diagTabPane').bootstrapWizard({'tabClass':'nav nav-pills'});
+        
+        //The diagnostics added for the consultation
+        initializeConsultationDiagnosticsTable();
         
 });
 
@@ -74,7 +80,12 @@ function initializeDiagnosticsTable(){
              {"mDataProp":"diagnostic"},
              {"mDataProp":"lastUsed",
                  "bVisible":false}
-             ]
+             ],
+        "oLanguage": {
+            "sSearch": "Buscar:",
+            "sLengthMenu": "Mostrando _MENU_ resultados",
+            "sInfo": "Mostrando entradas de _START_ a _END_ de un total de _TOTAL_"
+        }     
     } );
 }
 
@@ -87,15 +98,16 @@ function addRowSelectionDiagnosticsTable(){
             {
                 diagnosticsTable.$('tr.row_selected').removeClass('row_selected');
                 $(this).addClass('row_selected');
-                rowSelectedData = diagnosticsTable.fnGetData( this );
+                selectedDiagnosticData = diagnosticsTable.fnGetData( this );
+                $('#selectedDiagnosticInput').val(selectedDiagnosticData["diagnostic"]);
                 if(!treatmentsTable){
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    initializeTreatmentsTable(selectedDiagnosticData["idCIE10"]);
                     addRowSelectionTreatments();
                     $('#diagTabPane').bootstrapWizard('next');
                 }else{
                     treatmentsTable.fnClearTable();
                     destroyTreatmentsTable("treatmentsDiv");
-                    initializeTreatmentsTable(rowSelectedData["idCIE10"]);
+                    initializeTreatmentsTable(selectedDiagnosticData["idCIE10"]);
                     addRowSelectionTreatments();
                     $('#diagTabPane').bootstrapWizard('next');
                 }
@@ -130,16 +142,17 @@ function addRowSelectionTreatments(){
                 {
                     treatmentsTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
-                    rowSelectedData = treatmentsTable.fnGetData( this );
+                    selectedTreatmentData = treatmentsTable.fnGetData( this );
+                    $('#selectedTreatmentInput').val(selectedTreatmentData[0]["treatment"]);
                     if(!drugsTable){
-                        initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
+                        initializeDrugsTable(selectedTreatmentData[0]["idTreatment"]);
                         addRowSelectionDrugs();
                         $('#diagTabPane').bootstrapWizard('next');
                     }
                     else
                     {
                         destroyDrugsTable("drugsDiv");
-                        initializeDrugsTable(rowSelectedData[0]["idTreatment"]);
+                        initializeDrugsTable(selectedTreatmentData[0]["idTreatment"]);
                         addRowSelectionDrugs();
                         $('#diagTabPane').bootstrapWizard('next');
                     }
@@ -179,9 +192,10 @@ function addRowSelectionDrugs(){
                 {
                     drugsTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
-                    rowSelectedData = drugsTable.fnGetData( this );
+                    selectedDrugData = drugsTable.fnGetData( this );
+                    $('#selectedDrugInput').val(selectedDrugData[0]["drug"] + " , " + selectedDrugData[0]["drugPresentationId"]["presentation"] );
                     if(!commercialNamesTable){
-                        initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
+                        initializeCommercialNamesTable(selectedDrugData[0]["idDrug"]);
                         addRowSelectionCommercialNamesTable();
                         $('#diagTabPane').bootstrapWizard('next');
                     }
@@ -189,7 +203,7 @@ function addRowSelectionDrugs(){
                     {
                        commercialNamesTable.fnClearTable();
                        destroyCommercialNamesTable("commercialNamesTab");
-                       initializeCommercialNamesTable(rowSelectedData[0]["idDrug"]);
+                       initializeCommercialNamesTable(selectedDrugData[0]["idDrug"]);
                        addRowSelectionCommercialNamesTable();
                        $('#diagTabPane').bootstrapWizard('next');
                     }
@@ -222,7 +236,8 @@ function addRowSelectionCommercialNamesTable(){
                 {
                     commercialNamesTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
-                    rowSelectedData = commercialNamesTable.fnGetData( this );
+                    selectedCommercialNamesData = commercialNamesTable.fnGetData( this );
+                    $('#selectedCommercialNamesInput').val(selectedCommercialNamesData["commercialName"]);
                     }
                 
         });
@@ -232,4 +247,13 @@ function destroyCommercialNamesTable(id){
     $('#'+id).html("<div class='row'><table id='commercialNamesTable'><thead>\n\
                     <tr><th>Medicamento</th></tr></thead><tbody>\n\
                     </tbody></table></div>");
+}
+
+function initializeConsultationDiagnosticsTable(){
+    $("#consultationDiagnosticsTable").dataTable({
+        "bSort":false,
+        "bFilter":false,
+        "bInfo":false,
+        "bPaginate":false
+    });
 }

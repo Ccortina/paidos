@@ -2,19 +2,28 @@
 	<div class="panel-heading">Diagnósticos,tratamientos y medicamentos incluidos en la consulta</div>
 	<div class="panel-body">
 		<div class="row">
-			El diagnostico
+                    <div class="col-sm-12">
+                        <table id="consultationDiagnosticsTable">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <br>    
+                    </div>
 		</div>
 		<div class="row">
-			<div class="col-sm-1">
+			<div class="col-sm-2">
 				<a data-toggle="modal" href="#modalDiagnostic" class="btn btn-primary">Agregar</a>
 			</div>
-			<div class="col-sm-1">
+			<div class="col-sm-2">
 				<button type="button" class="btn btn-danger">Quitar</button>
 			</div>
 			<div class="col-sm-3">
 				<button type="button" class="btn btn-primary">Medicamento sin asociaciones</button>
 			</div>
-			<div class="col-sm-2 col-sm-offset-5">
+			<div class="col-sm-2 col-sm-offset-3">
 				<button type="button" class="btn btn-primary">Generar receta</button>
 			</div>
 		</div>
@@ -99,27 +108,27 @@
                                         <fieldset disabled>
                                             <form class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label for="selectedDiagnostic" class="col-sm-2 control-label">Diagnóstico</label>
+                                                    <label for="selectedDiagnosticInput" class="col-sm-2 control-label">Diagnóstico</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="selectedDiagnostic" placeholder="Diagnóstico Seleccionado"/>
+                                                        <input type="text" class="form-control" id="selectedDiagnosticInput" placeholder="Diagnóstico Seleccionado"/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="selectedTreatment" class="col-sm-2 control-label">Tratamiento</label>
+                                                    <label for="selectedTreatmentInput" class="col-sm-2 control-label">Tratamiento</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="selectedTreatment" placeholder="Tratamiento Seleccionado"/>
+                                                        <input type="text" class="form-control" id="selectedTreatmentInput" placeholder="Tratamiento Seleccionado"/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="selectedDrug" class="col-sm-2 control-label">Medicamento</label>
+                                                    <label for="selectedDrugInput" class="col-sm-2 control-label">Medicamento</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="selectedDrug" placeholder="Medicamento Seleccionado"/>
+                                                        <input type="text" class="form-control" id="selectedDrugInput" placeholder="Medicamento Seleccionado"/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="selectedCommercialName" class="col-sm-2 control-label">Nombre comercial</label>
+                                                    <label for="selectedCommercialNamesInput" class="col-sm-2 control-label">Nombre comercial</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="selectedCommercialName" placeholder="Nombre comercial Seleccionado"/>
+                                                        <input type="text" class="form-control" id="selectedCommercialNamesInput" placeholder="Nombre comercial Seleccionado"/>
                                                     </div>
                                                 </div>
                                             </form>
