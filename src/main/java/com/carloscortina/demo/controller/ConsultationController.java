@@ -24,6 +24,7 @@ import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
+import com.carloscortina.demo.model.DrugDose;
 import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.Patient_Relative;
 import com.carloscortina.demo.model.PerBackNoPat;
@@ -33,6 +34,7 @@ import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.CommercialNameService;
+import com.carloscortina.demo.service.DrugDoseService;
 import com.carloscortina.demo.service.DrugService;
 import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.PerBackNoPatService;
@@ -63,6 +65,8 @@ public class ConsultationController {
 	private DrugService drugService;
         @Autowired
         private CommercialNameService commercialNameService;
+        @Autowired
+        private DrugDoseService drugDoseService;
         
 	
 	@RequestMapping(value="appointments")
@@ -223,7 +227,7 @@ public class ConsultationController {
         
         //This method gives a json response with all the drugs related to the treatment
         @RequestMapping(value="drugsByTreatment")
-	public @ResponseBody JsonPack<Drug> allDrugs(@RequestParam int treatmentId)
+	public @ResponseBody JsonPack<Drug> allDrugsByTreatment(@RequestParam int treatmentId)
 	{
 		String query = "FROM Drug t join t.treatmentCollection d WHERE d.idTreatment = "+treatmentId;
                 
@@ -238,6 +242,24 @@ public class ConsultationController {
 		String query = "FROM CommercialName t WHERE t.drugId = "+drugId;
                 
 		JsonPack<CommercialName> result = new JsonPack<CommercialName>(commercialNameService.getListOfItem(query));
+		return result;
+	}
+        
+        @RequestMapping(value="drugDose")
+	public @ResponseBody JsonPack<DrugDose> getDrugDoseByDrugId(@RequestParam int drugId)
+	{
+		String query = "FROM DrugDose t WHERE t.idDrug = " + drugId;
+                
+		JsonPack<DrugDose> result = new JsonPack<DrugDose>(drugDoseService.getListOfItem(query));
+		return result;
+	}
+        
+        @RequestMapping(value="getAllDrugs")
+	public @ResponseBody JsonPack<Drug> allDrugs()
+	{
+		String query = "FROM Drug t ";
+                
+		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
 		return result;
 	}
 	

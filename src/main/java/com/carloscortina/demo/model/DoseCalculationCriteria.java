@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -41,6 +42,7 @@ public class DoseCalculationCriteria implements Serializable {
     @Column(name = "criteria")
     private String criteria;
     @OneToMany(mappedBy = "doseCalculationCriteriaId")
+    @JsonIgnore
     private Collection<Drug> drugCollection;
 
     public DoseCalculationCriteria() {

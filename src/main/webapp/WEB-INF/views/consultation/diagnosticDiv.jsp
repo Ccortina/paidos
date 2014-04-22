@@ -6,7 +6,11 @@
                         <table id="consultationDiagnosticsTable">
                             <thead>
                                 <tr>
-                                    <th>Descripcion</th>
+                                    <th>Descripción</th>
+                                    <th>Diagnostic</th>
+                                    <th>Treatment</th>
+                                    <th>Drug</th>
+                                    <th>CommercialName</th>
                                 </tr>
                             </thead>
                         </table>
@@ -21,10 +25,10 @@
 				<button type="button" class="btn btn-danger">Quitar</button>
 			</div>
 			<div class="col-sm-3">
-				<button type="button" class="btn btn-primary">Medicamento sin asociaciones</button>
+				<a data-toggle="modal" href="#modalDrugNoAssociation" class="btn btn-primary">Medicamento sin asociaciones</a>
 			</div>
 			<div class="col-sm-2 col-sm-offset-3">
-				<button type="button" class="btn btn-primary">Generar receta</button>
+				<button type="button" id="generatePrescriptionButton"class="btn btn-primary">Generar receta</button>
 			</div>
 		</div>
 	</div>
@@ -137,7 +141,7 @@
                                 <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                                <button type="button" class="btn btn-primary">Agregar</button>
+                                                <button type="button" id="addDiagnosticRowButton" class="btn btn-primary" >Agregar</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -151,6 +155,55 @@
                                 </div>
                             </div>
 			</div> <!-- Close Modal Footer -->
-		</div><!-- End modal content -->
+		</div><!-- End modal  content -->
 	</div>
-</div>
+</div><!-- End modal diagnostic -->
+
+<!-- Modal for adding a drug without association -->
+<div class="modal fade" id="modalDrugNoAssociation" tabindex="-1" role="dialog" aria-labelledby="modalDiagnosticLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <h4 class="modal-title">Agregar Medicamento</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table id="drugsNoAssociationTable" >
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Presentación</th>
+                                    <th>Aplicación</th>
+                                    <th>Unidad</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="row" id="drugsNoAssociationCommercialNameDiv">     
+                    <div class="col-sm-12">
+                        <table id="drugsNoAssociationCommercialNameTable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre Comercial</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>    
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-6">	
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                    <div class="col-sm-6">	
+                        <button type="button" id="addDrugNoAssociationRowButton" class="btn btn-primary" >Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- End for modal add drug without association -->

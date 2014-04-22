@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -47,6 +48,7 @@ public class ApplicationMethod implements Serializable {
     @Column(name = "active")
     private String active;
     @OneToMany(mappedBy = "applicationMethodId")
+    @JsonIgnore
     private Collection<Drug> drugCollection;
 
     public ApplicationMethod() {

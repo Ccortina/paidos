@@ -185,7 +185,9 @@
                                 <div id="diagnostico" class="tab-pane">
                                         <jsp:include page="diagnosticDiv.jsp"/>
                                 </div>
-                                <div id="receta" class="tab-pane">receta</div>
+                                <div id="receta" class="tab-pane">
+                                    <textarea id="consultationPrescription" class="form-control" rows="10"></textarea>
+                                </div>
                                 <div id="actividades" class="tab-pane">actividades</div>
                                 <div id="resumen" class="tab-pane">resumen</div>
                             </div><!-- tab-content div -->

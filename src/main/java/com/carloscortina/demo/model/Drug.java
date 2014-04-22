@@ -22,6 +22,9 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.FetchType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -91,16 +94,17 @@ public class Drug implements Serializable {
     private DrugPresentation drugPresentationId;
     @JoinColumn(name = "doseCalculationCriteriaId", referencedColumnName = "idDoseCalculationCriteria")
     @ManyToOne
-    @JsonIgnore
     private DoseCalculationCriteria doseCalculationCriteriaId;
     @JoinColumn(name = "applicationMethodId", referencedColumnName = "idApplicationMethod")
     @ManyToOne
-    @JsonIgnore
     private ApplicationMethod applicationMethodId;
     @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
     @ManyToOne
     @JsonIgnore
     private AdministrationUnit administrationUnitId;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "idDrug")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Collection<DrugDose> drugDoseId;
 
     public Drug() {
     }
@@ -221,6 +225,14 @@ public class Drug implements Serializable {
 
     public void setAdministrationUnitId(AdministrationUnit administrationUnitId) {
         this.administrationUnitId = administrationUnitId;
+    }
+    
+    public Collection<DrugDose> getDrugDoseId() {
+        return this.drugDoseId;
+    }
+
+    public void setDrugDoseId(Collection<DrugDose> drugDoseId) {
+        this.drugDoseId = drugDoseId;
     }
 
     @Override
