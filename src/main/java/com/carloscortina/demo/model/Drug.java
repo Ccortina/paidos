@@ -22,7 +22,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.FetchType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -100,7 +99,7 @@ public class Drug implements Serializable {
     private ApplicationMethod applicationMethodId;
     @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
     @ManyToOne
-    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private AdministrationUnit administrationUnitId;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "idDrug")
     @LazyCollection(LazyCollectionOption.FALSE)

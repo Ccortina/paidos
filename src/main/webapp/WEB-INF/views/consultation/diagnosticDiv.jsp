@@ -3,14 +3,16 @@
 	<div class="panel-body">
 		<div class="row">
                     <div class="col-sm-12">
+                        <!-- This table shows the current diagnostics added to the consultation -->
                         <table id="consultationDiagnosticsTable">
                             <thead>
                                 <tr>
-                                    <th>Descripción</th>
-                                    <th>Diagnostic</th>
-                                    <th>Treatment</th>
-                                    <th>Drug</th>
-                                    <th>CommercialName</th>
+                                    <th>Descripción</th>    <!-- 0 -->
+                                    <th>Diagnostic</th>     <!-- 1 -->
+                                    <th>Treatment</th>      <!-- 2 -->
+                                    <th>Drug</th>           <!-- 3 -->
+                                    <th>CommercialName</th> <!-- 4 -->
+                                    <th>Eliminar</th>       <!-- 5 -->
                                 </tr>
                             </thead>
                         </table>
@@ -20,9 +22,6 @@
 		<div class="row">
 			<div class="col-sm-2">
 				<a data-toggle="modal" href="#modalDiagnostic" class="btn btn-primary">Agregar</a>
-			</div>
-			<div class="col-sm-2">
-				<button type="button" class="btn btn-danger">Quitar</button>
 			</div>
 			<div class="col-sm-3">
 				<a data-toggle="modal" href="#modalDrugNoAssociation" class="btn btn-primary">Medicamento sin asociaciones</a>

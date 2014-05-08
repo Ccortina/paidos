@@ -73,10 +73,34 @@ $(document).ready(function(){
         
         addRowSelectionDrugsNoAssociationTable();
         
+        //Reset the diagnostic wizar on modal close
         $('#modalDiagnostic').on('hidden.bs.modal', function (e) {
             resetDiagnosticWizard();
         });
+        
+        initializeActivitiesList();
+        
+        initializeSelectedActivitiesList();
 });
+
+//Add a row to the diagnostics table for the consultation
+//
+function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,id4){
+    $("#consultationDiagnosticsTable").dataTable().fnAddData([diagnostic + " , " +
+                                                                treatment + " , " +
+                                                                drug + " , " +
+                                                                commercialName,id1,id2,id3,id4,
+                                                                "<button type='button' class='btn btn-danger' onclick='deleteDiagnosticRow(this)'>\n\
+                                                                    Eliminar</button>"]);
+    resetDiagnosticWizard();
+                                                    
+}
+
+//Delete the row in the Consultation diagnositc table 
+function deleteDiagnosticRow(row){
+    console.log($(row).parent().parent());
+    $("#consultationDiagnosticsTable").dataTable().fnDeleteRow($(row).parent().parent()[0]);
+}
 
 function ajaxCall(ID){
         $.ajax({
@@ -156,6 +180,7 @@ function addRowSelectionDiagnosticsTable(){
         });
 }
 
+//Initialize the trreatment table
 function initializeTreatmentsTable(id){
     treatmentsTable = $('#treatmentsTable').dataTable( {
         "sDom":'<"top"f>rt<"bottom"lip><"clear">',
@@ -183,13 +208,16 @@ function initializeTreatmentsTable(id){
     });
 }
 
+//Add the cpability of selecting a row in the table of treatments
 function addRowSelectionTreatments(){
      $('#treatmentsTable tbody').on( 'click', 'tr', function (e){
+            //If a row is already selected
             if ( $(this).hasClass('row_selected')){
                 $(this).removeClass('row_selected');
             }
             else
                 {
+                    //If there's no selected row already.
                     treatmentsTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
                     selectedTreatmentData = treatmentsTable.fnGetData( this );
@@ -201,6 +229,7 @@ function addRowSelectionTreatments(){
                     }
                     else
                     {
+                        //Reset and redrwa the table
                         destroyDrugsTable("drugsDiv");
                         initializeDrugsTable(selectedTreatmentData[0]["idTreatment"]);
                         addRowSelectionDrugs();
@@ -210,6 +239,8 @@ function addRowSelectionTreatments(){
         });
 }
 
+//Reset the inner html of the table to prevent any residual code ot he previous 
+//table
 function destroyTreatmentsTable(id){
     $('#'+id).html("<div class='row'><table id='treatmentsTable'><thead>\n\
                     <tr><th>Id</th><th>Tratamiento</th></tr></thead><tbody>\n\
@@ -328,21 +359,11 @@ function initializeConsultationDiagnosticsTable(){
             {"bVisible":false},
             {"bVisible":false},
             {"bVisible":false},
-            {"bVisible":false}
+            {"bVisible":false},
+            null
         ]
     });
     
-}
-
-//Add a row to the diagnostics table for the consultation
-//
-function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,id4){
-    $("#consultationDiagnosticsTable").dataTable().fnAddData([diagnostic + " , " +
-                                                                treatment + " , " +
-                                                                drug + " , " +
-                                                                commercialName,id1,id2,id3,id4]);
-    resetDiagnosticWizard();
-                                                    
 }
 
 function initalizeDrugsNoAssociationTable(){
@@ -440,36 +461,156 @@ function resetDiagnosticWizard(){
 //Read each row of the table and get the data
 function generatePrescription(){
     var table = $("#consultationDiagnosticsTable").dataTable();
-    var cell;
+    var cell,commName;
     var rows = table.fnGetNodes(); //Get all the TR nodes of the table
-    var dose = 0.0;
+    var dose = 0.0, r1="";
+    
+    //Clean text area of the prescription
+    $("#consultationPrescription").val("");
+    
+    console.log($("#weight").val());
     
     //Check Weight is not empty or 0.
-    
-    
-    
-    //Iterate trought nodes to get data
-    for(var i=0;i<rows.length;i++)
+    if( $("#weight").val() !== '0' )
     {
-        cell = table.fnGetData(rows[i],3);
-        console.log(cell);
-        //Check if dose is based on weight or age
-        switch(cell[doseCalculationCriteriaId][idDoseCalculationCriteria])
+        //Iterate trought nodes to get data
+        for(var i=0;i<rows.length;i++)
         {
-            case 1: //Weight
-                
-            break;
-            case 2: //Age
-            break;
-            default: //NaN
+            cell = table.fnGetData(rows[i],3);
+            commName = table.fnGetData(rows[i],4);
+            console.log(cell);
+            
+            //Check if the cell cointain more than 1 object
+            if(cell.length>1){
+                cell =cell[0];
+            }
+            
+            //Check if dose is based on weight or age
+            switch(cell["doseCalculationCriteriaId"]["idDoseCalculationCriteria"])
+            {
+                case 1: //Weight
+                    dose = (($("#weight").val() * cell["drugDoseId"][0]["dose"])
+                                /cell["dailyFrequency"]/cell["concentration"]);
+                                
+                    r1 = dose + " " + cell["administrationUnitId"]["administrationUnit"] +
+                            " cada " + 24/cell["dailyFrequency"] + " hora(s) por ";       
+                break;
+                case 2: //Age
+                    //Age uses the dose to calculate the schedule, there can be multiple
+                    //doses based on different ages.
+                    if( cell["drugDoseId"].length > 1){
+                    //Sort the ages from min to max
+                        var ages = bubbleSort(cell["drugDoseId"]);
+                    
+                        for(var i=0; i < ages.length; i++){
+                            if($("#age").val() <= ages[i]["age"]){
+                                dose = 24/ages[i]["dose"];
+                                break;
+                            }
+                        }
+                    }else{
+                        dose = 24/cell["drugDoseId"][0]["dose"];
+                    }
+                      r1 = cell["dailyFrequency"] + " " + cell["administrationUnitId"]["administrationUnit"] +
+                            " cada " + dose + " hora(s) por " ;
+                    
+                break;
+                default: //NaN
+                      r1 = cell["administrationUnitId"]["administrationUnit"] +
+                           " cada " + 24/cell["dailyFrequency"] + " hora(s) por "; 
+            }
+            //The prescription
+            $("#consultationPrescription").val($("#consultationPrescription").val() + (i+1) + ".-" + commName["commercialName"] + 
+                                                    " , Presentacion: " + cell["drugPresentationId"]["presentation"] + 
+                                                    "\n" + cell["applicationMethodId"]["applicationMethod"] + " " +
+                                                    r1 +
+                                                    cell["treatmentDays"] + " dia(s).\n Horario de administracion: " + 
+                                                    cell["applicationSchedule"] + ".\n\n");
+            if(cell["notes"] !== ""){
+                $("#consultationPrescription").val($("#consultationPrescription").val() + "Observaciones: " + cell["notes"] + ".\n\n");
+            }                                
+            
         }
-        //Calculate the correct dose for the patient
-        dose = calculateDrugPrescription($('#weight').val(),cell["drugDoseId"][0]["dose"],
-                                            cell["dailyFrequency"],cell["concentration"]);
-                                            
-    }
+
+        $('#consultationTabMenu a[href="#receta"]').tab('show');
+    } else {
+        //Alert and stop process if weigth is 0
+        $("#sideBarAlert").html("<div class='alert alert-danger alert-dismissable'>\n\
+                                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>\n\
+                                    <strong>Peligro!</strong> El peso del paciente no puede ser 0.\n\
+                                    </div>");
+        
+    }    
+    
+    
 }
 
 function calculateDrugPrescription(weight,dose,frequency,concentration){
     return ((weight*dose)/frequency/concentration);
+}
+
+function bubbleSort(list){
+   var  swaps = 0,endIndex = 0,len = list.length - 1,hasSwap = true;
+ 
+    for (var i = 0; i < len; i++) {
+
+        hasSwap = false;
+
+        for (var j = 0, swapping, endIndex = len - i; j < endIndex; j++) {
+
+            if (list[j]["age"] > list[j + 1]["age"]) {
+
+                swapping = list[j];
+
+                list[j] = list[j + 1];
+                list[j + 1] = swapping;
+
+                swaps++;
+                hasSwap = true;
+            };
+        };
+
+        if (!hasSwap) {
+            break;
+        }
+    }
+    
+    return list;
+}
+
+//Activities section of the div
+
+function initializeActivitiesList()
+{
+    $('#tblActivities').dataTable({
+        "bSort":false,
+        "sScrollY": "200px",
+        "bScrollCollapse": true,
+        "bPaginate": false,
+        "bInfo": false,
+        "aoColumns":[
+            null,
+            null,
+            null,
+            {"bVisible":false}
+        ],
+        "oLanguage": { "sSearch": "Buscar:"}
+    });
+}
+
+function initializeSelectedActivitiesList()
+{
+    $('#tblSelectedActivities').dataTable({
+        "bSort":false,
+        "sScrollY": "200px",
+        "bScrollCollapse": true,
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+        "aoColumns":[
+            null,
+            null,
+            {"bVisible":false}
+        ]
+    });
 }

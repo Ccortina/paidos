@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -46,6 +47,7 @@ public class AdministrationUnit implements Serializable {
     @Column(name = "active")
     private short active;
     @OneToMany(mappedBy = "administrationUnitId")
+    @JsonIgnore
     private Collection<Drug> drugCollection;
 
     public AdministrationUnit() {

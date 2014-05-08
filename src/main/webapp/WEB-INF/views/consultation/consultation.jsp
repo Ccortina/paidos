@@ -17,6 +17,12 @@
 <!-- File for bootstrapWizard -->
 <c:url var="wizardJs" value="/resources/js/jquery.bootstrap.wizard.min.js" />
 
+<!-- Files for validation bootstrap -->
+<c:url var="validationJs" value="/resources/js/bootstrapValidator.min.js" />
+<c:url var="validationCSS" value="/resources/CSS/bootstrapValidator.min.css" />
+
+<!-- Files for confirmation bootstrap -->
+<c:url var="confirmationJs" value="/resources/js/confirmationBootstrap.js" />
 
 <script src="${dataTablesJS}" type="text/javascript"></script>
 
@@ -27,6 +33,10 @@
 <link href="${offcanvasCss}" rel="stylesheet" />
 
 <script src="${wizardJs}" type="text/javascript"></script>
+
+<script src="${validationJs}" type="text/javascript"></script>
+
+<script src="${confirmationJs}" type="text/javascript"></script>
 
 <!-- Make modal diagnostic bigger -->
 <style type="text/css">
@@ -66,6 +76,7 @@
                 <div class="col-sm-12">
                     <strong>Edad :</strong>
                     ${age[0]} A ${age[1]} M ${age[2]} D
+                    <input type="hidden" id="age" value="${age[0]}" />
                 </div>
             </div>
             <div class="row">    
@@ -89,8 +100,10 @@
                 <div class="col-sm-6">
                     <button type="button" class="btn btn-danger">Cancelar</button>
                 </div>
+            </div>   
+            <div id="sideBarAlert">
             </div>    
-        </div><!--/span-->
+        </div><!-- End side Bar-->
         
         <!-- Main column -->
         <div class="col-xs-12 col-sm-9">
@@ -114,39 +127,47 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <form:form role="form" id="appointmentData">
-                                    <div class="col-sm-1">
-                                        <label for="weight">Peso(Kg):</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input class="form-control input-sm" id="weight" type="text" value="${appointment.weigth}" />
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <label for="size">Talla(cm):</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input class="form-control input-sm" id="size" type="text" value="${appointment.size}" />
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <label for="pc">PC(cm):</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input class="form-control input-sm" id="pc" type="text" value="${appointment.pc}" />
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <label for="ta">TA:</label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <input class="form-control input-sm" id="ta" type="text" 
-                                                        value="${appointment.ta} / ${appointment.ta2} - ${appointment.averageTa}" />
-                                    </div>                              
-                                    <div class="col-sm-2">
-                                        <label for="temperature">Temperatura:</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input class="form-control input-sm" id="temperature" type="text" value="${appointment.temperature}" />
-                                    </div> 
-                                </form:form><!-- form -->
+                                <div class="col-sm-12">
+                                    <!-- Data obtained from the examination previous to the appointment-->
+                                    <form:form role="form" id="appointmentData">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <label for="weight">Peso(Kg):</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <!-- The min value must be 0  and the fiel accepts only decimal numbers -->
+                                                <input class="form-control input-sm" id="weight" type="number" step="any" min="0" value="${appointment.weigth}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="temperature">Temperatura:</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control input-sm" id="temperature" type="number" step="any" min="0" value="${appointment.temperature}" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <label for="size">Talla(cm):</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control input-sm" id="size" type="number" step="any" min="0" value="${appointment.size}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="ta">TA:</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control input-sm" id="ta" type="number" step="any" min="0" 
+                                                            value="${appointment.ta} / ${appointment.ta2} - ${appointment.averageTa}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="pc">PC(cm):</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control input-sm" id="pc" type="number" step="any" min="0" value="${appointment.pc}" />
+                                            </div>
+                                        </div>
+                                    </form:form><!-- form -->
+                                </div><!-- col -->
                             </div><!-- row -->
                         </div><!-- panel body -->
                     </div><!-- panel -->
@@ -154,7 +175,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <ul class="nav nav-tabs">
+                            <ul id="consultationTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#generales" data-toggle="tab">Generales</a></li>
                               <li><a href="#antecedentes" data-toggle="tab">Antecedentes</a></li>
                               <li><a href="#documentos" data-toggle="tab">Documentos</a></li>
@@ -163,7 +184,7 @@
                               <li><a href="#labGabinetes" data-toggle="tab">Lab. Gabinete</a></li>
                               <li><a href="#medidas" data-toggle="tab">Medidas</a></li>
                               <li><a href="#peeaef" data-toggle="tab">PEEA/E.F</a></li>
-                              <li><a href="#diagnostico" data-toggle="tab">Diagnostico</a></li>
+                              <li id="consultationDiagnosticTab" ><a href="#diagnostico" data-toggle="tab">Diagnostico</a></li>
                               <li><a href="#receta" data-toggle="tab">Receta</a></li>
                               <li><a href="#actividades" data-toggle="tab">Actividades</a></li>
                               <li><a href="#resumen" data-toggle="tab">Resumen</a></li>
@@ -188,7 +209,33 @@
                                 <div id="receta" class="tab-pane">
                                     <textarea id="consultationPrescription" class="form-control" rows="10"></textarea>
                                 </div>
-                                <div id="actividades" class="tab-pane">actividades</div>
+                                <div id="actividades" class="tab-pane">
+                                    <div class="row">
+                                        <div id="divConsultationActivities" class="col-sm-6">
+                                            <table id="tblActivities">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Actividad</th>
+                                                        <th>Tipo</th>
+                                                        <th>Costo</th>
+                                                        <th>FullDescription</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div id="divConsultationSelectedActivities" class="col-sm-6">
+                                            <table id="tblSelectedActivities">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Actividad</th>
+                                                        <th>Costo</th>
+                                                        <th>FullDescription</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div id="resumen" class="tab-pane">resumen</div>
                             </div><!-- tab-content div -->
                         </div><!-- col for the tabs  -->

@@ -134,9 +134,9 @@ public class ConsultationController {
 		currentRecord.setPerinatalBackground(changes.getPerinatalBackground());
 		recordService.updateItem(currentRecord);
 		String message = " <div class='alert alert-success alert-dismissable'> " +
-								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
-								"<div>Se han guardado los cambios</div>" +
-						  "</div>";
+                                        "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                                            "<div>Se han guardado los cambios</div>" +
+                                                "</div>";
 		return message;
 	}
 	
@@ -315,13 +315,16 @@ public class ConsultationController {
 		return ( format.format(date));
 	}
 	
+        //This method process the current date and calculates the age in years,months and days of the pacient
 	private String calculateAge(Date date){
+                //The format of the date years months days
 		SimpleDateFormat temp = new SimpleDateFormat("yyyy-MM-dd");
 		String[] birthdayElements = temp.format(date).split("-");
+                //Get current date
 		Calendar cd = Calendar.getInstance();
 		Calendar bd = new GregorianCalendar(Integer.parseInt(birthdayElements[0]),
-											Integer.parseInt(birthdayElements[1]),
-											Integer.parseInt(birthdayElements[2]));
+                                                    Integer.parseInt(birthdayElements[1]),
+                                                    Integer.parseInt(birthdayElements[2]));
 		
 		int month = Integer.parseInt(birthdayElements[1]);
 		int day = Integer.parseInt(birthdayElements[2]);
