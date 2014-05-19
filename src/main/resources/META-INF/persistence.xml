@@ -3,6 +3,12 @@
   <persistence-unit name="com.carloscortina_demo_war_1.0.0-BUILD-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.carloscortina.demo.model.DrugDose</class>
+    <class>com.carloscortina.demo.model.Vaccine</class>
+    <class>com.carloscortina.demo.model.Activity</class>
+    <class>com.carloscortina.demo.model.ActivityType</class>
+    <class>com.carloscortina.demo.model.VaccineType</class>
+    <class>com.carloscortina.demo.model.Patient_1</class>
+    <class>com.carloscortina.demo.model.Relative_1</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

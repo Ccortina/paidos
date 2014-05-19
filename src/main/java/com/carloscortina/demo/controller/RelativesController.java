@@ -85,7 +85,7 @@ public class RelativesController {
 		newRelative.setState(form.getState());
 		newRelative.setCountry(form.getCountry());
 		newRelative.setCp(form.getCp());
-		newRelative.setReligion(religion);
+		//newRelative.setr(religion);
 		
 		return newRelative;
 	}

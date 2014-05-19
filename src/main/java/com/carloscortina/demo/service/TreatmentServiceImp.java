@@ -45,5 +45,10 @@ public class TreatmentServiceImp implements TreatmentService{
 		// TODO Auto-generated method stub
 		return treatmentDao.getListOfItem(query);
 	}
+
+    @Override
+    public void delete(Treatment item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 }

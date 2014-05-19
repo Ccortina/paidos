@@ -38,9 +38,4 @@ public class PatientRelativeId implements java.io.Serializable {
 	public void setRelativeId(int relativeId) {
 		this.relativeId = relativeId;
 	}
-	
-	
-	
-	
-	
 }

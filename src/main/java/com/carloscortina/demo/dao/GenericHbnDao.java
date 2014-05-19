@@ -33,6 +33,11 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 		getSession().save(item);
 	}
 
+        public void delete(T item) {
+            getSession().delete(item);
+        }
+        
+        @Override
 	public void updateItem(T item){
 		// Update an object
 		getSession().update(item);

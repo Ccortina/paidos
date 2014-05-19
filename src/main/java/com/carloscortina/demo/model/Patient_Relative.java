@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 
 import javax.persistence.EmbeddedId;
@@ -19,12 +20,14 @@ public class Patient_Relative implements Serializable{
 	@EmbeddedId
 	@JoinColumn(name = "idRelative", referencedColumnName = "idRelative", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+        @JsonIgnore
     private Relative relative;
     @JoinColumn(name = "idRelationship", referencedColumnName = "idRelationship")
     @ManyToOne
     private Relationship idRelationship;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Patient patient;
     
 	public Relative getRelative() {

@@ -13,23 +13,38 @@ import com.carloscortina.demo.model.Patient;
 @Transactional
 public class PatientServiceImp implements PatientService {
 
-	@Autowired
-	PatientDao patientDao;
-	
-	@Override
-	public void createPatient(Patient patient) {
-		// TODO Auto-generated method stub
-		patientDao.createPatient(patient);
-	}
+    @Autowired
+    PatientDao patientDao;
 
-	@Override
-	public List<Patient> getPatients() {
-		// TODO Auto-generated method stub
-		return patientDao.getPatients();
-	}
-	
-	public Patient getPatientById(int id){
-		return patientDao.getPatientById(id);
-	}
+    @Override
+    public void create(Patient item) {
+        patientDao.create(item);
+    }
 
+    @Override
+    public Patient getById(int id) {
+        return patientDao.getById(id);
+    }
+
+    @Override
+    public void updateItem(Patient item) {
+        patientDao.updateItem(item);
+    }
+
+    @Override
+    public List<Patient> getAll(String table) {
+        return patientDao.getAll(table);
+    }
+
+    @Override
+    public List<Patient> getListOfItem(String query) {
+        return patientDao.getListOfItem(query);
+    }
+
+    @Override
+    public void delete(Patient item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+	
+	
 }

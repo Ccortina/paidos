@@ -47,4 +47,9 @@ public class DrugServiceImp implements DrugService
     public List<Drug> getListOfItem(String query) {
         return drugDao.getListOfItem(query);
     }
+
+    @Override
+    public void delete(Drug item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

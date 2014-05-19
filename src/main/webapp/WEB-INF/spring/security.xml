@@ -21,13 +21,13 @@
 	<http auto-config="true"
 			use-expressions="true" >
 		<intercept-url pattern="/" access="permitAll"/>	
-		<intercept-url pattern="/login/*" access="permitAll"/>
+		<!-- <intercept-url pattern="/login/*" access="permitAll"/>
 		<intercept-url pattern="/logout" access="permitAll"/>
 		<intercept-url pattern="/consultation/*" access="permitAll"/>
 		<intercept-url pattern="/signup/*" access="hasRole('Administrador')"/>
-		<intercept-url pattern="/patients/*" access="hasRole('Doctor')"/>
-		<intercept-url pattern="/relatives/*" access="hasRole('Doctor')"/>		
-		<intercept-url pattern="/**" access="hasRole('Asistente')"/>
+		<intercept-url pattern="/patients/*" access="permitAll"/>
+		<intercept-url pattern="/relatives/*" access="hasRole('Doctor')"/>-->		
+		<intercept-url pattern="/**" access="permitAll"/>
 		<form-login 
 			login-page="/login/form"
 			login-processing-url="/login"

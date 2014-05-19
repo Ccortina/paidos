@@ -47,5 +47,10 @@ public class DrugDoseServiceImp implements DrugDoseService{
     public List<DrugDose> getListOfItem(String query) {
         return drugDose.getListOfItem(query);
     }
+
+    @Override
+    public void delete(DrugDose item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

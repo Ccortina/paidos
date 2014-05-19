@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carloscortina.demo.json.JsonPack;
+import com.carloscortina.demo.model.Activity;
+import com.carloscortina.demo.model.ActivityType;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
@@ -31,6 +33,9 @@ import com.carloscortina.demo.model.PerBackNoPat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Treatment;
+import com.carloscortina.demo.model.Vaccine;
+import com.carloscortina.demo.service.ActivityService;
+import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.CommercialNameService;
@@ -41,6 +46,8 @@ import com.carloscortina.demo.service.PerBackNoPatService;
 import com.carloscortina.demo.service.RecordService;
 import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.TreatmentService;
+import com.carloscortina.demo.service.VaccineService;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -67,6 +74,12 @@ public class ConsultationController {
         private CommercialNameService commercialNameService;
         @Autowired
         private DrugDoseService drugDoseService;
+        @Autowired
+        private ActivityService activityService;
+        @Autowired
+        private VaccineService vaccineService;
+        @Autowired
+        private ActivityTypeService activityTypeService;
         
 	
 	@RequestMapping(value="appointments")
@@ -80,7 +93,7 @@ public class ConsultationController {
 	public String startConsultation(Model model){
 		int IdAppointment = 1;
 		Appointment appointment = appointmentService.getById(IdAppointment);
-		Patient patient = patientService.getPatientById(appointment.getIdPatient().getId());
+		Patient patient = patientService.getById(appointment.getIdPatient().getId());
 		Record record = recordService.getByPatientId(patient);
 		PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
 		
@@ -199,6 +212,57 @@ public class ConsultationController {
 						  "</div>";
 		return message;
 	}
+        
+        //Create a new activity and save it in the DB
+        @RequestMapping(value="addNewActivity", method=RequestMethod.POST)
+	public @ResponseBody String addNewActivity(@RequestParam(value="activity") String activity,
+                                                   @RequestParam(value="activityCost") String cost,
+                                                   @RequestParam(value="idActivityType") String type,
+                                                   @RequestParam(value="consultationDefault" , required = false) String cDefault,
+                                                   @RequestParam(value="idVaccine" , required = false) String vaccine)
+	{
+		Activity newActivity = new Activity();
+                newActivity.setActivity(activity);
+                newActivity.setActivityCost(Double.parseDouble(cost));
+                newActivity.setIdActivityType(activityTypeService.getById(Integer.parseInt(type)));
+                newActivity.setActive(1);
+                if( vaccine!= null ){
+                    newActivity.setIdVaccine(vaccineService.getById(Integer.parseInt(vaccine)));
+                }
+                if( cDefault != null){ 
+                    newActivity.setConsultationDefault(Integer.parseInt(cDefault));
+                }
+                
+                activityService.create(newActivity);
+                return ("function" );
+	}
+        
+        @RequestMapping(value="editActivity", method=RequestMethod.POST)
+	public @ResponseBody String editActivity(@RequestParam(value="idActivity") String idActivity,
+                                                   @RequestParam(value="activity") String activity,
+                                                   @RequestParam(value="activityCost") String cost,
+                                                   @RequestParam(value="idActivityType") String type,
+                                                   @RequestParam(value="consultationDefault" , required = false) String cDefault,
+                                                   @RequestParam(value="idVaccine" , required = false) String vaccine)
+        {
+		Activity modifiedActivity = activityService.getById(Integer.parseInt(idActivity));
+                
+                modifiedActivity.setActivity(activity);
+                modifiedActivity.setActivityCost(Double.parseDouble(cost));
+                modifiedActivity.setIdActivityType(activityTypeService.getById(Integer.parseInt(type)));
+                modifiedActivity.setActive(1);
+                if( vaccine != null ){
+                    if( !vaccine.isEmpty() ){
+                        modifiedActivity.setIdVaccine(vaccineService.getById(Integer.parseInt(vaccine)));
+                    }
+                }
+                if( cDefault != null){ 
+                    modifiedActivity.setConsultationDefault(Integer.parseInt(cDefault));
+                }
+                
+                activityService.updateItem(modifiedActivity);
+                return ("function");
+	}
 	
 	@RequestMapping(value="frequentDiagnostics")
 	public @ResponseBody JsonPack<Cie10> frequentDiagnostics()
@@ -254,6 +318,7 @@ public class ConsultationController {
 		return result;
 	}
         
+        //Return a json with all the Drugs(Medecine) in the system
         @RequestMapping(value="getAllDrugs")
 	public @ResponseBody JsonPack<Drug> allDrugs()
 	{
@@ -261,6 +326,28 @@ public class ConsultationController {
                 
 		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
 		return result;
+	}
+        
+        //This method returns a json with all the activities 
+        @RequestMapping(value="getAllActivities")
+	public @ResponseBody JsonPack<Activity> allActivities()
+	{
+		String query = "FROM Activity t ";
+                
+		JsonPack<Activity> result = new JsonPack<Activity>(activityService.getListOfItem(query));
+		
+                return result;
+	}
+        
+        //This method returns a json with all the vaccines in the system 
+        @RequestMapping(value="getAllVaccines")
+	public @ResponseBody JsonPack<Vaccine> allVaccines()
+	{
+		//String query = "FROM Vaccine t ";
+                
+		JsonPack<Vaccine> result = new JsonPack<Vaccine>(vaccineService.getAll("Vaccine"));
+		
+                return result;
 	}
 	
 	private Relative getFather(Set<Patient_Relative> relatives)
@@ -304,12 +391,14 @@ public class ConsultationController {
 		return ( list );
 	}
 	
+        //Return current system date
 	private String getCurrentDate(){
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		return ( format.format(date));
 	}
 	
+        //Recives a date and formats in day month year format
 	private String formatDate(Date date){
 		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		return ( format.format(date));

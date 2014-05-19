@@ -46,5 +46,10 @@ public class CommercialNameServiceImp implements CommercialNameService{
     public List<CommercialName> getListOfItem(String query) {
         return commercialName.getListOfItem(query);
     }
+
+    @Override
+    public void delete(CommercialName item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

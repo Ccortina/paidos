@@ -46,4 +46,9 @@ public class Cie10ServiceImp implements Cie10Service{
 		return cie10Dao.getListOfItem(query);
 	}
 
+    @Override
+    public void delete(Cie10 item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

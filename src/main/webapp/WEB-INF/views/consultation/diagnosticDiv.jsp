@@ -27,7 +27,7 @@
 				<a data-toggle="modal" href="#modalDrugNoAssociation" class="btn btn-primary">Medicamento sin asociaciones</a>
 			</div>
 			<div class="col-sm-2 col-sm-offset-3">
-				<button type="button" id="generatePrescriptionButton"class="btn btn-primary">Generar receta</button>
+				<button type="button" id="generatePrescriptionButton" class="btn btn-primary">Generar receta</button>
 			</div>
 		</div>
 	</div>
@@ -168,7 +168,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table id="drugsNoAssociationTable" >
+                        <table id="drugsNoAssociationTable">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>

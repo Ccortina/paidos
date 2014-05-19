@@ -8,7 +8,7 @@
 
 <!-- Files for data tables function -->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
-<c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.css" />
+<c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
 
 <!-- Files for the offcanvas function of bootstrap -->
 <c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
@@ -212,30 +212,39 @@
                                 <div id="actividades" class="tab-pane">
                                     <div class="row">
                                         <div id="divConsultationActivities" class="col-sm-6">
-                                            <table id="tblActivities">
+                                            <table id="tblActivities" class="hover cell-border">
                                                 <thead>
                                                     <tr>
                                                         <th>Actividad</th>
                                                         <th>Tipo</th>
                                                         <th>Costo</th>
-                                                        <th>FullDescription</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div id="divConsultationSelectedActivities" class="col-sm-6">
-                                            <table id="tblSelectedActivities">
+                                            <table id="tblSelectedActivities" class="hover cell-border">
                                                 <thead>
                                                     <tr>
                                                         <th>Actividad</th>
                                                         <th>Costo</th>
-                                                        <th>FullDescription</th>
+                                                        <th>Eliminar</th>
                                                     </tr>
                                                 </thead>
                                             </table>
+                                        </div> <!-- Selected activities Div -->
+                                    </div> <!-- Actividades div Row -->
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="button" class="btn btn-primary" value="Agregar" onclick="addSelectedAcitivitiesRow()"/>
+                                            <a data-toggle="modal" href="#modalAddNewActivity" class="btn btn-primary">Nuevo</a>
+                                            <a data-toggle="modal" href="#modalEditActivity" class="btn btn-primary" onclick="editSelectedActivity();">Modificar</a>
+                                            <jsp:include page="addModifyActivities.jsp" />
+                                        </div>
+                                        <div class="col-sm-6">
                                         </div>
                                     </div>
-                                </div>
+                                </div> <!-- Actividades div -->
                                 <div id="resumen" class="tab-pane">resumen</div>
                             </div><!-- tab-content div -->
                         </div><!-- col for the tabs  -->

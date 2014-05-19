@@ -1,5 +1,6 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -15,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name="Relative")
@@ -202,6 +205,7 @@ public class Relative implements Serializable{
 	}
 	
 	@OneToMany(mappedBy="relative")
+        @LazyCollection(LazyCollectionOption.FALSE)
 	public Set<Patient_Relative> getPatientRelative() {
 		return patientRelative;
 	}
