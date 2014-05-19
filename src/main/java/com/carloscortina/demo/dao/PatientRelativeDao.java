@@ -4,6 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.PatientRelativeId;
 import com.carloscortina.demo.model.Patient_Relative;
 
 /**
@@ -11,4 +12,6 @@ import com.carloscortina.demo.model.Patient_Relative;
  * @author Ccortina_Mac
  */
 public interface PatientRelativeDao extends GenericDao<Patient_Relative>{
+    
+
 }

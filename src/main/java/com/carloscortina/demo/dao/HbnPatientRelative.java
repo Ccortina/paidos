@@ -4,6 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.PatientRelativeId;
 import com.carloscortina.demo.model.Patient_Relative;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class HbnPatientRelative extends GenericHbnDao<Patient_Relative> implements PatientRelativeDao{
 
-    
 }
