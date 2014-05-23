@@ -5,7 +5,5 @@ import java.util.List;
 import com.carloscortina.demo.model.Appointment;
 
 public interface AppointmentDao extends GenericDao<Appointment> {
-
-	public List<Appointment> getRelatedData();
 	
 }

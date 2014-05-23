@@ -4,7 +4,9 @@
  */
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,6 +23,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -67,6 +72,12 @@ public class Activity implements Serializable {
     @ManyToOne(optional = false)
     @LazyCollection(LazyCollectionOption.FALSE)
     private ActivityType idActivityType;
+    @JoinTable(name = "ActivityConsultation", joinColumns = {
+        @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity")}, inverseJoinColumns = {
+        @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")})
+    @ManyToMany
+    @JsonIgnore
+    private Collection<Consultation> consultationCollection;
 
     public Activity() {
     }
@@ -138,6 +149,18 @@ public class Activity implements Serializable {
     public void setIdActivityType(ActivityType idActivityType) {
         this.idActivityType = idActivityType;
     }
+
+    @XmlTransient
+    public Collection<Consultation> getConsultationCollection() {
+        return consultationCollection;
+    }
+
+    public void setConsultationCollection(Collection<Consultation> consultationCollection) {
+        this.consultationCollection = consultationCollection;
+    }
+    
+    
+    
 
     @Override
     public int hashCode() {

@@ -50,6 +50,10 @@
     	color:red;
 	}‹
 </style>
+<input type="hidden" id="consultationDoctorId" value="${doctor.id}">
+<input type="hidden" id="consultationDoctor" value="${doctor.staff.firstName} ${doctor.staff.lastName}">
+<input type="hidden" id="consultationPatientId" value="${patient.id}">
+
 <!-- Main div container , centers everything-->
 <div class="container">
 
@@ -95,7 +99,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-6">
-                    <button type="button" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveConsultation();">Guardar</button>
                 </div>
                 <div class="col-sm-6">
                     <button type="button" class="btn btn-danger">Cancelar</button>
@@ -136,13 +140,13 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <!-- The min value must be 0  and the fiel accepts only decimal numbers -->
-                                                <input class="form-control input-sm" id="weight" type="number" step="any" min="0" value="${appointment.weigth}" />
+                                                <input class="form-control input-sm" id="weight" name="weight" type="number" step="any" min="0" value="" />
                                             </div>
                                             <div class="col-sm-2">
                                                 <label for="temperature">Temperatura:</label>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="temperature" type="number" step="any" min="0" value="${appointment.temperature}" />
+                                                <input class="form-control input-sm" id="temperature" name="temperature" type="number" step="any" min="0" value="" />
                                             </div>
                                         </div>
                                         <div class="row">
@@ -150,20 +154,20 @@
                                                 <label for="size">Talla(cm):</label>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="size" type="number" step="any" min="0" value="${appointment.size}" />
+                                                <input class="form-control input-sm" id="size" name="size" type="number" step="any" min="0" value="" />
                                             </div>
                                             <div class="col-sm-2">
                                                 <label for="ta">TA:</label>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="ta" type="number" step="any" min="0" 
-                                                            value="${appointment.ta} / ${appointment.ta2} - ${appointment.averageTa}" />
+                                                <input class="form-control input-sm" id="ta" name="ta" type="number" step="any" min="0"
+                                                       />
                                             </div>
                                             <div class="col-sm-2">
                                                 <label for="pc">PC(cm):</label>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="pc" type="number" step="any" min="0" value="${appointment.pc}" />
+                                                <input class="form-control input-sm" id="pc" name="pc" type="number" step="any" min="0" value="" />
                                             </div>
                                         </div>
                                     </form:form><!-- form -->
@@ -187,7 +191,6 @@
                               <li id="consultationDiagnosticTab" ><a href="#diagnostico" data-toggle="tab">Diagnostico</a></li>
                               <li><a href="#receta" data-toggle="tab">Receta</a></li>
                               <li><a href="#actividades" data-toggle="tab">Actividades</a></li>
-                              <li><a href="#resumen" data-toggle="tab">Resumen</a></li>
                             </ul>
 
                             <div class="tab-content">
@@ -245,7 +248,6 @@
                                         </div>
                                     </div>
                                 </div> <!-- Actividades div -->
-                                <div id="resumen" class="tab-pane">resumen</div>
                             </div><!-- tab-content div -->
                         </div><!-- col for the tabs  -->
                     </div>

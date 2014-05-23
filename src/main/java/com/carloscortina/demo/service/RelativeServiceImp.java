@@ -34,5 +34,10 @@ public class RelativeServiceImp implements RelativeService {
 		// TODO Auto-generated method stub
 		return relativeDao.getAllRelatives();
 	}
+        
+        @Override
+        public void updateRelative(Relative item){
+            relativeDao.updateRelative(item);
+        }
 
 }

@@ -1,21 +1,19 @@
 package com.carloscortina.demo.model;
 
-import java.util.Collection;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 
 @Entity
-@Table(name = "perBackNoPat")
+@Table(name = "perbacknopat")
 public class PerBackNoPat{
 
     @Id
@@ -32,9 +30,6 @@ public class PerBackNoPat{
     
     @Column(name = "headCircumference")
     private Double headCircumference;
-    
-    @Column(name = "birthMethod")
-    private Integer birthMethod;
     
     @Column(name = "apgar1Minute")
     private Integer apgar1Minute;
@@ -116,8 +111,9 @@ public class PerBackNoPat{
     @Column(name = "positiveFacts")
     private String positiveFacts;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPerBackNoPat")
-    private Collection<Record> recordCollection;
+    @JoinColumn(name = "birthMethod", referencedColumnName = "idBirthMethod")
+    @ManyToOne
+    private Birthmethod birthMethod;
 
     public PerBackNoPat() {
     }
@@ -157,15 +153,7 @@ public class PerBackNoPat{
     public void setHeadCircumference(Double headCircumference) {
         this.headCircumference = headCircumference;
     }
-
-    public Integer getBirthMethod() {
-        return birthMethod;
-    }
-
-    public void setBirthMethod(Integer birthMethod) {
-        this.birthMethod = birthMethod;
-    }
-
+    
     public Integer getApgar1Minute() {
         return apgar1Minute;
     }
@@ -366,14 +354,15 @@ public class PerBackNoPat{
         this.positiveFacts = positiveFacts;
     }
 
-
-    public Collection<Record> getRecordCollection() {
-        return recordCollection;
+    public Birthmethod getBirthMethod() {
+        return birthMethod;
     }
 
-    public void setRecordCollection(Collection<Record> recordCollection) {
-        this.recordCollection = recordCollection;
+    public void setBirthMethod(Birthmethod birthMethod) {
+        this.birthMethod = birthMethod;
     }
+
+    
 
     @Override
     public int hashCode() {

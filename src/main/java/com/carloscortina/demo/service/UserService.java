@@ -8,5 +8,6 @@ public interface UserService {
 
 	boolean registerUser(User user,Errors errors);
 	User getUserByUsername(String Username);
+        User getUserById(int id);
 	
 }

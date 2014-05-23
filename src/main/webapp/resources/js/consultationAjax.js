@@ -18,15 +18,8 @@ var drugsTable = false;
 var drugDose;
 
 $(document).ready(function(){
-        $('#sibilingsTable tbody tr').dblclick(function(e){
-                alert( "Handler for .dblclick() called." );
-        });
 
-        oTable = $('#sibilingsTable').dataTable({
-                "bFilter":false,
-                "bPaginate":false,
-                "bSort":false
-        });
+        initializeSibilingsTable();
 
         //Diagnostics Table Initialization
         initializeDiagnosticsTable();
@@ -85,8 +78,67 @@ $(document).ready(function(){
         initializeActivityVaccineList("tblNewActivityVaccine");
         
         initializeActivityVaccineList("tblEditActivityVaccine");
+        
+        addSaveOnChangeToForm();
+
 });
 
+//Sibilings table
+function initializeSibilingsTable(){
+    var idPatient=$("#consultationPatientId").val();
+
+    $('#sibilingsTable').DataTable({
+        "searching":false,
+        "info":false,
+        "ordering":false,
+        "paging":false,
+        "ajax":{
+            "url":"./consultation/getConsultationSibilings",
+            "data":{"idpatient":idPatient}},
+        "columns":[
+            {"data":"fullName"}
+        ],
+        "initComplete":function(settings,json){
+            $('#sibilingsTable tbody tr').dblclick(function(e){
+                
+                var idSibiling = $("#sibilingsTable").DataTable().row(this).data()["idPatient"]["id"];
+                openSibilingFile(idSibiling);
+            });
+        }
+    });
+}
+
+
+//Sibilings table
+function initializeConsultationDiagnosticAbstractTable(){
+    var idPatient=$("#consultationPatientId").val();
+
+    $('#tblConsultationDiagnosticAbstract').DataTable({
+        "info":false,
+        "ordering":false,
+        "paging":false,
+        "ajax":{
+            "url":"./consultation/getConsultationSibilings",
+            "data":{"idpatient":idPatient}},
+        "columns":[
+            {"data":"fullName"}
+        ],
+        "initComplete":function(settings,json){
+            $('#sibilingsTable tbody tr').dblclick(function(e){
+                
+                var idSibiling = $("#sibilingsTable").DataTable().row(this).data()["idPatient"]["id"];
+                openSibilingFile(idSibiling);
+            });
+        }
+    });
+}
+
+function addSaveOnChangeToForm(){
+    $( ".onChange" ).change(function() {
+        ajaxCall($(this).closest('form').attr('id'));
+        
+    });
+}
 //Add a row to the diagnostics table for the consultation
 //
 function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,id4){
@@ -145,7 +197,7 @@ function initializeDiagnosticsTable(){
         "sDom":'<"top"f>rt<"bottom"lip><"clear">',
         "aaSorting": [[ 1, "desc" ]],
         "iDeferLoading": 57,
-        "sAjaxSource":"./diagnostics",
+        "sAjaxSource":"./consultation/diagnostics",
         "aoColumns":[
              {"mDataProp":"diagnostic"},
              {"mDataProp":"lastUsed",
@@ -194,7 +246,7 @@ function initializeTreatmentsTable(id){
     treatmentsTable = $('#treatmentsTable').dataTable( {
         "sDom":'<"top"f>rt<"bottom"lip><"clear">',
         "bSort":false,
-        "sAjaxSource":"./diagnosticTreatment",
+        "sAjaxSource":"./consultation/diagnosticTreatment",
         "fnServerParams": function ( aoData ) { aoData.push( {name:"diagnosticId",value:id} ); },
         "aoColumns": [
                      {   "bVisible": false,
@@ -260,7 +312,7 @@ function initializeDrugsTable(id){
         drugsTable = $('#drugsTable').dataTable( {
             "sDom":'<"top"f>rt<"bottom"lip><"clear">',
             "bSort":true,
-            "sAjaxSource":"./drugsByTreatment",
+            "sAjaxSource":"./consultation/drugsByTreatment",
             "fnServerParams": function ( aoData ) { aoData.push( {name:"treatmentId",value:id} ); },
             "aoColumns": [
                          { "mRender": function(data,type,full){
@@ -320,7 +372,7 @@ function initializeCommercialNamesTable(id){
     commercialNamesTable = $('#commercialNamesTable').dataTable( {
         "sDom":'<"top"f>rt<"bottom"lip><"clear">',
         "bSort":true,
-        "sAjaxSource":"./drugsCommercialNames",
+        "sAjaxSource":"./consultation/drugsCommercialNames",
         "fnServerParams": function ( aoData ) { aoData.push( {name:"drugId",value:id} ); },
         "aoColumns":[{"mDataProp":"commercialName"}],
         "oLanguage": {
@@ -388,7 +440,7 @@ function initalizeDrugsNoAssociationTable(){
                 "sNext": "Siguiente"
             }
         },
-        "sAjaxSource":"./getAllDrugs",
+        "sAjaxSource":"./consultation/getAllDrugs",
         "aoColumns": [
                      { "mData":"drug" },
                      { "mData":"drugPresentationId.presentation"},
@@ -423,7 +475,7 @@ function initalizeDrugsNoAssociationCommercialNameTable(drugId){
         "bFilter":false,
         "bInfo":false,
         "bPaginate":false,
-        "sAjaxSource":"./drugsCommercialNames",
+        "sAjaxSource":"./consultation/drugsCommercialNames",
         "fnServerParams": function ( aoData ) { aoData.push( {name:"drugId",value:drugId} ); },
         "aoColumns":[{"mData":"commercialName"}],
         "oLanguage": { 
@@ -479,7 +531,8 @@ function generatePrescription(){
     
     //Clean text area of the prescription
     $("#consultationPrescription").val("");
-    
+    var prescriptionHeader = $("#consultationDoctor").val() + "\t\t\t"+ getCurrentDate()+"\n\n\n";
+    $("#consultationPrescription").val(prescriptionHeader);
     
     //Check Weight is not empty or 0.
     if( $("#weight").val() !== '0' )
@@ -597,7 +650,7 @@ function initializeActivitiesList()
         "bPaginate": false,
         "bInfo": false,
         "aaSorting": [[ 2, "asc" ]],
-        "sAjaxSource":"./getAllActivities",
+        "sAjaxSource":"./consultation/getAllActivities",
         "aoColumns":[
             {"mData":"activity"},
             {"mData":"idActivityType.type"},
@@ -661,6 +714,12 @@ function deleteSelectedActivitiescRow(row){
     $("#tblSelectedActivities").dataTable().fnDeleteRow($(row).parent().parent()[0]);
 }
 
+function addSelectedAcitivitiesRow(){
+    var table = $("#tblSelectedActivities").DataTable();
+    
+    table.row.add($('#tblActivities').DataTable().row('.row_selected').data()).draw();
+}
+
 function initializeActivityVaccineList(tbl)
 {
     $('#'+tbl).DataTable({
@@ -669,7 +728,7 @@ function initializeActivityVaccineList(tbl)
         "scrollCollapse": true,
         "paging": false,
         "info":false,
-        "ajax":"./getAllVaccines",
+        "ajax":"./consultation/getAllVaccines",
         "columns":[
             {"data":"idVaccine",
                 "visible":false},
@@ -703,6 +762,13 @@ function addRowSelectionActivityVaccineList(tbl){
                     }
                 }
         });
+}
+
+
+function saveConsultation(){
+    //Save appointment data
+
+    
 }
 
 function editSelectedActivity(){
@@ -740,4 +806,27 @@ function editSelectedActivity(){
     }
     });
     
+}
+
+function getCurrentDate(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd='0'+dd;
+    } 
+
+    if(mm<10) {
+        mm='0'+mm;
+    } 
+
+    today = mm+'/'+dd+'/'+yyyy;
+    return today;
+}
+
+function openSibilingFile(idSibiling){
+    var url= "patients/file/"+idSibiling;
+    window.open(url);
 }

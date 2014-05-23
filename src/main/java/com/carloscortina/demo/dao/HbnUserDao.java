@@ -33,4 +33,11 @@ public class HbnUserDao implements UserDao {
 		return (User) q.uniqueResult();
 	}
 
+    @Override
+    public User getUserById(int id) {
+        return (User)getSession().get(User.class, id);
+    }
+        
+        
+
 }

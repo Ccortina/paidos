@@ -1,12 +1,20 @@
 package com.carloscortina.demo.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,125 +27,152 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Diagnostic.findAll", query = "SELECT d FROM Diagnostic d"),
-    @NamedQuery(name = "Diagnostic.findByIdConsultation", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idConsultation = :idConsultation"),
-    @NamedQuery(name = "Diagnostic.findByIdPatient", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idPatient = :idPatient"),
-    @NamedQuery(name = "Diagnostic.findByIdCIE10", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idCIE10 = :idCIE10"),
-    @NamedQuery(name = "Diagnostic.findByIdTreatment", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idTreatment = :idTreatment"),
-    @NamedQuery(name = "Diagnostic.findByIdMedecine", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idMedecine = :idMedecine"),
-    @NamedQuery(name = "Diagnostic.findByIdCommercialName", query = "SELECT d FROM Diagnostic d WHERE d.diagnosticPK.idCommercialName = :idCommercialName")})
+    @NamedQuery(name = "Diagnostic.findByIdDiagnostic", query = "SELECT d FROM Diagnostic d WHERE d.idDiagnostic = :idDiagnostic"),
+    @NamedQuery(name = "Diagnostic.findByIdCommercialName", query = "SELECT d FROM Diagnostic d WHERE d.idCommercialName = :idCommercialName")})
 public class Diagnostic implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected DiagnosticPK diagnosticPK;
-    @JoinColumn(name = "IdCommercialName", referencedColumnName = "idcommercialName", insertable = false, updatable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "idDiagnostic")
+    private Integer idDiagnostic;
+    @Basic(optional = false)
+    @Column(name = "IdCommercialName")
+    private int idCommercialName;
+    @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")
     @ManyToOne(optional = false)
-    private CommercialName commercialName;
-    @JoinColumn(name = "idMedecine", referencedColumnName = "idDrug", insertable = false, updatable = false)
+    private Treatment idTreatment;
+    @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
-    private Drug drug;
-    @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment", insertable = false, updatable = false)
+    private Patient idPatient;
+    @JoinColumn(name = "idMedecine", referencedColumnName = "idDrug")
     @ManyToOne(optional = false)
-    private Treatment treatment;
-    @JoinColumn(name = "idCIE10", referencedColumnName = "idCIE10", insertable = false, updatable = false)
+    private Drug idMedecine;
+    @JoinColumn(name = "idCIE10", referencedColumnName = "idCIE10")
     @ManyToOne(optional = false)
-    private Cie10 cie10;
-    @JoinColumn(name = "idPatient", referencedColumnName = "idPatient", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Patient patient;
-    @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Consultation consultation;
+    private Cie10 idCIE10;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "diagnostic")
+    private Collection<ConsultationDiagnostic> consultationDiagnosticCollection;
 
     public Diagnostic() {
     }
 
-    public Diagnostic(DiagnosticPK diagnosticPK) {
-        this.diagnosticPK = diagnosticPK;
+    public Diagnostic(Integer idDiagnostic) {
+        this.idDiagnostic = idDiagnostic;
     }
 
-    public Diagnostic(int idConsultation, int idPatient, int idCIE10, int idTreatment, int idMedecine, int idCommercialName) {
-        this.diagnosticPK = new DiagnosticPK(idConsultation, idPatient, idCIE10, idTreatment, idMedecine, idCommercialName);
+    public Diagnostic(Integer idDiagnostic, int idCommercialName, Treatment idTreatment, Patient idPatient, Drug idMedecine, Cie10 idCIE10, Collection<ConsultationDiagnostic> consultationDiagnosticCollection) {
+        this.idDiagnostic = idDiagnostic;
+        this.idCommercialName = idCommercialName;
+        this.idTreatment = idTreatment;
+        this.idPatient = idPatient;
+        this.idMedecine = idMedecine;
+        this.idCIE10 = idCIE10;
+        this.consultationDiagnosticCollection = consultationDiagnosticCollection;
     }
 
-    public DiagnosticPK getDiagnosticPK() {
-        return diagnosticPK;
+    public Integer getIdDiagnostic() {
+        return idDiagnostic;
     }
 
-    public void setDiagnosticPK(DiagnosticPK diagnosticPK) {
-        this.diagnosticPK = diagnosticPK;
+    public void setIdDiagnostic(Integer idDiagnostic) {
+        this.idDiagnostic = idDiagnostic;
     }
 
-    public CommercialName getCommercialName() {
-        return commercialName;
+    public int getIdCommercialName() {
+        return idCommercialName;
     }
 
-    public void setCommercialName(CommercialName commercialName) {
-        this.commercialName = commercialName;
+    public void setIdCommercialName(int idCommercialName) {
+        this.idCommercialName = idCommercialName;
     }
 
-    public Drug getDrug() {
-        return drug;
+    public Treatment getIdTreatment() {
+        return idTreatment;
     }
 
-    public void setDrug(Drug drug) {
-        this.drug = drug;
+    public void setIdTreatment(Treatment idTreatment) {
+        this.idTreatment = idTreatment;
     }
 
-    public Treatment getTreatment() {
-        return treatment;
+    public Patient getIdPatient() {
+        return idPatient;
     }
 
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
+    public void setIdPatient(Patient idPatient) {
+        this.idPatient = idPatient;
     }
 
-    public Cie10 getCie10() {
-        return cie10;
+    public Drug getIdMedecine() {
+        return idMedecine;
     }
 
-    public void setCie10(Cie10 cie10) {
-        this.cie10 = cie10;
+    public void setIdMedecine(Drug idMedecine) {
+        this.idMedecine = idMedecine;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public Cie10 getIdCIE10() {
+        return idCIE10;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setIdCIE10(Cie10 idCIE10) {
+        this.idCIE10 = idCIE10;
     }
 
-    public Consultation getConsultation() {
-        return consultation;
+    public Collection<ConsultationDiagnostic> getConsultationDiagnosticCollection() {
+        return consultationDiagnosticCollection;
     }
 
-    public void setConsultation(Consultation consultation) {
-        this.consultation = consultation;
+    public void setConsultationDiagnosticCollection(Collection<ConsultationDiagnostic> consultationDiagnosticCollection) {
+        this.consultationDiagnosticCollection = consultationDiagnosticCollection;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (diagnosticPK != null ? diagnosticPK.hashCode() : 0);
+        int hash = 3;
+        hash = 37 * hash + (this.idDiagnostic != null ? this.idDiagnostic.hashCode() : 0);
+        hash = 37 * hash + this.idCommercialName;
+        hash = 37 * hash + (this.idTreatment != null ? this.idTreatment.hashCode() : 0);
+        hash = 37 * hash + (this.idPatient != null ? this.idPatient.hashCode() : 0);
+        hash = 37 * hash + (this.idMedecine != null ? this.idMedecine.hashCode() : 0);
+        hash = 37 * hash + (this.idCIE10 != null ? this.idCIE10.hashCode() : 0);
+        hash = 37 * hash + (this.consultationDiagnosticCollection != null ? this.consultationDiagnosticCollection.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Diagnostic)) {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        Diagnostic other = (Diagnostic) object;
-        if ((this.diagnosticPK == null && other.diagnosticPK != null) || (this.diagnosticPK != null && !this.diagnosticPK.equals(other.diagnosticPK))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Diagnostic other = (Diagnostic) obj;
+        if (this.idDiagnostic != other.idDiagnostic && (this.idDiagnostic == null || !this.idDiagnostic.equals(other.idDiagnostic))) {
+            return false;
+        }
+        if (this.idCommercialName != other.idCommercialName) {
+            return false;
+        }
+        if (this.idTreatment != other.idTreatment && (this.idTreatment == null || !this.idTreatment.equals(other.idTreatment))) {
+            return false;
+        }
+        if (this.idPatient != other.idPatient && (this.idPatient == null || !this.idPatient.equals(other.idPatient))) {
+            return false;
+        }
+        if (this.idMedecine != other.idMedecine && (this.idMedecine == null || !this.idMedecine.equals(other.idMedecine))) {
+            return false;
+        }
+        if (this.idCIE10 != other.idCIE10 && (this.idCIE10 == null || !this.idCIE10.equals(other.idCIE10))) {
+            return false;
+        }
+        if (this.consultationDiagnosticCollection != other.consultationDiagnosticCollection && (this.consultationDiagnosticCollection == null || !this.consultationDiagnosticCollection.equals(other.consultationDiagnosticCollection))) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "diagnostic.Diagnostic[ diagnosticPK=" + diagnosticPK + " ]";
-    }
+    
     
 }

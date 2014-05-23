@@ -45,5 +45,10 @@ public class HbnRelativeDao implements RelativeDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+        
+        @Override
+        public void updateRelative(Relative item){
+            getSession().update(item);
+        }
 
 }

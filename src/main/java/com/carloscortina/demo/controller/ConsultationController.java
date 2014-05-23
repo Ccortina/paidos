@@ -23,6 +23,7 @@ import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.ActivityType;
 import com.carloscortina.demo.model.Appointment;
+import com.carloscortina.demo.model.Birthmethod;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
@@ -37,6 +38,7 @@ import com.carloscortina.demo.model.Vaccine;
 import com.carloscortina.demo.service.ActivityService;
 import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
+import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.CommercialNameService;
 import com.carloscortina.demo.service.DrugDoseService;
@@ -46,6 +48,7 @@ import com.carloscortina.demo.service.PerBackNoPatService;
 import com.carloscortina.demo.service.RecordService;
 import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.TreatmentService;
+import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -54,8 +57,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping(value="/consultation")
 public class ConsultationController {
 
-	@Autowired
-	private AppointmentService appointmentService;
+        @Autowired
+        private AppointmentService appointmentService;
 	@Autowired
 	private PatientService patientService;
 	@Autowired
@@ -80,29 +83,31 @@ public class ConsultationController {
         private VaccineService vaccineService;
         @Autowired
         private ActivityTypeService activityTypeService;
+        @Autowired
+        private UserService userService; 
+        @Autowired
+        private BirthmethodService birthMethodService;
         
-	
-	@RequestMapping(value="appointments")
-	public String loadAppointments(Model model){
-		
-		return ("consultation/appointments");
-	}
-	
+        
+        int idAppointment;
+        int idDoctor;
 	
 	@RequestMapping(value="")
 	public String startConsultation(Model model){
-		int IdAppointment = 1;
-		Appointment appointment = appointmentService.getById(IdAppointment);
+		idAppointment = 1;
+                idDoctor =16;
+		Appointment appointment = appointmentService.getById(idAppointment);
 		Patient patient = patientService.getById(appointment.getIdPatient().getId());
 		Record record = recordService.getByPatientId(patient);
 		PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
-		
+                
+                
 		model.addAttribute("father",getFather(patient.getRelatives()));
 		model.addAttribute("mother",getMother(patient.getRelatives()));
 		
-		List<Relative> brothers = new ArrayList<Relative>();
-		brothers = getBrothers(patient.getRelatives());
-		model.addAttribute("hermanos",brothers);
+		//List<Relative> brothers = new ArrayList<Relative>();
+		//brothers = getBrothers(patient.getRelatives());
+		//model.addAttribute("hermanos",brothers);
 		
 		model.addAttribute("birthday",formatDate(patient.getBirthday()));
 		String[] age = calculateAge(patient.getBirthday()).split("-");
@@ -110,10 +115,11 @@ public class ConsultationController {
 		model.addAttribute("age",age);
 		model.addAttribute("date",getCurrentDate());
 		model.addAttribute("patient",patient);
-		model.addAttribute("appointment",appointment);
 		model.addAttribute("record",record);
 		model.addAttribute("perBackNoPat",perBackNoPat);
-		
+                model.addAttribute("doctor",userService.getUserById(idDoctor));
+                model.addAttribute("birthmethods", birthMethodService.getAll("Birthmethod"));
+
 		return ( "consultation/consultation" );
 	}
 	
@@ -125,7 +131,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	//Update record alergic background field
@@ -138,7 +144,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="savePerinatalBackground",method=RequestMethod.POST)
@@ -150,7 +156,7 @@ public class ConsultationController {
                                         "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
                                             "<div>Se han guardado los cambios</div>" +
                                                 "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="saveDevelopmentBackground",method=RequestMethod.POST)
@@ -162,7 +168,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="saveSurgicalHistory",method=RequestMethod.POST)
@@ -174,7 +180,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="saveHereditaryAndFamilyBackground",method=RequestMethod.POST)
@@ -186,7 +192,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="savePathologicalBackground",method=RequestMethod.POST)
@@ -198,7 +204,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
 	
 	@RequestMapping(value="saveOthers",method=RequestMethod.POST)
@@ -210,7 +216,7 @@ public class ConsultationController {
 								"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
 								"<div>Se han guardado los cambios</div>" +
 						  "</div>";
-		return message;
+		return "";
 	}
         
         //Create a new activity and save it in the DB
@@ -263,6 +269,30 @@ public class ConsultationController {
                 activityService.updateItem(modifiedActivity);
                 return ("function");
 	}
+        
+        @RequestMapping(value="getConsultationSibilings")
+        public @ResponseBody JsonPack<Relative> getConsultationSibilings(@RequestParam int idpatient){
+            
+            Patient patient= patientService.getById(idpatient);
+            List<Relative> relatives = getBrothers(patient.getRelatives());
+            List<Relative> sibiling = new ArrayList<Relative>();
+            
+            for(Relative r: relatives)
+            {
+                if(r.getIdPatient() != null)
+                {
+                        sibiling.add(r);
+                }
+            }
+            
+            
+            return (new JsonPack<Relative>(sibiling));
+        }
+        
+        @RequestMapping(value="updateAppointmentData")
+        public @ResponseBody String updateAppointmentData(@RequestParam(value="algo")int algo){
+            return "";
+        }
 	
 	@RequestMapping(value="frequentDiagnostics")
 	public @ResponseBody JsonPack<Cie10> frequentDiagnostics()
@@ -273,7 +303,7 @@ public class ConsultationController {
 	}
 	
 	@RequestMapping(value="diagnostics")
-	public @ResponseBody JsonPack<Cie10> allDiagnostics()
+	public @ResponseBody JsonPack<Cie10> allDiagnostics(@RequestParam(required = false) String cache)
 	{
 		String query = "FROM Cie10 c WHERE c.active = 1";
 		JsonPack<Cie10> result = new JsonPack<Cie10>(cie10Service.getListOfItem(query));

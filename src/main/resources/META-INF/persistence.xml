@@ -9,6 +9,8 @@
     <class>com.carloscortina.demo.model.VaccineType</class>
     <class>com.carloscortina.demo.model.Patient_1</class>
     <class>com.carloscortina.demo.model.Relative_1</class>
+    <class>com.carloscortina.demo.model.PatientRelative</class>
+    <class>com.carloscortina.demo.model.Birthmethod</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

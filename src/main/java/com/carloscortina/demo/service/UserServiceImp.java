@@ -30,5 +30,9 @@ public class UserServiceImp implements UserService {
 	public User getUserByUsername(String username){
 		return userDao.getUserByUsername(username);
 	}
+        
+        public User getUserById(int id){
+            return userDao.getUserById(id);
+        }
 
 }

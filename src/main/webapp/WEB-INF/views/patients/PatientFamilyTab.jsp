@@ -8,7 +8,7 @@
 <%@page contentType="text/html" pageEncoding="MacRoman"%>
 <!DOCTYPE html>
 <br>
-<div class="row">
+<div class="row" id="divPatientFamily">
     <div class="col-sm-10">
         <table id="tblPatientRelativesList" class="row-border hover">
             <thead>
@@ -16,6 +16,7 @@
                     <th>RelativeId</th>
                     <th>Nombre</th>
                     <th>Relacion</th>
+                    <th>Desasociar</th>
                 </tr>
             </thead>
         </table>
@@ -34,7 +35,7 @@
         <br>
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" value="Modificar" class="btn btn-primary">  
+                <input type="button" class="btn btn-primary" value="Modificar" onclick="enableModifyPatientRelative();"/>
             </div>
         </div>
     </div>
@@ -42,7 +43,48 @@
 <br>
 <div class="row">
     <div class="col-sm-12">
-        <form role ="form" id="formPatientFamilyDisplay" method="post">
+        <form role ="form" id="formPatientFamilyDisplay" method="post" action="../updatePatientRelative">
+            <input type="hidden" name="id">
+            <div class="row" id="divHiddenModifiyPatientRelative"style="display:none;">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="firstName">Nombre : </label>
+                        <input type="text" name="firstName" class="form-control input-sm" disabled/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="secondName">Segundo Nombre : </label>
+                        <input type="text" name="secondName" class="form-control input-sm" disabled/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="fatherLastName">A. Paterno : </label>
+                        <input type="text" name="fatherLastName" class="form-control input-sm" disabled/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="motherLastName">A. Materno : </label>
+                        <input type="text" name="motherLastName" class="form-control input-sm" disabled/>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="selectPatientFamilyRelationship">Relaci—n</label>
+                        <select class="form-control" id="selectPatientFamilyRelationship" name="idRelationship" disabled>
+                            <c:forEach items="${relationshipType}" var="type">
+                                <option value="${type.id}">${type.relationship}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <input type="button" id="btnHiddenModifySave" class="btn btn-primary" value="Guardar Cambios" onclick="updateRelative();"/>
+                    <input type="button" class="btn btn-primary" value="Cancelar" onclick="updateRelativeCancel();"/>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-2">
                    <div class="form-group">
@@ -71,7 +113,11 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="religion">Religion : </label>
-                        <input type="text" name="religion" class="form-control input-sm" disabled/>
+                        <select class="form-control" id="selectPatientFamilyReligion" name="religion" disabled>
+                            <c:forEach items="${religionType}" var="type">
+                                <option value="${type.id}">${type.religion}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
             </div><!-- End 1st row -->
@@ -220,7 +266,6 @@
                                         <th>Nombre</th>
                                         <th>RFC</th>
                                         <th>Relaci—n</th>
-                                        <th>Desasociar</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -230,4 +275,3 @@
                 </div><!-- Modal content -->
         </div>
 </div>
-

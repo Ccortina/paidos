@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.carloscortina.demo.model.PatientRegistrationForm;
+import com.carloscortina.demo.model.PatientRelativeId;
 import com.carloscortina.demo.model.Patient_Relative;
 import com.carloscortina.demo.model.PerBackNoPat;
 import com.carloscortina.demo.model.Record;
@@ -26,6 +27,7 @@ import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.RecordService;
 import com.carloscortina.demo.service.RelationshipService;
 import com.carloscortina.demo.service.RelativeService;
+import com.carloscortina.demo.service.ReligionService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class PatientsController {
         private RelativeService relativeService;
 	@Autowired
         private PatientRelativeService prService;
+        @Autowired
+        private ReligionService religionService; 
         
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -123,6 +127,8 @@ public class PatientsController {
             model.addAttribute("perBackNoPat",perBackNoPat);
             model.addAttribute("sibilings",sibilings );
             model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
+            System.out.println(religionService.getAllReligions());
+            model.addAttribute("religionType", religionService.getAllReligions());
             return("patients/PatientFile");
         }
         
@@ -160,6 +166,8 @@ public class PatientsController {
                                                              @RequestParam(value="idRelationship")int idRelationship)
 	{
 		Patient_Relative patientRelative = new Patient_Relative();
+                PatientRelativeId id = new PatientRelativeId(idPatient, idRelative);
+                patientRelative.setPatienRelativeId(id);
                 patientRelative.setIdRelationship(relationshipService.getById(idRelationship));
                 patientRelative.setPatient(patientService.getById(idPatient));
                 patientRelative.setRelative(relativeService.getRelative(idRelative));
@@ -167,7 +175,7 @@ public class PatientsController {
 
                 prService.create(patientRelative);
                 
-		return "$('#tblPatientFamilyPatientRelatives').ajax.reload();$('#tblPatientRelativesList').ajax.reload()";
+		return "addRelative";
 	}
         
         @RequestMapping(value="unrelateRelative")
@@ -176,13 +184,79 @@ public class PatientsController {
                                                      @RequestParam(value="idRelationship")int idRelationship){
         
             Patient_Relative patientRelative = new Patient_Relative();
+            PatientRelativeId id = new PatientRelativeId(idPatient, idRelative);
+            patientRelative.setPatienRelativeId(id);
             patientRelative.setIdRelationship(relationshipService.getById(idRelationship));
             patientRelative.setPatient(patientService.getById(idPatient));
             patientRelative.setRelative(relativeService.getRelative(idRelative));
             
             prService.delete(patientRelative);
             
-            return "$('#tblPatientFamilyPatientRelatives').ajax.reload();$('#tblPatientRelativesList').ajax.reload()";
+            return "";
+        }
+        
+        @RequestMapping(value="updatePatientRelative")
+        public @ResponseBody String updateRelative(@RequestParam(value="cellPhone",required=false)String cellPhone,
+                                                   @RequestParam(value="city",required=false)String city,
+                                                   @RequestParam(value="colony",required=false)String colony,
+                                                   @RequestParam(value="country",required=false)String country,
+                                                   @RequestParam(value="cp",required=false)String cp,
+                                                   @RequestParam(value="curp",required=false)String curp,
+                                                   @RequestParam(value="email",required=false)String email,
+                                                   @RequestParam(value="fatherLastName")String fatherLastName,
+                                                   @RequestParam(value="firstName")String firstName,
+                                                   @RequestParam(value="homephone",required=false)String homePhone,
+                                                   @RequestParam(value="id")int idRelative,
+                                                   @RequestParam(value="idRelationship")String idRelationship,
+                                                   @RequestParam(value="motherLastName",required=false)String motherLastName,
+                                                   @RequestParam(value="notes",required=false)String notes,
+                                                   @RequestParam(value="number",required=false)String number,
+                                                   @RequestParam(value="occupation",required=false)String occupation,
+                                                   @RequestParam(value="officeExt",required=false)String officeExt,
+                                                   @RequestParam(value="officePhone",required=false)String officePhone,
+                                                   @RequestParam(value="otherPhone",required=false)String otherPhone,
+                                                   @RequestParam(value="recommendedBy",required=false)String recommendedBy,
+                                                   @RequestParam(value="religion")String religion,
+                                                   @RequestParam(value="rfc",required=false)String rfc,
+                                                   @RequestParam(value="secondName",required=false)String secondName,
+                                                   @RequestParam(value="state",required=false)String state,
+                                                   @RequestParam(value="street",required=false)String street
+                                                   ){
+        
+            Relative updateRelative = relativeService.getRelative(idRelative);
+            updateRelative.setFirstName(firstName);
+            updateRelative.setSecondName(secondName);
+            updateRelative.setFatherLastName(fatherLastName);
+            updateRelative.setMotherLastName(motherLastName);
+            updateRelative.setCurp(curp);
+            updateRelative.setOccupation(occupation);
+            updateRelative.setRfc(rfc);
+            updateRelative.setHomePhone(homePhone);
+            updateRelative.setOfficePhone(officePhone);
+            updateRelative.setOfficeExt(officeExt);
+            updateRelative.setCellPhone(cellPhone);
+            updateRelative.setOtherPhone(otherPhone);
+            updateRelative.setEmail(email);
+            updateRelative.setReligion(religionService.getReligion(Integer.parseInt(religion)));
+            updateRelative.setCity(city);
+            updateRelative.setColony(colony);
+            updateRelative.setCountry(country);
+            updateRelative.setCp(cp);
+            updateRelative.setCurp(curp);
+            updateRelative.setNotes(notes);
+            updateRelative.setStreet(street);
+            updateRelative.setState(state);
+            updateRelative.setRecommendedBy(recommendedBy);
+            updateRelative.setNumber(number);
+            for(Patient_Relative r: updateRelative.getPatientRelative()){
+                if(r.getPatienRelativeId().getRelativeId() == idRelative){
+                    r.setIdRelationship(relationshipService.getById(Integer.parseInt(idRelationship)));
+                }
+            }
+            
+            relativeService.updateRelative(updateRelative);
+            
+            return "";
         }
         
         //Generic Methods

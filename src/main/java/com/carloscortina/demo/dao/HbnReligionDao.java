@@ -35,7 +35,7 @@ public class HbnReligionDao implements ReligionDao {
 	@Override
 	public List<Religion> getAllReligions() {
 		// TODO Auto-generated method stub
-		return getSession().createQuery("form Religion").list();
+		return getSession().createQuery("from Religion").list();
 	}
 
 }

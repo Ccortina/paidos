@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -40,8 +41,6 @@ public class Consultation implements Serializable {
     @Size(max = 100)
     @Column(name = "motive")
     private String motive;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
-    private Collection<Diagnostic> diagnosticCollection;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
@@ -51,6 +50,22 @@ public class Consultation implements Serializable {
     @JoinColumn(name = "idAppointment", referencedColumnName = "idAppointment")
     @ManyToOne(optional = false)
     private Appointment idAppointment;
+    @ManyToMany(mappedBy = "consultationCollection")
+    private Collection<Activity> activityCollection;
+    @Column(name = "weigth")
+    private Integer weigth;
+    @Column(name = "size")
+    private Integer kidSize;
+    @Column(name = "temperature")
+    private Integer temperature;
+    @Column(name = "pc")
+    private Integer pc;
+    @Column(name = "ta")
+    private Integer ta;
+    @Column(name = "ta2")
+    private String ta2;
+    @Column(name = "taAverage")
+    private String taAverage;
 
     public Consultation() {
     }
@@ -74,16 +89,7 @@ public class Consultation implements Serializable {
     public void setMotive(String motive) {
         this.motive = motive;
     }
-
-    @XmlTransient
-    public Collection<Diagnostic> getDiagnosticCollection() {
-        return diagnosticCollection;
-    }
-
-    public void setDiagnosticCollection(Collection<Diagnostic> diagnosticCollection) {
-        this.diagnosticCollection = diagnosticCollection;
-    }
-
+    
     public Patient getIdPatient() {
         return idPatient;
     }
@@ -108,6 +114,72 @@ public class Consultation implements Serializable {
         this.idAppointment = idAppointment;
     }
 
+    @XmlTransient
+    public Collection<Activity> getActivityCollection() {
+        return activityCollection;
+    }
+
+    public void setActivityCollection(Collection<Activity> activityCollection) {
+        this.activityCollection = activityCollection;
+    }
+    
+    public Integer getWeigth() {
+        return weigth;
+    }
+
+    public void setWeigth(Integer weigth) {
+        this.weigth = weigth;
+    }
+
+    public Integer getSize() {
+        return kidSize;
+    }
+
+    public void setSize(Integer size) {
+        this.kidSize = size;
+    }
+
+    public Integer getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Integer temperature) {
+        this.temperature = temperature;
+    }
+
+    public Integer getPc() {
+        return pc;
+    }
+
+    public void setPc(Integer pc) {
+        this.pc = pc;
+    }
+
+    public Integer getTa() {
+        return ta;
+    }
+
+    public void setTa(Integer ta) {
+        this.ta = ta;
+    }
+
+    public String getTa2() {
+        return ta2;
+    }
+
+    public void setTa2(String ta2) {
+        this.ta2 = ta2;
+    }
+
+    public String getTaAverage() {
+        return taAverage;
+    }
+
+    public void setTaAverage(String taAverage) {
+        this.taAverage = taAverage;
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

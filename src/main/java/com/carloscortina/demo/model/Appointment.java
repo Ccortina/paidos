@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,17 +19,19 @@ import javax.validation.constraints.Size;
 @Table(name="appointment")
 public class Appointment {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idAppointment")
     private Integer idAppointment;
 
     @NotNull
     @Column(name = "date")
+    @Temporal(TemporalType.DATE)
     private Date date;
     
     @NotNull
     @Column(name = "time")
+    @Temporal(TemporalType.TIME)
     private Date time;
     
     @Size(max = 45)
@@ -37,34 +41,6 @@ public class Appointment {
     @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
-    
-    @Size(max = 45)
-    @Column(name = "weigth")
-    private String weigth;
-    
-    @Size(max = 45)
-    @Column(name = "size")
-    private String size;
-    
-    @Size(max = 45)
-    @Column(name = "pc")
-    private String pc;
-    
-    @Size(max = 45)
-    @Column(name = "ta")
-    private String ta;
-    
-    @Size(max = 45)
-    @Column(name = "ta2")
-    private String ta2;
-    
-    @Size(max = 45)
-    @Column(name = "averageTa")
-    private String averageTa;
-    
-    @Size(max = 45)
-    @Column(name = "temperature")
-    private String temperature;
     
     @Column(name = "immunization")
     private boolean immunization;
@@ -134,71 +110,15 @@ public class Appointment {
         this.notes = notes;
     }
 
-    public String getWeigth() {
-        return weigth;
-    }
-
-    public void setWeigth(String weigth) {
-        this.weigth = weigth;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getPc() {
-        return pc;
-    }
-
-    public void setPc(String pc) {
-        this.pc = pc;
-    }
-
-    public String getTa() {
-        return ta;
-    }
-
-    public void setTa(String ta) {
-        this.ta = ta;
-    }
-
-    public String getTa2() {
-        return ta2;
-    }
-
-    public void setTa2(String ta2) {
-        this.ta2 = ta2;
-    }
-
-    public String getAverageTa() {
-        return averageTa;
-    }
-
-    public void setAverageTa(String averageTa) {
-        this.averageTa = averageTa;
-    }
-
-    public String getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(String temperature) {
-        this.temperature = temperature;
-    }
-
     public boolean isImmunization() {
-		return immunization;
-	}
+        return immunization;
+    }
 
-	public void setImmunization(boolean immunization) {
-		this.immunization = immunization;
-	}
+    public void setImmunization(boolean immunization) {
+        this.immunization = immunization;
+    }
 
-	public AppointmentStatus getIdStatus() {
+    public AppointmentStatus getIdStatus() {
         return idStatus;
     }
 

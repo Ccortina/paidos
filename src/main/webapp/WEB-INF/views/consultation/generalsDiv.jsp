@@ -33,35 +33,21 @@
 		<div class="col-sm-6">
 			<div class="row">
 				<div class="col-sm-12">
-					<label for="sibilings">
-						Hermanos(Doble click abre el expediente) 
-					</label>
+                                    <label for="sibilings">
+                                            Hermanos(Doble click abre el expediente) 
+                                    </label>
 				</div>
 				<div class="row">
-					<div class="col-sm-12">
-						<table id="sibilingsTable">
-							<thead>
-								<tr>
-									<th>Nombre</th>
-									<th>Edad</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Prueba1</td>
-									<td>Numeros</td>
-								</tr>
-								<tr>
-									<td>Prueba2</td>
-									<td>Numeros</td>
-								</tr>
-								<tr>
-									<td>Prueba3</td>
-									<td>Numeros</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+                                    <div class="col-sm-12">
+                                        <table id="sibilingsTable" class="hover row-border">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Edad</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
 				</div>
 			</div>
 		</div>
@@ -130,42 +116,47 @@
 					</div>
 				</div>
 				<div class="row">
-					<form:form role ="form" id="generalsPerBackNoPatForm" modelAttribute="perBackNoPat">
-						<div class="form-group">
-							<div class="col-sm-1">
-								<label for="">A.P. no P. :</label>
-							</div>
-							<div class="col-sm-2">
-								<label for="birthweigth">Peso (Kg):</label>
-							</div>
-							<div class="col-sm-1">
-								<form:input class="form-control input-sm" id="birthweight" type="text" path="birthweight" />
-							</div>
-							<div class="col-sm-1">
-								<label for="birthsize">Talla (cm):</label>
-							</div>
-							<div class="col-sm-1">
-								<form:input class="form-control input-sm" id="birthsize" type="text" path="birthsize" />
-							</div>
-							<div class="col-sm-1">
-								<label for="headCircumference">PC (cm):</label>
-							</div>
-							<div class="col-sm-1">
-								<form:input class="form-control input-sm" id="headCircumference" type="text" path="headCircumference" />
-							</div>
-							<div class="col-sm-2">
-								<label for="birthMethod">T. Nacimiento:</label>
-							</div>
-							<div class="col-sm-1">
-								<form:input class="form-control input-sm" id="birthMethod" type="text" path="birthMethod" />
-							</div>
-						</div>
-					</form:form>	
+                                    <form:form role ="form" id="generalsPerBackNoPatForm" modelAttribute="perBackNoPat">
+                                        <div class="col-sm-2">
+                                                <strong>A.P. no P. :</strong>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <label for="birthweigth">Peso (Kg):</label>
+                                                <form:input class="form-control input-sm" id="birthweight" type="text" path="birthweight" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                    <label for="birthsize">Talla (cm):</label>
+                                                    <form:input class="form-control input-sm" id="birthsize" type="text" path="birthsize" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <label for="headCircumference">PC (cm):</label>
+                                                <form:input class="form-control input-sm" id="headCircumference" type="text" path="headCircumference" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <label for="birthMethod">T. Nacimiento:</label>
+                                                <form:input class="form-control input-sm" id="birthMethod" type="text" path="birthMethod.birthMethod" />
+                                            </div>
+                                        </div>
+                                    </form:form>	
 				</div>
 				<div class="row">
 					<div class="form-group">
 						<div class="col-sm-12">
-							Aqui va una tabla
+							<table id="tblConsultationDiagnosticAbstract">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            
+                                                        </table>
 						</div>
 					</div>
 				</div>

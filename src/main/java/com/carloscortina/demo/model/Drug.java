@@ -82,7 +82,7 @@ public class Drug implements Serializable {
     private String notes;
     @Column(name = "active")
     private Short active;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMedecine")
     @JsonIgnore
     private Collection<Diagnostic> diagnosticCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")

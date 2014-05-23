@@ -49,9 +49,6 @@ public class CommercialName implements Serializable {
     @NotNull
     @Column(name = "active")
     private short active;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commercialName")
-    private Collection<Diagnostic> diagnosticCollection;
     @JoinColumn(name = "drugId", referencedColumnName = "idDrug")
     @ManyToOne(optional = false)
     private Drug drugId;
@@ -91,15 +88,6 @@ public class CommercialName implements Serializable {
 
     public void setActive(short active) {
         this.active = active;
-    }
-
-    @XmlTransient
-    public Collection<Diagnostic> getDiagnosticCollection() {
-        return diagnosticCollection;
-    }
-
-    public void setDiagnosticCollection(Collection<Diagnostic> diagnosticCollection) {
-        this.diagnosticCollection = diagnosticCollection;
     }
 
     public Drug getDrugId() {

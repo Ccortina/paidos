@@ -9,4 +9,5 @@ public interface RelativeService {
 	public void createRelative(Relative relative);
 	public Relative getRelative(int id);
 	public List<Relative> getAllRelatives();
+        public void updateRelative(Relative item);
 }
