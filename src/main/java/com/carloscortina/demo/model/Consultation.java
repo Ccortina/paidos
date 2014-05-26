@@ -1,9 +1,9 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -51,21 +50,22 @@ public class Consultation implements Serializable {
     @ManyToOne(optional = false)
     private Appointment idAppointment;
     @ManyToMany(mappedBy = "consultationCollection")
+    @JsonIgnore
     private Collection<Activity> activityCollection;
     @Column(name = "weigth")
-    private Integer weigth;
+    private double weigth;
     @Column(name = "size")
-    private Integer kidSize;
+    private double kidSize;
     @Column(name = "temperature")
-    private Integer temperature;
+    private double temperature;
     @Column(name = "pc")
-    private Integer pc;
+    private double pc;
     @Column(name = "ta")
-    private Integer ta;
+    private double ta;
     @Column(name = "ta2")
-    private String ta2;
+    private double ta2;
     @Column(name = "taAverage")
-    private String taAverage;
+    private double taAverage;
 
     public Consultation() {
     }
@@ -123,59 +123,59 @@ public class Consultation implements Serializable {
         this.activityCollection = activityCollection;
     }
     
-    public Integer getWeigth() {
+    public double getWeigth() {
         return weigth;
     }
 
-    public void setWeigth(Integer weigth) {
+    public void setWeigth(double weigth) {
         this.weigth = weigth;
     }
 
-    public Integer getSize() {
+    public double getSize() {
         return kidSize;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(double size) {
         this.kidSize = size;
     }
 
-    public Integer getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
-    public Integer getPc() {
+    public double getPc() {
         return pc;
     }
 
-    public void setPc(Integer pc) {
+    public void setPc(double pc) {
         this.pc = pc;
     }
 
-    public Integer getTa() {
+    public double getTa() {
         return ta;
     }
 
-    public void setTa(Integer ta) {
+    public void setTa(double ta) {
         this.ta = ta;
     }
 
-    public String getTa2() {
+    public double getTa2() {
         return ta2;
     }
 
-    public void setTa2(String ta2) {
+    public void setTa2(double ta2) {
         this.ta2 = ta2;
     }
 
-    public String getTaAverage() {
+    public double getTaAverage() {
         return taAverage;
     }
 
-    public void setTaAverage(String taAverage) {
+    public void setTaAverage(double taAverage) {
         this.taAverage = taAverage;
     }
     

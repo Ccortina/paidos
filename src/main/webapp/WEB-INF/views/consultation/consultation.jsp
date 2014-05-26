@@ -24,6 +24,13 @@
 <!-- Files for confirmation bootstrap -->
 <c:url var="confirmationJs" value="/resources/js/confirmationBootstrap.js" />
 
+<!-- Files for Jqplot -->
+<c:url var="jqplotJs" value="/resources/js/jquery.jqplot.min.js" />
+<c:url var="jqplotJsonJs" value="/resources/js/jqplot.json2.min.js" />
+<c:url var="jqplotCSS" value="/resources/CSS/jquery.jqplot.min.css" />
+
+<!-- Files for FullCalendar -->
+
 <script src="${dataTablesJS}" type="text/javascript"></script>
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
@@ -37,6 +44,12 @@
 <script src="${validationJs}" type="text/javascript"></script>
 
 <script src="${confirmationJs}" type="text/javascript"></script>
+
+<script src="${jqplotJs}" type="text/javascript"></script>
+
+<link href="${jqplotCSS}" rel="stylesheet" />
+
+<script src="${jqplotJsonJs}" type="text/javascript"></script>
 
 <!-- Make modal diagnostic bigger -->
 <style type="text/css">
@@ -53,7 +66,7 @@
 <input type="hidden" id="consultationDoctorId" value="${doctor.id}">
 <input type="hidden" id="consultationDoctor" value="${doctor.staff.firstName} ${doctor.staff.lastName}">
 <input type="hidden" id="consultationPatientId" value="${patient.id}">
-
+<input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}">
 <!-- Main div container , centers everything-->
 <div class="container">
 
@@ -200,10 +213,10 @@
                                 <div id="antecedentes" class="tab-pane">
                                         <jsp:include page="backgroundDiv.jsp"/>
                                 </div>
-                                <div id="documentos" class="tab-pane">documentos</div>
-                                <div id="graficas" class="tab-pane">graficas</div>
+                                <div id="documentos" class="tab-pane"><jsp:include page="fileUpload.jsp" /></div>
+                                <div id="graficas" class="tab-pane"><jsp:include page="graphs.jsp" /></div>
                                 <div id="inmunizaciones" class="tab-pane">inmunizaciones</div>
-                                <div id="labGabinetes" class="tab-pane">laboratorio gabinete</div>
+                                <div id="labGabinetes" class="tab-pane"><jsp:include page="laboratory.jsp" /></div>
                                 <div id="medidas" class="tab-pane">medidas</div>
                                 <div id="peeaef" class="tab-pane">peea ef</div>
                                 <div id="diagnostico" class="tab-pane">

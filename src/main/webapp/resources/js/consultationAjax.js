@@ -79,7 +79,19 @@ $(document).ready(function(){
         
         initializeActivityVaccineList("tblEditActivityVaccine");
         
+        initializePatientDocumentsTable();
+        
         addSaveOnChangeToForm();
+        
+        //Documents
+        uploadFile();
+        
+        //Charts
+        initializeGraphsPatientDataTable();
+        
+        saveOnchangeEditConsultationData();
+        
+        $("#modalGraph").on('shown.bs.modal',drawGraph);
 
 });
 
@@ -829,4 +841,190 @@ function getCurrentDate(){
 function openSibilingFile(idSibiling){
     var url= "patients/file/"+idSibiling;
     window.open(url);
+}
+
+//Section: Documents Tab
+function uploadFile(){
+    
+    $("#formUploadFile").on('submit',function(e){
+       var oMyForm = new FormData();
+       oMyForm.append("file",file2.files[0]);
+        
+       $.ajax({
+            url:'./consultation/uploadFile',
+            data:oMyForm,
+            dataType:'text',
+            processData: false,
+            contentType: false,
+            cache: false,
+            type:'POST',
+            success: function(data, textStatus, jqXHR)
+            {
+                $("#tblConsultationPatientDocuments").DataTable().ajax.reload();
+            }
+        });
+        
+        e.preventDefault();
+    });
+    //$("#formUploadFile").submit();
+}
+
+function initializePatientDocumentsTable(){
+    var idPatient=$("#consultationPatientId").val();
+    
+    $("#tblConsultationPatientDocuments").DataTable({
+       "bSort":false,
+       "searching":false,
+       "scrollY": "200px",
+       "scrollCollapse": true,
+       "paging": false,
+       "info":false,
+       "ajax":{
+           url:"./consultation/getPatientDocument",
+           data:{"idPatient":idPatient}},
+       "columns":[
+           {"data":"name"},
+           {"data":"deleteBtn"}],
+       "initComplete": function(settings,json){
+            $('#tblConsultationPatientDocuments tbody tr').dblclick(function(e){
+                openDocument($("#tblConsultationPatientDocuments").DataTable().row(this).data()["name"]);
+                
+            });
+       }
+    });
+}
+
+function deleteDocument(button){
+    var table = $("#tblConsultationPatientDocuments").DataTable();
+    var file = table.row($(button).parent().parent()[0]).data()["name"];
+    $.ajax({
+        url:'./consultation/deletePatientDocument',
+        data:{ 'file':file},
+        success:function(msg){
+            table.ajax.reload();
+        }
+    });
+}
+
+function openDocument(file){
+    $.ajax({
+        url:'./consultation/openPatientDocument',
+        data:{ 'file':file}
+    });
+}
+
+//Section:Charts/Graphs
+
+function initializeGraphsPatientDataTable(){
+    var idPatient=$("#consultationPatientId").val();
+    
+    $("#tblGraphsPastConsultation").DataTable({
+       "bSort":false,
+       "scrollY": "200px",
+       "scrollCollapse": true,
+       "paging": false,
+       "info":false,
+       "ajax":{
+           url:"./consultation/getGraphPatientData",
+           data:{"patient":idPatient}},
+       "columns":[
+            {"data":"idConsultation",
+                "visible": false},
+            {"data":"date"},
+            {"data":"age"},
+            {"data":"weight"},
+            {"data":"size"},
+            {"data":"pc"},
+            {"data":"ta"},
+            {"data":"ta2"},
+            {"data":"taaverage"},
+            {"data":"temperature"},
+            {"data":"imc"}],
+        "initComplete":function(settings,json){
+            var table = $("#tblGraphsPastConsultation").DataTable();
+            $("#tblGraphsPastConsultation").on( 'click', 'tr', function (e){
+                if ( $(this).hasClass('selected')){
+                    $(this).removeClass('selected');
+                }
+                else
+                {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        }
+    });
+}
+
+function saveOnchangeEditConsultationData(){
+    $( ".onChange2" ).change(function() {
+        
+        var s = $("#inputGraphSize").val(); 
+        var w = $("#inputGraphWeight").val();
+        $("#inputGraphIMC").val(w / ((s/100)*(s/100)));
+        
+        ajaxCall("formGraphEdit");
+        $.ajax({
+            url:$('#formGraphEdit').attr("action"),
+            data: $('#formGraphEdit').serializeObject(),
+            type:"POST",
+            success:function(response){
+                $("#tblGraphsPastConsultation").DataTable().ajax.reload();
+            }
+         });
+    });
+}
+
+function loadGraphPacientData(){
+    
+    var selectedRow = $("#tblGraphsPastConsultation").DataTable().row('.selected').data();
+    console.log(selectedRow);
+    $.each(selectedRow, function(name, val){
+
+    $el = $('[name="'+name+'"]','#formGraphEdit');
+
+    $el.val(val);
+ 
+
+    });
+}
+
+function drawGraph(graph){
+    var idPatient=$("#consultationPatientId").val();
+    var patientName = $("#consultationPatientName").val();
+    
+    $.jqplot('divChart',  [[[1, 2],[3,5.12],[5,13.1],[7,33.6],[9,85.9],[11,219.9]]]); 
+    
+    var url;
+    switch(graph){
+        case 1:
+            url = "./consultation/graph1";
+            break;
+            case 2:
+                break;
+                case 3:
+                    break;
+                    case 4:
+                        break;
+                        case 5:
+                            break;
+                            case 6:
+                                break;
+    }
+    
+    $.ajax({
+        type:"POST",
+        url:url,
+        data: { 'patient':idPatient },
+        dataType:"json",
+        success:function(response){
+            console.log("algo");
+            console.log(response);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+      }
+    });
+    
 }

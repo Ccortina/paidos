@@ -21,13 +21,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
-import com.carloscortina.demo.model.ActivityType;
+import com.carloscortina.demo.model.Ageweight0To36Months;
 import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.Birthmethod;
+import com.carloscortina.demo.model.AuxGraphTable;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Consultation;
+import com.carloscortina.demo.model.Document;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.GraphData;
 import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.Patient_Relative;
 import com.carloscortina.demo.model.PerBackNoPat;
@@ -35,14 +38,17 @@ import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.model.Vaccine;
+import com.carloscortina.demo.service.AW0to36MonthsService;
 import com.carloscortina.demo.service.ActivityService;
 import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.CommercialNameService;
+import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.DrugDoseService;
 import com.carloscortina.demo.service.DrugService;
+import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.PerBackNoPatService;
 import com.carloscortina.demo.service.RecordService;
@@ -50,7 +56,16 @@ import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.TreatmentService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 
 @Controller
@@ -87,10 +102,17 @@ public class ConsultationController {
         private UserService userService; 
         @Autowired
         private BirthmethodService birthMethodService;
+        @Autowired
+        private AW0to36MonthsService aw036Service;
+        @Autowired
+        ConsultationService consultationService;
+        @Autowired
+        LaboratoryTestService labService;
         
-        
-        int idAppointment;
-        int idDoctor;
+        private int idAppointment;
+        private int idDoctor;
+        private int idPatient;
+        private String[] age;
 	
 	@RequestMapping(value="")
 	public String startConsultation(Model model){
@@ -98,6 +120,7 @@ public class ConsultationController {
                 idDoctor =16;
 		Appointment appointment = appointmentService.getById(idAppointment);
 		Patient patient = patientService.getById(appointment.getIdPatient().getId());
+                idPatient = patient.getId();
 		Record record = recordService.getByPatientId(patient);
 		PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
                 
@@ -110,7 +133,7 @@ public class ConsultationController {
 		//model.addAttribute("hermanos",brothers);
 		
 		model.addAttribute("birthday",formatDate(patient.getBirthday()));
-		String[] age = calculateAge(patient.getBirthday()).split("-");
+		age = calculateAge(patient.getBirthday()).split("-");
 		
 		model.addAttribute("age",age);
 		model.addAttribute("date",getCurrentDate());
@@ -119,6 +142,7 @@ public class ConsultationController {
 		model.addAttribute("perBackNoPat",perBackNoPat);
                 model.addAttribute("doctor",userService.getUserById(idDoctor));
                 model.addAttribute("birthmethods", birthMethodService.getAll("Birthmethod"));
+                model.addAttribute("laboratoryTests", labService.getAll("LaboratoryTest"));
 
 		return ( "consultation/consultation" );
 	}
@@ -359,7 +383,7 @@ public class ConsultationController {
 	}
         
         //This method returns a json with all the activities 
-        @RequestMapping(value="getAllActivities")
+        @RequestMapping(value={"/getAllActivities","getAllActivities"})
 	public @ResponseBody JsonPack<Activity> allActivities()
 	{
 		String query = "FROM Activity t ";
@@ -379,7 +403,185 @@ public class ConsultationController {
 		
                 return result;
 	}
+        
+        
+        
+        @RequestMapping(value="uploadFile",method=RequestMethod.POST)
+        public @ResponseBody String uploadFile(MultipartHttpServletRequest request){
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            
+            
+            Iterator<String> itr = request.getFileNames();
+            MultipartFile file = request.getFile(itr.next());
+            
+            String fileName = file.getOriginalFilename();
+            System.out.println(fileName);
+
+            try{
+                inputStream = file.getInputStream();
+                File newFolder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+idPatient);
+                newFolder.mkdir();
+                File newFile = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+idPatient+"/"+fileName);
+                if(!newFile.exists()){
+                    newFile.createNewFile();
+                }
+                outputStream = new FileOutputStream(newFile);
+                int read =0;
+                byte[] bytes = new byte[1024];
+
+                while((read = inputStream.read(bytes)) != -1){
+                    outputStream.write(bytes,0,read);
+                }
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+            
+            
+            return "";
+        }
 	
+        @RequestMapping(value="getPatientDocument")
+        public @ResponseBody JsonPack<Document> getDocuments(@RequestParam(value="idPatient")int idPatient){
+            File folder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+idPatient);
+            File[] listOfFiles = folder.listFiles();
+            List<Document> documents = new ArrayList<Document>();
+            
+            
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                   
+                    Document doc = new Document();
+                    doc.setName(listOfFiles[i].getName());
+                    doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
+                    documents.add(doc);
+                    
+                } else if (listOfFiles[i].isDirectory()) {
+                    System.out.println("Directory " + listOfFiles[i].getName());
+                }
+            }
+            
+            JsonPack<Document> result = new JsonPack<Document>(documents);
+            
+            return result;
+        }
+        
+        @RequestMapping(value="deletePatientDocument")
+        public @ResponseBody String delteDocument(@RequestParam(value="file")String file){
+            try{
+                File fileDelete = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+idPatient+"/"+file);
+                fileDelete.delete();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return "";
+        }
+        
+        @RequestMapping(value="openPatientDocument")
+        public @ResponseBody String openDocument(@RequestParam(value="file")String file){
+            try{
+                if(Desktop.isDesktopSupported()){
+                    Desktop.getDesktop().open(new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+idPatient+"/"+file));
+                }
+            }catch (IOException ioe){
+                ioe.printStackTrace();
+            }
+            
+            return "";
+        }
+        
+        //Section: Graphs/Charts
+        
+        @RequestMapping(value="getGraphPatientData")
+        public @ResponseBody JsonPack<AuxGraphTable> getPatientConsults(@RequestParam(value="patient")int patient){
+            String query = "FROM Consultation c where c.idPatient="+patient;
+            List<Consultation> list = consultationService.getListOfItem(query);
+            List<AuxGraphTable> ret = new ArrayList<AuxGraphTable>();
+            AuxGraphTable data = new AuxGraphTable();
+            
+            for(Consultation cs: list){
+                data = new AuxGraphTable(cs.getIdConsultation(),cs.getIdAppointment().getDate(),
+                                            "8-3-1",cs.getWeigth(),cs.getSize(),cs.getPc(),
+                                            cs.getTa(),cs.getTa2(),cs.getTaAverage(),cs.getTemperature(),cs.getWeigth()/Math.pow((cs.getSize()/100.00),2));
+                ret.add(data);
+            }
+            
+            return new JsonPack<AuxGraphTable>(ret);
+        }
+        
+        @RequestMapping(value="editGraphPatientData")
+        public @ResponseBody String editPatientConsults(@RequestParam(value="idConsultation")int idConsultation,
+                                                        @RequestParam(value="weight")double weight,
+                                                        @RequestParam(value="size",required = false)double size,
+                                                        @RequestParam(value="pc",required = false)double pc,
+                                                        @RequestParam(value="imc")double imc,
+                                                        @RequestParam(value="ta",required = false)double ta,
+                                                        @RequestParam(value="ta2",required = false)double ta2,
+                                                        @RequestParam(value="taaverage",required = false)double taaverage,
+                                                        @RequestParam(value="temperature",required = false)double temperature){
+            Consultation cs = consultationService.getById(idConsultation);
+            cs.setWeigth(weight);
+            cs.setSize(size);
+            cs.setPc(pc);
+            cs.setTa(ta);
+            cs.setTa2(ta2);
+            cs.setTaAverage(taaverage);
+            cs.setTemperature(temperature);
+            
+            consultationService.updateItem(cs);
+            return "";
+        }
+        
+        @RequestMapping(value="graph1")
+        public @ResponseBody JsonPack<List<GraphData>> graphAge_Weight0_36(@RequestParam(value="patient")int idPatient){
+            
+            List<Ageweight0To36Months> data = aw036Service.getAll("Ageweight0To36Months");
+            List<List<GraphData>> allData = new ArrayList<List<GraphData>>();
+            List<GraphData> list = new ArrayList<GraphData>();
+            Ageweight0To36Months aux = new Ageweight0To36Months();
+            GraphData singleD = new GraphData();
+            Patient patient = patientService.getById(idPatient);
+            String query = "FROM Consultation c where c.idPatient=" + idPatient;
+            String gender = (patient.getSex().compareTo("masculino")) == 0? "M" : "F"; 
+            
+            for(Method m: aux.getClass().getMethods()){
+                
+                if(m.getName().startsWith("getP") && m.getParameterTypes().length == 0){
+                    list = new ArrayList<GraphData>();
+                    for(Ageweight0To36Months aw: data)
+                    {   
+                        System.out.println(aw.getGender() +","+gender);
+                        if(aw.getGender().compareTo(gender) == 0){
+                            try{
+                                Object p =  m.invoke(aw);
+                                singleD  = new GraphData(aw.getAgeInMonths(),Double.valueOf(p.toString()).doubleValue());
+                                list.add(singleD);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    allData.add(list);
+                }
+            }
+            
+            list = new ArrayList<GraphData>();
+            List<Consultation> patientData = consultationService.getListOfItem(query);
+            //double ageMonths= Double.parseDouble(age[0]) * 12 + Double.parseDouble(age[1] + Double.parseDouble(age[2])/365);
+            double ageMonths=27.01;
+            for(Consultation cs: patientData){
+                singleD = new GraphData(ageMonths,cs.getSize());
+                list.add(singleD);
+            }
+            allData.add(list);
+
+            return new JsonPack<List<GraphData>>(allData);
+        }
+        
+        //Section: Laboratory Test Tabs
+
+        
 	private Relative getFather(Set<Patient_Relative> relatives)
 	{
 		for(Patient_Relative r: relatives)
