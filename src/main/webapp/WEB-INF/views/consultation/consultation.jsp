@@ -5,10 +5,19 @@
 
 <!-- Javascript for the ajax calls -->
 <c:url var="consultationAjax" value="/resources/js/consultationAjax.js" />
+<c:url var="laboratorytestJS" value="/resources/js/ConsultationTabs/LaboratoryTest.js" />
+<c:url var="measuresJS" value="/resources/js/ConsultationTabs/Measures.js" />
+<c:url var="documentsJS" value="/resources/js/ConsultationTabs/FileUpload.js" />
+<c:url var="backgroundJS" value="/resources/js/ConsultationTabs/Background.js" />
+<c:url var="activitiesJS" value="/resources/js/ConsultationTabs/Activities.js" />
+<c:url var="diagnosticJS" value="/resources/js/ConsultationTabs/Diagnostic.js" />
+<c:url var="graphsJS" value="/resources/js/ConsultationTabs/Graph.js" />
+<c:url var="inmunizationJS" value="/resources/js/ConsultationTabs/Inmunization.js" />
 
 <!-- Files for data tables function -->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
 <c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
+<c:url var="dtModCSS" value="/resources/CSS/DataTables/datatables.mod.css" />
 
 <!-- Files for the offcanvas function of bootstrap -->
 <c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
@@ -29,11 +38,23 @@
 <c:url var="jqplotJsonJs" value="/resources/js/jqplot.json2.min.js" />
 <c:url var="jqplotCSS" value="/resources/CSS/jquery.jqplot.min.css" />
 
-<!-- Files for FullCalendar -->
+<!-- Files for datePicker -->
+<c:url var="momentJs" value="/resources/js/BootstrapPlugins/Datepicker/moment.js" />
+<c:url var="datePickerJs" value="/resources/js/BootstrapPlugins/Datepicker/bootstrap-datetimepicker.min.js" />
+<c:url var="datePickerCSS" value="/resources/CSS/bootstrap-datetimepicker.min.css" />
+<c:url var="datePickerESJs" value="/resources/js/BootstrapPlugins/Datepicker/bootstrap-datetimepicker.es.js" />
+
+<c:url var="inputmaskJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.js" />
+<c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
+<c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
+
+<c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
 
 <script src="${dataTablesJS}" type="text/javascript"></script>
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
+
+<link href="${dtModCSS}" rel="stylesheet" />
 
 <script src="${offcanvasJs}" type="text/javascript"></script>
 
@@ -51,22 +72,10 @@
 
 <script src="${jqplotJsonJs}" type="text/javascript"></script>
 
-<!-- Make modal diagnostic bigger -->
-<style type="text/css">
-	#modalDiagnostic .modal-dialog
-	{
-		width:60%;
-	}
-	
-	.row_selected
-	{
-    	color:red;
-	}‹
-</style>
-<input type="hidden" id="consultationDoctorId" value="${doctor.id}">
-<input type="hidden" id="consultationDoctor" value="${doctor.staff.firstName} ${doctor.staff.lastName}">
-<input type="hidden" id="consultationPatientId" value="${patient.id}">
+<input type="hidden" id="consultationDoctorId" value="${doctor.idUser}">
+<input type="hidden" id="consultationDoctor" value="${doctor.idStaffMember.name} ${doctor.idStaffMember.lastName}">
 <input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}">
+
 <!-- Main div container , centers everything-->
 <div class="container">
 
@@ -100,7 +109,7 @@
                 <!-- The row for the age of the patient -->
                 <div class="col-sm-12">
                     <strong>Apodo :</strong>
-                    ${patient.nickname}
+                    ${patient.nickName}
                 </div>
             </div>
             <div class="row">    
@@ -146,49 +155,59 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <!-- Data obtained from the examination previous to the appointment-->
-                                    <form:form role="form" id="appointmentData">
+                                    <form role="form" id="formConsultationBasicData">
                                         <div class="row">
-                                            <div class="col-sm-2">
+                                            <div class="col-md-2">
                                                 <label for="weight">Peso(Kg):</label>
+                                                <input class="form-control input-sm inputDecimal" name="weigth" id="txtConsultationWeight" value="${appWeight}"/>
                                             </div>
-                                            <div class="col-sm-2">
-                                                <!-- The min value must be 0  and the fiel accepts only decimal numbers -->
-                                                <input class="form-control input-sm" id="weight" name="weight" type="number" step="any" min="0" value="" />
-                                            </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-md-2">
                                                 <label for="temperature">Temperatura:</label>
+                                                <input class="form-control input-sm inputDecimal" name="temperature" value="${appTemperature}"/>
                                             </div>
-                                            <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="temperature" name="temperature" type="number" step="any" min="0" value="" />
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-2">
+                                            <div class="col-md-2">
                                                 <label for="size">Talla(cm):</label>
+                                                <input class="form-control input-sm inputDecimal" name="size" value="${appSize}"/>
                                             </div>
-                                            <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="size" name="size" type="number" step="any" min="0" value="" />
-                                            </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-md-1">
                                                 <label for="ta">TA:</label>
+                                                <input class="form-control input-sm inputDecimal" name="ta" value="${appTA}"/>
                                             </div>
-                                            <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="ta" name="ta" type="number" step="any" min="0"
-                                                       />
+                                            <div class="col-md-1">
+                                                <label for="ta2">/</label>
+                                                <input class="form-control input-sm inputDecimal" name="ta2" value="${appTA2}"/>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-md-1">
+                                                <label for="taaverage">-</label>
+                                                <input class="form-control input-sm inputDecimal" name="taaverage" value="${appTAA}"/>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label for="pc">PC(cm):</label>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input class="form-control input-sm" id="pc" name="pc" type="number" step="any" min="0" value="" />
+                                                <input class="form-control input-sm inputDecimal" name="pc" value="${appPC}"/>
                                             </div>
                                         </div>
-                                    </form:form><!-- form -->
+                                    </form><!-- form -->
                                 </div><!-- col -->
                             </div><!-- row -->
                         </div><!-- panel body -->
                     </div><!-- panel -->
                     <div id="ajaxMessage"><!-- The ajax response -->
+                    </div>
+                    <!-- Danger alert -->
+                    
+                    <div class="alert alert-danger alert-dismissable" style="display: none">
+                      <strong>Advertencia!</strong>
+                      <div id="alertDangerMessage"></div>
+                    </div>
+                    <!--Succes alert-->
+                    <div class="alert alert-success alert-dismissable" style="display: none">
+                      <strong>Excelente!</strong>
+                      <div id="alertSuccessMessage"></div>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      <strong>Advertencia!</strong> La informacion se guarda automaticamente al hacer cambios. A excepcion
+                      del diagnostico,receta y datos de consulta.
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -207,60 +226,19 @@
                             </ul>
 
                             <div class="tab-content">
-                                <div id="generales" class="tab-pane active">
-                                        <jsp:include page="generalsDiv.jsp"/>
-                                </div>
-                                <div id="antecedentes" class="tab-pane">
-                                        <jsp:include page="backgroundDiv.jsp"/>
-                                </div>
-                                <div id="documentos" class="tab-pane"><jsp:include page="fileUpload.jsp" /></div>
-                                <div id="graficas" class="tab-pane"><jsp:include page="graphs.jsp" /></div>
-                                <div id="inmunizaciones" class="tab-pane">inmunizaciones</div>
-                                <div id="labGabinetes" class="tab-pane"><jsp:include page="laboratory.jsp" /></div>
-                                <div id="medidas" class="tab-pane">medidas</div>
-                                <div id="peeaef" class="tab-pane">peea ef</div>
-                                <div id="diagnostico" class="tab-pane">
-                                        <jsp:include page="diagnosticDiv.jsp"/>
-                                </div>
+                                <div id="generales" class="tab-pane active"><jsp:include page="Tabs/generals.jsp"/></div>
+                                <div id="antecedentes" class="tab-pane"><jsp:include page="Tabs/background.jsp"/></div>
+                                <div id="documentos" class="tab-pane"><jsp:include page="Tabs/fileUpload.jsp" /></div>
+                                <div id="graficas" class="tab-pane"><jsp:include page="Tabs/graphs.jsp" /></div>
+                                <div id="inmunizaciones" class="tab-pane"><jsp:include page="Tabs/inmunization.jsp" /></div>
+                                <div id="labGabinetes" class="tab-pane"><jsp:include page="Tabs/laboratory.jsp" /></div>
+                                <div id="medidas" class="tab-pane"><jsp:include page="Tabs/measures.jsp" /></div>
+                                <div id="peeaef" class="tab-pane"><jsp:include page="Tabs/peea.jsp" /></div>
+                                <div id="diagnostico" class="tab-pane"><jsp:include page="Tabs/diagnostic.jsp"/></div>
                                 <div id="receta" class="tab-pane">
                                     <textarea id="consultationPrescription" class="form-control" rows="10"></textarea>
                                 </div>
-                                <div id="actividades" class="tab-pane">
-                                    <div class="row">
-                                        <div id="divConsultationActivities" class="col-sm-6">
-                                            <table id="tblActivities" class="hover cell-border">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Actividad</th>
-                                                        <th>Tipo</th>
-                                                        <th>Costo</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <div id="divConsultationSelectedActivities" class="col-sm-6">
-                                            <table id="tblSelectedActivities" class="hover cell-border">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Actividad</th>
-                                                        <th>Costo</th>
-                                                        <th>Eliminar</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div> <!-- Selected activities Div -->
-                                    </div> <!-- Actividades div Row -->
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <input type="button" class="btn btn-primary" value="Agregar" onclick="addSelectedAcitivitiesRow()"/>
-                                            <a data-toggle="modal" href="#modalAddNewActivity" class="btn btn-primary">Nuevo</a>
-                                            <a data-toggle="modal" href="#modalEditActivity" class="btn btn-primary" onclick="editSelectedActivity();">Modificar</a>
-                                            <jsp:include page="addModifyActivities.jsp" />
-                                        </div>
-                                        <div class="col-sm-6">
-                                        </div>
-                                    </div>
-                                </div> <!-- Actividades div -->
+                                <div id="actividades" class="tab-pane"><jsp:include page="Tabs/activities.jsp"/></div>
                             </div><!-- tab-content div -->
                         </div><!-- col for the tabs  -->
                     </div>
@@ -270,12 +248,42 @@
     </div><!-- main div of the container -->
 </div><!--/.container-->
 
+<!-- Plugins and tools -->
+<script src="${momentJs}" type="text/javascript"></script>
+
+<link href="${datePickerCSS}" rel="stylesheet" />
+
+<script src="${datePickerJs}" type="text/javascript"></script>
+
+<script src="${datePickerESJs}" type="text/javascript"></script>
+
+<script src="${inputmaskJs}" type="text/javascript"></script>
+
+<script src="${inputmaskDateJs}" type="text/javascript"></script>
+
+<script src="${inputmaskRegexJs}" type="text/javascript"></script>
+
+<script src="${bootboxJs}" type="text/javascript"></script>
+
+<!-- System behaviuor -->
+
 <script src="${consultationAjax}" type="text/javascript"></script>
 
-<!-- The style for the nav pills -->
-<style type="text/css">
-    .red .active a,
-    .red .active a:hover {
-        background-color: red;
-    }
-</style>
+<script src="${laboratorytestJS}" type="text/javascript"></script>
+
+<script src="${measuresJS}" type="text/javascript"></script>
+
+<script src="${documentsJS}" type="text/javascript"></script>
+
+<script src="${backgroundJS}" type="text/javascript"></script>
+
+<script src="${activitiesJS}" type="text/javascript"></script>
+
+<script src="${diagnosticJS}" type="text/javascript"></script>
+
+<script src="${inmunizationJS}" type="text/javascript"></script>
+
+<script src="${graphsJS}" type="text/javascript"></script>
+
+
+

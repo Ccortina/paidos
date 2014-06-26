@@ -1,0 +1,23 @@
+/* 
+    Document   : datatables.mod
+    Created on : Jun 21, 2014, 11:35:41 PM
+    Author     : Ccortina_Mac
+    Description:
+        Purpose of the stylesheet follows.
+*/
+    
+tr.vpNormal:hover,tr.vpNormal.selected{
+    background-color:#028e2c!important;
+}
+    
+tr.vpSuspended:hover,tr.vpSuspended.selected{
+    background-color:#cda80a!important;
+}
+    
+tr.vpExpired:hover,tr.vpExpired.selected{
+    background-color:#C23B22!important;
+}
+
+
+
+

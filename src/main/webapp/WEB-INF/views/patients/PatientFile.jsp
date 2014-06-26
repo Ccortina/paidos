@@ -16,7 +16,17 @@
 <c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
 <c:url var="offcanvasCss" value="/resources/CSS/offcanvas.css" />
 
-<c:url var="patientFileJS" value="/resources/js/patientFile.js" />
+<c:url var="patientFileJS" value="/resources/js/PatientFile/${jsFile}" />
+
+<!-- Files for datePicker -->
+<c:url var="datePickerJs" value="/resources/js/bootstrap-datepicker.js" />
+<c:url var="datePickerCSS" value="/resources/CSS/datepicker.css" />
+
+<!-- Tabs -->
+<c:url var="patientBackgroundJS" value="/resources/js/PatientFile/Tabs/background.js" />
+<c:url var="documentsJS" value="/resources/js/PatientFile/Tabs/file.js" />
+<c:url var="laboratoryJS" value="/resources/js/PatientFile/Tabs/laboratoryTest.js" />
+<!--<c:url var="previousConsultationJS" value="/resources/js/PatientFile/Tabs/PreviousConsultation.js" />-->
 
 <script src="${dataTablesJS}" type="text/javascript"></script>
 
@@ -26,7 +36,7 @@
 
 <link href="${offcanvasCss}" rel="stylesheet" />
 
-<script src="${patientFileJS}" type="text/javascript"></script>
+<link href="${datePickerCSS}" rel="stylesheet" />
 
 <style type="text/css">
 	#modalPatientFamilyAddRelative .modal-dialog
@@ -37,6 +47,7 @@
 
 <!-- Main div container , centers everything-->
 <input type="hidden" id="hiddenPatientFileId" value="${patient.id}">
+<input type="hidden" id="hiddenPatientIdAppointment" value="${idAppointment}">
 <div class="container">
     <div class="row">
         <div class="col-sm-2"> <!-- primer columna foto -->
@@ -99,13 +110,8 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Fecha Nacimiento</th>
-                            </tr>
-                            <c:forEach items="${sibilings}" var="i">
-                            <tr>
-                                <td>${i.firstName} ${i.secondName} ${i.fatherLastName} ${i.motherLastName}</td>
-                                <td>1</td>                          
-                            </tr>
-                            </c:forEach>    
+                                <th>Consultar</th>
+                            </tr>   
                         </thead>
                     </table>
                 </div>
@@ -114,11 +120,27 @@
         <div class="col-sm-2"><!--Cuarta columna botones -->
             <div class="row">
                 <div class="col-sm-12">
-                    botones
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="button" class="btn btn-primary" value="Consultar" onclick="consultPatient();"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="button" class="btn btn-danger" value="Cerrar" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div><!--Cuarta columna botones -->
     </div><!-- First row -->
+    <div id="divWarningAutosave" class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-warning alert-dismissable">
+                <strong>Advertencia!</strong> La informacion se guarda automaticamente al realizar un cambio.
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <ul id="consultationTabMenu" class="nav nav-tabs">
@@ -134,17 +156,24 @@
             </ul>
             
             <div class="tab-content">
-                <div id="resumen" class="tab-pane active"> <jsp:include page="PatientAbstractTab.jsp" /></div>
-                <div id="familia" class="tab-pane"><jsp:include page="PatientFamilyTab.jsp" /></div>
-                <div id="antecedentes" class="tab-pane"> <jsp:include page="PatientBackgroundTab.jsp" /> </div>
-                <div id="documentos" class="tab-pane">documentos</div>
+                <div id="resumen" class="tab-pane active"> <jsp:include page="PatientFileTabs/PatientAbstractTab.jsp" /></div>
+                <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /></div>
+                <div id="antecedentes" class="tab-pane"><jsp:include page="PatientFileTabs/PatientBackgroundTab.jsp" /> </div>
+                <div id="documentos" class="tab-pane"><jsp:include page="PatientFileTabs/Files.jsp" /></div>
                 <div id="graficas" class="tab-pane">graficas</div>
                 <div id="inmunizaciones" class="tab-pane">inmunizaciones</div>
-                <div id="labGabinetes" class="tab-pane">Lab. Gabinete</div>
-                <div id="consultas" class="tab-pane">Consultas</div>
+                <div id="labGabinetes" class="tab-pane"><jsp:include page="PatientFileTabs/LaboratoryTest.jsp" /></div>
+                <div id="consultas" class="tab-pane"><jsp:include page="PatientFileTabs/PreviousConsultation.jsp" /></div>
                 <div id="citas" class="tab-pane">citas</div>
             </div><!-- tab-content div -->
         </div>
     </div>
         
 </div><!--/.container-->
+
+<script src="${patientFileJS}" type="text/javascript"></script>
+<script src="${patientBackgroundJS}" type="text/javascript"></script>
+<script src="${documentsJS}" type="text/javascript"></script>
+<script src="${laboratoryJS}" type="text/javascript"></script>
+<script src="${datePickerJs}" type="text/javascript"></script>
+<!--<script src="${previousConsultationJS}" type="text/javascript"></script>-->

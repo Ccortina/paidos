@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"></html>
 <head>
 <title>Paidos Demo <c:out value="${pageTitle}" />
 </title>
@@ -11,6 +11,7 @@
 <c:url var="cssUrl" value="/resources/CSS/bootstrap.min.css" />
 <c:url var="jsUrl" value="/resources/js/bootstrap.min.js" />
 <c:url var="jqueryUrl" value="/resources/js/jquery-2-1.0.3.js" />
+<c:url var="inputMask" value="/resources/js//JQueryPlugins/jquery.inputmask.js" />
 
 <script src="${jqueryUrl}" type="text/javascript"></script>
 <script src="${jsUrl}" type="text/javascript"></script>
