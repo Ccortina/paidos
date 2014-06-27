@@ -215,3 +215,9 @@ function displayDangerAlert(message){
     box.find('.modal-content').css({'color': '#a94442','background-color': '#f2dede','border-color': '#ebccd1'});
     window.setTimeout(function(){bootbox.hideAll();}, 2000);
 }
+
+function displayWarningAlert(message){
+    var box = bootbox.alert("<center><strong>Advertencia! </strong>"+message+"</center>");
+    box.find('.modal-content').css({'color':'#8a6d3b','background-color':'#fcf8e3','border-color':'#faebcc'});
+    window.setTimeout(function(){bootbox.hideAll();}, 2000);
+}

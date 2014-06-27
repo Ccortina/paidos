@@ -5,4 +5,5 @@ import com.carloscortina.demo.model.Patient;
 
 public interface PatientService extends GenericService<Patient>{
 
+    public Patient mergePatient(Patient patient);
 }

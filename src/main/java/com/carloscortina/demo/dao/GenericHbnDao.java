@@ -3,9 +3,11 @@ package com.carloscortina.demo.dao;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import org.hibernate.Criteria;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class GenericHbnDao<T> implements GenericDao<T> {
@@ -63,5 +65,16 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 	public List<T> getListOfItem(String query) {
 		return ( getSession().createQuery(query).list());
 	}
+        
+        @Override
+        public List<T> getSpecificColumnsList(List<String> columns){
+            Criteria criteria = getSession().createCriteria(type);
+            for(String property: columns){
+                criteria.setProjection(Projections.projectionList().add(
+                    Projections.property(property)));
+            }
+            List<T> result = criteria.list();
+            return result;
+        }
 
 }

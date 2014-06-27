@@ -51,5 +51,10 @@ public class ActivityTypeServiceImp implements ActivityTypeService{
     public void delete(ActivityType item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<ActivityType> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

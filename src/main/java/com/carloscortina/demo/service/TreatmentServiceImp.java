@@ -50,5 +50,10 @@ public class TreatmentServiceImp implements TreatmentService{
     public void delete(Treatment item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Treatment> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 }

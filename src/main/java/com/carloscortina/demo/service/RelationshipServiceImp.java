@@ -51,5 +51,10 @@ public class RelationshipServiceImp implements RelationshipService{
     public void delete(Relationship item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Relationship> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

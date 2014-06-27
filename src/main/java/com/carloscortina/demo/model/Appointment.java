@@ -1,6 +1,11 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,8 +25,10 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="appointment")
-public class Appointment {
+public class Appointment implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idAppointment")
@@ -30,9 +40,14 @@ public class Appointment {
     private Date date;
     
     @NotNull
-    @Column(name = "time")
+    @Column(name = "startTime")
     @Temporal(TemporalType.TIME)
-    private Date time;
+    private Date startTime;
+    
+    @Basic(optional = false)
+    @Column(name = "endTime")
+    @Temporal(TemporalType.TIME)
+    private Date endTime;
     
     @Size(max = 45)
     @Column(name = "motive")
@@ -49,13 +64,37 @@ public class Appointment {
     @ManyToOne(optional = false)
     private AppointmentStatus idStatus;
     
-    @JoinColumn(name = "registeredBy", referencedColumnName = "idStaffMember")
+    @JoinColumn(name = "registeredBy", referencedColumnName = "idUser")
     @ManyToOne(optional = false)
-    private StaffMember registeredBy;
+    private User registeredBy;
     
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
+    
+    @JoinColumn(name = "idDoctor", referencedColumnName = "idUser")
+    @ManyToOne(optional = false)
+    private User idDoctor;
+    
+    @Column(name = "weight")
+    private Double weight;
+    @Column(name = "temperature")
+    private Double temperature;
+    @Column(name = "size")
+    private Double size;
+    @Column(name = "ta")
+    private Double ta;
+    @Column(name = "ta2")
+    private Double ta2;
+    @Column(name = "taAverage")
+    private Double taAverage;
+    @Column(name = "pc")
+    private Double pc;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment")
+    private List<AppointmentVaccine> appointmentVaccineList;
+    @Basic(optional = false)
+    @Column(name = "programmedBySystem")
+    private short programmedBySystem;
 
     public Appointment() {
     }
@@ -63,13 +102,7 @@ public class Appointment {
     public Appointment(Integer idAppointment) {
         this.idAppointment = idAppointment;
     }
-
-    public Appointment(Integer idAppointment, Date date, Date time) {
-        this.idAppointment = idAppointment;
-        this.date = date;
-        this.time = time;
-    }
-
+    
     public Integer getIdAppointment() {
         return idAppointment;
     }
@@ -86,12 +119,20 @@ public class Appointment {
         this.date = date;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public String getMotive() {
@@ -126,11 +167,11 @@ public class Appointment {
         this.idStatus = idStatus;
     }
 
-    public StaffMember getRegisteredBy() {
+    public User getRegisteredBy() {
         return registeredBy;
     }
 
-    public void setRegisteredBy(StaffMember registeredBy) {
+    public void setRegisteredBy(User registeredBy) {
         this.registeredBy = registeredBy;
     }
 
@@ -140,5 +181,85 @@ public class Appointment {
 
     public void setIdPatient(Patient idPatient) {
         this.idPatient = idPatient;
+    }
+
+    public User getIdDoctor() {
+        return idDoctor;
+    }
+
+    public void setIdDoctor(User idDoctor) {
+        this.idDoctor = idDoctor;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public Double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Double temperature) {
+        this.temperature = temperature;
+    }
+
+    public Double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
+    }
+
+    public Double getTa() {
+        return ta;
+    }
+
+    public void setTa(Double ta) {
+        this.ta = ta;
+    }
+
+    public Double getTa2() {
+        return ta2;
+    }
+
+    public void setTa2(Double ta2) {
+        this.ta2 = ta2;
+    }
+
+    public Double getTaAverage() {
+        return taAverage;
+    }
+
+    public void setTaAverage(Double taAverage) {
+        this.taAverage = taAverage;
+    }
+
+    public Double getPc() {
+        return pc;
+    }
+
+    public void setPc(Double pc) {
+        this.pc = pc;
+    }
+
+    public List<AppointmentVaccine> getAppointmentVaccineList() {
+        return appointmentVaccineList;
+    }
+
+    public void setAppointmentVaccineList(List<AppointmentVaccine> appointmentVaccineList) {
+        this.appointmentVaccineList = appointmentVaccineList;
+    }
+    
+    public short getProgrammedBySystem() {
+        return programmedBySystem;
+    }
+
+    public void setProgrammedBySystem(short programmedBySystem) {
+        this.programmedBySystem = programmedBySystem;
     }
 }

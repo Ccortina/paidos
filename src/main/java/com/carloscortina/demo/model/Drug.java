@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -41,21 +42,7 @@ import org.hibernate.annotations.LazyCollectionOption;
     @NamedQuery(name = "Drug.findByDailyFrequency", query = "SELECT d FROM Drug d WHERE d.dailyFrequency = :dailyFrequency"),
     @NamedQuery(name = "Drug.findByActive", query = "SELECT d FROM Drug d WHERE d.active = :active")})
 public class Drug implements Serializable {
-    @JoinTable(name = "treatmentDrug", joinColumns = {
-        @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {
-        @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
-    @ManyToMany
-    @JsonIgnore
-    private Collection<Treatment> treatmentCollection;
-    @JoinTable(name = "incompatibleDrugs", joinColumns = {
-        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
-        @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idDrug")})
-    @ManyToMany
-    @JsonIgnore
-    private Collection<Drug> drugCollection;
-    @ManyToMany(mappedBy = "drugCollection")
-    @JsonIgnore
-    private Collection<Drug> drugCollection1;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,6 +91,23 @@ public class Drug implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "idDrug")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Collection<DrugDose> drugDoseId;
+    @JoinTable(name = "treatmentdrug", joinColumns = {
+        @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+        @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
+    @ManyToMany
+    private List<Treatment> treatmentList;
+    @JoinTable(name = "incompatibledrugs", joinColumns = {
+        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+        @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idDrug")})
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Drug> drugList;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "drugList")
+    private List<Drug> drugList1;
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
+    @ManyToOne(optional = false)
+    private User idUser;
 
     public Drug() {
     }
@@ -259,34 +263,42 @@ public class Drug implements Serializable {
         return "diagnostic.Drug[ idDrug=" + idDrug + " ]";
     }
 
-    @XmlTransient
     @JsonIgnore
-    public Collection<Treatment> getTreatmentCollection() {
-        return treatmentCollection;
-    }
-
-    public void setTreatmentCollection(Collection<Treatment> treatmentCollection) {
-        this.treatmentCollection = treatmentCollection;
-    }
-
     @XmlTransient
-    @JsonIgnore
-    public Collection<Drug> getDrugCollection() {
-        return drugCollection;
+    public List<Treatment> getTreatmentList() {
+        return treatmentList;
     }
 
-    public void setDrugCollection(Collection<Drug> drugCollection) {
-        this.drugCollection = drugCollection;
+    public void setTreatmentList(List<Treatment> treatmentList) {
+        this.treatmentList = treatmentList;
     }
 
     @XmlTransient
-    @JsonIgnore
-    public Collection<Drug> getDrugCollection1() {
-        return drugCollection1;
+    public List<Drug> getDrugList() {
+        return drugList;
     }
 
-    public void setDrugCollection1(Collection<Drug> drugCollection1) {
-        this.drugCollection1 = drugCollection1;
+    public void setDrugCollection(List<Drug> drugList) {
+        this.drugList = drugList;
     }
+
+    @XmlTransient
+    public Collection<Drug> getDrugList1() {
+        return drugList1;
+    }
+
+    public void setDrugList1(List<Drug> drugList1) {
+        this.drugList1 = drugList1;
+    }
+
+    public User getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(User idUser) {
+        this.idUser = idUser;
+    }
+    
+    
     
 }

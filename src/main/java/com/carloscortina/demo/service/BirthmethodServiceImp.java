@@ -51,5 +51,10 @@ public class BirthmethodServiceImp implements BirthmethodService{
     public List<Birthmethod> getListOfItem(String query) {
         return birthmethodDao.getListOfItem(query);
     }
+
+    @Override
+    public List<Birthmethod> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

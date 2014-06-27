@@ -51,5 +51,10 @@ public class AW0to36MonthsServiceImp implements AW0to36MonthsService{
     public List<Ageweight0To36Months> getListOfItem(String query) {
         return aw036Dao.getListOfItem(query);
     }
+
+    @Override
+    public List<Ageweight0To36Months> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -1,9 +1,9 @@
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.StaffMember;
+import com.carloscortina.demo.model.Staffmember;
 
 
 public interface StaffMemberDao {
 
-	void createStaffMember(StaffMember staff);
+	void createStaffMember(Staffmember staff);
 }

@@ -6,11 +6,9 @@
 package com.carloscortina.demo.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,11 +21,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -40,7 +40,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
     @NamedQuery(name = "Cie10.findAll", query = "SELECT c FROM Cie10 c"),
     @NamedQuery(name = "Cie10.findByIdCIE10", query = "SELECT c FROM Cie10 c WHERE c.idCIE10 = :idCIE10"),
     @NamedQuery(name = "Cie10.findByCieCode", query = "SELECT c FROM Cie10 c WHERE c.cieCode = :cieCode"),
-    @NamedQuery(name = "Cie10.findByLastUsed", query = "SELECT c FROM Cie10 c WHERE c.lastUsed = :lastUsed"),
     @NamedQuery(name = "Cie10.findByActive", query = "SELECT c FROM Cie10 c WHERE c.active = :active")})
 public class Cie10 implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -66,17 +65,17 @@ public class Cie10 implements Serializable {
     private String description;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "lastUsed")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUsed;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "active")
     private short active;
     @JsonIgnore
-    //fetch=FetchType.EAGER
-    @ManyToMany(fetch=FetchType.EAGER,mappedBy = "cie10Collection")
-    private Collection<Treatment> treatmentCollection;
+    @JoinTable(name = "diagnostictreatment", joinColumns = {
+        @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")}, inverseJoinColumns = {
+        @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
+    @ManyToMany
+    private List<Treatment> treatmentList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCIE10")
+    private List<Diagnostic> diagnosticList;
 
     public Cie10() {
     }
@@ -85,11 +84,10 @@ public class Cie10 implements Serializable {
         this.idCIE10 = idCIE10;
     }
 
-    public Cie10(Integer idCIE10, String cieCode, String diagnostic, Date lastUsed, short active) {
+    public Cie10(Integer idCIE10, String cieCode, String diagnostic, short active) {
         this.idCIE10 = idCIE10;
         this.cieCode = cieCode;
         this.diagnostic = diagnostic;
-        this.lastUsed = lastUsed;
         this.active = active;
     }
 
@@ -125,14 +123,6 @@ public class Cie10 implements Serializable {
         this.description = description;
     }
 
-    public Date getLastUsed() {
-        return lastUsed;
-    }
-
-    public void setLastUsed(Date lastUsed) {
-        this.lastUsed = lastUsed;
-    }
-
     public short getActive() {
         return active;
     }
@@ -142,13 +132,24 @@ public class Cie10 implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Treatment> getTreatmentCollection() {
-        return treatmentCollection;
+    public List<Treatment> getTreatmentList() {
+        return treatmentList;
     }
 
-    public void setTreatmentCollection(Collection<Treatment> treatmentCollection) {
-        this.treatmentCollection = treatmentCollection;
+    public void setTreatmentList(List<Treatment> treatmentList) {
+        this.treatmentList = treatmentList;
     }
+
+    @XmlTransient
+    public List<Diagnostic> getDiagnosticList() {
+        return diagnosticList;
+    }
+
+    public void setDiagnosticList(List<Diagnostic> diagnosticList) {
+        this.diagnosticList = diagnosticList;
+    }
+    
+    
 
     @Override
     public int hashCode() {

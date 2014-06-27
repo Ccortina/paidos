@@ -51,5 +51,10 @@ public class LaboratoryTestServiceImp implements LaboratoryTestService{
     public List<LaboratoryTest> getListOfItem(String query) {
         return labDao.getListOfItem(query);
     }
+
+    @Override
+    public List<LaboratoryTest> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

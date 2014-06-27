@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.carloscortina.demo.model.Appointment;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -47,4 +48,18 @@ public class AppointmentServiceImp implements AppointmentService {
         return appointmentDao.getListOfItem(query);
     }
 
+    @Override
+    public List<Appointment> getAppointments(Date start, Date end){
+        return appointmentDao.getAppointments(start, end);
+    }
+    
+    @Override
+    public List<Appointment> getAppointments(Date start, Date end,int idDoctor){
+        return appointmentDao.getAppointments(start, end,idDoctor);
+    }
+
+    @Override
+    public List<Appointment> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

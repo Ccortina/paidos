@@ -10,4 +10,5 @@ public interface GenericDao<T> {
 	public T getById(int id);
 	public List<T> getAll(String table);
 	public List<T> getListOfItem(String query);
+        public List<T> getSpecificColumnsList(List<String> columns);
 }

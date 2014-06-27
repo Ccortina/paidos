@@ -286,6 +286,7 @@ public class Relative implements Serializable{
 
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne
+    @JsonIgnore
     public Patient getIdPatient() {
         return idPatient;
     }

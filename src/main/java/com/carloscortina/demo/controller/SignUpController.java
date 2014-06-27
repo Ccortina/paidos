@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.carloscortina.demo.model.Role;
-import com.carloscortina.demo.model.StaffMember;
+import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.StaffRegistrationForm;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.RoleService;
@@ -65,8 +65,8 @@ public class SignUpController
 		convertPasswordError(result);	//Verify if the passwords match
 		if (!result.hasErrors())	// The validation was correct?
 		{
-			StaffMember staff = toStaffMember(form);
-			staffMemberService.createStaffMember(staff);	
+			Staffmember staff = toStaffMember(form);
+			staffMemberService.createStaffmember(staff);	
 			
 			Role role = roleService.getRole(Integer.parseInt(form.getRole()));
 			
@@ -96,23 +96,23 @@ public class SignUpController
 		
 	}
 	
-	private User toUser(StaffRegistrationForm form,Role role,StaffMember staff)
+	private User toUser(StaffRegistrationForm form,Role role,Staffmember staff)
 	{
 		User newUser = new User();
 		newUser.setUsername(form.getUsername());
 		newUser.setPassword(form.getPassword());
 		newUser.setEmail(form.getEmail());
-		newUser.setRole(role);
-		newUser.setStaff(staff);
+                newUser.setIdRole(role);
+                newUser.setIdStaffMember(staff);
 		
 		return newUser;
 		
 	}
 	
-	private StaffMember toStaffMember(StaffRegistrationForm form)
+	private Staffmember toStaffMember(StaffRegistrationForm form)
 	{
-		StaffMember staff = new StaffMember();
-		staff.setFirstName(form.getFirstName());
+		Staffmember staff = new Staffmember();
+                staff.setName(form.getFirstName());
 		staff.setLastName(form.getLastName());
 		staff.setPhone(form.getPhone());
 		staff.setCellPhone(form.getCellPhone());

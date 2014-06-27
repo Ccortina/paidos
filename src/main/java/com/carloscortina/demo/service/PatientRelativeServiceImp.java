@@ -51,5 +51,10 @@ public class PatientRelativeServiceImp implements PatientRelativeService{
     public void delete(Patient_Relative item) {
         patientRelativeDao.delete(item);
     }
+
+    @Override
+    public List<Patient_Relative> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

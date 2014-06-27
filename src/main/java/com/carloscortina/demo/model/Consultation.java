@@ -1,27 +1,32 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author carloscortina
+ * @author Ccortina_Mac
  */
 @Entity
 @Table(name = "consultation")
@@ -29,7 +34,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Consultation.findAll", query = "SELECT c FROM Consultation c"),
     @NamedQuery(name = "Consultation.findByIdConsultation", query = "SELECT c FROM Consultation c WHERE c.idConsultation = :idConsultation"),
-    @NamedQuery(name = "Consultation.findByMotive", query = "SELECT c FROM Consultation c WHERE c.motive = :motive")})
+    @NamedQuery(name = "Consultation.findByMotive", query = "SELECT c FROM Consultation c WHERE c.motive = :motive"),
+    @NamedQuery(name = "Consultation.findByWeigth", query = "SELECT c FROM Consultation c WHERE c.weigth = :weigth"),
+    @NamedQuery(name = "Consultation.findBySize", query = "SELECT c FROM Consultation c WHERE c.size = :size"),
+    @NamedQuery(name = "Consultation.findByTemperature", query = "SELECT c FROM Consultation c WHERE c.temperature = :temperature"),
+    @NamedQuery(name = "Consultation.findByPc", query = "SELECT c FROM Consultation c WHERE c.pc = :pc"),
+    @NamedQuery(name = "Consultation.findByTa", query = "SELECT c FROM Consultation c WHERE c.ta = :ta"),
+    @NamedQuery(name = "Consultation.findByTa2", query = "SELECT c FROM Consultation c WHERE c.ta2 = :ta2"),
+    @NamedQuery(name = "Consultation.findByTaAverage", query = "SELECT c FROM Consultation c WHERE c.taAverage = :taAverage"),
+    @NamedQuery(name = "Consultation.findByPeea", query = "SELECT c FROM Consultation c WHERE c.peea = :peea"),
+    @NamedQuery(name = "Consultation.findByEf", query = "SELECT c FROM Consultation c WHERE c.ef = :ef")})
 public class Consultation implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,35 +51,44 @@ public class Consultation implements Serializable {
     @Basic(optional = false)
     @Column(name = "idConsultation")
     private Integer idConsultation;
-    @Size(max = 100)
     @Column(name = "motive")
     private String motive;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "weigth")
+    private Double weigth;
+    @Column(name = "size")
+    private Double size;
+    @Column(name = "temperature")
+    private Double temperature;
+    @Column(name = "pc")
+    private Double pc;
+    @Column(name = "ta")
+    private Double ta;
+    @Column(name = "ta2")
+    private Double ta2;
+    @Column(name = "taAverage")
+    private Double taAverage;
+    @Column(name = "peea")
+    private String peea;
+    @Column(name = "ef")
+    private String ef;
+    @Column(name = "prescription")
+    private String prescription;
+    @Column(name = "prescriptionNotes")
+    private String prescriptionNotes;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConsultation")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<ConsultationDiagnostic> consultationDiagnosticList;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
-    @JoinColumn(name = "idDoctor", referencedColumnName = "idStaffMember")
+    @JoinColumn(name = "idDoctor", referencedColumnName = "idUser")
     @ManyToOne(optional = false)
-    private StaffMember idDoctor;
+    private User idDoctor;
     @JoinColumn(name = "idAppointment", referencedColumnName = "idAppointment")
     @ManyToOne(optional = false)
     private Appointment idAppointment;
-    @ManyToMany(mappedBy = "consultationCollection")
-    @JsonIgnore
-    private Collection<Activity> activityCollection;
-    @Column(name = "weigth")
-    private double weigth;
-    @Column(name = "size")
-    private double kidSize;
-    @Column(name = "temperature")
-    private double temperature;
-    @Column(name = "pc")
-    private double pc;
-    @Column(name = "ta")
-    private double ta;
-    @Column(name = "ta2")
-    private double ta2;
-    @Column(name = "taAverage")
-    private double taAverage;
+    
 
     public Consultation() {
     }
@@ -89,7 +112,88 @@ public class Consultation implements Serializable {
     public void setMotive(String motive) {
         this.motive = motive;
     }
-    
+
+    public Double getWeigth() {
+        return weigth;
+    }
+
+    public void setWeigth(Double weigth) {
+        this.weigth = weigth;
+    }
+
+    public Double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
+    }
+
+    public Double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Double temperature) {
+        this.temperature = temperature;
+    }
+
+    public Double getPc() {
+        return pc;
+    }
+
+    public void setPc(Double pc) {
+        this.pc = pc;
+    }
+
+    public Double getTa() {
+        return ta;
+    }
+
+    public void setTa(Double ta) {
+        this.ta = ta;
+    }
+
+    public Double getTa2() {
+        return ta2;
+    }
+
+    public void setTa2(Double ta2) {
+        this.ta2 = ta2;
+    }
+
+    public Double getTaAverage() {
+        return taAverage;
+    }
+
+    public void setTaAverage(Double taAverage) {
+        this.taAverage = taAverage;
+    }
+
+    public String getPeea() {
+        return peea;
+    }
+
+    public void setPeea(String peea) {
+        this.peea = peea;
+    }
+
+    public String getEf() {
+        return ef;
+    }
+
+    public void setEf(String ef) {
+        this.ef = ef;
+    }
+
+    @XmlTransient
+    public List<ConsultationDiagnostic> getConsultationDiagnosticList() {
+        return consultationDiagnosticList;
+    }
+
+    public void setConsultationDiagnosticList(List<ConsultationDiagnostic> consultationDiagnosticList) {
+        this.consultationDiagnosticList = consultationDiagnosticList;
+    }
+
     public Patient getIdPatient() {
         return idPatient;
     }
@@ -98,11 +202,11 @@ public class Consultation implements Serializable {
         this.idPatient = idPatient;
     }
 
-    public StaffMember getIdDoctor() {
+    public User getIdDoctor() {
         return idDoctor;
     }
 
-    public void setIdDoctor(StaffMember idDoctor) {
+    public void setIdDoctor(User idDoctor) {
         this.idDoctor = idDoctor;
     }
 
@@ -114,72 +218,16 @@ public class Consultation implements Serializable {
         this.idAppointment = idAppointment;
     }
 
-    @XmlTransient
-    public Collection<Activity> getActivityCollection() {
-        return activityCollection;
+    public String getPrescription() {
+        return prescription;
     }
 
-    public void setActivityCollection(Collection<Activity> activityCollection) {
-        this.activityCollection = activityCollection;
-    }
-    
-    public double getWeigth() {
-        return weigth;
-    }
-
-    public void setWeigth(double weigth) {
-        this.weigth = weigth;
-    }
-
-    public double getSize() {
-        return kidSize;
-    }
-
-    public void setSize(double size) {
-        this.kidSize = size;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
-
-    public double getPc() {
-        return pc;
-    }
-
-    public void setPc(double pc) {
-        this.pc = pc;
-    }
-
-    public double getTa() {
-        return ta;
-    }
-
-    public void setTa(double ta) {
-        this.ta = ta;
-    }
-
-    public double getTa2() {
-        return ta2;
-    }
-
-    public void setTa2(double ta2) {
-        this.ta2 = ta2;
-    }
-
-    public double getTaAverage() {
-        return taAverage;
-    }
-
-    public void setTaAverage(double taAverage) {
-        this.taAverage = taAverage;
+    public void setPrescription(String prescription) {
+        this.prescription = prescription;
     }
     
     
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -202,8 +250,7 @@ public class Consultation implements Serializable {
 
     @Override
     public String toString() {
-        return "diagnostic.Consultation[ idConsultation=" + idConsultation + " ]";
+        return "pruebas1.Consultation[ idConsultation=" + idConsultation + " ]";
     }
     
 }
-

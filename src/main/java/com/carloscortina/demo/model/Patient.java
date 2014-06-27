@@ -1,14 +1,10 @@
 package com.carloscortina.demo.model;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,309 +12,337 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+/**
+ *
+ * @author Ccortina_Mac
+ */
 @Entity
-@Table(name="Patient")
-public class Patient implements Serializable{
-	
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 9026423808843575752L;
-    private int id;
+@Table(name = "patient")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p"),
+    @NamedQuery(name = "Patient.findByIdPatient", query = "SELECT p FROM Patient p WHERE p.idPatient = :idPatient"),
+    @NamedQuery(name = "Patient.findByFirstName", query = "SELECT p FROM Patient p WHERE p.firstName = :firstName"),
+    @NamedQuery(name = "Patient.findBySecondName", query = "SELECT p FROM Patient p WHERE p.secondName = :secondName"),
+    @NamedQuery(name = "Patient.findByFatherLastName", query = "SELECT p FROM Patient p WHERE p.fatherLastName = :fatherLastName"),
+    @NamedQuery(name = "Patient.findByMotherLastName", query = "SELECT p FROM Patient p WHERE p.motherLastName = :motherLastName"),
+    @NamedQuery(name = "Patient.findByCurp", query = "SELECT p FROM Patient p WHERE p.curp = :curp"),
+    @NamedQuery(name = "Patient.findByNickName", query = "SELECT p FROM Patient p WHERE p.nickName = :nickName"),
+    @NamedQuery(name = "Patient.findBySex", query = "SELECT p FROM Patient p WHERE p.sex = :sex"),
+    @NamedQuery(name = "Patient.findByBirthday", query = "SELECT p FROM Patient p WHERE p.birthday = :birthday"),
+    @NamedQuery(name = "Patient.findByActive", query = "SELECT p FROM Patient p WHERE p.active = :active"),
+    @NamedQuery(name = "Patient.findByAddedDate", query = "SELECT p FROM Patient p WHERE p.addedDate = :addedDate")})
+public class Patient implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "idPatient")
+    private Integer idPatient;
+    @Basic(optional = false)
+    @Column(name = "FirstName")
     private String firstName;
+    @Column(name = "SecondName")
     private String secondName;
+    @Column(name = "FatherLastName")
     private String fatherLastName;
+    @Column(name = "MotherLastName")
     private String motherLastName;
+    @Column(name = "CURP")
     private String curp;
-    private String nickname;
+    @Column(name = "NickName")
+    private String nickName;
+    @Basic(optional = false)
+    @Column(name = "Sex")
     private String sex;
+    @Basic(optional = false)
+    @Column(name = "Birthday")
+    @Temporal(TemporalType.DATE)
     private Date birthday;
+    @Lob
+    @Column(name = "Notes")
     private String notes;
-    private boolean active;
-    private StaffMember doctor;
-    private Timestamp addedDate;
-    private Set<Patient_Relative> relatives;
-    private Set<Record> record;
+    @Basic(optional = false)
+    @Column(name = "Active")
+    private short active;
+    @Basic(optional = false)
+    @Column(name = "AddedDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date addedDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Patient_Relative> patientRelativeList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
+    private List<Consultation> consultationList;
+    @JoinColumn(name = "idDoctor", referencedColumnName = "idStaffMember")
+    @ManyToOne(optional = false)
+    private Staffmember idDoctor;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
+    private List<LaboratoryTestResult> laboratoryTestResultList;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idPatient")
+    private List<Relative> relativeList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
+    private List<Appointment> appointmentList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
+    private List<Record> recordList;
+    @JoinTable(name = "patientDrugAlergic", joinColumns = {
+        @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")}, inverseJoinColumns = {
+        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")})
+    @ManyToMany
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Drug> drugList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    @JsonIgnore
+    private List<PatientVaccine> patientVaccineList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    @JsonIgnore
+    private List<AppointmentVaccine> appointmentVaccineList;
 
     public Patient() {
-            super();
-            this.id = 0;
-            this.firstName = "";
-            this.secondName = "";
-            this.fatherLastName = "";
-            this.motherLastName = "";
-            this.curp = "";
-            this.nickname = "";
-            this.sex = "";
-            this.birthday = null;
-            this.notes = "";
-            this.active = false;
-            this.doctor = null;
-            this.addedDate = null;
     }
 
-    public Patient(int id, String firstName, String secondName,
-                    String fatherLastName, String motherLastName, String curp,
-                    String nickname, String sex, Date birthday, String notes,
-                    boolean active, StaffMember doctor, Timestamp addedDate) {
-            super();
-            this.id = id;
-            this.firstName = firstName;
-            this.secondName = secondName;
-            this.fatherLastName = fatherLastName;
-            this.motherLastName = motherLastName;
-            this.curp = curp;
-            this.nickname = nickname;
-            this.sex = sex;
-            this.birthday = birthday;
-            this.notes = notes;
-            this.active = active;
-            this.doctor = doctor;
-            this.addedDate = addedDate;
+    public Patient(Integer idPatient) {
+        this.idPatient = idPatient;
     }
 
-    /**
-     * @return the id
-     */
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="idPatient")
-    public int getId() {
-            return id;
+    public Patient(Integer idPatient, String firstName, String sex, java.util.Date birthday, short active, java.util.Date addedDate) {
+        this.idPatient = idPatient;
+        this.firstName = firstName;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.active = active;
+        this.addedDate = addedDate;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-            this.id = id;
+    public Integer getIdPatient() {
+        return idPatient;
     }
 
-    /**
-     * @return the firstName
-     */
-    @Size(min=3,max=45)
-    @Column(name="FirstName")
+    public void setIdPatient(Integer idPatient) {
+        this.idPatient = idPatient;
+    }
+
     public String getFirstName() {
-            return firstName;
+        return firstName;
     }
 
-    /**
-     * @param firstName the firstName to set
-     */
     public void setFirstName(String firstName) {
-            this.firstName = firstName;
+        this.firstName = firstName;
     }
 
-    /**
-     * @return the secondName
-     */
-    @Size(min=3,max=45)
-    @Column(name="SecondName")
     public String getSecondName() {
-            return secondName;
+        return secondName;
     }
 
-    /**
-     * @param secondName the secondName to set
-     */
     public void setSecondName(String secondName) {
-            this.secondName = secondName;
+        this.secondName = secondName;
     }
 
-    /**
-     * @return the fatherLastName
-     */
-    @Size(min=3,max=45)
-    @Column(name="FatherLastName")
     public String getFatherLastName() {
-            return fatherLastName;
+        return fatherLastName;
     }
 
-    /**
-     * @param fatherLastName the fatherLastName to set
-     */
     public void setFatherLastName(String fatherLastName) {
-            this.fatherLastName = fatherLastName;
+        this.fatherLastName = fatherLastName;
     }
 
-    /**
-     * @return the motherLastName
-     */
-    @Size(min=3,max=45)
-    @Column(name="MotherLastName")
     public String getMotherLastName() {
-            return motherLastName;
+        return motherLastName;
     }
 
-    /**
-     * @param motherLastName the motherLastName to set
-     */
     public void setMotherLastName(String motherLastName) {
-            this.motherLastName = motherLastName;
+        this.motherLastName = motherLastName;
     }
 
-    /**
-     * @return the curp
-     */
-    @Size(min=18,max=18)
-    @Column(name="curp")
     public String getCurp() {
-            return curp;
+        return curp;
     }
 
-    /**
-     * @param curp the curp to set
-     */
     public void setCurp(String curp) {
-            this.curp = curp;
+        this.curp = curp;
     }
 
-    /**
-     * @return the nickname
-     */
-    @Size(min=1,max=45)
-    @Column(name="NickName")
-    public String getNickname() {
-            return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    /**
-     * @param nickname the nickname to set
-     */
-    public void setNickname(String nickname) {
-            this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    /**
-     * @return the sex
-     */
-    @Size(min=8,max=9)
-    @Column(name="Sex")
     public String getSex() {
-            return sex;
+        return sex;
     }
 
-    /**
-     * @param sex the sex to set
-     */
     public void setSex(String sex) {
-            this.sex = sex;
+        this.sex = sex;
     }
 
-    /**
-     * @return the birthday
-     */
-    @NotNull
-    @Column(name="Birthday")
-    public Date getBirthday() {
-            return birthday;
+    public java.util.Date getBirthday() {
+        return birthday;
     }
 
-    /**
-     * @param birthday the birthday to set
-     */
-    public void setBirthday(Date birthday) {
-            this.birthday = birthday;
+    public void setBirthday(java.util.Date birthday) {
+        this.birthday = birthday;
     }
 
-    /**
-     * @return the notes
-     */
-    @Column(name="Notes")
     public String getNotes() {
-            return notes;
+        return notes;
     }
 
-    /**
-     * @param notes the notes to set
-     */
     public void setNotes(String notes) {
-            this.notes = notes;
+        this.notes = notes;
     }
 
-    /**
-     * @return the active
-     */
-    @NotNull
-    @Column(name="Active")
-    public boolean isActive() {
-            return active;
+    public short getActive() {
+        return active;
     }
 
-    /**
-     * @param active the active to set
-     */
-    public void setActive(boolean active) {
-            this.active = active;
+    public void setActive(short active) {
+        this.active = active;
     }
 
-    /**
-     * @return the doctor
-     */
-    @ManyToOne
-    @JoinColumn(name="idDoctor",referencedColumnName="idStaffMember")
-    @NotFound(action=NotFoundAction.IGNORE)
-    public StaffMember getDoctor() {
-            return doctor;
+    public java.util.Date getAddedDate() {
+        return addedDate;
     }
 
-    /**
-     * @param doctor the doctor to set
-     */
-    public void setDoctor(StaffMember doctor) {
-            this.doctor = doctor;
+    public void setAddedDate(java.util.Date addedDate) {
+        this.addedDate = addedDate;
     }
 
-    /**
-     * @return the addedDate
-     */
-    public Timestamp getAddedDate() {
-            return addedDate;
-    }
-
-    /**
-     * @param addedDate the addedDate to set
-     */
-    public void setAddedDate(Timestamp addedDate) {
-            this.addedDate = addedDate;
-    }
-
-    /**
-     * @return the relatives
-     */
+    @XmlTransient
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy="patient")
-    public Set<Patient_Relative> getRelatives() {
-            return relatives;
+    public List<Patient_Relative> getPatientRelativeList() {
+        return patientRelativeList;
     }
 
-    /**
-     * @param relatives the relatives to set
-     */
-    public void setRelatives(Set<Patient_Relative> relatives) {
-            this.relatives = relatives;
-    }
-	
-    @OneToMany(mappedBy = "idPatient")
-    @JsonIgnore
-    public Set<Record> getRecord() {
-        return record;
+    public void setPatientRelativeList(List<Patient_Relative> patientRelativeList) {
+        this.patientRelativeList = patientRelativeList;
     }
 
-    public void setRecord(Set<Record> record) {
-        this.record = record;
+    @XmlTransient
+    public List<Consultation> getConsultationList() {
+        return consultationList;
     }
-	
-	
-	
 
+    public void setConsultationList(List<Consultation> consultationList) {
+        this.consultationList = consultationList;
+    }
+
+    public Staffmember getIdDoctor() {
+        return idDoctor;
+    }
+
+    public void setIdDoctor(Staffmember idDoctor) {
+        this.idDoctor = idDoctor;
+    }
+
+    @XmlTransient
+    public List<LaboratoryTestResult> getLaboratoryTestResultList() {
+        return laboratoryTestResultList;
+    }
+
+    public void setLaboratoryTestResultList(List<LaboratoryTestResult> laboratoryTestResultList) {
+        this.laboratoryTestResultList = laboratoryTestResultList;
+    }
+
+    @XmlTransient
+    public List<Relative> getRelativeList() {
+        return relativeList;
+    }
+
+    public void setRelativeList(List<Relative> relativeList) {
+        this.relativeList = relativeList;
+    }
+
+    @XmlTransient
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
+    }
+
+    public void setAppointmentList(List<Appointment> appointmentList) {
+        this.appointmentList = appointmentList;
+    }
+
+    @XmlTransient
+    public List<Record> getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(List<Record> recordList) {
+        this.recordList = recordList;
+    }
+
+    public List<Drug> getDrugList() {
+        return drugList;
+    }
+
+    public void setDrugList(List<Drug> drugList) {
+        this.drugList = drugList;
+    }
+
+    public List<PatientVaccine> getPatientVaccineList() {
+        return patientVaccineList;
+    }
+
+    public void setPatientVaccineList(List<PatientVaccine> patientVaccineList) {
+        this.patientVaccineList = patientVaccineList;
+    }
+
+    public List<AppointmentVaccine> getAppointmentVaccineList() {
+        return appointmentVaccineList;
+    }
+
+    public void setAppointmentVaccineList(List<AppointmentVaccine> appointmentVaccineList) {
+        this.appointmentVaccineList = appointmentVaccineList;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idPatient != null ? idPatient.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Patient)) {
+            return false;
+        }
+        Patient other = (Patient) object;
+        if ((this.idPatient == null && other.idPatient != null) || (this.idPatient != null && !this.idPatient.equals(other.idPatient))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "pruebas1.Patient[ idPatient=" + idPatient + " ]";
+    }
+    
 }

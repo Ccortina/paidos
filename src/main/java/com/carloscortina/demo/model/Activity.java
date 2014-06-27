@@ -6,10 +6,12 @@ package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,12 +74,9 @@ public class Activity implements Serializable {
     @ManyToOne(optional = false)
     @LazyCollection(LazyCollectionOption.FALSE)
     private ActivityType idActivityType;
-    @JoinTable(name = "ActivityConsultation", joinColumns = {
-        @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity")}, inverseJoinColumns = {
-        @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")})
-    @ManyToMany
-    @JsonIgnore
-    private Collection<Consultation> consultationCollection;
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
+    @ManyToOne(optional = false)
+    private User idUser;
 
     public Activity() {
     }
@@ -150,17 +149,13 @@ public class Activity implements Serializable {
         this.idActivityType = idActivityType;
     }
 
-    @XmlTransient
-    public Collection<Consultation> getConsultationCollection() {
-        return consultationCollection;
+    public User getIdUser() {
+        return idUser;
     }
 
-    public void setConsultationCollection(Collection<Consultation> consultationCollection) {
-        this.consultationCollection = consultationCollection;
+    public void setIdUser(User idUser) {
+        this.idUser = idUser;
     }
-    
-    
-    
 
     @Override
     public int hashCode() {

@@ -25,6 +25,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
 
 /**
  *
@@ -108,6 +109,12 @@ public class Vaccine implements Serializable {
     @JoinColumn(name = "IdVaccineType", referencedColumnName = "IdvaccineType")
     @ManyToOne(optional = false)
     private VaccineType idVaccineType;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
+    @JsonIgnore
+    private List<PatientVaccine> patientVaccineList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
+    @JsonIgnore
+    private List<AppointmentVaccine> appointmentVaccineList;
 
     public Vaccine() {
     }
@@ -256,6 +263,22 @@ public class Vaccine implements Serializable {
         this.idVaccineType = idVaccineType;
     }
 
+    public List<PatientVaccine> getPatientVaccineList() {
+        return patientVaccineList;
+    }
+
+    public void setPatientVaccineList(List<PatientVaccine> patientVaccineList) {
+        this.patientVaccineList = patientVaccineList;
+    }
+
+    public List<AppointmentVaccine> getAppointmentVaccineList() {
+        return appointmentVaccineList;
+    }
+
+    public void setAppointmentVaccineList(List<AppointmentVaccine> appointmentVaccineList) {
+        this.appointmentVaccineList = appointmentVaccineList;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

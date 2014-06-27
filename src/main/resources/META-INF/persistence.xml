@@ -13,6 +13,10 @@
     <class>com.carloscortina.demo.model.Birthmethod</class>
     <class>com.carloscortina.demo.model.Ageweight0To36Months</class>
     <class>com.carloscortina.demo.model.LaboratoryTest</class>
+    <class>com.carloscortina.demo.model.MeasureConsultation</class>
+    <class>com.carloscortina.demo.model.Measures</class>
+    <class>com.carloscortina.demo.model.Consultation</class>
+    <class>com.carloscortina.demo.model.Holyday</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

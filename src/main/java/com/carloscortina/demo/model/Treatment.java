@@ -3,6 +3,7 @@ package com.carloscortina.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -34,9 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Treatment.findByIdTreatment", query = "SELECT t FROM Treatment t WHERE t.idTreatment = :idTreatment"),
     @NamedQuery(name = "Treatment.findByActive", query = "SELECT t FROM Treatment t WHERE t.active = :active")})
 public class Treatment implements Serializable {
-    @ManyToMany(mappedBy = "treatmentCollection")
-    @JsonIgnore
-    private Collection<Drug> drugCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,13 +58,19 @@ public class Treatment implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "active")
     private String active;
-    //fetch=FetchType.EAGER
-    @JoinTable(name = "diagnosticTreatment", joinColumns = {
-        @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")}, inverseJoinColumns = {
-        @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")})
-    @ManyToMany()
     @JsonIgnore
-    private Collection<Cie10> cie10Collection;
+    @ManyToMany(mappedBy = "treatmentList")
+    private List<Drug> drugList;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "treatmentList")
+    private List<Cie10> cie10List;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idTreatment")
+    private List<Diagnostic> diagnosticList;
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
+    @ManyToOne(optional = false)
+    @JsonIgnore
+    private User idUser;
 
     public Treatment() {
     }
@@ -112,14 +118,32 @@ public class Treatment implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Cie10> getCie10Collection() {
-        return cie10Collection;
+    public List<Drug> getDrugList() {
+        return drugList;
     }
 
-    public void setCie10Collection(Collection<Cie10> cie10Collection) {
-        this.cie10Collection = cie10Collection;
+    public void setDrugList(List<Drug> drugList) {
+        this.drugList = drugList;
     }
 
+    @XmlTransient
+    public List<Cie10> getCie10List() {
+        return cie10List;
+    }
+
+    public void setCie10List(List<Cie10> cie10List) {
+        this.cie10List = cie10List;
+    }
+
+    @XmlTransient
+    public List<Diagnostic> getDiagnosticList() {
+        return diagnosticList;
+    }
+
+    public void setDiagnosticList(List<Diagnostic> diagnosticList) {
+        this.diagnosticList = diagnosticList;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -145,14 +169,13 @@ public class Treatment implements Serializable {
         return "diagnostic.Treatment[ idTreatment=" + idTreatment + " ]";
     }
 
-    @XmlTransient
-    @org.codehaus.jackson.annotate.JsonIgnore
-    public Collection<Drug> getDrugCollection() {
-        return drugCollection;
+    public User getIdUser() {
+        return idUser;
     }
 
-    public void setDrugCollection(Collection<Drug> drugCollection) {
-        this.drugCollection = drugCollection;
+    public void setIdUser(User idUser) {
+        this.idUser = idUser;
     }
+    
     
 }

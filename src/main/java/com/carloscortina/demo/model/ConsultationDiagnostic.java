@@ -4,9 +4,14 @@
  */
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -23,47 +28,57 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ConsultationDiagnostic.findAll", query = "SELECT c FROM ConsultationDiagnostic c"),
-    @NamedQuery(name = "ConsultationDiagnostic.findByIdConsultation", query = "SELECT c FROM ConsultationDiagnostic c WHERE c.consultationDiagnosticPK.idConsultation = :idConsultation"),
-    @NamedQuery(name = "ConsultationDiagnostic.findByIdDiagnostic", query = "SELECT c FROM ConsultationDiagnostic c WHERE c.consultationDiagnosticPK.idDiagnostic = :idDiagnostic")})
+    @NamedQuery(name = "ConsultationDiagnostic.findByIdConsultationDiagnostic", query = "SELECT c FROM ConsultationDiagnostic c WHERE c.idConsultationDiagnostic = :idConsultationDiagnostic")})
 public class ConsultationDiagnostic implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ConsultationDiagnosticPK consultationDiagnosticPK;
-    @JoinColumn(name = "idDiagnostic", referencedColumnName = "idDiagnostic", insertable = false, updatable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "idConsultationDiagnostic")
+    private Integer idConsultationDiagnostic;
+    @JoinColumn(name = "idDiagnostic", referencedColumnName = "idDiagnostic")
     @ManyToOne(optional = false)
-    private Diagnostic diagnostic;
+    private Diagnostic idDiagnostic;
+    @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")
+    @ManyToOne(optional = false)
+    @JsonIgnore
+    private Consultation idConsultation;
 
     public ConsultationDiagnostic() {
     }
 
-    public ConsultationDiagnostic(ConsultationDiagnosticPK consultationDiagnosticPK) {
-        this.consultationDiagnosticPK = consultationDiagnosticPK;
+    public ConsultationDiagnostic(Integer idConsultationDiagnostic) {
+        this.idConsultationDiagnostic = idConsultationDiagnostic;
     }
 
-    public ConsultationDiagnostic(int idConsultation, int idDiagnostic) {
-        this.consultationDiagnosticPK = new ConsultationDiagnosticPK(idConsultation, idDiagnostic);
+    public Integer getIdConsultationDiagnostic() {
+        return idConsultationDiagnostic;
     }
 
-    public ConsultationDiagnosticPK getConsultationDiagnosticPK() {
-        return consultationDiagnosticPK;
+    public void setIdConsultationDiagnostic(Integer idConsultationDiagnostic) {
+        this.idConsultationDiagnostic = idConsultationDiagnostic;
     }
 
-    public void setConsultationDiagnosticPK(ConsultationDiagnosticPK consultationDiagnosticPK) {
-        this.consultationDiagnosticPK = consultationDiagnosticPK;
+    public Diagnostic getIdDiagnostic() {
+        return idDiagnostic;
     }
 
-    public Diagnostic getDiagnostic() {
-        return diagnostic;
+    public void setIdDiagnostic(Diagnostic idDiagnostic) {
+        this.idDiagnostic = idDiagnostic;
     }
 
-    public void setDiagnostic(Diagnostic diagnostic) {
-        this.diagnostic = diagnostic;
+    public Consultation getIdConsultation() {
+        return idConsultation;
+    }
+
+    public void setIdConsultation(Consultation idConsultation) {
+        this.idConsultation = idConsultation;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (consultationDiagnosticPK != null ? consultationDiagnosticPK.hashCode() : 0);
+        hash += (idConsultationDiagnostic != null ? idConsultationDiagnostic.hashCode() : 0);
         return hash;
     }
 
@@ -74,7 +89,7 @@ public class ConsultationDiagnostic implements Serializable {
             return false;
         }
         ConsultationDiagnostic other = (ConsultationDiagnostic) object;
-        if ((this.consultationDiagnosticPK == null && other.consultationDiagnosticPK != null) || (this.consultationDiagnosticPK != null && !this.consultationDiagnosticPK.equals(other.consultationDiagnosticPK))) {
+        if ((this.idConsultationDiagnostic == null && other.idConsultationDiagnostic != null) || (this.idConsultationDiagnostic != null && !this.idConsultationDiagnostic.equals(other.idConsultationDiagnostic))) {
             return false;
         }
         return true;
@@ -82,7 +97,7 @@ public class ConsultationDiagnostic implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.ConsultationDiagnostic[ consultationDiagnosticPK=" + consultationDiagnosticPK + " ]";
+        return "pruebas1.ConsultationDiagnostic[ idConsultationDiagnostic=" + idConsultationDiagnostic + " ]";
     }
     
 }

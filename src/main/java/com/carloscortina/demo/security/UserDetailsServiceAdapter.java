@@ -22,7 +22,7 @@ public class UserDetailsServiceAdapter implements UserDetailsService{
 		
 		if( user == null){
 			throw new UsernameNotFoundException("No such user: " + username);
-		}else if (user.getRole() == null){
+		}else if (user.getIdRole() == null){
 			throw new UsernameNotFoundException("User " + username + "has no authorities");
 		}
 		

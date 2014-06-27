@@ -37,47 +37,61 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Agregar Diagnostico</h4>
                 </div>
-  
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <table id="diagnosticsTable" class="row-border hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Diagnostico</th>
-                                            <th>Ultima fecha</th>
-                                        </tr>	
-                                    </thead>
-                            </table>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist" id="tabsConsultationDiagnostic">
+                        <li class="active"><a href="#tabDiagnosticAndTreatments" role="tab" data-toggle="tab">Diagnósticos y Tratamientos</a></li>
+                        <li><a href="#tabDrugsAndNames" role="tab" data-toggle="tab">Medicamentos</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tabDiagnosticAndTreatments">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="diagnosticsTable" class="row-border hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Diagnostico</th>
+                                                    <th>Ultima fecha</th>
+                                                </tr>	
+                                            </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="treatmentsTable" class="hover row-border">
+                                        <thead>
+                                            <tr>
+                                                <th>Tratamiento</th>
+                                            </tr>	
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <table id="treatmentsTable" class="hover row-border">
-                                <thead>
-                                    <tr>
-                                        <th>Tratamiento</th>
-                                    </tr>	
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <table id="drugsTable" class="hover row-border">
-                                <thead>
-                                        <tr>
-                                            <th>Medicamento</th>
-                                            <th>Presentación</th>
-                                        </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="col-sm-6">
-                            <table id="commercialNamesTable" class="hover row-border">
-                                <thead>
-                                        <tr>
-                                            <th>Medicamento</th>
-                                        </tr>
-                                </thead>
-                            </table>
+                        <div class="tab-pane fade" id="tabDrugsAndNames">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="drugsTable" class="hover row-border">
+                                        <thead>
+                                                <tr>
+                                                    <th>Medicamento</th>
+                                                    <th>Presentación</th>
+                                                </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="commercialNamesTable" class="hover row-border">
+                                        <thead>
+                                            <tr>
+                                                <th>Medicamento</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <div class="modal-footer">

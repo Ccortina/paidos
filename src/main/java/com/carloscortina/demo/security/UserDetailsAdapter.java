@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.carloscortina.demo.model.Role;
-import com.carloscortina.demo.model.StaffMember;
+import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.User;
 
 
@@ -24,16 +24,16 @@ public class UserDetailsAdapter implements UserDetails{
 	}
 	
 	public User getUser() { return (user); }
-	public int getId() { return (user.getId()); }
+	public int getId() { return (user.getIdUser()); }
 	public String getPaidosUsername() { return user.getUsername(); }
 	public String getEmail() { return (user.getEmail()); }
-	public Role getRole() { return user.getRole();}
-	public StaffMember getStaffMember() { return ( user.getStaff() ); }
+	public Role getRole() { return user.getIdRole();}
+	public Staffmember getStaffMember() { return ( user.getIdStaffMember() ); }
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-		String role = user.getRole().getRole();
+		String role = user.getIdRole().getRole();
 		System.out.println("--------------------------------------------------"+role);
 		authorities.add(new SimpleGrantedAuthority(role)); 
 		return authorities;

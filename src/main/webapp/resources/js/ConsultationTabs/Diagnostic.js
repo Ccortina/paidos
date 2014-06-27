@@ -20,38 +20,14 @@ $(document).ready(function(){
         //Add add row function to 'agregar' button
         //addDiagnosticRow( diagnostic,treatment,drug,commercialName,diagnosticId,TreatmentId,DrugId,CommercialNameId)
         $('#addDiagnosticRowButton').on('click',function(){
-            if(typeof $("#treatmentsTable").DataTable().row('.selected').data() === 'undefined'){
-                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],                                          
-                                    " --- ",
-                                        " --- ",
-                                            " --- ",
-                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
-                                                   "",
-                                                        "",
-                                                            "");
-            }else if(typeof $("#drugsTable").DataTable().row('.selected').data() === 'undefined'){
-                //if theres no drug related
-                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],                                          
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
-                                        " --- ",
-                                            " --- ",
-                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
-                                                   $("#treatmentsTable").DataTable().row('.selected').data(),
-                                                        "",
-                                                            "");
-            }else if(typeof $("#commercialNamesTable").DataTable().row('.selected').data()["commercialName"] === 'undefined'){
-                //If theres no commercial name related
-                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
-                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " +
-                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
-                                            " --- ",
-                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
-                                                    $("#treatmentsTable").DataTable().row('.selected').data(),
-                                                        $("#drugsTable").DataTable().row('.selected').data(),
-                                                            "");
-            } else {
-                //if theres no problem
+            
+            var sD = checkNotUndefined($("#diagnosticsTable").DataTable().row('.selected').data());
+            var sT = checkNotUndefined($("#treatmentsTable").DataTable().row('.selected').data());
+            var sM = checkNotUndefined($("#drugsTable").DataTable().row('.selected').data());
+            var sC = checkNotUndefined($("#commercialNamesTable").DataTable().row('.selected').data()); 
+            
+            //All are used
+            if(sD && sT && sM && sC){
                 addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
                                     $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
                                         $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " + 
@@ -61,28 +37,59 @@ $(document).ready(function(){
                                                     $("#treatmentsTable").DataTable().row('.selected').data(),
                                                         $("#drugsTable").DataTable().row('.selected').data(),
                                                             $("#commercialNamesTable").DataTable().row('.selected').data());
-            }
-        });
-        
-        //Add row with the drug without association at the diagnostic table 
-        //diagnostic,treatment,drug,commercialName,id1,id2,id3,id4
-        $('#addDrugNoAssociationRowButton').on('click',function(){
-            
-            if( typeof selectedCommercialNamesData["commercialName"] === 'undefined'){
-                addDiagnosticRow("---","---",selectedDrugData["drug"] + " , " + selectedDrugData["drugPresentationId"]["presentation"],
+            }else if(!sD && !sT && sM && !sC){
+                addDiagnosticRow($(" --- ",
+                                    " --- ",
+                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " +
+                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
+                                            " --- ",
+                                                "",
+                                                    "",
+                                                        $("#drugsTable").DataTable().row('.selected').data(),
+                                                            ""));  
+            }else if(!sD && !sT && sM && sC){
+                addDiagnosticRow(" --- ",
+                                    " --- ",
+                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " + 
+                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
+                                            $("#commercialNamesTable").DataTable().row('.selected').data()["commercialName"],
+                                                "",
+                                                    "",
+                                                        $("#drugsTable").DataTable().row('.selected').data(),
+                                                            $("#commercialNamesTable").DataTable().row('.selected').data());    
+            }else if(sD && !sT && !sM && !sC){
+                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],                                          
+                                    " --- ",
                                         " --- ",
-                                            "","",
-                                                selectedDrugData,
-                                                    "");
+                                            " --- ",
+                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
+                                                   "",
+                                                        "",
+                                                            "");
+            }else if(sD && sT && !sM && !sC){
+                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
+                                        " --- ",
+                                            " --- ",
+                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
+                                                    $("#treatmentsTable").DataTable().row('.selected').data(),
+                                                        "",
+                                                            "");
+            }else if(sD && sT && sM && !sC){
+                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
+                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " +
+                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
+                                            " --- ",
+                                                $("#diagnosticsTable").DataTable().row('.selected').data(),
+                                                    $("#treatmentsTable").DataTable().row('.selected').data(),
+                                                        $("#drugsTable").DataTable().row('.selected').data(),
+                                                            "");
             }else{
-                addDiagnosticRow("---","---",selectedDrugData["drug"] + " , " + selectedDrugData["drugPresentationId"]["presentation"],
-                                        selectedCommercialNamesData["commercialName"],
-                                            "","",
-                                                selectedDrugData,
-                                                    selectedCommercialNamesData);
-            }  
+                displayWarningAlert("Falta informacion.");     
+            } 
         });
-        
+
         //Add behaviour to "generar receta" button. 
         $('#generatePrescriptionButton').on('click',function(){
             generatePrescription();
@@ -95,15 +102,71 @@ $(document).ready(function(){
         });
 });
 
+function checkNotUndefined(value){
+    if(typeof value === 'undefined'){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 
 //Add a row to the diagnostics table for the consultation
 function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,id4){
-    $("#consultationDiagnosticsTable").DataTable().row.add([diagnostic + " , " +
+    var addedRowindex =$("#consultationDiagnosticsTable").DataTable().row.add([diagnostic + " , " +
                                                                 treatment + " , " +
                                                                 drug + " , " +
                                                                 commercialName,id1,id2,id3,id4,
                                                                 "<button type='button' class='btn btn-danger' onclick='deleteDiagnosticRow(this)'>\n\
-                                                                    Eliminar</button>"]).draw();
+                                                                    Eliminar</button>"]).draw().index();
+    
+    $("#consultationDiagnosticsTable").DataTable().rows().data().each(function(value,index){
+        //No Drug info  
+        console.log(value[3]);
+        if(value[3] !== ""){
+            if(checkNotUndefined(value[3][0])){
+                if(id3 !== ""){
+                    if(checkNotUndefined(id3[0])){
+                        value[3][0]['drugList'].foreach(function(entry){
+                            if(entry['idDrug'] === id3[0]['idDrug']){
+                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
+                                $(row).css({"background-color":"#FF6961"});
+                                $(row).addClass("vpExpired");
+                            }
+                        });
+                    }else{
+                        value[3][0]['drugList'].foreach(function(entry){
+                            if(entry['idDrug'] === id3['idDrug']){
+                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
+                                $(row).css({"background-color":"#FF6961"});
+                                $(row).addClass("vpExpired");
+                            }
+                        });
+                    }
+                }
+            }else{
+                if(id3 !== ""){
+                    if(checkNotUndefined(id3[0])){
+                        value[3]['drugList'].foreach(function(entry){
+                            if(entry['idDrug'] === id3[0]['idDrug']){
+                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
+                                $(row).css({"background-color":"#FF6961"});
+                                $(row).addClass("vpExpired");
+                            }
+                        });
+                    }else{
+                        value[3]['drugList'].foreach(function(entry){
+                            if(entry['idDrug'] === id3['idDrug']){
+                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
+                                $(row).css({"background-color":"#FF6961"});
+                                $(row).addClass("vpExpired");
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    });
     resetDiagnosticWizard();
                                                     
 }
@@ -143,7 +206,7 @@ function initializeDiagnosticsTable(){
                     $('#selectedTreatmentInput').val("");
                     $('#selectedDrugInput').val("");
                     $('#selectedCommercialNameInput').val("");
-                    $('#treatmentsTable').DataTable().search(" ").draw();
+                    $('#treatmentsTable').DataTable().ajax.reload();
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
@@ -195,27 +258,34 @@ function initializeTreatmentsTable(){
             var table = $('#treatmentsTable').DataTable();
             
             $('#treatmentsTable tbody').on( 'click', 'tr', function (e) {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                    $('#selectedTreatmentInput').val("");
-                    $('#selectedDrugInput').val("");
-                    $('#selectedCommercialNameInput').val("");
-                }else{
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    var selectedTreatment;
-                    if(typeof table.row('.selected').data()[0] === 'undefined'){
-                        selectedTreatment = table.row('.selected').data()["treatment"];
+                var required = $('#diagnosticsTable').DataTable().row('.selected').data();
+                
+                if(typeof required == 'undefined' ){
+                    displayWarningAlert("Debe seleccionar por lo menos un diagnostico primero");
+                }{
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                        $('#selectedTreatmentInput').val("");
+                        $('#selectedDrugInput').val("");
+                        $('#selectedCommercialNameInput').val("");
+                        $('#drugsTable').DataTable().ajax.reload();
                     }else{
-                        selectedTreatment = table.row('.selected').data()[0]["treatment"];
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        var selectedTreatment;
+                        if(typeof table.row('.selected').data()[0] === 'undefined'){
+                            selectedTreatment = table.row('.selected').data()["treatment"];
+                        }else{
+                            selectedTreatment = table.row('.selected').data()[0]["treatment"];
+                        }
+                        $('#selectedTreatmentInput').val(selectedTreatment);
+                        $('#drugsTable').DataTable().ajax.reload();
+                        $('#selectedDrugInput').val("");
+                        $('#selectedCommercialNameInput').val("");
                     }
-                    $('#selectedTreatmentInput').val(selectedTreatment);
-                    $('#drugsTable').DataTable().ajax.reload();
-                    $('#selectedDrugInput').val("");
-                    $('#selectedCommercialNameInput').val("");
                 }
             });
-        }
+        }          
     });
 }
 
@@ -269,6 +339,7 @@ function initializeDrugsTable(){
                     $(this).removeClass('selected');
                     $('#selectedDrugInput').val("");
                     $('#selectedCommercialNameInput').val("");
+                    $('#commercialNamesTable').DataTable().ajax.reload();
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
@@ -284,7 +355,19 @@ function initializeDrugsTable(){
                     $('#selectedCommercialNameInput').val("");
                 }
             });
-        }
+            
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if(typeof data[0] === 'undefined'){
+                var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data['drug']+")");
+            }else{
+                var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data[0]['drug']+")");
+            }
+            if(alergicDrug.length > 0){
+                $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
+            }
+        }        
     });
 }
 
@@ -328,19 +411,24 @@ function initializeCommercialNamesTable(){
             var table = $('#commercialNamesTable').DataTable();
             
             $('#commercialNamesTable tbody').on( 'click', 'tr', function (e) {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                    $('#selectedCommercialNamesInput').val("");
+                var required = $('#drugsTable').DataTable().row('.selected').data();
+                if(typeof  required === 'undefined'){
+                    displayWarningAlert("Debe seleccionar por lo menos un medicamento primero");
                 }else{
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    var selectedCommercialName;
-                    if(typeof table.row('.selected').data()[0] === 'undefined'){
-                        selectedCommercialName = table.row('.selected').data()["commercialName"];
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                        $('#selectedCommercialNamesInput').val("");
                     }else{
-                        selectedCommercialName = table.row('.selected').data()[0]["commercialName"];
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        var selectedCommercialName;
+                        if(typeof table.row('.selected').data()[0] === 'undefined'){
+                            selectedCommercialName = table.row('.selected').data()["commercialName"];
+                        }else{
+                            selectedCommercialName = table.row('.selected').data()[0]["commercialName"];
+                        }
+                        $('#selectedCommercialNamesInput').val(selectedCommercialName);
                     }
-                    $('#selectedCommercialNamesInput').val(selectedCommercialName);
                 }
             });
         }
@@ -367,14 +455,21 @@ function initializeConsultationDiagnosticsTable(){
 
 
 function resetDiagnosticWizard(){
-    $('#selectedDiagnosticInput').val("");
-    $('#selectedTreatmentInput').val("");
-    $('#selectedDrugInput').val("");
-    $('#selectedCommercialNamesInput').val("");
-    selectedDiagnosticData = "";
-    selectedTreatmentData = "";
-    selectedDrugData = "";
-    selectedCommercialNamesData = "";
+    var tblD =$('#diagnosticsTable').DataTable();
+    var tblT =$('#treatmentsTable').DataTable();
+    var tblM =$("#drugsTable").DataTable();
+    var tblC =$("#commercialNamesTable").DataTable();
+    
+    tblD.$('tr.selected').removeClass('selected');
+    tblT.$('tr.selected').removeClass('selected');
+    tblM.$('tr.selected').removeClass('selected');
+    tblC.$('tr.selected').removeClass('selected');
+    
+    tblD.ajax.reload();
+    tblT.ajax.reload();
+    tblM.ajax.reload();
+    tblC.ajax.reload();
+    $("#tabsConsultationDiagnostic a[href='#tabDiagnosticAndTreatments']").tab('show');
 }
 
 //Get all the members of the diagnostic table and process them

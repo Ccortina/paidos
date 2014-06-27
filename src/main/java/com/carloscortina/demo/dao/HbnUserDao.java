@@ -21,7 +21,7 @@ public class HbnUserDao implements UserDao {
 	@Override
 	public void createUser(User user) {
 		// TODO Auto-generated method stub
-		System.out.println("-----------"+user.getRole().getId());
+		System.out.println("-----------"+user.getIdRole().getId());
 		getSession().save(user);
 	}
 

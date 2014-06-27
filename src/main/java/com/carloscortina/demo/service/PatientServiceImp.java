@@ -45,6 +45,16 @@ public class PatientServiceImp implements PatientService {
     public void delete(Patient item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Patient> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Patient mergePatient(Patient patient) {
+        return patientDao.mergePatient(patient);
+    }
 	
 	
 }

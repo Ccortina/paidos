@@ -51,5 +51,10 @@ public class ConsultationServiceImp implements ConsultationService{
     public List<Consultation> getListOfItem(String query) {
         return consultationDao.getListOfItem(query);
     }
+
+    @Override
+    public List<Consultation> getSpecificColumnsList(List<String> columns) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
