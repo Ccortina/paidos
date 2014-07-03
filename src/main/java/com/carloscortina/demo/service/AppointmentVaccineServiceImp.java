@@ -7,6 +7,9 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.AppointmentVaccineDao;
 import com.carloscortina.demo.model.AppointmentVaccine;
 import java.util.List;
+import java.util.Map;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,9 +53,14 @@ public class AppointmentVaccineServiceImp implements AppointmentVaccineService{
     public List<AppointmentVaccine> getListOfItem(String query) {
         return avDao.getListOfItem(query);
     }
+    
+    @Override
+    public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
-    public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns) {
+    public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

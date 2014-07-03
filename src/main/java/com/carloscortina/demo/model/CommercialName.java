@@ -2,31 +2,28 @@ package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author carloscortina
+ * @author Ccortina_Mac
  */
 @Entity
-@Table(name = "commercialName")
+@Table(name = "commercialname")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CommercialName.findAll", query = "SELECT c FROM CommercialName c"),
@@ -41,14 +38,14 @@ public class CommercialName implements Serializable {
     @Column(name = "idcommercialName")
     private Integer idcommercialName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 80)
     @Column(name = "commercialName")
     private String commercialName;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "active")
     private short active;
+    @ManyToMany(mappedBy = "commercialnameList")
+    @JsonIgnore
+    private List<User> userList;
     @JoinColumn(name = "drugId", referencedColumnName = "idDrug")
     @ManyToOne(optional = false)
     private Drug drugId;
@@ -90,6 +87,15 @@ public class CommercialName implements Serializable {
         this.active = active;
     }
 
+    @XmlTransient
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
     public Drug getDrugId() {
         return drugId;
     }
@@ -120,8 +126,7 @@ public class CommercialName implements Serializable {
 
     @Override
     public String toString() {
-        return "diagnostic.CommercialName[ idcommercialName=" + idcommercialName + " ]";
+        return "pruebas1.Commercialname[ idcommercialName=" + idcommercialName + " ]";
     }
     
 }
-

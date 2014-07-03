@@ -2,12 +2,20 @@ package com.carloscortina.demo.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.Criteria;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class GenericHbnDao<T> implements GenericDao<T> {
@@ -67,12 +75,33 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 	}
         
         @Override
-        public List<T> getSpecificColumnsList(List<String> columns){
+        public List<T> getSpecificColumnsList(List<String> columns,Criterion restrictions){
+            
             Criteria criteria = getSession().createCriteria(type);
+            
+            ProjectionList prop = Projections.projectionList();
             for(String property: columns){
-                criteria.setProjection(Projections.projectionList().add(
-                    Projections.property(property)));
+                prop.add(Projections.property(property),property);
             }
+            criteria.add(restrictions);
+            criteria.setProjection(prop).setResultTransformer(Transformers.aliasToBean(type));
+            
+            List<T> result = criteria.list();
+            return result;
+        }
+        
+        @Override
+        public List<T> getSpecificColumnsList(List<String> columns,LogicalExpression restriction){
+            
+            Criteria criteria = getSession().createCriteria(type);
+            
+            ProjectionList prop = Projections.projectionList();
+            for(String property: columns){
+                prop.add(Projections.property(property),property);
+            }
+            criteria.add(restriction);
+            criteria.setProjection(prop).setResultTransformer(Transformers.aliasToBean(type));
+            
             List<T> result = criteria.list();
             return result;
         }

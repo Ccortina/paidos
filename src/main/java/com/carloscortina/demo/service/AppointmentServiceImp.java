@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.model.Appointment;
 import java.util.Date;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 
 @Service
 @Transactional
@@ -59,7 +61,13 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> getSpecificColumnsList(List<String> columns) {
+    public List<Appointment> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Appointment> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

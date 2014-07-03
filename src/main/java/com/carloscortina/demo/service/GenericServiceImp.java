@@ -4,6 +4,8 @@ import java.util.List;
 
 
 import com.carloscortina.demo.dao.GenericDao;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 
 public abstract class GenericServiceImp<T> implements GenericService<T> {
 
@@ -30,7 +32,12 @@ public abstract class GenericServiceImp<T> implements GenericService<T> {
 	}
         
         @Override
-        public List<T> getSpecificColumnsList(List<String> columns){
-            return genericDao.getSpecificColumnsList(columns);
+        public List<T> getSpecificColumnsList(List<String> columns,Criterion restrictions){
+            return genericDao.getSpecificColumnsList(columns,restrictions);
+        }
+        
+        @Override
+        public List<T> getSpecificColumnsList(List<String> columns, LogicalExpression restriction){
+            return genericDao.getSpecificColumnsList(columns,restriction);
         }
 }

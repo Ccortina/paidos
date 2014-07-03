@@ -2,7 +2,7 @@ package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
+
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,24 +10,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
  *
- * @author carloscortina
+ * @author Ccortina_Mac
  */
 @Entity
 @Table(name = "treatment")
@@ -44,33 +41,24 @@ public class Treatment implements Serializable {
     @Column(name = "IdTreatment")
     private Integer idTreatment;
     @Basic(optional = false)
-    @NotNull
     @Lob
-    @Size(min = 1, max = 65535)
     @Column(name = "treatment")
     private String treatment;
     @Lob
-    @Size(max = 65535)
     @Column(name = "directions")
     private String directions;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "active")
     private String active;
-    @JsonIgnore
     @ManyToMany(mappedBy = "treatmentList")
+    @JsonIgnore
+    private List<User> userList;
+    @ManyToMany(mappedBy = "treatmentList")
+    @JsonIgnore
     private List<Drug> drugList;
     @JsonIgnore
     @ManyToMany(mappedBy = "treatmentList")
     private List<Cie10> cie10List;
-    @JsonIgnore
-    @OneToMany(mappedBy = "idTreatment")
-    private List<Diagnostic> diagnosticList;
-    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
-    @ManyToOne(optional = false)
-    @JsonIgnore
-    private User idUser;
 
     public Treatment() {
     }
@@ -118,6 +106,15 @@ public class Treatment implements Serializable {
     }
 
     @XmlTransient
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    @XmlTransient
     public List<Drug> getDrugList() {
         return drugList;
     }
@@ -126,7 +123,6 @@ public class Treatment implements Serializable {
         this.drugList = drugList;
     }
 
-    @XmlTransient
     public List<Cie10> getCie10List() {
         return cie10List;
     }
@@ -135,15 +131,6 @@ public class Treatment implements Serializable {
         this.cie10List = cie10List;
     }
 
-    @XmlTransient
-    public List<Diagnostic> getDiagnosticList() {
-        return diagnosticList;
-    }
-
-    public void setDiagnosticList(List<Diagnostic> diagnosticList) {
-        this.diagnosticList = diagnosticList;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -166,16 +153,7 @@ public class Treatment implements Serializable {
 
     @Override
     public String toString() {
-        return "diagnostic.Treatment[ idTreatment=" + idTreatment + " ]";
+        return "pruebas1.Treatment[ idTreatment=" + idTreatment + " ]";
     }
-
-    public User getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
-    }
-    
     
 }

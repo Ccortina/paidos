@@ -6,23 +6,27 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author Ccortina_Mac
+ */
 @Entity
 @Table(name = "user")
 @XmlRootElement
@@ -33,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByAddedDate", query = "SELECT u FROM User u WHERE u.addedDate = :addedDate")})
-public class User implements Serializable{
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,20 +57,24 @@ public class User implements Serializable{
     @Column(name = "AddedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedDate;
+    @JoinTable(name = "DoctorCommercialNamesCatalog", joinColumns = {
+        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
+        @JoinColumn(name = "idCommercialName", referencedColumnName = "idcommercialName")})
+    @ManyToMany
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUser")
-    private List<Treatment> treatmentList;
+    private List<CommercialName> commercialnameList;
+    @JoinTable(name = "DoctorDrugCatalog", joinColumns = {
+        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
+        @JoinColumn(name = "IdDrug", referencedColumnName = "idDrug")})
+    @ManyToMany
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUser")
     private List<Drug> drugList;
+    @JoinTable(name = "DoctorTreatmentCatalog", joinColumns = {
+        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
+        @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")})
+    @ManyToMany
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
-    private List<Appointment> appointmentList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<CIE10Doctor> cIE10DoctorList;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUser")
-    private List<Measures> measuresList;
+    private List<Treatment> treatmentList;
     @JoinColumn(name = "idStaffMember", referencedColumnName = "idStaffMember")
     @ManyToOne(optional = false)
     private Staffmember idStaffMember;
@@ -130,12 +138,12 @@ public class User implements Serializable{
     }
 
     @XmlTransient
-    public List<Treatment> getTreatmentList() {
-        return treatmentList;
+    public List<CommercialName> getCommercialnameList() {
+        return commercialnameList;
     }
 
-    public void setTreatmentList(List<Treatment> treatmentList) {
-        this.treatmentList = treatmentList;
+    public void setCommercialnameList(List<CommercialName> commercialnameList) {
+        this.commercialnameList = commercialnameList;
     }
 
     @XmlTransient
@@ -148,31 +156,12 @@ public class User implements Serializable{
     }
 
     @XmlTransient
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
+    public List<Treatment> getTreatmentList() {
+        return treatmentList;
     }
 
-    public void setAppointmentList(List<Appointment> appointmentList) {
-        this.appointmentList = appointmentList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<CIE10Doctor> getCIE10DoctorList() {
-        return cIE10DoctorList;
-    }
-
-    public void setCIE10DoctorList(List<CIE10Doctor> cIE10DoctorList) {
-        this.cIE10DoctorList = cIE10DoctorList;
-    }
-
-    @XmlTransient
-    public List<Measures> getMeasuresList() {
-        return measuresList;
-    }
-
-    public void setMeasuresList(List<Measures> measuresList) {
-        this.measuresList = measuresList;
+    public void setTreatmentList(List<Treatment> treatmentList) {
+        this.treatmentList = treatmentList;
     }
 
     public Staffmember getIdStaffMember() {
@@ -215,4 +204,5 @@ public class User implements Serializable{
     public String toString() {
         return "pruebas1.User[ idUser=" + idUser + " ]";
     }
+    
 }

@@ -180,7 +180,7 @@ function initializeAvaibleVaccineTable(){
 function submitAddPV(){
     var row = $("#tblPVAvaibleVaccine").DataTable().row('.selected').data();
     
-    if(typeof row == 'undefined'){
+    if(typeof row === 'undefined'){
         displayDangerAlert(" No se ha seleccionado una vacuna para agregar.");
     }else{
         $.ajax({
@@ -202,7 +202,7 @@ function submitAddPV(){
 function deletePV(){
     var row = $("#tblConsultationPatientInmunization").DataTable().row('.selected').data();
     
-    if(typeof row == 'undefined'){
+    if(typeof row === 'undefined'){
         displayDangerAlert(" No se ha seleccionado una vacuna para eliminar.");
     }else{
         var box = bootbox.confirm("<strong>Advertencia!</strong>Esta seguro de eliminar esta vacuna programada?", function(result) {

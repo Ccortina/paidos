@@ -9,10 +9,12 @@ $(document).ready(function(){
     
         
         initializeDiagnosticsTable();
-        
         initializeTreatmentsTable();
         initializeDrugsTable();
         initializeCommercialNamesTable();
+        
+        initializeDWADrugsTable();
+        initializeDWADrugsCommercialNameTable();
         
         //The diagnostics added for the consultation
         initializeConsultationDiagnosticsTable();
@@ -37,34 +39,15 @@ $(document).ready(function(){
                                                     $("#treatmentsTable").DataTable().row('.selected').data(),
                                                         $("#drugsTable").DataTable().row('.selected').data(),
                                                             $("#commercialNamesTable").DataTable().row('.selected').data());
-            }else if(!sD && !sT && sM && !sC){
-                addDiagnosticRow($(" --- ",
-                                    " --- ",
-                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " +
-                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
-                                            " --- ",
-                                                "",
-                                                    "",
-                                                        $("#drugsTable").DataTable().row('.selected').data(),
-                                                            ""));  
-            }else if(!sD && !sT && sM && sC){
-                addDiagnosticRow(" --- ",
-                                    " --- ",
-                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " + 
-                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
-                                            $("#commercialNamesTable").DataTable().row('.selected').data()["commercialName"],
-                                                "",
-                                                    "",
-                                                        $("#drugsTable").DataTable().row('.selected').data(),
-                                                            $("#commercialNamesTable").DataTable().row('.selected').data());    
-            }else if(sD && !sT && !sM && !sC){
-                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],                                          
-                                    " --- ",
-                                        " --- ",
+            }else if(sD && sT && sM && !sC){
+                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
+                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " +
+                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
                                             " --- ",
                                                 $("#diagnosticsTable").DataTable().row('.selected').data(),
-                                                   "",
-                                                        "",
+                                                    $("#treatmentsTable").DataTable().row('.selected').data(),
+                                                        $("#drugsTable").DataTable().row('.selected').data(),
                                                             "");
             }else if(sD && sT && !sM && !sC){
                 addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
@@ -75,15 +58,14 @@ $(document).ready(function(){
                                                     $("#treatmentsTable").DataTable().row('.selected').data(),
                                                         "",
                                                             "");
-            }else if(sD && sT && sM && !sC){
-                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
-                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " +
-                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
+            }else if(sD && !sT && !sM && !sC){
+                addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],                                          
+                                    " --- ",
+                                        " --- ",
                                             " --- ",
                                                 $("#diagnosticsTable").DataTable().row('.selected').data(),
-                                                    $("#treatmentsTable").DataTable().row('.selected').data(),
-                                                        $("#drugsTable").DataTable().row('.selected').data(),
+                                                   "",
+                                                        "",
                                                             "");
             }else{
                 displayWarningAlert("Falta informacion.");     
@@ -110,6 +92,34 @@ function checkNotUndefined(value){
     }
 }
 
+function addDiagnosticRowDWA(){
+    var sM = checkNotUndefined($("#tblDWADrugs").DataTable().row('.selected').data());
+    var sC = checkNotUndefined($("#tblDWADrugsCommercialName").DataTable().row('.selected').data());
+    
+    if(sM && !sC){
+        addDiagnosticRow($(" --- ",
+                            " --- ",
+                                $("#tblDWADrugs").DataTable().row('.selected').data()["drug"] + " , " +
+                                        $("#tblDWADrugs").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
+                                    " --- ",
+                                        "",
+                                            "",
+                                                $("#tblDWADrugs").DataTable().row('.selected').data(),
+                                                    ""));
+    }else if(sM && sC){
+        addDiagnosticRow(" --- ",
+                            " --- ",
+                                $("#tblDWADrugs").DataTable().row('.selected').data()["drug"] + " , " + 
+                                        $("#tblDWADrugs").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
+                                    $("#tblDWADrugsCommercialName").DataTable().row('.selected').data()["commercialName"],
+                                        "",
+                                            "",
+                                                $("#tblDWADrugs").DataTable().row('.selected').data(),
+                                                    $("#tblDWADrugsCommercialName").DataTable().row('.selected').data());
+    }else if(!sM && sC){
+        displayWarningAlert("Falta informacion.");
+    }
+}
 
 //Add a row to the diagnostics table for the consultation
 function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,id4){
@@ -122,18 +132,28 @@ function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,i
     
     $("#consultationDiagnosticsTable").DataTable().rows().data().each(function(value,index){
         //No Drug info  
-        console.log(value[3]);
         if(value[3] !== ""){
             if(checkNotUndefined(value[3][0])){
                 if(id3 !== ""){
                     if(checkNotUndefined(id3[0])){
-                        value[3][0]['drugList'].foreach(function(entry){
-                            if(entry['idDrug'] === id3[0]['idDrug']){
-                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
-                                $(row).css({"background-color":"#FF6961"});
-                                $(row).addClass("vpExpired");
-                            }
-                        });
+                        if(entry['idDrug'] === id3[0]['idDrug']){
+                            $.ajax({
+                                url:"/demo/consultation/checkDrugIncompatibility",
+                                data:{drugId1:value[3][0]['idDrug'],drugId2:id3[0]['idDrug']},
+                                type:"POST",
+                                error:function(jqXHR,textStatus,errorThrown){
+                                    displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
+                                },
+                                success:function(response,status,jqXHR ){
+                                    console.log(response);
+                                    if(response){
+                                        var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
+                                        $(row).css({"background-color":"#FF6961"});
+                                        $(row).addClass("vpExpired");
+                                    }
+                                }
+                            });
+                        }          
                     }else{
                         value[3][0]['drugList'].foreach(function(entry){
                             if(entry['idDrug'] === id3['idDrug']){
@@ -201,20 +221,18 @@ function initializeDiagnosticsTable(){
             
             $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                    $('#selectedDiagnosticInput').val("");
-                    $('#selectedTreatmentInput').val("");
-                    $('#selectedDrugInput').val("");
-                    $('#selectedCommercialNameInput').val("");
                     $('#treatmentsTable').DataTable().ajax.reload();
+                    $(this).removeClass('selected');
+                    
+                    table = $('#drugsTable').DataTable();
+                    table.$('tr.selected').removeClass('selected');
+                    table = $('#commercialNamesTable').DataTable();
+                    table.$('tr.selected').removeClass('selected');
+                    
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
-                    $('#selectedDiagnosticInput').val(table.row('.selected').data()["cie10"]["diagnostic"]);
                     $('#treatmentsTable').DataTable().ajax.reload();
-                    $('#selectedTreatmentInput').val("");
-                    $('#selectedDrugInput').val("");
-                    $('#selectedCommercialNameInput').val("");
                 }
             });
         }
@@ -245,14 +263,8 @@ function initializeTreatmentsTable(){
                 } 
             }
         },
-        "columns":[{
-            "render": function ( data, type, full, meta ) {
-                if(typeof full[0] === 'undefined'){
-                    return full['treatment'];
-                }else{
-                    return full[0]['treatment'];
-                }
-            }}
+        "columns":[
+            {"data":"treatment"}
         ],
         "initComplete":function(settings,json){
             var table = $('#treatmentsTable').DataTable();
@@ -260,28 +272,16 @@ function initializeTreatmentsTable(){
             $('#treatmentsTable tbody').on( 'click', 'tr', function (e) {
                 var required = $('#diagnosticsTable').DataTable().row('.selected').data();
                 
-                if(typeof required == 'undefined' ){
+                if(typeof required === 'undefined' ){
                     displayWarningAlert("Debe seleccionar por lo menos un diagnostico primero");
                 }{
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
-                        $('#selectedTreatmentInput').val("");
-                        $('#selectedDrugInput').val("");
-                        $('#selectedCommercialNameInput').val("");
                         $('#drugsTable').DataTable().ajax.reload();
                     }else{
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
-                        var selectedTreatment;
-                        if(typeof table.row('.selected').data()[0] === 'undefined'){
-                            selectedTreatment = table.row('.selected').data()["treatment"];
-                        }else{
-                            selectedTreatment = table.row('.selected').data()[0]["treatment"];
-                        }
-                        $('#selectedTreatmentInput').val(selectedTreatment);
                         $('#drugsTable').DataTable().ajax.reload();
-                        $('#selectedDrugInput').val("");
-                        $('#selectedCommercialNameInput').val("");
                     }
                 }
             });
@@ -307,29 +307,13 @@ function initializeDrugsTable(){
                 if(typeof table.row('.selected').data() === 'undefined' ){
                     d.treatmentId = -1;
                 }else{
-                    if(typeof table.row('.selected').data()[0] === 'undefined'){
-                        d.treatmentId = table.row('.selected').data()["idTreatment"];
-                    }else{
-                        d.treatmentId = table.row('.selected').data()[0]["idTreatment"];
-                    }
+                    d.treatmentId = table.row('.selected').data()["idTreatment"];   
                 } 
             }
         },
-        "columns":[{
-            "render": function ( data, type, full, meta ) {
-                if(typeof full[0] === 'undefined'){
-                    return full['drug'];
-                }else{
-                    return full[0]['drug'];
-                }
-            }},
-            {"render": function ( data, type, full, meta ) {
-                if(typeof full[0] === 'undefined'){
-                    return full['drug'];
-                }else{
-                    return full[0].drugPresentationId.presentation;
-                }
-            }}    
+        "columns":[
+            {"data":"drug"},
+            {"data":"drugPresentationId.presentation"}    
         ],
         "initComplete":function(settings,json){
             var table = $('#drugsTable').DataTable();
@@ -337,32 +321,20 @@ function initializeDrugsTable(){
             $('#drugsTable tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
-                    $('#selectedDrugInput').val("");
-                    $('#selectedCommercialNameInput').val("");
                     $('#commercialNamesTable').DataTable().ajax.reload();
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
-                    var selectedDrug;
-                                        
-                    if(typeof table.row('.selected').data()[0] === 'undefined'){
-                        selectedDrug = table.row('.selected').data()["drug"];
-                    }else{
-                        selectedDrug = table.row('.selected').data()[0]["drug"];
-                    }
-                    $('#selectedDrugInput').val(selectedDrug);
                     $('#commercialNamesTable').DataTable().ajax.reload();
-                    $('#selectedCommercialNameInput').val("");
+
                 }
             });
             
         },
         "createdRow": function( row, data, dataIndex ) {
-            if(typeof data[0] === 'undefined'){
-                var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data['drug']+")");
-            }else{
-                var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data[0]['drug']+")");
-            }
+
+            var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data['drug']+")");
+
             if(alergicDrug.length > 0){
                 $(row).css({"background-color":"#FDFD96"});
                 $(row).addClass("vpSuspended");
@@ -390,22 +362,13 @@ function initializeCommercialNamesTable(){
                 if(typeof table.row('.selected').data() === 'undefined' ){
                     d.drugId = -1;
                 }else{
-                    if(typeof table.row('.selected').data()[0] === 'undefined'){
-                        d.drugId = table.row('.selected').data()["idDrug"];
-                    }else{
-                        d.drugId = table.row('.selected').data()[0]["idDrug"];
-                    }
+                    d.drugId = table.row('.selected').data()["idDrug"];
+  
                 } 
             }
         },
-        "columns":[{
-            "render": function ( data, type, full, meta ) {
-                if(typeof full[0] === 'undefined'){
-                    return full['commercialName'];
-                }else{
-                    return full[0]['commercialName'];
-                }
-            }}    
+        "columns":[
+            {"data":"commercialName"}    
         ],
         "initComplete":function(settings,json){
             var table = $('#commercialNamesTable').DataTable();
@@ -417,17 +380,9 @@ function initializeCommercialNamesTable(){
                 }else{
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
-                        $('#selectedCommercialNamesInput').val("");
                     }else{
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
-                        var selectedCommercialName;
-                        if(typeof table.row('.selected').data()[0] === 'undefined'){
-                            selectedCommercialName = table.row('.selected').data()["commercialName"];
-                        }else{
-                            selectedCommercialName = table.row('.selected').data()[0]["commercialName"];
-                        }
-                        $('#selectedCommercialNamesInput').val(selectedCommercialName);
                     }
                 }
             });
@@ -453,6 +408,99 @@ function initializeConsultationDiagnosticsTable(){
     
 }
 
+function initializeDWADrugsTable(){
+    $("#tblDWADrugs").DataTable({
+        "ordering":false,
+        "scrollY": "300px",
+        "scrollCollapse": true,
+        "paging": false,
+        "info":false,
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar"
+        },
+        "ajax":{
+            "url":"/demo/consultation/getDrugsByTreatment",
+            "data":{"treatmentId":"-1"}
+        },
+        "columns":[
+            {"data":"drug"},
+            {"data":"drugPresentationId.presentation"},
+            {"data":"applicationSchedule"},
+            {"data":"administrationUnitId.administrationUnit"}
+        ],
+        "initComplete":function(settings,json){
+            var table = $('#tblDWADrugs').DataTable();
+            
+            $('#tblDWADrugs tbody').on( 'click', 'tr', function (e) {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                    $('#tblDWADrugsCommercialName').DataTable().ajax.reload();
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                    $('#tblDWADrugsCommercialName').DataTable().ajax.reload();
+                }
+            });
+            
+        },
+        "createdRow": function( row, data, dataIndex ) {
+
+            var  alergicDrug = $("#tblConsultationPatientAlergicDrug tr:contains("+data['drug']+")");
+
+            if(alergicDrug.length > 0){
+                $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
+            }
+        }        
+    });
+}
+
+function initializeDWADrugsCommercialNameTable(){
+    $("#tblDWADrugsCommercialName").DataTable({
+        "ordering":false,
+        "scrollY": "300px",
+        "scrollCollapse": true,
+        "paging": false,
+        "info":false,
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar"
+        },
+        "ajax":{
+            "url":"/demo/consultation/getDrugsCommercialNames",
+            "data":function ( d ) {
+                var table = $('#tblDWADrugs').DataTable();
+                if(typeof table.row('.selected').data() === 'undefined' ){
+                    d.drugId = -1;
+                }else{
+                    d.drugId = table.row('.selected').data()["idDrug"];
+  
+                } 
+            }
+        },
+        "columns":[
+            {"data":"commercialName"}    
+        ],
+        "initComplete":function(settings,json){
+            var table = $('#tblDWADrugsCommercialName').DataTable();
+            
+            $('#tblDWADrugsCommercialName tbody').on( 'click', 'tr', function (e) {
+                var required = $('#tblDWADrugs').DataTable().row('.selected').data();
+                if(typeof  required === 'undefined'){
+                    displayWarningAlert("Debe seleccionar por lo menos un medicamento primero");
+                }else{
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                }
+            });
+        }
+    });
+}
 
 function resetDiagnosticWizard(){
     var tblD =$('#diagnosticsTable').DataTable();

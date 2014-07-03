@@ -7,6 +7,8 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.DrugDao;
 import com.carloscortina.demo.model.Drug;
 import java.util.List;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +56,22 @@ public class DrugServiceImp implements DrugService
     }
 
     @Override
-    public List<Drug> getSpecificColumnsList(List<String> columns) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Drug> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+        return drugDao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Drug> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        return drugDao.getSpecificColumnsList(columns, restrictions);
+    }
+    
+    @Override
+    public List<Drug> getDrugByUser(int id){
+        return drugDao.getDrugByUser(id);
+    }
+
+    @Override
+    public List<Drug> getDrugByTreatmentAndUser(int treatmentId,int userId) {
+        return drugDao.getDrugByTreatmentAndUser(treatmentId,userId);
     }
 }

@@ -7,6 +7,8 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.Cie10DoctorDao;
 import com.carloscortina.demo.model.CIE10Doctor;
 import java.util.List;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +55,12 @@ public class Cie10DoctorServiceImp implements Cie10DoctorService{
     }
 
     @Override
-    public List<CIE10Doctor> getSpecificColumnsList(List<String> columns) {
-        return cdDao.getSpecificColumnsList(columns);
+    public List<CIE10Doctor> getSpecificColumnsList(List<String> columns,Criterion restrictions) {
+        return cdDao.getSpecificColumnsList(columns,restrictions);
     }
     
+    @Override
+    public List<CIE10Doctor> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        return cdDao.getSpecificColumnsList(columns,restrictions);
+    }
 }

@@ -7,6 +7,8 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.ActivityDao;
 import com.carloscortina.demo.model.Activity;
 import java.util.List;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +55,14 @@ public class ActivityServiceImp implements ActivityService{
     }
 
     @Override
-    public List<Activity> getSpecificColumnsList(List<String> columns) {
+    public List<Activity> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Activity> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

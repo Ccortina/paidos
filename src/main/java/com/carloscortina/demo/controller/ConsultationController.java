@@ -85,8 +85,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -263,16 +267,8 @@ public class ConsultationController {
             return "";
         }
 	
-	@RequestMapping(value="frequentDiagnostics")
-	public @ResponseBody JsonPack<Cie10> frequentDiagnostics()
-	{
-		String query = "FROM Cie10 c WHERE (day(current_date()) - day(c.lastUsed)) <= 3 AND c.active = 1";
-		JsonPack<Cie10> result = new JsonPack<Cie10>(cie10Service.getListOfItem(query));
-		return result;
-	}
-	
 	@RequestMapping(value="getDiagnostics")
-	public @ResponseBody JsonPack<CIE10Doctor> allDiagnostics()
+	public @ResponseBody JsonPack<CIE10Doctor> getAllDiagnosticsByUser()
 	{
 		String query = "FROM CIE10Doctor WHERE idUser="+doctor.getIdUser()+" AND cie10.active=1";
 		return  new JsonPack<CIE10Doctor>(c10dService.getListOfItem(query));
@@ -282,31 +278,25 @@ public class ConsultationController {
 	@RequestMapping(value="getTreatmentByDiagnostic")
 	public @ResponseBody JsonPack<Treatment> getTreatmentsBasedOnDiagnostic(int diagnosticId)
 	{   
-            String query;
 
             if(diagnosticId <= 0){
-                query = "FROM Treatment";
+                return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(16));
             } else {
-                query = "FROM Treatment t join t.cie10List d WHERE d.idCIE10 = " + diagnosticId + "AND t.idUser="+doctor.getIdUser();
+                return new JsonPack<Treatment>(treatmentService.getTreatmentByCIE10AndUser(diagnosticId,doctor.getIdUser() ));
             }
-
-            
-            return new JsonPack<Treatment>(treatmentService.getListOfItem(query));
 	}
         
         //This method gives a json response with all the drugs related to the treatment
         @RequestMapping(value="getDrugsByTreatment")
-	public @ResponseBody JsonPack<Drug> allDrugsByTreatment(int treatmentId)
+	public @ResponseBody JsonPack<Drug> getDrugsByTreatment(int treatmentId)
 	{
-            String query;
+            //String query;
             
             if( treatmentId <= 0){
-                query = "FROM Drug";
+                return new JsonPack<Drug>(drugService.getDrugByUser(doctor.getIdUser()));
             }else{
-                query = "FROM Drug t join t.treatmentList d WHERE d.idTreatment = "+treatmentId+" AND t.idUser="+doctor.getIdUser();
+                return new JsonPack<Drug>(drugService.getDrugByTreatmentAndUser(treatmentId, doctor.getIdUser()));
             }
-            
-            return new JsonPack<Drug>(drugService.getListOfItem(query));
             
 	}
 	
@@ -343,6 +333,22 @@ public class ConsultationController {
 		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
 		return result;
 	}
+        
+        @RequestMapping(value="checkDrugIncompatibility")
+        public @ResponseBody boolean checkDrugIncompatibility(int drugId1, int drugId2){
+        
+            Drug drug1 = drugService.getById(drugId1);
+            Drug drug2 = drugService.getById(drugId2);
+            
+            for(Drug temp: drug1.getDrugList()){
+                for(Drug temp2: drug2.getDrugList()){
+                    if(temp.getIdDrug() == temp2.getIdDrug()){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         
         //This method returns a json with all the activities 
         @RequestMapping(value={"/getAllActivities","getAllActivities"})
@@ -614,9 +620,8 @@ public class ConsultationController {
         @RequestMapping(value="getPatientAlergicAvaibleDrugs")
         public @ResponseBody JsonPack<Drug> getPatientAlergicAvaibleDrugs(){
             
-            List<Drug> alergicList = patient.getDrugList();
-            List<Drug> drugList = drugService.getListOfItem("FROM Drug WHERE idUser="+doctor.getIdUser());
-            drugList.removeAll(alergicList);
+            List<Drug> drugList = drugService.getDrugByUser(doctor.getIdUser());
+            drugList.removeAll(patient.getDrugList());
             return new JsonPack<Drug>(drugList);
         }
         

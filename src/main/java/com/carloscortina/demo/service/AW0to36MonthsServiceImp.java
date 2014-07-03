@@ -7,6 +7,8 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.AW0to36MonthsDao;
 import com.carloscortina.demo.model.Ageweight0To36Months;
 import java.util.List;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +55,12 @@ public class AW0to36MonthsServiceImp implements AW0to36MonthsService{
     }
 
     @Override
-    public List<Ageweight0To36Months> getSpecificColumnsList(List<String> columns) {
+    public List<Ageweight0To36Months> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Ageweight0To36Months> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
