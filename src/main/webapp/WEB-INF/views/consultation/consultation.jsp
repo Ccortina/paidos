@@ -65,8 +65,8 @@
 
 <script src="${jqplotJsonJs}" type="text/javascript"></script>
 
-<input type="hidden" id="consultationDoctorId" value="${doctor.idUser}">
-<input type="hidden" id="consultationDoctor" value="${doctor.idStaffMember.name} ${doctor.idStaffMember.lastName}">
+<input type="hidden" id="assignedDoctor" value="${doctor}">
+<input type="hidden" id="prescriptionCounter" value="${prescriptionCounter}">
 <input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}">
 
 <!-- Main div container , centers everything-->
@@ -226,7 +226,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group-sm">
                                                 <label>Notas:</label>
-                                                <input type="text" id="consultationPrescriptionNotes" class="form-control inputNormal" />
+                                                <input type="text" id="consultationPrescriptionNotes" class="form-control inputTextArea" />
                                             </div>
                                         </div>
                                     </div>

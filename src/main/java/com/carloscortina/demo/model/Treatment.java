@@ -20,6 +20,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 /**
@@ -56,8 +58,8 @@ public class Treatment implements Serializable {
     @ManyToMany(mappedBy = "treatmentList")
     @JsonIgnore
     private List<Drug> drugList;
-    @JsonIgnore
     @ManyToMany(mappedBy = "treatmentList")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Cie10> cie10List;
 
     public Treatment() {
@@ -72,6 +74,15 @@ public class Treatment implements Serializable {
         this.treatment = treatment;
         this.active = active;
     }
+
+    public Treatment(Integer idTreatment, String treatment, String directions, String active) {
+        this.idTreatment = idTreatment;
+        this.treatment = treatment;
+        this.directions = directions;
+        this.active = active;
+    }
+    
+    
 
     public Integer getIdTreatment() {
         return idTreatment;

@@ -63,5 +63,10 @@ public class CommercialNameServiceImp implements CommercialNameService{
     public List<CommercialName> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<CommercialName> getCommercialNameByUser(int id) {
+        return commercialName.getCommercialNameByUser(id);
+    }
     
 }

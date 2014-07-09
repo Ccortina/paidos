@@ -25,6 +25,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -81,7 +83,7 @@ public class Drug implements Serializable {
         @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
     @ManyToMany
-    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Treatment> treatmentList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
     @JsonIgnore
@@ -98,6 +100,9 @@ public class Drug implements Serializable {
     @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
     @ManyToOne
     private AdministrationUnit administrationUnitId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDrug")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<DrugDose> drugDoseList;
 
     public Drug() {
     }
@@ -267,6 +272,14 @@ public class Drug implements Serializable {
 
     public void setAdministrationUnitId(AdministrationUnit administrationUnitId) {
         this.administrationUnitId = administrationUnitId;
+    }
+
+    public List<DrugDose> getDrugDoseList() {
+        return drugDoseList;
+    }
+
+    public void setDrugDoseList(List<DrugDose> drugDoseList) {
+        this.drugDoseList = drugDoseList;
     }
 
     @Override

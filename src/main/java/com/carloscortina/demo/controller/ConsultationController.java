@@ -21,12 +21,10 @@ import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.ActivityConsultation;
 import com.carloscortina.demo.model.Ageweight0To36Months;
 import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.AppointmentStatus;
 import com.carloscortina.demo.model.AppointmentVaccine;
 import com.carloscortina.demo.model.AppointmentVaccinePK;
 import com.carloscortina.demo.model.AuxGraphTable;
 import com.carloscortina.demo.model.CIE10Doctor;
-import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.ConsultationDiagnostic;
@@ -85,12 +83,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -177,7 +171,7 @@ public class ConsultationController {
 		model.addAttribute("patient",patient);
 		model.addAttribute("record",record);
 		model.addAttribute("perBackNoPat",perBackNoPat);
-                model.addAttribute("doctor",doctor);
+                model.addAttribute("doctor",doctor.getIdStaffMember().getName()+" "+doctor.getIdStaffMember().getLastName());
                 model.addAttribute("birthmethods", birthMethodService.getAll("Birthmethod"));
                 model.addAttribute("measuresCatalog",measuresService.getAll("Measures"));
                 model.addAttribute("appWeight",appointment.getWeight());
@@ -268,51 +262,31 @@ public class ConsultationController {
         }
 	
 	@RequestMapping(value="getDiagnostics")
-	public @ResponseBody JsonPack<CIE10Doctor> getAllDiagnosticsByUser()
+	public @ResponseBody JsonPack<CIE10Doctor> getDiagnosticsByUser()
 	{
 		String query = "FROM CIE10Doctor WHERE idUser="+doctor.getIdUser()+" AND cie10.active=1";
 		return  new JsonPack<CIE10Doctor>(c10dService.getListOfItem(query));
 		
 	}
 	
-	@RequestMapping(value="getTreatmentByDiagnostic")
-	public @ResponseBody JsonPack<Treatment> getTreatmentsBasedOnDiagnostic(int diagnosticId)
+	@RequestMapping(value="getTreatments")
+	public @ResponseBody JsonPack<Treatment> getTreatmentsByUser()
 	{   
-
-            if(diagnosticId <= 0){
-                return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(16));
-            } else {
-                return new JsonPack<Treatment>(treatmentService.getTreatmentByCIE10AndUser(diagnosticId,doctor.getIdUser() ));
-            }
+            return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(16));
 	}
         
         //This method gives a json response with all the drugs related to the treatment
-        @RequestMapping(value="getDrugsByTreatment")
-	public @ResponseBody JsonPack<Drug> getDrugsByTreatment(int treatmentId)
+        @RequestMapping(value="getDrugs")
+	public @ResponseBody JsonPack<Drug> getDrugsByUser()
 	{
-            //String query;
-            
-            if( treatmentId <= 0){
-                return new JsonPack<Drug>(drugService.getDrugByUser(doctor.getIdUser()));
-            }else{
-                return new JsonPack<Drug>(drugService.getDrugByTreatmentAndUser(treatmentId, doctor.getIdUser()));
-            }
-            
+            return new JsonPack<Drug>(drugService.getDrugByUser(doctor.getIdUser()));
 	}
 	
         //This method gives a json response with all the commercial names related to a drug
         @RequestMapping(value="getDrugsCommercialNames")
-	public @ResponseBody JsonPack<CommercialName> allDrugCommercialNames(@RequestParam int drugId)
+	public @ResponseBody JsonPack<CommercialName> allDrugCommercialNames()
 	{
-            String query;
-            
-            if( drugId <= 0){
-                query = "FROM CommercialName";
-            }else{
-                query = "FROM CommercialName t WHERE t.drugId = "+drugId;
-            }
-                
-            return new JsonPack<CommercialName>(commercialNameService.getListOfItem(query));
+            return new JsonPack<CommercialName>(commercialNameService.getCommercialNameByUser(doctor.getIdUser()));
 	}
         
         @RequestMapping(value="drugDose")
@@ -324,7 +298,7 @@ public class ConsultationController {
 		return result;
 	}
         
-        //Return a json with all the Drugs(Medecine) in the system
+        /*Return a json with all the Drugs(Medecine) in the system
         @RequestMapping(value="getDrugs")
 	public @ResponseBody JsonPack<Drug> allDrugs()
 	{
@@ -332,7 +306,7 @@ public class ConsultationController {
                 
 		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
 		return result;
-	}
+	}*/
         
         @RequestMapping(value="checkDrugIncompatibility")
         public @ResponseBody boolean checkDrugIncompatibility(int drugId1, int drugId2){
@@ -408,24 +382,24 @@ public class ConsultationController {
 	
         @RequestMapping(value="getPatientDocument")
         public @ResponseBody JsonPack<Document> getDocuments(){
-            File folder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient());
+            File folder = new File("E:\\Documents\\Paidos\\Files\\paciente"+patient.getIdPatient());
             File[] listOfFiles = folder.listFiles();
             List<Document> documents = new ArrayList<Document>();
             
-            
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                   
-                    Document doc = new Document();
-                    doc.setName(listOfFiles[i].getName());
-                    doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
-                    documents.add(doc);
-                    
-                } else if (listOfFiles[i].isDirectory()) {
-                    System.out.println("Directory " + listOfFiles[i].getName());
+            if(listOfFiles != null){
+                for(int i = 0; i < listOfFiles.length; i++) {
+                    if (listOfFiles[i].isFile()) {
+
+                        Document doc = new Document();
+                        doc.setName(listOfFiles[i].getName());
+                        doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
+                        documents.add(doc);
+
+                    } else if (listOfFiles[i].isDirectory()) {
+                        System.out.println("Directory " + listOfFiles[i].getName());
+                    }
                 }
             }
-            
             JsonPack<Document> result = new JsonPack<Document>(documents);
             
             return result;

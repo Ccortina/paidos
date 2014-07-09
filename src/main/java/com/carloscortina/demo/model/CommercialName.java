@@ -17,6 +17,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -48,6 +50,7 @@ public class CommercialName implements Serializable {
     private List<User> userList;
     @JoinColumn(name = "drugId", referencedColumnName = "idDrug")
     @ManyToOne(optional = false)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private Drug drugId;
 
     public CommercialName() {
@@ -61,6 +64,13 @@ public class CommercialName implements Serializable {
         this.idcommercialName = idcommercialName;
         this.commercialName = commercialName;
         this.active = active;
+    }
+
+    public CommercialName(Integer idcommercialName, String commercialName, short active, Drug drugId) {
+        this.idcommercialName = idcommercialName;
+        this.commercialName = commercialName;
+        this.active = active;
+        this.drugId = drugId;
     }
 
     public Integer getIdcommercialName() {

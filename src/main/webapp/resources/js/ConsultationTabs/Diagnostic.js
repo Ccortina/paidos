@@ -31,9 +31,9 @@ $(document).ready(function(){
             //All are used
             if(sD && sT && sM && sC){
                 addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
-                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " + 
-                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()["treatment"],
+                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " + 
+                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
                                             $("#commercialNamesTable").DataTable().row('.selected').data()["commercialName"],
                                                 $("#diagnosticsTable").DataTable().row('.selected').data(),
                                                     $("#treatmentsTable").DataTable().row('.selected').data(),
@@ -41,9 +41,9 @@ $(document).ready(function(){
                                                             $("#commercialNamesTable").DataTable().row('.selected').data());
             }else if(sD && sT && sM && !sC){
                 addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
-                                        $("#drugsTable").DataTable().row('.selected').data()[0]["drug"] + " , " +
-                                                $("#drugsTable").DataTable().row('.selected').data()[0]["drugPresentationId"]["presentation"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()["treatment"],
+                                        $("#drugsTable").DataTable().row('.selected').data()["drug"] + " , " +
+                                                $("#drugsTable").DataTable().row('.selected').data()["drugPresentationId"]["presentation"],
                                             " --- ",
                                                 $("#diagnosticsTable").DataTable().row('.selected').data(),
                                                     $("#treatmentsTable").DataTable().row('.selected').data(),
@@ -51,7 +51,7 @@ $(document).ready(function(){
                                                             "");
             }else if(sD && sT && !sM && !sC){
                 addDiagnosticRow($("#diagnosticsTable").DataTable().row('.selected').data()["cie10"]["diagnostic"],
-                                    $("#treatmentsTable").DataTable().row('.selected').data()[0]["treatment"],
+                                    $("#treatmentsTable").DataTable().row('.selected').data()["treatment"],
                                         " --- ",
                                             " --- ",
                                                 $("#diagnosticsTable").DataTable().row('.selected').data(),
@@ -82,10 +82,20 @@ $(document).ready(function(){
         $('#modalDiagnostic').on('hidden.bs.modal', function (e) {
             resetDiagnosticWizard();
         });
+        
+        $("#consultationPrescriptionNumber").val((parseInt($("#prescriptionCounter").val())+1));
 });
 
 function checkNotUndefined(value){
     if(typeof value === 'undefined'){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function checkNotEmptyString(value){
+    if(value === ""){
         return false;
     }else{
         return true;
@@ -130,63 +140,6 @@ function addDiagnosticRow(diagnostic,treatment,drug,commercialName,id1,id2,id3,i
                                                                 "<button type='button' class='btn btn-danger' onclick='deleteDiagnosticRow(this)'>\n\
                                                                     Eliminar</button>"]).draw().index();
     
-    $("#consultationDiagnosticsTable").DataTable().rows().data().each(function(value,index){
-        //No Drug info  
-        if(value[3] !== ""){
-            if(checkNotUndefined(value[3][0])){
-                if(id3 !== ""){
-                    if(checkNotUndefined(id3[0])){
-                        if(entry['idDrug'] === id3[0]['idDrug']){
-                            $.ajax({
-                                url:"/demo/consultation/checkDrugIncompatibility",
-                                data:{drugId1:value[3][0]['idDrug'],drugId2:id3[0]['idDrug']},
-                                type:"POST",
-                                error:function(jqXHR,textStatus,errorThrown){
-                                    displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
-                                },
-                                success:function(response,status,jqXHR ){
-                                    console.log(response);
-                                    if(response){
-                                        var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
-                                        $(row).css({"background-color":"#FF6961"});
-                                        $(row).addClass("vpExpired");
-                                    }
-                                }
-                            });
-                        }          
-                    }else{
-                        value[3][0]['drugList'].foreach(function(entry){
-                            if(entry['idDrug'] === id3['idDrug']){
-                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
-                                $(row).css({"background-color":"#FF6961"});
-                                $(row).addClass("vpExpired");
-                            }
-                        });
-                    }
-                }
-            }else{
-                if(id3 !== ""){
-                    if(checkNotUndefined(id3[0])){
-                        value[3]['drugList'].foreach(function(entry){
-                            if(entry['idDrug'] === id3[0]['idDrug']){
-                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
-                                $(row).css({"background-color":"#FF6961"});
-                                $(row).addClass("vpExpired");
-                            }
-                        });
-                    }else{
-                        value[3]['drugList'].foreach(function(entry){
-                            if(entry['idDrug'] === id3['idDrug']){
-                                var row = $("#consultationDiagnosticsTable").DataTable().row(addedRowindex);
-                                $(row).css({"background-color":"#FF6961"});
-                                $(row).addClass("vpExpired");
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    });
     resetDiagnosticWizard();
                                                     
 }
@@ -228,11 +181,15 @@ function initializeDiagnosticsTable(){
                     table.$('tr.selected').removeClass('selected');
                     table = $('#commercialNamesTable').DataTable();
                     table.$('tr.selected').removeClass('selected');
-                    
+                    //Reset all the tables
+                    $('#treatmentsTable').DataTable().column(1).search('',false,false).draw();
+                    $('#drugsTable').DataTable().column(2).search('',false,false).draw();
+                    $('#commercialNamesTable').DataTable().column(1).search('',false,false).draw();
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
-                    $('#treatmentsTable').DataTable().ajax.reload();
+                    var diagnosticId = table.row(this).data()["cie10"]["idCIE10"];
+                    $('#treatmentsTable').DataTable().column(1).search("-"+diagnosticId+"-",false,false).draw();
                 }
             });
         }
@@ -252,36 +209,36 @@ function initializeTreatmentsTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":{
-            "url":"/demo/consultation/getTreatmentByDiagnostic",
-            "data":function ( d ) {
-                var table = $('#diagnosticsTable').DataTable();
-                if(typeof table.row('.selected').data() === 'undefined' ){
-                    d.diagnosticId = -1;
-                }else{
-                    d.diagnosticId = table.row('.selected').data()["cie10"]["idCIE10"];
-                } 
-            }
-        },
+        "ajax":"/demo/consultation/getTreatments",
         "columns":[
-            {"data":"treatment"}
+            {"data":"treatment"},
+            {"render":function(data,type,row){
+                    var list=[];
+                    row['cie10List'].forEach(function(entry){
+                        list.push("-"+entry["idCIE10"]+"-");
+                    });
+                    return list;
+            },
+                "visible":false}
         ],
         "initComplete":function(settings,json){
-            var table = $('#treatmentsTable').DataTable();
-            
             $('#treatmentsTable tbody').on( 'click', 'tr', function (e) {
                 var required = $('#diagnosticsTable').DataTable().row('.selected').data();
                 
                 if(typeof required === 'undefined' ){
                     displayWarningAlert("Debe seleccionar por lo menos un diagnostico primero");
-                }{
+                }else{
+                    var table = $('#treatmentsTable').DataTable();
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
-                        $('#drugsTable').DataTable().ajax.reload();
+                        //Reset Drugs and commercial names table
+                        $('#drugsTable').DataTable().column(2).search('',false,false).draw();
+                        $('#commercialNamesTable').DataTable().column(1).search('',false,false).draw();
                     }else{
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
-                        $('#drugsTable').DataTable().ajax.reload();
+                        var treatmentId = table.row(this).data()["idTreatment"];
+                        $('#drugsTable').DataTable().column(2).search("-"+treatmentId+"-",false,false).draw();
                     }
                 }
             });
@@ -300,33 +257,38 @@ function initializeDrugsTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":{
-            "url":"/demo/consultation/getDrugsByTreatment",
-            "data":function ( d ) {
-                var table = $('#treatmentsTable').DataTable();
-                if(typeof table.row('.selected').data() === 'undefined' ){
-                    d.treatmentId = -1;
-                }else{
-                    d.treatmentId = table.row('.selected').data()["idTreatment"];   
-                } 
-            }
-        },
+        "ajax":"/demo/consultation/getDrugs",
         "columns":[
             {"data":"drug"},
-            {"data":"drugPresentationId.presentation"}    
+            {"data":"drugPresentationId.presentation"},
+            {"render":function(data,type,row){
+                var list=[];
+                    row['treatmentList'].forEach(function(entry){
+                        list.push("-"+entry["idTreatment"]+"-");
+                    });
+                    return list;
+            },
+            "visible":false
+            }
         ],
         "initComplete":function(settings,json){
-            var table = $('#drugsTable').DataTable();
-            
-            $('#drugsTable tbody').on( 'click', 'tr', function (e) {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                    $('#commercialNamesTable').DataTable().ajax.reload();
-                }else{
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    $('#commercialNamesTable').DataTable().ajax.reload();
 
+            $('#drugsTable tbody').on( 'click', 'tr', function (e) {
+                var required = $('#treatmentsTable').DataTable().row('.selected').data();
+                if(typeof required === 'undefined' ){
+                    displayWarningAlert("Debe seleccionar por lo menos un tratamiento primero");
+                }else{
+                    var table = $('#drugsTable').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                        $('#commercialNamesTable').DataTable().column(1).search('',false,false).draw();
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        var drugId = table.row(this).data()["idDrug"];
+                        $('#commercialNamesTable').DataTable().column(1).search(drugId,false,false).draw();
+
+                    }
                 }
             });
             
@@ -355,29 +317,19 @@ function initializeCommercialNamesTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":{
-            "url":"/demo/consultation/getDrugsCommercialNames",
-            "data":function ( d ) {
-                var table = $('#drugsTable').DataTable();
-                if(typeof table.row('.selected').data() === 'undefined' ){
-                    d.drugId = -1;
-                }else{
-                    d.drugId = table.row('.selected').data()["idDrug"];
-  
-                } 
-            }
-        },
+        "ajax":"/demo/consultation/getDrugsCommercialNames",
         "columns":[
-            {"data":"commercialName"}    
+            {"data":"commercialName"},
+            {"data":"drugId.idDrug"}
         ],
         "initComplete":function(settings,json){
-            var table = $('#commercialNamesTable').DataTable();
-            
+
             $('#commercialNamesTable tbody').on( 'click', 'tr', function (e) {
                 var required = $('#drugsTable').DataTable().row('.selected').data();
                 if(typeof  required === 'undefined'){
                     displayWarningAlert("Debe seleccionar por lo menos un medicamento primero");
                 }else{
+                    var table = $('#commercialNamesTable').DataTable();
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
                     }else{
@@ -419,10 +371,7 @@ function initializeDWADrugsTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":{
-            "url":"/demo/consultation/getDrugsByTreatment",
-            "data":{"treatmentId":"-1"}
-        },
+        "ajax":"/demo/consultation/getDrugs",
         "columns":[
             {"data":"drug"},
             {"data":"drugPresentationId.presentation"},
@@ -435,11 +384,12 @@ function initializeDWADrugsTable(){
             $('#tblDWADrugs tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
-                    $('#tblDWADrugsCommercialName').DataTable().ajax.reload();
+                    $('#tblDWADrugsCommercialName').DataTable().column(1).search('',false,false).draw();
                 }else{
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
-                    $('#tblDWADrugsCommercialName').DataTable().ajax.reload();
+                    var drugId = table.row(this).data()["idDrug"];
+                    $('#tblDWADrugsCommercialName').DataTable().column(1).search(drugId,false,false).draw();
                 }
             });
             
@@ -467,20 +417,11 @@ function initializeDWADrugsCommercialNameTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":{
-            "url":"/demo/consultation/getDrugsCommercialNames",
-            "data":function ( d ) {
-                var table = $('#tblDWADrugs').DataTable();
-                if(typeof table.row('.selected').data() === 'undefined' ){
-                    d.drugId = -1;
-                }else{
-                    d.drugId = table.row('.selected').data()["idDrug"];
-  
-                } 
-            }
-        },
+        "ajax":"/demo/consultation/getDrugsCommercialNames",
         "columns":[
-            {"data":"commercialName"}    
+            {"data":"commercialName"},
+            {"data":"drugId.idDrug",
+                "visible":false}
         ],
         "initComplete":function(settings,json){
             var table = $('#tblDWADrugsCommercialName').DataTable();
@@ -513,10 +454,11 @@ function resetDiagnosticWizard(){
     tblM.$('tr.selected').removeClass('selected');
     tblC.$('tr.selected').removeClass('selected');
     
-    tblD.ajax.reload();
-    tblT.ajax.reload();
-    tblM.ajax.reload();
-    tblC.ajax.reload();
+    $('#treatmentsTable').DataTable().column(1).search('',false,false).draw();
+    $('#drugsTable').DataTable().column(2).search('',false,false).draw();
+    $('#commercialNamesTable').DataTable().column(1).search('',false,false).draw();
+    
+    
     $("#tabsConsultationDiagnostic a[href='#tabDiagnosticAndTreatments']").tab('show');
 }
 
@@ -530,19 +472,17 @@ function generatePrescription(){
     
     //Clean text area of the prescription
     $("#consultationPrescription").val("");
-    var prescriptionHeader = $("#consultationDoctor").val() + "\t\t\t"+ getCurrentDate()+"\n\n\n";
+    var prescriptionHeader = $("#assignedDoctor").val() + "\t\t\t"+ getCurrentDate()+"\n\n\n";
     $("#consultationPrescription").val(prescriptionHeader);
     
     //Check Weight is not empty or 0.
-    console.log($("#txtConsultationWeight").val());
-    if( $("#txtConsultationWeight").val() !== '0' )
+    if( checkNotEmptyString($("#txtConsultationWeight").val()) && $("#txtConsultationWeight").val() > 0 )
     {
         //Iterate trought nodes to get data
         for(var i=0;i<rows.length;i++)
         {
             cell = table.fnGetData(rows[i],3);
             commName = table.fnGetData(rows[i],4);
-            
             //Check if the cell cointain more than 1 object
             if(cell.length>1){
                 cell =cell[0];
@@ -552,7 +492,7 @@ function generatePrescription(){
             switch(cell["doseCalculationCriteriaId"]["idDoseCalculationCriteria"])
             {
                 case 1: //Weight
-                    dose = (($("#weight").val() * cell["drugDoseId"][0]["dose"])
+                    dose = (($("#txtConsultationWeight").val() * cell["drugDoseList"][0]["dose"])
                                 /cell["dailyFrequency"]/cell["concentration"]);
                                 
                     r1 = dose + " " + cell["administrationUnitId"]["administrationUnit"] +
@@ -561,9 +501,9 @@ function generatePrescription(){
                 case 2: //Age
                     //Age uses the dose to calculate the schedule, there can be multiple
                     //doses based on different ages.
-                    if( cell["drugDoseId"].length > 1){
+                    if( cell["drugDoseList"].length > 1){
                     //Sort the ages from min to max
-                        var ages = bubbleSort(cell["drugDoseId"]);
+                        var ages = bubbleSort(cell["drugDoseList"]);
                     
                         for(var i=0; i < ages.length; i++){
                             if($("#age").val() <= ages[i]["age"]){
@@ -572,7 +512,7 @@ function generatePrescription(){
                             }
                         }
                     }else{
-                        dose = 24/cell["drugDoseId"][0]["dose"];
+                        dose = 24/cell["drugDoseList"][0]["dose"];
                     }
                       r1 = cell["dailyFrequency"] + " " + cell["administrationUnitId"]["administrationUnit"] +
                             " cada " + dose + " hora(s) por " ;
@@ -598,10 +538,7 @@ function generatePrescription(){
         $('#consultationTabMenu a[href="#receta"]').tab('show');
     } else {
         //Alert and stop process if weigth is 0
-        $("#sideBarAlert").html("<div class='alert alert-danger alert-dismissable'>\n\
-                                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>\n\
-                                    <strong>Peligro!</strong> El peso del paciente no puede ser 0.\n\
-                                    </div>");
+        displayWarningAlert("El peso del paciente no puede ser 0.");            
         
     }    
     

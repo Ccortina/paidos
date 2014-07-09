@@ -23,7 +23,7 @@
 			<div class="col-sm-2">
 				<a data-toggle="modal" href="#modalDiagnostic" class="btn btn-primary">Agregar Diagnostico</a>
 			</div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
 				<a data-toggle="modal" href="#modalDrugWithoutAssociation" class="btn btn-primary">Medicamento sin asociación</a>
 			</div>
 			<div class="col-sm-2">
@@ -63,6 +63,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Tratamiento</th>
+                                                <th>CIE10IdList</th>
                                             </tr>	
                                         </thead>
                                     </table>
@@ -77,6 +78,7 @@
                                                 <tr>
                                                     <th>Medicamento</th>
                                                     <th>Presentación</th>
+                                                    <th>TreatmentIdList</th>
                                                 </tr>
                                         </thead>
                                     </table>
@@ -86,6 +88,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Medicamento</th>
+                                                <th>drugId</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -117,7 +120,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-8">
-                        <table id="tblDWADrugs">
+                        <table id="tblDWADrugs" class="hover row-border">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -129,10 +132,11 @@
                         </table>
                     </div>  
                     <div class="col-sm-4">
-                        <table id="tblDWADrugsCommercialName">
+                        <table id="tblDWADrugsCommercialName" class="hover row-border">
                             <thead>
                                 <tr>
                                     <th>Nombre Comercial</th>
+                                    <th>drugId</th>
                                 </tr>
                             </thead>
                         </table>
@@ -141,11 +145,11 @@
             </div>    
             <div class="modal-footer">
                 <div class="row">
-                    <div class="col-sm-6">	
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary" onclick="addDiagnosticRowDWA();" >Agregar</button>
                     </div>
                     <div class="col-sm-6">	
-                        <button type="button" class="btn btn-primary" onclick="addDiagnosticRowDWA();" >Agregar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>

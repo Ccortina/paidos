@@ -13,8 +13,8 @@ $(document).ready(function(){
         
         $('.inputDecimal').inputmask('Regex',{regex:"[0-9]+(\.[0-9][0-9]?)?"});
         $('.inputDate').inputmask("dd/mm/yyyy");
-        $('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-]*'});
-        $('.inputTextArea').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[\sA-Za-z0-9-\n]*'});
+        $('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-αινσϊρ]*'});
+        $('.inputTextArea').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-\n\\.,αινσϊρ]*'});
         
         $('.datepicker').datetimepicker({
             pickDate:true,

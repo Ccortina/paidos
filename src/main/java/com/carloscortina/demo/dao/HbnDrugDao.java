@@ -5,14 +5,10 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Drug;
+import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.Treatment;
 import java.util.List;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.LogicalExpression;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -24,61 +20,44 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
 
     @Override
     public List<Drug> getDrugByUser(int id){
-        Criteria criteria = getSession().createCriteria(Drug.class);
-            
-        ProjectionList prop = Projections.projectionList();
-        prop.add(Projections.property("idDrug"),"idDrug");
-        prop.add(Projections.property("drug"),"drug");
-        prop.add(Projections.property("concentration"),"concentration");
-        prop.add(Projections.property("treatmentDays"),"treatmentDays");
-        prop.add(Projections.property("applicationSchedule"),"applicationSchedule");
-        prop.add(Projections.property("dailyFrequency"),"dailyFrequency");
-        prop.add(Projections.property("notes"),"notes");
-        prop.add(Projections.property("active"),"active");
-        prop.add(Projections.property("drugPresentationId"),"drugPresentationId");
-        prop.add(Projections.property("doseCalculationCriteriaId"),"doseCalculationCriteriaId");
-        prop.add(Projections.property("applicationMethodId"),"applicationMethodId");
-        prop.add(Projections.property("administrationUnitId"),"administrationUnitId");
+        String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,drug.treatmentDays,drug.applicationSchedule,drug.dailyFrequency,drug.notes,"
+                + "drug.active,drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.applicationMethodId,drug.administrationUnitId) FROM Drug as drug"
+                + " JOIN drug.userList u WHERE u.idUser=:idUser";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("idUser",id);
         
-        criteria.createAlias("userList", "ul");
-        criteria.add(Restrictions.eq("ul.idUser", id));
+        List<Drug> result = query.list();
         
-        criteria.setProjection(prop).setResultTransformer(Transformers.aliasToBean(Drug.class));
-
-        List<Drug> result = criteria.list();
+        for(Drug temp: result){
+            String hql1 = "SELECT new DrugDose(dose.idDrugDose,dose.age,dose.dose) FROM DrugDose as dose WHERE idDrug.idDrug = :idDrug ";
+            String hql2 = "SELECT new Treatment(treatment.idTreatment) FROM Treatment as treatment JOIN treatment.drugList d WHERE d.idDrug = :idDrug ";
+            List<DrugDose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
+            List<Treatment> treatmentList = getSession().createQuery(hql2).setParameter("idDrug", temp.getIdDrug()).list();
+            temp.setDrugDoseList(drugDoseList);
+            temp.setTreatmentList(treatmentList);
+        }
+        
         return result;
+        
     }
     
     @Override
     public List<Drug> getDrugByTreatmentAndUser(int treatmentId,int userId){
-        Criteria criteria = getSession().createCriteria(Drug.class);
-            
-        ProjectionList prop = Projections.projectionList();
-        prop.add(Projections.property("idDrug"),"idDrug");
-        prop.add(Projections.property("drug"),"drug");
-        prop.add(Projections.property("concentration"),"concentration");
-        prop.add(Projections.property("treatmentDays"),"treatmentDays");
-        prop.add(Projections.property("applicationSchedule"),"applicationSchedule");
-        prop.add(Projections.property("dailyFrequency"),"dailyFrequency");
-        prop.add(Projections.property("notes"),"notes");
-        prop.add(Projections.property("active"),"active");
-        prop.add(Projections.property("drugPresentationId"),"drugPresentationId");
-        prop.add(Projections.property("doseCalculationCriteriaId"),"doseCalculationCriteriaId");
-        prop.add(Projections.property("applicationMethodId"),"applicationMethodId");
-        prop.add(Projections.property("administrationUnitId"),"administrationUnitId");
-            
+        String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,drug.treatmentDays,drug.applicationSchedule,drug.dailyFrequency,drug.notes,"
+                + "drug.active,drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.applicationMethodId,drug.administrationUnitId) FROM Drug as drug"
+                + " JOIN drug.userList u  JOIN drug.treatmentList t WHERE u.idUser=:idUser AND t.idTreatment=:idTreatment";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("idUser",userId);
+        query.setParameter("idTreatment",treatmentId);
         
-        criteria.createAlias("userList", "ul");
-        Criterion user = Restrictions.eq("ul.idUser", userId);
-        criteria.createAlias("treatmentList", "tl");
-        Criterion treatment = Restrictions.eq("tl.idTreatment", treatmentId);
+        List<Drug> result = query.list();
         
-        LogicalExpression andRestriction = Restrictions.and(user, treatment);
-        criteria.add(andRestriction);
+        for(Drug temp: result){
+            String hql1 = "SELECT new DrugDose(dose.idDrugDose,dose.age,dose.dose) FROM DrugDose as dose WHERE idDrug.idDrug = :idDrug ";
+            List<DrugDose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
+            temp.setDrugDoseList(drugDoseList);
+        }
         
-        criteria.setProjection(prop).setResultTransformer(Transformers.aliasToBean(Drug.class));
-
-        List<Drug> result = criteria.list();
         return result;
     }
 }
