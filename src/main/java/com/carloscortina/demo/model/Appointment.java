@@ -91,6 +91,7 @@ public class Appointment implements Serializable{
     @Column(name = "pc")
     private Double pc;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment")
+    @JsonIgnore
     private List<AppointmentVaccine> appointmentVaccineList;
     @Basic(optional = false)
     @Column(name = "programmedBySystem")
@@ -101,6 +102,26 @@ public class Appointment implements Serializable{
 
     public Appointment(Integer idAppointment) {
         this.idAppointment = idAppointment;
+    }
+
+    public Appointment(Date date, Date startTime, Date endTime, String motive, String notes, boolean immunization, AppointmentStatus idStatus, User registeredBy, Patient idPatient, User idDoctor, Double weight, Double temperature, Double size, Double ta, Double ta2, Double taAverage, Double pc) {
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.motive = motive;
+        this.notes = notes;
+        this.immunization = immunization;
+        this.idStatus = idStatus;
+        this.registeredBy = registeredBy;
+        this.idPatient = idPatient;
+        this.idDoctor = idDoctor;
+        this.weight = weight;
+        this.temperature = temperature;
+        this.size = size;
+        this.ta = ta;
+        this.ta2 = ta2;
+        this.taAverage = taAverage;
+        this.pc = pc;
     }
     
     public Integer getIdAppointment() {

@@ -63,5 +63,10 @@ public class LaboratoryTestResultServiceImp implements LaboratoryTestResultServi
     public List<LaboratoryTestResult> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void mergeItem(LaboratoryTestResult item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

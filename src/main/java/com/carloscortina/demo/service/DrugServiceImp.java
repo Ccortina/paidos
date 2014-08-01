@@ -74,4 +74,9 @@ public class DrugServiceImp implements DrugService
     public List<Drug> getDrugByTreatmentAndUser(int treatmentId,int userId) {
         return drugDao.getDrugByTreatmentAndUser(treatmentId,userId);
     }
+
+    @Override
+    public void mergeItem(Drug item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

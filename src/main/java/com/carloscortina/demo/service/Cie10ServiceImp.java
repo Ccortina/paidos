@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.dao.Cie10Dao;
 import com.carloscortina.demo.model.Cie10;
-import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 
@@ -62,6 +61,16 @@ public class Cie10ServiceImp implements Cie10Service{
     @Override
     public List<Cie10> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mergeItem(Cie10 item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Cie10> getCie10ByUser(int id) {
+        return cie10Dao.getCie10ByUser(id);
     }
 
 }

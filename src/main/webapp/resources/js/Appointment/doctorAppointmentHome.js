@@ -23,7 +23,7 @@ $(document).ready(function(){
                data:{
                    start:start.toISOString(),
                    end:end.toISOString(),
-                   timezone:timezone
+                   timezone:timezone,
                },
                success:function(doc){
                    var events = [];
@@ -46,11 +46,24 @@ $(document).ready(function(){
                }
            });
        },
+       eventClick: function(event) {
+           
+           bootbox.confirm("Quiere ir a la consulta?", function(result) {
+                        if(result){
+                            window.location.href = event.url;
+                        }
+                    });
+           return (false);
+       },
        eventRender:function(event,element){
            element.context.textContent = element.context.textContent+"Motivo: " + event.description;
            //element.find('span.fc-event-title').html(element.find('span.fc-event-title').text("<br/>"));		
        }
    });
+   
+   $('.inputDate').inputmask("dd/mm/yyyy",{"oncleared": function(){
+                                                $("#"+$(this).closest("form").attr('id')).data('bootstrapValidator').revalidateField($(this).attr('name'));
+                                            }});
 });
 
 function colorBasedOnStatus(status){

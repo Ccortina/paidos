@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.carloscortina.demo.model.Role;
 import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.User;
 
@@ -27,7 +26,6 @@ public class UserDetailsAdapter implements UserDetails{
 	public int getId() { return (user.getIdUser()); }
 	public String getPaidosUsername() { return user.getUsername(); }
 	public String getEmail() { return (user.getEmail()); }
-	public Role getRole() { return user.getIdRole();}
 	public Staffmember getStaffMember() { return ( user.getIdStaffMember() ); }
 	
 	@Override

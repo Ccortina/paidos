@@ -63,4 +63,14 @@ public class Cie10DoctorServiceImp implements Cie10DoctorService{
     public List<CIE10Doctor> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return cdDao.getSpecificColumnsList(columns,restrictions);
     }
+
+    @Override
+    public void mergeItem(CIE10Doctor item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<CIE10Doctor> getCie10ByUser(int id) {
+        return cdDao.getCie10ByUser(id);
+    }
 }

@@ -1,22 +1,27 @@
 package com.carloscortina.demo.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
+import com.carloscortina.demo.json.JsonPack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Religion;
+import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.model.forms.RelativeRegistrationForm;
 import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.ReligionService;
+import com.carloscortina.demo.service.UserService;
+import java.lang.reflect.Method;
+import java.util.Map;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value="/relatives")
@@ -24,40 +29,57 @@ public class RelativesController {
 
 	@Autowired
 	private RelativeService relativeService; 
-	
 	@Autowired
 	private ReligionService religionService;
+        @Autowired
+        private UserService userService;
 	
+        private User loggedUser;
+        
 	@RequestMapping(value="home")
 	public String getRelativesMainPage(Model model){
-		List<Relative> relatives = relativeService.getAllRelatives();
-		model.addAttribute("relatives",relatives);
-		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String currentPrincipalName = authentication.getName();
+                loggedUser = userService.getUserByUsername(currentPrincipalName);
+                model.addAttribute("religions",religionService.getAllReligions());
 		return ("relatives/relativesHome");
 	}
-	
-	@RequestMapping(value="new",method=RequestMethod.GET)
-	public String getRelativeRegistrationForm(Model model){
-		
-		model.addAttribute("form",new RelativeRegistrationForm());
-		
-		return ("relatives/relativeRegistrationForm");
-	}
-	
-	@RequestMapping(value="add",method=RequestMethod.POST)
-	public String addNewRelative(@ModelAttribute("form") @Valid RelativeRegistrationForm form, 
-			BindingResult result,Model model){
-		
-		if (!result.hasErrors())	// The validation was correct?
-		{
-			Relative relative = toRelative(form);
-			relativeService.createRelative(relative);	
-			model.addAttribute("addedRelative","Familiar Agregado Correctamente");
-			return ( "redirect:/relatives/home" );
-		}
-		
-		return ("relatives/relativeRegistrationForm");
-	}
+        
+        @RequestMapping(value="getAllRelatives")
+        public @ResponseBody JsonPack<Relative> getAllRelatives(){
+
+            return new JsonPack<Relative>(relativeService.getAllRelatives());
+        }
+        
+        @RequestMapping(value="saveNewRelative",produces = "application/json")
+        public @ResponseBody Relative getAllRelatives(@RequestParam Map<String,String> params){
+            Relative relative = new Relative();
+            
+            //Travel the map entries
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                //Fill relative data
+                try{
+                    for(Method m: relative.getClass().getMethods()){
+                        if(m.getName().startsWith("set")){
+                            if( m.getName().equalsIgnoreCase("set"+entry.getKey())){
+                                if(!entry.getValue().isEmpty()){
+                                    if( m.getName().equalsIgnoreCase("setReligion")){
+                                        m.invoke(relative,religionService.getReligion(Integer.parseInt(entry.getValue())));
+                                    }else{
+                                        m.invoke(relative,entry.getValue());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    relativeService.createRelative(relative);
+                }catch(Exception e){ 
+                    e.printStackTrace();
+                }
+            }
+            
+            return (relative);
+        }
 	
 	private Relative toRelative(RelativeRegistrationForm form){
 		
@@ -89,4 +111,6 @@ public class RelativesController {
 		
 		return newRelative;
 	}
+        
+        
 }

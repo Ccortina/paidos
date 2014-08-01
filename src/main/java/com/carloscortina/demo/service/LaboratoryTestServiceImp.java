@@ -26,7 +26,7 @@ public class LaboratoryTestServiceImp implements LaboratoryTestService{
     
     @Override
     public void create(LaboratoryTest item) {
-        
+        labDao.create(item);
     }
 
     @Override
@@ -61,6 +61,11 @@ public class LaboratoryTestServiceImp implements LaboratoryTestService{
     
     @Override
     public List<LaboratoryTest> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mergeItem(LaboratoryTest item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

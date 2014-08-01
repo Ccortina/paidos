@@ -66,6 +66,7 @@
 <script src="${jqplotJsonJs}" type="text/javascript"></script>
 
 <input type="hidden" id="assignedDoctor" value="${doctor}">
+<input type="hidden" id="patientAge" value="${age[0]}-${age[1]}-${age[2]}">
 <input type="hidden" id="prescriptionCounter" value="${prescriptionCounter}">
 <input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}">
 
@@ -213,12 +214,12 @@
                                 <div id="receta" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-9">
-                                            <textarea id="consultationPrescription" class="form-control inputTextArea" rows="10"></textarea>
+                                            <textarea id="consultationPrescription" class="form-control" rows="10"></textarea>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group-sm">
                                                 <label>Folio:</label>
-                                                <input type="text" id="consultationPrescriptionNumber" class="form-control inputDecimal" value="${prescriptionCounter}" />
+                                                <input type="text" id="consultationPrescriptionNumber" class="form-control inputDecimal" value="${prescriptionCounter}" disabled="true" />
                                             </div>
                                         </div>
                                     </div> 

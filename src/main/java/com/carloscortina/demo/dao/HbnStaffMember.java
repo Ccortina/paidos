@@ -1,26 +1,9 @@
 package com.carloscortina.demo.dao;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.carloscortina.demo.model.Staffmember;
 import org.springframework.stereotype.Repository;
 
-import com.carloscortina.demo.model.Staffmember;
-
 @Repository
-public class HbnStaffMember implements StaffMemberDao {
-
-	@Autowired
-	private SessionFactory sessionFactory;
-	
-	private Session getSession(){
-		return sessionFactory.getCurrentSession();
-	}
-	
-	@Override
-	public void createStaffMember(Staffmember staff) {
-		// TODO Auto-generated method stub
-		getSession().save(staff);
-	}
-
+public class HbnStaffMember extends GenericHbnDao<Staffmember> implements StaffMemberDao {
+  
 }

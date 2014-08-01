@@ -121,10 +121,11 @@ function initializeEditLaboratoryTestsList(){
 function saveAddLaboratoryTestResult(){
     var row = $("#tblEditLaboratoryTests").DataTable().row('.selected').data();
     
-    if(row == 'undefined'){
+    if(row === 'undefined'){
         displayDangerAlert(" No se ha seleccionado un estudio de laboratorio.");
     }else{
-        if($("#formLaboratoryTestEdit input[name=idLaboratoryTest]").val() === ""){
+        console.log($("#formLaboratoryTestEdit input[name=testResult]").val());
+        if($("#formLaboratoryTestEdit input[name=testResult]").val() === ""){
             displayDangerAlert(" Los resultados no deben estar vacios.");
         }else{
             $.ajax({
@@ -148,7 +149,7 @@ function saveAddLaboratoryTestResult(){
 function deleteLaboratoryTest(){
     var row = $("#tblLaboratoryTestsPatientData").DataTable().row('.selected').data();
     
-    if(row == 'undefined'){
+    if(row === 'undefined'){
         displayDangerAlert(" No se ha seleccionado un estudio de laboratorio para borrar.");
     }else{
         $.ajax({

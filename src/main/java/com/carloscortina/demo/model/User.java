@@ -22,6 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -78,15 +80,26 @@ public class User implements Serializable {
     @JoinColumn(name = "idStaffMember", referencedColumnName = "idStaffMember")
     @ManyToOne(optional = false)
     private Staffmember idStaffMember;
+    @ManyToMany(mappedBy = "userList")
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Activity> activityList;
+    @Column(name = "active")
+    private Short active;
     @JoinColumn(name = "idRole", referencedColumnName = "idRole")
     @ManyToOne(optional = false)
-    private Role idRole;
+    private Userrole idRole;
 
     public User() {
     }
 
     public User(Integer idUser) {
         this.idUser = idUser;
+    }
+
+    public User(Integer idUser, Staffmember idStaffMember) {
+        this.idUser = idUser;
+        this.idStaffMember = idStaffMember;
     }
 
     public User(Integer idUser, String username, String password, String email, Date addedDate) {
@@ -172,11 +185,27 @@ public class User implements Serializable {
         this.idStaffMember = idStaffMember;
     }
 
-    public Role getIdRole() {
+    public List<Activity> getActivityList() {
+        return activityList;
+    }
+
+    public void setActivityList(List<Activity> activityList) {
+        this.activityList = activityList;
+    } 
+
+    public Short getActive() {
+        return active;
+    }
+
+    public void setActive(Short active) {
+        this.active = active;
+    }
+
+    public Userrole getIdRole() {
         return idRole;
     }
 
-    public void setIdRole(Role idRole) {
+    public void setIdRole(Userrole idRole) {
         this.idRole = idRole;
     }
 

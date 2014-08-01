@@ -63,5 +63,10 @@ public class AW0to36MonthsServiceImp implements AW0to36MonthsService{
     public List<Ageweight0To36Months> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void mergeItem(Ageweight0To36Months item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

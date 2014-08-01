@@ -30,53 +30,51 @@ body {
 <sec:authorize access="authenticated" var="authenticated" />
 
 <body>
-	<nav class="navbar-wrapper navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Paidos Demo</a>
-			</div>
-			<div class="collapse navbar-collapse navbar-ex1-collapse">
-				<div class="collapse navbar-collapse">
-					<c:choose>
-						<c:when test="${authenticated}">
-							<ul class="nav navbar-nav">
-								<li class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-										Patients <span class="caret"></span>
-									</a>
-									<ul class="dropdown-menu">
-										<li><a href="${contextPath}/patients/home">Pacientes</a></li>
-										<li><a href="${contextPath}/relatives/home">Familiares</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Link</a></li>
-							</ul>
-						</c:when>
-					</c:choose>
-					<c:url var="logoutUrl" value="/logout" />
-					<ul class="nav navbar-nav navbar-right">
-						<c:choose>
-							<c:when test="${authenticated}">
-								<li class="dropdown"><a class="dropdown-toggle"
-									data-toggle="dropdown" href="#">Configuration <span
-										class="caret"></span></a>
-									<ul class="dropdown-menu">
-										<li><a href="${contextPath}/signup/form">Register New Users</a></li>
-									</ul>
-								</li>
-								<li class="navbar-text"><div>
-										Welcome
-										<sec:authentication property="principal.username" />
-									</div></li>
-								<li><a href="${logoutUrl}">Logout</a></li>
-							</c:when>
-							<c:otherwise>
-								<c:url var="loginUrl" value="/login/form" />
-								<li class="active"><a href="${loginUrl}">Login</a></li>
-							</c:otherwise>
-						</c:choose>
-					</ul>
-				</div>
-			</div>
-		</div>	
-	</nav>
+    <nav class="navbar-wrapper navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                    <a class="navbar-brand" href="${contextPath}">Paidos Demo</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <div class="collapse navbar-collapse">
+                    <sec:authorize access="isAuthenticated()">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="${contextPath}/patients/home">
+                                        Pacientes<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/patients/home">Pacientes</a></li>
+                                    <li><a href="${contextPath}/relatives/home">Familiares</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Link</a></li>
+                        </ul>
+                    </sec:authorize>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <sec:authorize access="hasRole('Administrador')">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuration <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/signup/form">Register New Users</a></li>
+                                </ul>
+                            </li>
+                        </sec:authorize>
+                        <sec:authorize access="isAuthenticated()">    
+                            <li class="navbar-text">
+                                <div>
+                                    <sec:authentication property="principal.username" />
+                                </div>
+                            </li>
+                            <li><a href="${logoutUrl}">Logout</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="isAnonymous()">
+                            <c:url var="loginUrl" value="/login" />
+                            <li class="active"><a href="${loginUrl}">Login</a></li>
+                        </sec:authorize>
+                    </ul>
+                </div>
+            </div>
+        </div>	
+    </nav>

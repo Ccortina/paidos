@@ -7,7 +7,6 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.MeasuresDao;
 import com.carloscortina.demo.model.Measures;
 import java.util.List;
-import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +61,11 @@ public class MeasuresServiceImp implements MeasuresService{
 
     @Override
     public List<Measures> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mergeItem(Measures item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

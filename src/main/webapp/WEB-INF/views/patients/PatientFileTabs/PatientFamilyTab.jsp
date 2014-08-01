@@ -13,7 +13,8 @@
         <table id="tblPatientRelativesList" class="row-border hover">
             <thead>
                 <tr>
-                    <th>RelativeId</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
                     <th>Nombre</th>
                     <th>Relacion</th>
                     <th>Desasociar</th>
@@ -75,7 +76,7 @@
                         <label for="selectPatientFamilyRelationship">Relaci—n</label>
                         <select class="form-control onChange" id="selectPatientFamilyRelationship" name="patientRelative" >
                             <c:forEach items="${relationshipType}" var="type">
-                                <option value="${type.id}">${type.relationship}</option>
+                                <option value="${type.idRelationship}">${type.relationship}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -122,31 +123,31 @@
                 <div class="col-sm-2">
                    <div class="form-group">
                         <label for="homePhone">Tel. Casa : </label>
-                        <input type="number" name="homePhone" class="form-control input-sm onChange" />
+                        <input type="text" name="homePhone" class="form-control input-sm onChange" />
                     </div> 
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="officePhone">Tel. Oficina : </label>
-                        <input type="number" name="officePhone" class="form-control input-sm onChange" />
+                        <input type="text" name="officePhone" class="form-control input-sm onChange" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="officeExt">Ext : </label>
-                        <input type="number" name="officeExt" class="form-control input-sm onChange" />
+                        <input type="text" name="officeExt" class="form-control input-sm onChange" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="cellPhone">Celular : </label>
-                        <input type="number" name="cellPhone" class="form-control input-sm onChange" />
+                        <input type="text" name="cellPhone" class="form-control input-sm onChange" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="otherPhone">Otro : </label>
-                        <input type="number" name="otherPhone" class="form-control input-sm onChange" />
+                        <input type="text" name="otherPhone" class="form-control input-sm onChange" />
                     </div>
                 </div>
             </div><!-- End 2nd row -->
@@ -160,7 +161,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="number">Numero Casa : </label>
-                        <input type="number" name="number" class="form-control input-sm onChange" />
+                        <input type="text" name="number" class="form-control input-sm onChange" />
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -180,7 +181,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="state">Estado : </label>
-                        <input type="number" name="state" class="form-control input-sm onChange" />
+                        <input type="text" name="state" class="form-control input-sm onChange" />
                     </div>
                 </div>
                 <div class="col-sm-2">
@@ -192,7 +193,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="cp">C—digo Postal : </label>
-                        <input type="number" name="cp" class="form-control input-sm onChange" />
+                        <input type="text" name="cp" class="form-control input-sm onChange" />
                     </div>
                 </div>
             </div><!-- row -->

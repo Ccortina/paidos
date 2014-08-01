@@ -64,6 +64,17 @@ public class CIE10Doctor implements Serializable {
         this.cIE10DoctorPK = new CIE10DoctorPK(idCIE10, idUser);
     }
 
+    public CIE10Doctor(Date lastUsed, Cie10 cie10, User user) {
+        this.lastUsed = lastUsed;
+        this.cie10 = cie10;
+        this.user = user;
+    }
+    
+    public CIE10Doctor(Date lastUsed, Cie10 cie10) {
+        this.lastUsed = lastUsed;
+        this.cie10 = cie10;
+    }
+
     public CIE10DoctorPK getCIE10DoctorPK() {
         return cIE10DoctorPK;
     }

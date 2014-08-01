@@ -17,7 +17,6 @@
         <button class="btn btn-primary" id="btnUploadFile" value="Subir">Subir</button>
     </form>
 </div>
-<div class="row"><strong>Doble click en el archivo para abrirlo.</strong></div>
 <div class="row">
     <div class="col-sm-7">
         <table id="tblConsultationPatientDocuments" class="hover row-border">

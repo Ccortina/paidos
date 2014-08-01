@@ -64,6 +64,11 @@ public class AppointmentStatusServiceImp implements AppointmentStatusService{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void mergeItem(AppointmentStatus item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
     
 }

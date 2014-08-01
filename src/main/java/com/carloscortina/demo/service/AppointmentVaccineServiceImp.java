@@ -63,6 +63,11 @@ public class AppointmentVaccineServiceImp implements AppointmentVaccineService{
     public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void mergeItem(AppointmentVaccine item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }

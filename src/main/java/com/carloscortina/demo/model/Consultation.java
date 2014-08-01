@@ -4,6 +4,7 @@
  */
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -76,9 +77,8 @@ public class Consultation implements Serializable {
     private String prescription;
     @Column(name = "prescriptionNotes")
     private String prescriptionNotes;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConsultation")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<ConsultationDiagnostic> consultationDiagnosticList;
+    @Column(name = "prescriptionNumber")
+    private Integer prescriptionNumber;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
@@ -88,6 +88,15 @@ public class Consultation implements Serializable {
     @JoinColumn(name = "idAppointment", referencedColumnName = "idAppointment")
     @ManyToOne(optional = false)
     private Appointment idAppointment;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
+    private List<ConsultationDiagnostic> consultationdiagnosticList;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
+    private List<Consultationactivity> consultationactivityList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
+    private List<Consultationmeasure> consultationmeasureList;
     
 
     public Consultation() {
@@ -95,6 +104,21 @@ public class Consultation implements Serializable {
 
     public Consultation(Integer idConsultation) {
         this.idConsultation = idConsultation;
+    }
+
+    public Consultation(Integer idConsultation, Double weigth, Double size, Double temperature, Double pc, Double ta, Double ta2, Double taAverage, String peea, String ef, String prescription, Appointment idAppointment) {
+        this.idConsultation = idConsultation;
+        this.weigth = weigth;
+        this.size = size;
+        this.temperature = temperature;
+        this.pc = pc;
+        this.ta = ta;
+        this.ta2 = ta2;
+        this.taAverage = taAverage;
+        this.peea = peea;
+        this.ef = ef;
+        this.prescription = prescription;
+        this.idAppointment = idAppointment;
     }
 
     public Integer getIdConsultation() {
@@ -186,12 +210,30 @@ public class Consultation implements Serializable {
     }
 
     @XmlTransient
-    public List<ConsultationDiagnostic> getConsultationDiagnosticList() {
-        return consultationDiagnosticList;
+    public List<Consultationactivity> getConsultationactivityList() {
+        return consultationactivityList;
     }
 
-    public void setConsultationDiagnosticList(List<ConsultationDiagnostic> consultationDiagnosticList) {
-        this.consultationDiagnosticList = consultationDiagnosticList;
+    public void setConsultationactivityList(List<Consultationactivity> consultationactivityList) {
+        this.consultationactivityList = consultationactivityList;
+    }
+
+    @XmlTransient
+    public List<Consultationmeasure> getConsultationmeasureList() {
+        return consultationmeasureList;
+    }
+
+    @XmlTransient
+    public void setConsultationmeasureList(List<Consultationmeasure> consultationmeasureList) {
+        this.consultationmeasureList = consultationmeasureList;
+    }
+
+    public List<ConsultationDiagnostic> getConsultationdiagnosticList() {
+        return consultationdiagnosticList;
+    }
+
+    public void setConsultationdiagnosticList(List<ConsultationDiagnostic> consultationdiagnosticList) {
+        this.consultationdiagnosticList = consultationdiagnosticList;
     }
 
     public Patient getIdPatient() {
@@ -225,8 +267,22 @@ public class Consultation implements Serializable {
     public void setPrescription(String prescription) {
         this.prescription = prescription;
     }
-    
-    
+
+    public String getPrescriptionNotes() {
+        return prescriptionNotes;
+    }
+
+    public void setPrescriptionNotes(String prescriptionNotes) {
+        this.prescriptionNotes = prescriptionNotes;
+    }
+
+    public Integer getPrescriptionNumber() {
+        return prescriptionNumber;
+    }
+
+    public void setPrescriptionNumber(Integer prescriptionNumber) {
+        this.prescriptionNumber = prescriptionNumber;
+    }
 
     @Override
     public int hashCode() {

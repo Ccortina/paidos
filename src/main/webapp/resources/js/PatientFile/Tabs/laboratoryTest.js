@@ -8,13 +8,6 @@ $(document).ready(function(){
     
     initializeLaboratoryTestsList();
     
-    $('.datepicker').datepicker({
-        "format":"dd-mm-yyyy",
-        "autoclose":true,
-        "String.Default":"mx"
-    });
-    $('.datepicker').datepicker('setDate',new Date());
-    
     initializeEditLaboratoryTestsList();
 });
 

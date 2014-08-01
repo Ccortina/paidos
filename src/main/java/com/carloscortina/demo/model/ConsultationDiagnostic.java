@@ -6,12 +6,8 @@ package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -27,38 +23,39 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "consultationDiagnostic")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ConsultationDiagnostic.findAll", query = "SELECT c FROM ConsultationDiagnostic c"),
-    @NamedQuery(name = "ConsultationDiagnostic.findByIdConsultationDiagnostic", query = "SELECT c FROM ConsultationDiagnostic c WHERE c.idConsultationDiagnostic = :idConsultationDiagnostic")})
+    @NamedQuery(name = "ConsultationDiagnostic.findAll", query = "SELECT c FROM ConsultationDiagnostic c")})
 public class ConsultationDiagnostic implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "idConsultationDiagnostic")
-    private Integer idConsultationDiagnostic;
-    @JoinColumn(name = "idDiagnostic", referencedColumnName = "idDiagnostic")
+    @EmbeddedId
+    protected ConsultationdiagnosticPK consultationdiagnosticPK;
+    @JoinColumn(name = "idDiagnostic", referencedColumnName = "idDiagnostic", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Diagnostic idDiagnostic;
-    @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")
-    @ManyToOne(optional = false)
     @JsonIgnore
-    private Consultation idConsultation;
+    @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Consultation consultation;
 
     public ConsultationDiagnostic() {
     }
 
-    public ConsultationDiagnostic(Integer idConsultationDiagnostic) {
-        this.idConsultationDiagnostic = idConsultationDiagnostic;
+    public ConsultationDiagnostic(ConsultationdiagnosticPK consultationdiagnosticPK) {
+        this.consultationdiagnosticPK = consultationdiagnosticPK;
     }
 
-    public Integer getIdConsultationDiagnostic() {
-        return idConsultationDiagnostic;
+    public ConsultationDiagnostic(Diagnostic idDiagnostic, Consultation consultation) {
+        this.idDiagnostic = idDiagnostic;
+        this.consultation = consultation;
     }
 
-    public void setIdConsultationDiagnostic(Integer idConsultationDiagnostic) {
-        this.idConsultationDiagnostic = idConsultationDiagnostic;
+    public ConsultationdiagnosticPK getConsultationdiagnosticPK() {
+        return consultationdiagnosticPK;
     }
 
+    public void setConsultationdiagnosticPK(ConsultationdiagnosticPK consultationdiagnosticPK) {
+        this.consultationdiagnosticPK = consultationdiagnosticPK;
+    }
+    
     public Diagnostic getIdDiagnostic() {
         return idDiagnostic;
     }
@@ -67,29 +64,31 @@ public class ConsultationDiagnostic implements Serializable {
         this.idDiagnostic = idDiagnostic;
     }
 
-    public Consultation getIdConsultation() {
-        return idConsultation;
+    public Consultation getConsultation() {
+        return consultation;
     }
 
-    public void setIdConsultation(Consultation idConsultation) {
-        this.idConsultation = idConsultation;
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idConsultationDiagnostic != null ? idConsultationDiagnostic.hashCode() : 0);
+        int hash = 3;
+        hash = 71 * hash + (this.consultationdiagnosticPK != null ? this.consultationdiagnosticPK.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ConsultationDiagnostic)) {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        ConsultationDiagnostic other = (ConsultationDiagnostic) object;
-        if ((this.idConsultationDiagnostic == null && other.idConsultationDiagnostic != null) || (this.idConsultationDiagnostic != null && !this.idConsultationDiagnostic.equals(other.idConsultationDiagnostic))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConsultationDiagnostic other = (ConsultationDiagnostic) obj;
+        if (this.consultationdiagnosticPK != other.consultationdiagnosticPK && (this.consultationdiagnosticPK == null || !this.consultationdiagnosticPK.equals(other.consultationdiagnosticPK))) {
             return false;
         }
         return true;
@@ -97,7 +96,7 @@ public class ConsultationDiagnostic implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.ConsultationDiagnostic[ idConsultationDiagnostic=" + idConsultationDiagnostic + " ]";
+        return "ConsultationDiagnostic{" + "consultationdiagnosticPK=" + consultationdiagnosticPK + '}';
     }
     
 }

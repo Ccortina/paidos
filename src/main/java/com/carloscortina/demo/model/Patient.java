@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -76,7 +75,6 @@ public class Patient implements Serializable {
     @Column(name = "Birthday")
     @Temporal(TemporalType.DATE)
     private Date birthday;
-    @Lob
     @Column(name = "Notes")
     private String notes;
     @Basic(optional = false)
@@ -88,7 +86,7 @@ public class Patient implements Serializable {
     private java.util.Date addedDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Patient_Relative> patientRelativeList;
+    private List<PatientRelative> patientRelativeList;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
     private List<Consultation> consultationList;
@@ -126,6 +124,53 @@ public class Patient implements Serializable {
 
     public Patient(Integer idPatient) {
         this.idPatient = idPatient;
+    }
+
+    public Patient(Integer idPatient, String firstName, String secondName, String fatherLastName, String motherLastName, String sex, Date birthday) {
+        this.idPatient = idPatient;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+        this.sex = sex;
+        this.birthday = birthday;
+    }
+
+    public Patient(String firstName, String secondName, String fatherLastName, String motherLastName, String curp, String sex, Date birthday, String notes) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+        this.curp = curp;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.notes = notes;
+    }
+
+    public Patient(Integer idPatient, String firstName, String secondName, String fatherLastName, String motherLastName,String curp, String sex, Date birthday, String notes, short active, Staffmember idDoctor) {
+        this.idPatient = idPatient;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.notes = notes;
+        this.active = active;
+        this.idDoctor = idDoctor;
+        this.curp = curp;
+    }
+    
+    public Patient(Integer idPatient, String firstName, String secondName, String fatherLastName, String motherLastName, String sex, Date birthday, short active,Staffmember idDoctor) {
+        this.idPatient = idPatient;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.active = active;
+        this.idDoctor = idDoctor;
     }
 
     public Patient(Integer idPatient, String firstName, String sex, java.util.Date birthday, short active, java.util.Date addedDate) {
@@ -234,18 +279,17 @@ public class Patient implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
-    public List<Patient_Relative> getPatientRelativeList() {
-        return patientRelativeList;
-    }
-
-    public void setPatientRelativeList(List<Patient_Relative> patientRelativeList) {
-        this.patientRelativeList = patientRelativeList;
+    public List<Consultation> getConsultationList() {
+        return consultationList;
     }
 
     @XmlTransient
-    public List<Consultation> getConsultationList() {
-        return consultationList;
+    public List<PatientRelative> getPatientRelativeList() {
+        return patientRelativeList;
+    }
+
+    public void setPatientRelativeList(List<PatientRelative> patientRelativeList) {
+        this.patientRelativeList = patientRelativeList;
     }
 
     public void setConsultationList(List<Consultation> consultationList) {
@@ -304,6 +348,7 @@ public class Patient implements Serializable {
         this.drugList = drugList;
     }
 
+    @XmlTransient
     public List<PatientVaccine> getPatientVaccineList() {
         return patientVaccineList;
     }
@@ -312,6 +357,7 @@ public class Patient implements Serializable {
         this.patientVaccineList = patientVaccineList;
     }
 
+    @XmlTransient
     public List<AppointmentVaccine> getAppointmentVaccineList() {
         return appointmentVaccineList;
     }

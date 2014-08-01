@@ -1,5 +1,7 @@
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,9 +16,9 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="appointmentStatus")
-public class AppointmentStatus {
+public class AppointmentStatus implements Serializable {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idAppointmentStatus")
     private Integer idAppointmentStatus;
@@ -30,6 +32,7 @@ public class AppointmentStatus {
     @Column(name = "description")
     private String description;
     @OneToMany(mappedBy = "idStatus")
+    @JsonIgnore
     private List<Appointment> appointmentCollection;
 
     public AppointmentStatus() {

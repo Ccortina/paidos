@@ -63,5 +63,15 @@ public class ConsultationServiceImp implements ConsultationService{
     public List<Consultation> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void mergeItem(Consultation item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Consultation> getConsultationsByPatient(int idPatient) {
+        return consultationDao.getConsultationsByPatient(idPatient);
+    }
     
 }

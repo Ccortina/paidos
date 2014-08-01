@@ -31,13 +31,13 @@
 	<context:component-scan base-package="com.carloscortina.demo" />
 	
 	<mvc:annotation-driven >
-		<mvc:message-converters>
+		<!--<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 				<property name="objectMapper">
 					<bean class="com.carloscortina.demo.json.HibernateAwareObjectMapper" />
 				</property>
 			</bean>
-		</mvc:message-converters>
+		</mvc:message-converters>-->
 	</mvc:annotation-driven>
 	
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
@@ -78,6 +78,15 @@
 	<context:component-scan base-package="com.carloscortina.demo.dao,com.carloscortina.demo.service" />	
 	
 	<!-- Controller for registrationOk -->
-	<mvc:view-controller path="signup/registrationOk"
-							view-name="/signup/registrationOk"/>
+	<mvc:view-controller path="signup/registrationOk" view-name="/signup/registrationOk"/>
+        
+        <!-- prevent back button displaying secured data -->
+        <mvc:interceptors>
+            <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+                    <property name="cacheSeconds" value="0"/>
+                    <property name="useExpiresHeader" value="false"/>
+                    <property name="useCacheControlHeader" value="true"/>
+                    <property name="useCacheControlNoStore" value="true"/>
+            </bean>     
+        </mvc:interceptors>
 </beans>

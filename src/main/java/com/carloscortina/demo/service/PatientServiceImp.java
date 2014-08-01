@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.dao.PatientDao;
 import com.carloscortina.demo.model.Patient;
-import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 
@@ -62,6 +61,26 @@ public class PatientServiceImp implements PatientService {
     @Override
     public List<Patient> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mergeItem(Patient item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Patient> getAllPatientsByDoctor(int idStaffMember) {
+        return patientDao.getAllPatientsByDoctor(idStaffMember);
+    }
+
+    @Override
+    public List<Patient> getAllPatients() {
+        return patientDao.getAllPatients();
+    }
+
+    @Override
+    public Patient getPatientBasicData(int idPatient) {
+        return patientDao.getPatientBasicData(idPatient);
     }
 	
 	

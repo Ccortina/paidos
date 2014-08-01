@@ -15,13 +15,6 @@ $(document).ready(function(){
     initializePatientFamilyAllRelativesTable();
     
     initializePatientFamilyPatientRelativesTable();
-    
-    $('[id]').each(function(){
-  var ids = $('[id="'+this.id+'"]');
-  if(ids.length>1 && ids[0]==this)
-    console.warn('Multiple IDs #'+this.id);
-});
-    
 });
 
 function initializeSibilingsTable()
@@ -56,18 +49,19 @@ function initializePatientRelativeTable(){
         "info":false,
         "searching":false,
         "language": {
-            "emptyTable": "No hay informacion en la tabla."
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar"
         },
         "ajax":{
             "url":"../getPatientRelatives",
             "data":{
-                "idPatient":id
+                idPatient:id
             }},
         "columns":[
-            {"data":"id",
-                "visible":false},
-            {"data":"fullName"},
-            {"data":"patientRelative.0.idRelationship.relationship"},
+            {"data":"relative.fatherLastName"},
+            {"data":"relative.motherLastName"},
+            {"data":"relative.firstName"},
+            {"data":"idRelationship.relationship"},
             {"data": null,
              "defaultContent": "<input type='button' class='btn btn-danger' value='Desasociar' onclick='unrelateRelative(this);'/>"
             }],
@@ -81,16 +75,32 @@ function addRowSelectionPatientRelativeTable(){
     var table = $('#tblPatientRelativesList').DataTable();
     
     $('#tblPatientRelativesList tbody').on( 'click', 'tr', function (e){
-            if ( $(this).hasClass('selected')){
-                $(this).removeClass('selected');
-            }
-            else
-                {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    populateFormWithJSON( "formPatientFamilyDisplay" , "tblPatientRelativesList" );
+        if ( $(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else
+        {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            //populateFormWithJSON( "formPatientFamilyDisplay" , "tblPatientRelativesList" );
+            var inputs = $('#formPatientFamilyDisplay :input');
+            var pr = table.row('.selected').data();
+            console.log(pr);
+            inputs.each(function() {
+                if(this.name === "religion"){
+                    $("option",$("#selectPatientFamilyRelationship")).each(function(){
+                       if(this.value == pr['relative']['religion']['id']){this.selected=true;}
+                    });
                 }
-        });
+                if(this.name == "idRelationship"){
+                    $("option",$("#selectPatientFamilyReligion")).each(function(){
+                       if(this.value == pr['idRelationship']['idRelationship']){this.selected=true;}
+                    });
+                }
+                $(this).val(pr['relative'][this.name]);
+            });
+        }
+    });
 }
 
 function initializePatientFamilyAllRelativesTable(){
@@ -225,7 +235,7 @@ function updateRelativeCancel(){
 }
 
 function populateFormWithJSON( idForm , idTable ){
-    var activity = $('#'+idTable).DataTable().row('.selected').data();
+    var activity = $('#'+idTable).DataTable().row('.selected').data()['relative'];
     
     $.each(activity, function(name, val){
     
@@ -248,13 +258,13 @@ function populateFormWithJSON( idForm , idTable ){
                 case 'idRelationship':
                     console.log($(this).attr('value').value);
                     $("option",$el).each(function(){
-                       if(this.value === val[0]["idRelationship"]["idRelationship"]){ this.selected=true; } 
+                       if(this.value == val[0]["idRelationship"]["idRelationship"]){ this.selected=true; } 
                     });
                 break;
                 case 'religion':
                     $("option",$el).each(function(){
-                       if(this['id'] === val['id']){ 
-                           $(this).prop('selected',true); 
+                       if(this['id'] == val['id']){ 
+                           this.selected=true; 
                        }  
                     });
                 break;
@@ -304,3 +314,15 @@ $.fn.serializeObject = function()
     });
     return o;
 };
+
+function consultPatient(){
+    $.post("/demo/patients/patientConsultation?idPatient=" + $('#hiddenPatientFileId').val());
+    $.ajax({
+        url:"../patientConsultation",
+        data: {idPatient:$('#hiddenPatientFileId').val()},
+        type:"POST",
+        success:function(response){
+            window.location.href ="/demo/consultation/"+response;
+        }
+    });
+}

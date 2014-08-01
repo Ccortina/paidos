@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,11 +20,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -74,9 +73,19 @@ public class Activity implements Serializable {
     @ManyToOne(optional = false)
     @LazyCollection(LazyCollectionOption.FALSE)
     private ActivityType idActivityType;
-    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
-    @ManyToOne(optional = false)
-    private User idUser;
+    @JoinTable(name = "doctoractivitycatalog", joinColumns = {
+        @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity")}, inverseJoinColumns = {
+        @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
+    @ManyToMany
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<User> userList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity")
+    @JsonIgnore
+    private List<Consultationactivity> consultationactivityList;
+    @Basic(optional = false)
+    @Column(name = "includeInBill")
+    private int includeInBill;
 
     public Activity() {
     }
@@ -91,6 +100,46 @@ public class Activity implements Serializable {
         this.activityCost = activityCost;
         this.consultationDefault = consultationDefault;
         this.active = active;
+    }
+
+    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, ActivityType idActivityType) {
+        this.idActivity = idActivity;
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idActivityType = idActivityType;
+    }
+
+    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, ActivityType idActivityType, int includeInBill) {
+        this.idActivity = idActivity;
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idActivityType = idActivityType;
+        this.includeInBill = includeInBill;
+    }
+    
+    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType) {
+        this.idActivity = idActivity;
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idVaccine = idVaccine;
+        this.idActivityType = idActivityType;
+    }
+
+    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType, int includeInBill) {
+        this.idActivity = idActivity;
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idVaccine = idVaccine;
+        this.idActivityType = idActivityType;
+        this.includeInBill = includeInBill;
     }
 
     public Integer getIdActivity() {
@@ -149,13 +198,30 @@ public class Activity implements Serializable {
         this.idActivityType = idActivityType;
     }
 
-    public User getIdUser() {
-        return idUser;
+    public int getIncludeInBill() {
+        return includeInBill;
     }
 
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
+    public void setIncludeInBill(int includeInBill) {
+        this.includeInBill = includeInBill;
     }
+    
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<Consultationactivity> getConsultationactivityList() {
+        return consultationactivityList;
+    }
+
+    public void setConsultationactivityList(List<Consultationactivity> consultationactivityList) {
+        this.consultationactivityList = consultationactivityList;
+    }
+    
 
     @Override
     public int hashCode() {

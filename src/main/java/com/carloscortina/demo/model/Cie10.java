@@ -76,6 +76,9 @@ public class Cie10 implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCIE10")
     private List<Diagnostic> diagnosticList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cie10")
+    @JsonIgnore
+    private List<CIE10Doctor> cie10doctorList;
 
     public Cie10() {
     }
@@ -88,6 +91,14 @@ public class Cie10 implements Serializable {
         this.idCIE10 = idCIE10;
         this.cieCode = cieCode;
         this.diagnostic = diagnostic;
+        this.active = active;
+    }
+
+    public Cie10(Integer idCIE10, String cieCode, String diagnostic, String description, short active) {
+        this.idCIE10 = idCIE10;
+        this.cieCode = cieCode;
+        this.diagnostic = diagnostic;
+        this.description = description;
         this.active = active;
     }
 
@@ -148,8 +159,14 @@ public class Cie10 implements Serializable {
     public void setDiagnosticList(List<Diagnostic> diagnosticList) {
         this.diagnosticList = diagnosticList;
     }
-    
-    
+
+    public List<CIE10Doctor> getCie10doctorList() {
+        return cie10doctorList;
+    }
+
+    public void setCie10doctorList(List<CIE10Doctor> cie10doctorList) {
+        this.cie10doctorList = cie10doctorList;
+    }
 
     @Override
     public int hashCode() {

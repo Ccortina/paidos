@@ -66,6 +66,11 @@ public class Record {
         this.idRecord = idRecord;
     }
 
+    public Record(PerBackNoPat idPerBackNoPat, Patient idPatient) {
+        this.idPerBackNoPat = idPerBackNoPat;
+        this.idPatient = idPatient;
+    }
+
     public Integer getIdRecord() {
         return idRecord;
     }

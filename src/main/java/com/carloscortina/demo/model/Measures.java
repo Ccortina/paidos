@@ -20,8 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,10 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Measures.findByMeasure", query = "SELECT m FROM Measures m WHERE m.measure = :measure"),
     @NamedQuery(name = "Measures.findByUnits", query = "SELECT m FROM Measures m WHERE m.units = :units")})
 public class Measures implements Serializable {
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "includePrescription")
-    private short includePrescription;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,20 +43,20 @@ public class Measures implements Serializable {
     @Column(name = "idMeasures")
     private Integer idMeasures;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "measure")
     private String measure;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "units")
     private String units;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMeasure")
+    @Basic(optional = false)
+    @Column(name = "includePrescription")
+    private short includePrescription;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "measures")
     @JsonIgnore
-    private List<MeasureConsultation> measureConsultationList;
+    private List<Consultationmeasure> consultationmeasureList;
     @JoinColumn(name = "idUser", referencedColumnName = "idUser")
     @ManyToOne(optional = false)
+    @JsonIgnore
     private User idUser;
 
     public Measures() {
@@ -81,6 +75,12 @@ public class Measures implements Serializable {
         this.idMeasures = idMeasures;
         this.measure = measure;
         this.units = units;
+    }
+
+    public Measures(String measure, String units, User idUser) {
+        this.measure = measure;
+        this.units = units;
+        this.idUser = idUser;
     }
 
     public Integer getIdMeasures() {
@@ -107,21 +107,20 @@ public class Measures implements Serializable {
         this.units = units;
     }
 
-    @XmlTransient
-    @JsonIgnore
-    public List<MeasureConsultation> getMeasureConsultationList() {
-        return measureConsultationList;
-    }
-
-    public void setMeasureConsultationList(List<MeasureConsultation> measureConsultationList) {
-        this.measureConsultationList = measureConsultationList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (idMeasures != null ? idMeasures.hashCode() : 0);
         return hash;
+    }
+    
+    @XmlTransient
+    public List<Consultationmeasure> getConsultationmeasureList() {
+        return consultationmeasureList;
+    }
+
+    public void setConsultationmeasureList(List<Consultationmeasure> consultationmeasureList) {
+        this.consultationmeasureList = consultationmeasureList;
     }
 
     @Override

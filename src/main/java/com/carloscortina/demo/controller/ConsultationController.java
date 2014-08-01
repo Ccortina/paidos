@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
-import com.carloscortina.demo.model.ActivityConsultation;
 import com.carloscortina.demo.model.Ageweight0To36Months;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.AppointmentVaccine;
 import com.carloscortina.demo.model.AppointmentVaccinePK;
 import com.carloscortina.demo.model.AuxGraphTable;
 import com.carloscortina.demo.model.CIE10Doctor;
+import com.carloscortina.demo.model.CIE10DoctorPK;
+import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.ConsultationDiagnostic;
@@ -36,12 +37,13 @@ import com.carloscortina.demo.model.GraphData;
 import com.carloscortina.demo.model.Holyday;
 import com.carloscortina.demo.model.LaboratoryTest;
 import com.carloscortina.demo.model.LaboratoryTestResult;
-import com.carloscortina.demo.model.MeasureConsultation;
+import com.carloscortina.demo.model.Consultationmeasure;
+import com.carloscortina.demo.model.ConsultationmeasurePK;
 import com.carloscortina.demo.model.Measures;
 import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.PatientVaccine;
 import com.carloscortina.demo.model.PatientVaccinePK;
-import com.carloscortina.demo.model.Patient_Relative;
+import com.carloscortina.demo.model.PatientRelative;
 import com.carloscortina.demo.model.PerBackNoPat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
@@ -49,7 +51,6 @@ import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.model.Vaccine;
 import com.carloscortina.demo.service.AW0to36MonthsService;
-import com.carloscortina.demo.service.ActivityConsultationService;
 import com.carloscortina.demo.service.ActivityService;
 import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
@@ -67,7 +68,7 @@ import com.carloscortina.demo.service.DrugService;
 import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestResultService;
 import com.carloscortina.demo.service.LaboratoryTestService;
-import com.carloscortina.demo.service.MeasureConsultationService;
+import com.carloscortina.demo.service.ConsultationmeasureService;
 import com.carloscortina.demo.service.MeasuresService;
 import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.PatientVaccineService;
@@ -75,6 +76,11 @@ import com.carloscortina.demo.service.RecordService;
 import com.carloscortina.demo.service.TreatmentService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
+import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.ConsultationactivityPK;
+import com.carloscortina.demo.model.ConsultationdiagnosticPK;
+import com.carloscortina.demo.service.ConsultationactivityService;
+import com.carloscortina.demo.service.PatientRelativeService;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -131,11 +137,9 @@ public class ConsultationController {
         @Autowired
         ConsultationDiagnosticService cdService;
         @Autowired
-        MeasureConsultationService mcService;
+        ConsultationmeasureService cmService;
         @Autowired
         DiagnosticService diagnosticService;
-        @Autowired
-        ActivityConsultationService acService;
         @Autowired
         HolydayService holydayService;
         @Autowired
@@ -145,9 +149,13 @@ public class ConsultationController {
         @Autowired
         AppointmentVaccineService avService;
         @Autowired
-        UserService uService;
+        UserService userService;
         @Autowired
         Cie10DoctorService c10dService;
+        @Autowired
+        ConsultationactivityService caService;
+        @Autowired
+        PatientRelativeService prService;
         
         private Appointment appointment;
         private Patient patient;
@@ -200,15 +208,19 @@ public class ConsultationController {
                 newActivity.setActivityCost(Double.parseDouble(cost));
                 newActivity.setIdActivityType(activityTypeService.getById(Integer.parseInt(type)));
                 newActivity.setActive(1);
-                if( vaccine!= null ){
+                if( vaccine != null && vaccine.compareTo(activity) != 0 && vaccine.compareTo("") != 0){
                     newActivity.setIdVaccine(vaccineService.getById(Integer.parseInt(vaccine)));
                 }
-                if( cDefault != null){ 
+                if( cDefault != null && cDefault.compareTo("") != 0){ 
                     newActivity.setConsultationDefault(Integer.parseInt(cDefault));
                 }
-                
+                List<User> userList = new ArrayList<User>();
+                userList.add(doctor);
+                newActivity.setUserList(userList);
                 activityService.create(newActivity);
-                return ("function" );
+                doctor.getActivityList().add(newActivity);
+                userService.mergeItem(doctor);
+                return (Integer.toString(newActivity.getIdActivity()));
 	}
         
         @RequestMapping(value="editActivity", method=RequestMethod.POST)
@@ -238,6 +250,16 @@ public class ConsultationController {
                 return ("function");
 	}
         
+        
+        @RequestMapping(value="getConsultationSibilings2")
+        public @ResponseBody JsonPack<Patient> getConsultationSibilings2(){
+            List<Patient> sibilings = new ArrayList<Patient>();
+            for(PatientRelative pr: prService.getSibilingsByPatient(patient.getIdPatient())){
+                sibilings.add(patientService.getById(pr.getPatientRelativePK().getIdPatient()));
+            }
+            return new JsonPack<Patient>(sibilings);
+        }
+        
         @RequestMapping(value="getConsultationSibilings")
         public @ResponseBody JsonPack<Relative> getConsultationSibilings(){
             
@@ -264,8 +286,8 @@ public class ConsultationController {
 	@RequestMapping(value="getDiagnostics")
 	public @ResponseBody JsonPack<CIE10Doctor> getDiagnosticsByUser()
 	{
-		String query = "FROM CIE10Doctor WHERE idUser="+doctor.getIdUser()+" AND cie10.active=1";
-		return  new JsonPack<CIE10Doctor>(c10dService.getListOfItem(query));
+		//String query = "FROM CIE10Doctor WHERE idUser="+doctor.getIdUser()+" AND cie10.active=1";
+		return  new JsonPack<CIE10Doctor>(c10dService.getCie10ByUser(doctor.getIdUser()));
 		
 	}
 	
@@ -297,17 +319,7 @@ public class ConsultationController {
 		JsonPack<DrugDose> result = new JsonPack<DrugDose>(drugDoseService.getListOfItem(query));
 		return result;
 	}
-        
-        /*Return a json with all the Drugs(Medecine) in the system
-        @RequestMapping(value="getDrugs")
-	public @ResponseBody JsonPack<Drug> allDrugs()
-	{
-		String query = "FROM Drug t ";
-                
-		JsonPack<Drug> result = new JsonPack<Drug>(drugService.getListOfItem(query));
-		return result;
-	}*/
-        
+
         @RequestMapping(value="checkDrugIncompatibility")
         public @ResponseBody boolean checkDrugIncompatibility(int drugId1, int drugId2){
         
@@ -325,14 +337,10 @@ public class ConsultationController {
         }
         
         //This method returns a json with all the activities 
-        @RequestMapping(value={"/getAllActivities","getAllActivities"})
-	public @ResponseBody JsonPack<Activity> allActivities()
+        @RequestMapping(value={"/getActivities","getActivities"})
+	public @ResponseBody JsonPack<Activity> getActivities()
 	{
-		String query = "FROM Activity t ";
-                
-		JsonPack<Activity> result = new JsonPack<Activity>(activityService.getListOfItem(query));
-		
-                return result;
+            return  new JsonPack<Activity>(activityService.getActivitiesByUser(doctor.getIdUser()));
 	}
         
         //This method returns a json with all the vaccines in the system 
@@ -433,9 +441,9 @@ public class ConsultationController {
         //Section: Graphs/Charts
         
         @RequestMapping(value="getGraphPatientData")
-        public @ResponseBody JsonPack<AuxGraphTable> getGraphPatientConsults(){
+        public @ResponseBody String getGraphPatientConsults(){
             
-            String query = "FROM Consultation c where c.idPatient="+patient.getIdPatient();
+            /*String query = "FROM Consultation c where c.idPatient="+patient.getIdPatient();
             List<Consultation> list = consultationService.getListOfItem(query);
             List<AuxGraphTable> ret = new ArrayList<AuxGraphTable>();
             AuxGraphTable data;
@@ -455,7 +463,8 @@ public class ConsultationController {
                 ret.add(data);
             }
             
-            return new JsonPack<AuxGraphTable>(ret);
+            return new JsonPack<AuxGraphTable>(ret);*/
+            return "";
         }
         
         @RequestMapping(value="editGraphPatientData")
@@ -618,6 +627,29 @@ public class ConsultationController {
         }
         
         //Section: inmunization
+        
+        @RequestMapping(value="getProgrammedVaccine")
+        public @ResponseBody JsonPack<PatientVaccine> getProgrammedVaccine(){
+            Date currentDate = new Date();
+            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            //Check if any vaccine is outdated
+            for(PatientVaccine vaccine: pv){
+                //check if there's a programmed date
+                if(vaccine.getProgramedDate() != null){
+                    //check if not applied
+                    if(vaccine.getApplicationDate() == null){
+                        if(!(vaccine.getSuspended() > 0)){
+                            if(vaccine.getProgramedDate().compareTo(currentDate) < 1 ){
+                                vaccine.setSuspended((short)2);
+                                pvService.updateItem(vaccine);
+                            }
+                        }
+                    }
+                }
+            }
+            pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            return new JsonPack<PatientVaccine>(pv);
+        }
         
         //Return all the vaccines in the system even not active
         @RequestMapping(value="getExpiredVaccine")
@@ -1005,12 +1037,6 @@ public class ConsultationController {
             return "ProgramVaccinesFinished";
         }
         
-        @RequestMapping(value="getProgrammedVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getProgrammedVaccine(){
-            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
-            return new JsonPack<PatientVaccine>(pv);
-        }
-        
         @RequestMapping(value="editProgrammedVaccine")
         public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
             
@@ -1069,50 +1095,74 @@ public class ConsultationController {
         
         @RequestMapping(value="saveNewMeasure")
         public @ResponseBody String saveMeasure(String measure,String units){
-            Measures newMeasure = new Measures(measure, units);
-            newMeasure.setIdUser(doctor);
+            Measures newMeasure = new Measures(measure, units,doctor);
             measuresService.create(newMeasure);
             
             return "";
             
         }
         
+        /*
+        This method recives a map of values containing all the data necessary to persist the consultation,
+        activities,diagnostics and measures.
+        activitySize holds the total number of activities in the consultation.
+        
+        */
         @RequestMapping(value="saveConsultation")
         public @ResponseBody String saveConsultation(@RequestParam Map<String,String> parameters){
             
+            //As the DB is programmed with the consultation as foreign key, first the consultation must be created
             Consultation consultation = filterConsultation(parameters);
+            //Save the diagnostic
             List<Diagnostic> diagnostic = filterDiagnostic(parameters);
-            //Save Consultation
+            List<ConsultationDiagnostic> cdList = new ArrayList<ConsultationDiagnostic>();
+            List<Consultationactivity> caList = new ArrayList<Consultationactivity>();
+            List<Consultationmeasure> cmList = new ArrayList<Consultationmeasure>();
+            
             Integer activitySize = Integer.parseInt(parameters.get("activitySize"));
             consultation.setIdAppointment(appointment);
             consultationService.create(consultation);
             
-            for(int i=0; i < activitySize; i++){
-                Activity a = activityService.getById(Integer.parseInt(parameters.get("activity"+i)));
-                
-                ActivityConsultation ac = new ActivityConsultation(a,consultation);
-                acService.create(ac);
-            }
-            
             for(Diagnostic d: diagnostic){
-                ConsultationDiagnostic cd = new ConsultationDiagnostic();
-                cd .setIdConsultation(consultation);
-                cd.setIdDiagnostic(d);
-                
+                ConsultationdiagnosticPK cdPK = new ConsultationdiagnosticPK(consultation.getIdConsultation(), d.getIdDiagnostic());
+                ConsultationDiagnostic cd = new ConsultationDiagnostic(cdPK);
+                cdList.add(cd);
                 //Save the relation
-                cdService.create(cd);
+                //cdService.create(cd);
             }
             
             Integer measureSize = Integer.parseInt(parameters.get("measureSize"));
             
             for(int i=0; i < measureSize; i++){
-                MeasureConsultation mes = new MeasureConsultation(parameters.get("mValue"+i), 
-                                                                measuresService.getById(Integer.parseInt(parameters.get("measure"+i))),
-                                                                consultation);
-                mcService.create(mes);
+                //ConsultationmeasurePK cmId = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
+                //Consultationmeasure mes = new Consultationmeasure(cmId,parameters.get("mValue"+i));
+                ConsultationmeasurePK cmPK = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
+                Consultationmeasure cm = new Consultationmeasure(cmPK, parameters.get("mValue"+i));
+                //Consultationmeasure cm = new Consultationmeasure(parameters.get("mValue"+i), measuresService.getById(Integer.parseInt(parameters.get("measure"+i))), consultation);
+                cmList.add(cm);
+                //cmService.create(mes);
             }
-
             
+            for(int i=0; i < activitySize; i++){
+                Activity a = activityService.getById(Integer.parseInt(parameters.get("activity"+i)));
+                //ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
+                //Consultationactivity ca = new Consultationactivity(caPK);
+                //Set the cost
+                //Consultationactivity ca = new Consultationactivity(Double.parseDouble(parameters.get("activityPrice"+i)), consultation, a, Integer.parseInt(parameters.get("activityInclude"+i)));
+                //ca.setCost(Double.parseDouble(parameters.get("activityPrice"+i)));
+                //ca.setIncludeInBill(Integer.parseInt(parameters.get("activityInclude"+i)));
+                //caService.create(ca);
+                ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
+                Consultationactivity ca = new Consultationactivity(caPK, Double.parseDouble(parameters.get("activityPrice"+i)), Integer.parseInt(parameters.get("activityInclude"+i)));
+                caList.add(ca);
+            }
+            consultation.setConsultationdiagnosticList(cdList);
+            consultation.setConsultationactivityList(caList);
+            consultation.setConsultationmeasureList(cmList);
+            consultationService.updateItem(consultation);
+            //Update the appointment status
+            appointment.setIdStatus(apsService.getById(1));
+            appointmentService.mergeItem(appointment);
             return "patients/file/"+patient.getIdPatient();
             
         }
@@ -1133,6 +1183,8 @@ public class ConsultationController {
                                             m.getName().equalsIgnoreCase("setEf") || 
                                                 m.getName().equalsIgnoreCase("setPrescription")){
                                         m.invoke(consultation,entry.getValue());
+                                    }else if(m.getName().equalsIgnoreCase("setPrescriptionNumber")){
+                                        m.invoke(m.getName(), Integer.parseInt(entry.getValue()));
                                     }else{
                                         m.invoke(consultation,Double.parseDouble(entry.getValue()));
                                     }
@@ -1193,6 +1245,9 @@ public class ConsultationController {
                         diagnostic.setIdTreatment(treatmentService.getById(Integer.parseInt(t)));
                         diagnostic.setIdMedecine(drugService.getById(Integer.parseInt(m)));
                         diagnostic.setIdCommercialName(commercialNameService.getById(Integer.parseInt(n)));
+                        CIE10DoctorPK cdPK = new CIE10DoctorPK(Integer.parseInt(d), doctor.getIdUser());
+                        CIE10Doctor updateCie10 = new CIE10Doctor(cdPK, new Date());
+                        c10dService.updateItem(updateCie10);
                     }
                 }
                 diagnosticService.create(diagnostic);
@@ -1202,9 +1257,9 @@ public class ConsultationController {
             return diagnostics;
         }
 
-	private Relative getFather(List<Patient_Relative> relatives)
+	private Relative getFather(List<PatientRelative> relatives)
 	{
-		for(Patient_Relative r: relatives)
+		for(PatientRelative r: relatives)
 		{
 			if(r.getIdRelationship().getRelationship().equals("Padre"))
 			{
@@ -1215,9 +1270,9 @@ public class ConsultationController {
 		return ( null );
 	}
 	
-	private Relative getMother(List<Patient_Relative> relatives)
+	private Relative getMother(List<PatientRelative> relatives)
 	{
-		for(Patient_Relative r: relatives)
+		for(PatientRelative r: relatives)
 		{
 			if(r.getIdRelationship().getRelationship().equals("Madre"))
 			{
@@ -1228,11 +1283,11 @@ public class ConsultationController {
 		return ( null );
 	}
 	
-	private List<Relative> getBrothers(List<Patient_Relative> relatives){
+	private List<Relative> getBrothers(List<PatientRelative> relatives){
 		
 		List<Relative> list = new ArrayList<Relative>();
 		
-		for(Patient_Relative r: relatives)
+		for(PatientRelative r: relatives)
 		{
 			if(r.getIdRelationship().getRelationship().equals("Hermano"))
 			{

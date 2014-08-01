@@ -5,6 +5,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultation;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,5 @@ import com.carloscortina.demo.model.Consultation;
  */
 public interface ConsultationDao extends GenericDao<Consultation>{
     
+    public List<Consultation> getConsultationsByPatient(int idPatient);
 }

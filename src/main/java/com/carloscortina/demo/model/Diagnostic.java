@@ -1,13 +1,8 @@
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,10 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -52,9 +45,6 @@ public class Diagnostic implements Serializable {
     @JoinColumn(name = "idCIE10", referencedColumnName = "idCIE10")
     @ManyToOne(optional = false)
     private Cie10 idCIE10;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDiagnostic")
-    private List<ConsultationDiagnostic> consultationDiagnosticList;
 
     public Diagnostic() {
     }
@@ -68,15 +58,6 @@ public class Diagnostic implements Serializable {
         this.idTreatment = idTreatment;
         this.idMedecine = idMedecine;
         this.idCIE10 = idCIE10;
-    }
-
-    public Diagnostic(Integer idDiagnostic, CommercialName idCommercialName, Treatment idTreatment, Drug idMedecine, Cie10 idCIE10, List<ConsultationDiagnostic> consultationDiagnosticList) {
-        this.idDiagnostic = idDiagnostic;
-        this.idCommercialName = idCommercialName;
-        this.idTreatment = idTreatment;
-        this.idMedecine = idMedecine;
-        this.idCIE10 = idCIE10;
-        this.consultationDiagnosticList = consultationDiagnosticList;
     }
 
     public Integer getIdDiagnostic() {
@@ -118,16 +99,7 @@ public class Diagnostic implements Serializable {
     public void setIdCIE10(Cie10 idCIE10) {
         this.idCIE10 = idCIE10;
     }
-
-    @XmlTransient
-    public List<ConsultationDiagnostic> getConsultationDiagnosticList() {
-        return consultationDiagnosticList;
-    }
-
-    public void setConsultationDiagnosticList(List<ConsultationDiagnostic> consultationDiagnosticList) {
-        this.consultationDiagnosticList = consultationDiagnosticList;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 3;
@@ -137,7 +109,7 @@ public class Diagnostic implements Serializable {
         hash = 37 * hash + (this.idCIE10 != null ? this.idCIE10.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

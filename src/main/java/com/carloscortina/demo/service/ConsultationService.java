@@ -5,6 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Consultation;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,5 @@ import com.carloscortina.demo.model.Consultation;
  */
 public interface ConsultationService extends GenericService<Consultation> {
     
+    public List<Consultation> getConsultationsByPatient(int idPatient);
 }

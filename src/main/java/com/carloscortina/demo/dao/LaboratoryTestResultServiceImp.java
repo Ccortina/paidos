@@ -7,7 +7,6 @@ package com.carloscortina.demo.dao;
 import com.carloscortina.demo.model.LaboratoryTestResult;
 import com.carloscortina.demo.service.LaboratoryTestResultService;
 import java.util.List;
-import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,6 @@ public class LaboratoryTestResultServiceImp implements LaboratoryTestResultServi
 
     @Autowired
     private LaboratoryTestResultDao labResDao;
-    
-    @Override
-    public void create(LaboratoryTestResult item) {
-        labResDao.create(item);
-    }
 
     @Override
     public void delete(LaboratoryTestResult item) {
@@ -58,6 +52,16 @@ public class LaboratoryTestResultServiceImp implements LaboratoryTestResultServi
     
     @Override
     public List<LaboratoryTestResult> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void create(LaboratoryTestResult item) {
+        labResDao.create(item);
+    }
+
+    @Override
+    public void mergeItem(LaboratoryTestResult item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

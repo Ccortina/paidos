@@ -64,5 +64,15 @@ public class ActivityServiceImp implements ActivityService{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<Activity> getActivitiesByUser(int idUser) {
+        return activityDao.getActivitiesByUser(idUser);
+    }
+
+    @Override
+    public void mergeItem(Activity item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

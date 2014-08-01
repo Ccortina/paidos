@@ -70,4 +70,24 @@ public class AppointmentServiceImp implements AppointmentService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void mergeItem(Appointment item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByPatient(Date start, Date end, int idPatient) {
+        return appointmentDao.getAppointmentsByPatient(start, end, idPatient);
+    }
+    
+    @Override
+    public List<Appointment> getAppointmentsByDay(Date start, Date end) {
+        return appointmentDao.getAppointmentsByDay(start, end);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByPatient(int idPatient) {
+        return appointmentDao.getAppointmentsByPatient(idPatient);
+    }
+
 }

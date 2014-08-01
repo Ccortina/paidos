@@ -3,10 +3,6 @@
 * @Email carlos.a.cortina@gmail.com
 */
 
-var oTable;
-var json;
-var reload;
-
 $(document).ready(function(){
 
         initializeSibilingsTable();
@@ -14,7 +10,7 @@ $(document).ready(function(){
         $('.inputDecimal').inputmask('Regex',{regex:"[0-9]+(\.[0-9][0-9]?)?"});
         $('.inputDate').inputmask("dd/mm/yyyy");
         $('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-αινσϊρ]*'});
-        $('.inputTextArea').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-\n\\.,αινσϊρ]*'});
+        $('.inputTextArea').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-\n\\.,αινσϊρ\/\t]*'});
         
         $('.datepicker').datetimepicker({
             pickDate:true,
@@ -35,13 +31,14 @@ function saveConsultation(){
     data.push({name:'activitySize',value:$("#tblSelectedActivities").DataTable().rows().data().length});
     $("#tblSelectedActivities").DataTable().rows().data().each(function(value,index){
         data.push({name:'activity'+index,value:value["idActivity"]});
+        data.push({name:'activityPrice'+index,value:value["activityCost"]});
+        data.push({name:'activityInclude'+index,value:value["includeInBill"]});
     });
     
     //The diagnostic(s)
     data.push({name:'diagnosticSize',value:$("#consultationDiagnosticsTable").DataTable().rows().data().length});
     
     $("#consultationDiagnosticsTable").DataTable().rows().data().each(function(value,index){
-
 
         if(value[1] === ""){    //Check if diagnostic is empty
             if(value[3] !== ""){    //Check if Medecine id empty
@@ -59,21 +56,21 @@ function saveConsultation(){
             }
         }else{
             if(value[3] === ""){
-                data.push({name:'idCIE10'+index,value:value[1]["idCIE10"]});
-                data.push({name:'idTreatment'+index,value:value[2][0]["idTreatment"]});
+                data.push({name:'idCIE10'+index,value:value[1]["cie10"]["idCIE10"]});
+                data.push({name:'idTreatment'+index,value:value[2]["idTreatment"]});
                 data.push({name:'idMedecine'+index,value:""});
                 data.push({name:'IdCommercialName'+index,value:""});
             }else{
                 if(value[4] === ""){
-                    data.push({name:'idCIE10'+index,value:value[1]["idCIE10"]});
-                    data.push({name:'idTreatment'+index,value:value[2][0]["idTreatment"]});
-                    data.push({name:'idMedecine'+index,value:value[3][0]["idDrug"]});
-                    data.push({name:'IdCommercialName'+index,value:value[4]["idcommercialName"]});
-                }else{
-                    data.push({name:'idCIE10'+index,value:value[1]["idCIE10"]});
-                    data.push({name:'idTreatment'+index,value:value[2][0]["idTreatment"]});
-                    data.push({name:'idMedecine'+index,value:value[3][0]["idDrug"]});
+                    data.push({name:'idCIE10'+index,value:value[1]["cie10"]["idCIE10"]});
+                    data.push({name:'idTreatment'+index,value:value[2]["idTreatment"]});
+                    data.push({name:'idMedecine'+index,value:value[3]["idDrug"]});
                     data.push({name:'IdCommercialName'+index,value:""});
+                }else{
+                    data.push({name:'idCIE10'+index,value:value[1]["cie10"]["idCIE10"]});
+                    data.push({name:'idTreatment'+index,value:value[2]["idTreatment"]});
+                    data.push({name:'idMedecine'+index,value:value[3]["idDrug"]});
+                    data.push({name:'IdCommercialName'+index,value:value[4]["idcommercialName"]});
                 }
             }
         }
@@ -94,13 +91,12 @@ function saveConsultation(){
        data.push({name:"mValue"+index,value:value[1]});
     });
     
-    //console.log(data);
     $.ajax({
         url:"/demo/consultation/saveConsultation",
         data:data,
         type: "POST",
         error: function(data, status, error) {
-        console.log(data +"///////---//// "+error + "/////---///" + status);
+            console.log(data +"///////---//// "+error + "/////---///" + status);
         }
     });
 }
@@ -113,15 +109,25 @@ function initializeSibilingsTable(){
         "info":false,
         "ordering":false,
         "paging":false,
-        "ajax":"/demo/consultation/getConsultationSibilings",
+        "ajax":"/demo/consultation/getConsultationSibilings2",
         "columns":[
-            {"data":"fullName"}
+            {"render":function(data,row,full){
+                    return (full["firstName"]+" "+full["fatherLastName"]+" "+full["motherLastName"]);
+            }},
+            {"render":function(data,row,full){
+                    return getAge(full["birthday"],new Date());
+            }}
         ],
         "initComplete":function(settings,json){
-            $('#sibilingsTable tbody tr').dblclick(function(e){
-                
-                var idSibiling = $("#sibilingsTable").DataTable().row(this).data()["idPatient"]["id"];
-                openSibilingFile(idSibiling);
+            var table = $('#sibilingsTable').DataTable();
+
+            $('#sibilingsTable tbody').on( 'click', 'tr', function (e) {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
             });
         }
     });
@@ -165,7 +171,6 @@ $.fn.serializeObject = function()
         }
     });
     return o;
-    console.log(o);
 };
 
 function getCurrentDate(){
@@ -186,8 +191,8 @@ function getCurrentDate(){
     return today;
 }
 
-function openSibilingFile(idSibiling){
-    var url= "/demo/patients/file/"+idSibiling;
+function openSibilingFile(){
+    var url= "/demo/patients/file/"+$("#sibilingsTable").DataTable().row('.selected').data()["idPatient"];
     window.open(url);
 }
 
@@ -220,4 +225,42 @@ function displayWarningAlert(message){
     var box = bootbox.alert("<center><strong>Advertencia! </strong>"+message+"</center>");
     box.find('.modal-content').css({'color':'#8a6d3b','background-color':'#fcf8e3','border-color':'#faebcc'});
     window.setTimeout(function(){bootbox.hideAll();}, 2000);
+}
+
+function getAge(fromdate, todate){
+    if(todate) todate= new Date(todate);
+    else todate= new Date();
+
+    var age= [], fromdate= new Date(fromdate),
+    y= [todate.getFullYear(), fromdate.getFullYear()],
+    ydiff= y[0]-y[1],
+    m= [todate.getMonth(), fromdate.getMonth()],
+    mdiff= m[0]-m[1],
+    d= [todate.getDate(), fromdate.getDate()],
+    ddiff= d[0]-d[1];
+
+    if(mdiff < 0 || (mdiff=== 0 && ddiff<0))--ydiff;
+    if(mdiff<0) mdiff+= 12;
+    if(ddiff<0){
+        fromdate.setMonth(m[1]+1, 0);
+        ddiff= fromdate.getDate()-d[1]+d[0];
+        --mdiff;
+    }
+    if(mdiff> 0){ 
+        age.push(mdiff+ ' M ');
+    }else{
+        age.push('0 M ');
+    }
+    if(ddiff> 0){
+        age.push(ddiff+ ' D ');
+    }else{
+        age.push(ddiff+ '0 D ');
+    }
+    if(ydiff> 0){
+        age.push(ydiff+ ' A ');
+    }else{
+        age.push('0 A ');
+    }
+      
+    return age.join('');
 }

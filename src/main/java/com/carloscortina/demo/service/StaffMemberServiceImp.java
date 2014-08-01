@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.dao.StaffMemberDao;
 import com.carloscortina.demo.model.Staffmember;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 
 @Service
 @Transactional
@@ -15,23 +17,50 @@ public class StaffMemberServiceImp implements StaffMemberService {
 
 	@Autowired
 	private StaffMemberDao staffMemberDao;
+
+    @Override
+    public void create(Staffmember item) {
+        staffMemberDao.create(item);
+    }
+
+    @Override
+    public void delete(Staffmember item) {
+        staffMemberDao.delete(item);
+    }
+
+    @Override
+    public Staffmember getById(int id) {
+        return staffMemberDao.getById(id);
+    }
+
+    @Override
+    public void updateItem(Staffmember item) {
+        staffMemberDao.updateItem(item);
+    }
+
+    @Override
+    public void mergeItem(Staffmember item) {
+        staffMemberDao.mergeItem(item);
+    }
+
+    @Override
+    public List<Staffmember> getAll(String table) {
+        return staffMemberDao.getAll(table);
+    }
+
+    @Override
+    public List<Staffmember> getListOfItem(String query) {
+        return staffMemberDao.getListOfItem(query);
+    }
+
+    @Override
+    public List<Staffmember> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+        return staffMemberDao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Staffmember> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+        return staffMemberDao.getSpecificColumnsList(columns, restrictions);
+    }
 	
-	@Override
-	public void createStaffmember(Staffmember staff) {
-		// TODO Auto-generated method stub
-		staffMemberDao.createStaffMember(staff);
-	}
-
-	@Override
-	public Staffmember getStaffmember(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Staffmember> getStaffmembers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

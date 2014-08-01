@@ -18,10 +18,6 @@
 
 <c:url var="patientFileJS" value="/resources/js/PatientFile/${jsFile}" />
 
-<!-- Files for datePicker -->
-<c:url var="datePickerJs" value="/resources/js/bootstrap-datepicker.js" />
-<c:url var="datePickerCSS" value="/resources/CSS/datepicker.css" />
-
 <!-- Tabs -->
 <c:url var="patientBackgroundJS" value="/resources/js/PatientFile/Tabs/background.js" />
 <c:url var="documentsJS" value="/resources/js/PatientFile/Tabs/file.js" />
@@ -45,10 +41,15 @@
 	}
 </style>
 
+<script src="${patientFileJS}" type="text/javascript"></script>
+<script src="${patientBackgroundJS}" type="text/javascript"></script>
+<script src="${documentsJS}" type="text/javascript"></script>
+<script src="${laboratoryJS}" type="text/javascript"></script>
+
 <!-- Main div container , centers everything-->
-<input type="hidden" id="hiddenPatientFileId" value="${patient.id}">
+<input type="hidden" id="hiddenPatientFileId" value="${patient.idPatient}">
 <input type="hidden" id="hiddenPatientIdAppointment" value="${idAppointment}">
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-2"> <!-- primer columna foto -->
             <div class="row">
@@ -158,22 +159,9 @@
             <div class="tab-content">
                 <div id="resumen" class="tab-pane active"> <jsp:include page="PatientFileTabs/PatientAbstractTab.jsp" /></div>
                 <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /></div>
-                <div id="antecedentes" class="tab-pane"><jsp:include page="PatientFileTabs/PatientBackgroundTab.jsp" /> </div>
-                <div id="documentos" class="tab-pane"><jsp:include page="PatientFileTabs/Files.jsp" /></div>
-                <div id="graficas" class="tab-pane">graficas</div>
-                <div id="inmunizaciones" class="tab-pane">inmunizaciones</div>
-                <div id="labGabinetes" class="tab-pane"><jsp:include page="PatientFileTabs/LaboratoryTest.jsp" /></div>
-                <div id="consultas" class="tab-pane"><jsp:include page="PatientFileTabs/PreviousConsultation.jsp" /></div>
-                <div id="citas" class="tab-pane">citas</div>
             </div><!-- tab-content div -->
         </div>
     </div>
         
 </div><!--/.container-->
-
-<script src="${patientFileJS}" type="text/javascript"></script>
-<script src="${patientBackgroundJS}" type="text/javascript"></script>
-<script src="${documentsJS}" type="text/javascript"></script>
-<script src="${laboratoryJS}" type="text/javascript"></script>
-<script src="${datePickerJs}" type="text/javascript"></script>
 <!--<script src="${previousConsultationJS}" type="text/javascript"></script>-->

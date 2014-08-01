@@ -1,13 +1,10 @@
 package com.carloscortina.demo.service;
 
-import org.springframework.validation.Errors;
-
 import com.carloscortina.demo.model.User;
+import java.util.List;
 
-public interface UserService {
+public interface UserService extends GenericService<User>{
 
-	boolean registerUser(User user,Errors errors);
-	User getUserByUsername(String Username);
-        User getUserById(int id);
-	
+    public User getUserByUsername(String username);
+    public List<User> getUserByRole(int idRole);
 }

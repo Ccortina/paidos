@@ -17,12 +17,15 @@
     <class>com.carloscortina.demo.model.Measures</class>
     <class>com.carloscortina.demo.model.Consultation</class>
     <class>com.carloscortina.demo.model.Holyday</class>
+    <class>com.carloscortina.demo.model.Consultationmotive</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="Flyk3y"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="show_sql">true</property>
+      <property name="format_sql">true</property>
     </properties>
   </persistence-unit>
 </persistence>

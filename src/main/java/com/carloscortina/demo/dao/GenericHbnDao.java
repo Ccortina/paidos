@@ -2,10 +2,7 @@ package com.carloscortina.demo.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.hibernate.Criteria;
 
 import org.hibernate.Session;
@@ -14,7 +11,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +19,7 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private Class<T> type;
+	private final Class<T> type;
 	
 	protected Session getSession()
 	{
@@ -43,6 +39,7 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 		getSession().save(item);
 	}
 
+        @Override
         public void delete(T item) {
             getSession().delete(item);
         }
@@ -52,6 +49,12 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 		// Update an object
 		getSession().update(item);
 	}
+        
+        @Override
+        public void mergeItem(T item){
+            //Update (merge) Item
+            getSession().merge(item);
+        }
 	
 	@Override
 	@SuppressWarnings("unchecked")

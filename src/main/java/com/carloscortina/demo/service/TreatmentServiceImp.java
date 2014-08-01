@@ -72,6 +72,11 @@ public class TreatmentServiceImp implements TreatmentService{
     public List<Treatment> getTreatmentByUser(int userId) {
         return treatmentDao.getTreatmentByUser(userId);
     }
+
+    @Override
+    public void mergeItem(Treatment item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
     
 }

@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.carloscortina.demo.model.Role;
 import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.StaffRegistrationForm;
 import com.carloscortina.demo.model.User;
-import com.carloscortina.demo.service.RoleService;
 import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.UserService;
 
@@ -29,8 +27,8 @@ import com.carloscortina.demo.service.UserService;
 @RequestMapping(value="/signup")
 public class SignUpController 
 {
-	@Autowired
-	private RoleService roleService;
+	//@Autowired
+	//private RoleService roleService;
 	
 	@Autowired
 	private StaffMemberService staffMemberService;
@@ -68,11 +66,11 @@ public class SignUpController
 			Staffmember staff = toStaffMember(form);
 			staffMemberService.createStaffmember(staff);	
 			
-			Role role = roleService.getRole(Integer.parseInt(form.getRole()));
+			//Role role = roleService.(Integer.parseInt(form.getRole()));
 			
-			User user = toUser(form,role,staff);
+			//User user = toUser(form,role,staff);
 			
-			userService.registerUser(user, result);
+			//userService.registerUser(user, result);
 			
 			return ( "redirect:registrationOk" );
 		}
@@ -96,7 +94,7 @@ public class SignUpController
 		
 	}
 	
-	private User toUser(StaffRegistrationForm form,Role role,Staffmember staff)
+	/*private User toUser(StaffRegistrationForm form,Role role,Staffmember staff)
 	{
 		User newUser = new User();
 		newUser.setUsername(form.getUsername());
@@ -107,7 +105,7 @@ public class SignUpController
 		
 		return newUser;
 		
-	}
+	}*/
 	
 	private Staffmember toStaffMember(StaffRegistrationForm form)
 	{
@@ -121,7 +119,7 @@ public class SignUpController
 		
 	}
 	
-	@ModelAttribute("roles")
+	/*@ModelAttribute("roles")
 	private Map<String,String> roles(){
 		List<Role> lista = roleService.getRoles();
 		Map<String,String> roles = new HashMap<String, String>();
@@ -129,6 +127,6 @@ public class SignUpController
 			roles.put(Integer.toString(role.getId()), role.getRole());
 		}
 		return roles;
-	}
+	}*/
 	
 }

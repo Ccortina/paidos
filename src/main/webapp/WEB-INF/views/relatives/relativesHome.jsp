@@ -1,44 +1,72 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <jsp:include page="../Includes/header.jsp"/>
 
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<!-- Files for data tables function-->
+<c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
+<c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
 
-		<div class="container">
-			<nav class="navbar navbar-default" role="navigation">
-				<div class="collapse navbar-collapse navbar-ex1-collapse">
-   					<ul class="nav navbar-nav">
-   						<li><a href="./new">Agregar Familiar</a></li>
-   					</ul>
-   				</div>
-			</nav>
-				<c:if test="${empty relatives}">
-					<div class="alert alert-error">
-						<strong>No hay familiares registrados</strong>
-					</div>
-				</c:if>	
-				<c:if test="${empty addedRelative}">
-					<div class="alert alert-success">
-						<strong>${addedRelative}</strong>
-					</div>
-				</c:if>
-				<table class="table table-condensed">
-					<tr>
-						<th>A. Paterno</th>
-						<th>A. Materno</th>
-						<th>Nombre</th>
-						<th>RFC</th>
-						<th>Celular</th>
-					</tr>
-					<c:forEach var="relative" items="${relatives}">
-						<tr>
-							<td>${relative.fatherLastName}</td>
-							<td>${relative.motherLastName}</td>
-							<td>${relative.firstName} ${patient.secondName}</td>
-							<td>${relative.rfc}</td>
-							<td>${relative.cellPhone}</td>
-						</tr>
-					</c:forEach>
-				</table>
-		</div>
-	</body>
+<c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
+
+<c:url var="inputmaskJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.js" />
+<c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
+<c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
+
+<c:url var="bvCSS" value="/resources/CSS/BootstrapValidator/bootstrapValidator.min.css" />
+<c:url var="bvJs" value="/resources/js/BootstrapPlugins/BootstrapValidator/bootstrapValidator.min.js" />
+
+<c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
+
+<c:url var="relativeHomeJS" value="/resources/js/RelativeHome/RelativeHome.js" />
+<c:url var="newRelativeTabJS" value="/resources/js/RelativeHome/NewRelativeTab.js" />
+
+<link href="${dataTablesCSS}" rel="stylesheet" />
+<link href="${dtModCSS}" rel="stylesheet" />
+
+<link href="${bvCSS}" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <ul id="patientTabMenu" class="nav nav-tabs">
+              <li class="active"><a href="#tabMain" data-toggle="tab">Pacientes</a></li>
+              <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+              <li><a href="#tabEdit" data-toggle="tab">Modificar</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tabMain" class="tab-pane active">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="hover row-border" id="tblRelative">
+                                <thead>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Nombre</th>
+                                    <th>Activo</th>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabNew" class="tab-pane"><jsp:include page="Tabs/NewRelative.jsp" /></div>
+                <div id="tabEdit" class="tab-pane"></div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
+
+<script src="${dataTablesJS}" type="text/javascript"></script>
+
+<script src="${momentJs}" type="text/javascript"></script>
+
+<script src="${inputmaskJs}" type="text/javascript"></script>
+<script src="${inputmaskDateJs}" type="text/javascript"></script>
+<script src="${inputmaskRegexJs}" type="text/javascript"></script>
+
+<script src="${bvJs}" type="text/javascript"></script>
+
+<script src="${bootboxJs}" type="text/javascript"></script>
+
+<script src="${relativeHomeJS}" type="text/javascript"></script>
+<script src="${newRelativeTabJS}" type="text/javascript"></script>

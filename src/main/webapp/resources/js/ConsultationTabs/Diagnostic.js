@@ -174,13 +174,10 @@ function initializeDiagnosticsTable(){
             
             $('#diagnosticsTable tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('selected') ) {
-                    $('#treatmentsTable').DataTable().ajax.reload();
                     $(this).removeClass('selected');
-                    
-                    table = $('#drugsTable').DataTable();
-                    table.$('tr.selected').removeClass('selected');
-                    table = $('#commercialNamesTable').DataTable();
-                    table.$('tr.selected').removeClass('selected');
+                    $('#treatmentsTable').DataTable().$('tr.selected').removeClass('selected');
+                    $('#drugsTable').DataTable().$('tr.selected').removeClass('selected');
+                    $('#commercialNamesTable').DataTable().$('tr.selected').removeClass('selected');
                     //Reset all the tables
                     $('#treatmentsTable').DataTable().column(1).search('',false,false).draw();
                     $('#drugsTable').DataTable().column(2).search('',false,false).draw();
@@ -190,6 +187,11 @@ function initializeDiagnosticsTable(){
                     $(this).addClass('selected');
                     var diagnosticId = table.row(this).data()["cie10"]["idCIE10"];
                     $('#treatmentsTable').DataTable().column(1).search("-"+diagnosticId+"-",false,false).draw();
+                    $('#drugsTable').DataTable().column(2).search('',false,false).draw();
+                    $('#commercialNamesTable').DataTable().column(1).search('',false,false).draw();
+                    $('#treatmentsTable').DataTable().$('tr.selected').removeClass('selected');
+                    $('#drugsTable').DataTable().$('tr.selected').removeClass('selected');
+                    $('#commercialNamesTable').DataTable().$('tr.selected').removeClass('selected');
                 }
             });
         }
@@ -465,76 +467,75 @@ function resetDiagnosticWizard(){
 //Get all the members of the diagnostic table and process them
 //Read each row of the table and get the data
 function generatePrescription(){
-    var table = $("#consultationDiagnosticsTable").dataTable();
+    var table = $("#consultationDiagnosticsTable").DataTable();
     var cell,commName;
-    var rows = table.fnGetNodes(); //Get all the TR nodes of the table
     var dose = 0.0, r1="";
-    
-    //Clean text area of the prescription
-    $("#consultationPrescription").val("");
-    var prescriptionHeader = $("#assignedDoctor").val() + "\t\t\t"+ getCurrentDate()+"\n\n\n";
-    $("#consultationPrescription").val(prescriptionHeader);
     
     //Check Weight is not empty or 0.
     if( checkNotEmptyString($("#txtConsultationWeight").val()) && $("#txtConsultationWeight").val() > 0 )
     {
+        //Clean text area of the prescription
+        $("#consultationPrescription").val("");
+        var prescriptionHeader = "Medico: "+$("#assignedDoctor").val() + "\t\t\t\t\tFecha: "+ getCurrentDate()+"\nEdad(años)-meses-dias:"+
+                                    $("#patientAge").val()+"\nPeso (Kg): "+$("#txtConsultationWeight").val()+"\n\n\n";
+        $("#consultationPrescription").val(prescriptionHeader);
+        
         //Iterate trought nodes to get data
-        for(var i=0;i<rows.length;i++)
-        {
-            cell = table.fnGetData(rows[i],3);
-            commName = table.fnGetData(rows[i],4);
-            //Check if the cell cointain more than 1 object
-            if(cell.length>1){
-                cell =cell[0];
-            }
+        var idx = 1;
+        table.rows().nodes().each(function(value, index){
+            
+            cell = table.row(value).data()[3];
+            console.log(cell);
+            commName = table.row(value).data()[4];
             
             //Check if dose is based on weight or age
-            switch(cell["doseCalculationCriteriaId"]["idDoseCalculationCriteria"])
-            {
-                case 1: //Weight
-                    dose = (($("#txtConsultationWeight").val() * cell["drugDoseList"][0]["dose"])
-                                /cell["dailyFrequency"]/cell["concentration"]);
-                                
-                    r1 = dose + " " + cell["administrationUnitId"]["administrationUnit"] +
-                            " cada " + 24/cell["dailyFrequency"] + " hora(s) por ";       
-                break;
-                case 2: //Age
-                    //Age uses the dose to calculate the schedule, there can be multiple
-                    //doses based on different ages.
-                    if( cell["drugDoseList"].length > 1){
-                    //Sort the ages from min to max
-                        var ages = bubbleSort(cell["drugDoseList"]);
-                    
-                        for(var i=0; i < ages.length; i++){
-                            if($("#age").val() <= ages[i]["age"]){
-                                dose = 24/ages[i]["dose"];
-                                break;
-                            }
-                        }
-                    }else{
-                        dose = 24/cell["drugDoseList"][0]["dose"];
-                    }
-                      r1 = cell["dailyFrequency"] + " " + cell["administrationUnitId"]["administrationUnit"] +
-                            " cada " + dose + " hora(s) por " ;
-                    
-                break;
-                default: //NaN
-                      r1 = cell["administrationUnitId"]["administrationUnit"] +
-                           " cada " + 24/cell["dailyFrequency"] + " hora(s) por "; 
-            }
-            //The prescription
-            $("#consultationPrescription").val($("#consultationPrescription").val() + (i+1) + ".-" + commName["commercialName"] + 
-                                                    " , Presentacion: " + cell["drugPresentationId"]["presentation"] + 
-                                                    "\n" + cell["applicationMethodId"]["applicationMethod"] + " " +
-                                                    r1 +
-                                                    cell["treatmentDays"] + " dia(s).\n Horario de administracion: " + 
-                                                    cell["applicationSchedule"] + ".\n\n");
-            if(cell["notes"] !== ""){
-                $("#consultationPrescription").val($("#consultationPrescription").val() + "Observaciones: " + cell["notes"] + ".\n\n");
-            }                                
-            
-        }
+            if(checkNotEmptyString(cell)){
+                switch(cell["doseCalculationCriteriaId"]["idDoseCalculationCriteria"])
+                {
+                    case 1: //Weight
+                        dose = (($("#txtConsultationWeight").val() * cell["drugDoseList"][0]["dose"])
+                                    /cell["dailyFrequency"]/cell["concentration"]);
 
+                        r1 = dose + " " + cell["administrationUnitId"]["administrationUnit"] +
+                                " cada " + Math.round(24/cell["dailyFrequency"]) + " hora(s) por ";     
+                    break;
+                    case 2: //Age
+                        //Age uses the dose to calculate the schedule, there can be multiple
+                        //doses based on different ages.
+                        if( cell["drugDoseList"].length > 1){
+                        //Sort the ages from min to max
+                            var ages = bubbleSort(cell["drugDoseList"]);
+
+                            for(var i=0; i < ages.length; i++){
+                                if($("#age").val() <= ages[i]["age"]){
+                                    dose = 24/ages[i]["dose"];
+                                    break;
+                                }
+                            }
+                        }else{
+                            dose = 24/cell["drugDoseList"][0]["dose"];
+                        }
+                          r1 = cell["dailyFrequency"] + " " + cell["administrationUnitId"]["administrationUnit"] +
+                                " cada " + dose + " hora(s) por " ;
+
+                    break;
+                    default: //NaN
+                          r1 = cell["administrationUnitId"]["administrationUnit"] +
+                               " cada " + 24/cell["dailyFrequency"] + " hora(s) por "; 
+                }
+                //The prescription
+                $("#consultationPrescription").val($("#consultationPrescription").val() + idx + ".-" + commName["commercialName"] + 
+                                                        " , Presentacion: " + cell["drugPresentationId"]["presentation"] + 
+                                                        "\n" + cell["applicationMethodId"]["applicationMethod"] + " " + r1 + " " +
+                                                        cell["treatmentDays"] + " dia(s).\n Horario de administracion: " + 
+                                                        cell["applicationSchedule"] + ".\n\n");
+                if(cell["notes"] !== ""){
+                    $("#consultationPrescription").val($("#consultationPrescription").val() + "Observaciones: " + cell["notes"] + ".\n\n");
+                }
+                idx++;
+            }
+            
+        });
         $('#consultationTabMenu a[href="#receta"]').tab('show');
     } else {
         //Alert and stop process if weigth is 0
@@ -542,7 +543,7 @@ function generatePrescription(){
         
     }    
     
-    if($("#tblMeasuresConsultation").DataTable().data().lenth > 0){
+    if($("#tblMeasuresConsultation").DataTable().data().length > 0){
         $("#consultationPrescription").val($("#consultationPrescription").val() + "\n Medidas:\n");
 
         $("#tblMeasuresConsultation").DataTable().data().each(function(d){

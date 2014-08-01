@@ -68,5 +68,10 @@ public class CommercialNameServiceImp implements CommercialNameService{
     public List<CommercialName> getCommercialNameByUser(int id) {
         return commercialName.getCommercialNameByUser(id);
     }
+
+    @Override
+    public void mergeItem(CommercialName item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
