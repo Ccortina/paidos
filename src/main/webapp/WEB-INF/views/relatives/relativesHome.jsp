@@ -19,6 +19,7 @@
 
 <c:url var="relativeHomeJS" value="/resources/js/RelativeHome/RelativeHome.js" />
 <c:url var="newRelativeTabJS" value="/resources/js/RelativeHome/NewRelativeTab.js" />
+<c:url var="modifyRelativeTabJS" value="/resources/js/RelativeHome/ModifyRelativeTab.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
@@ -47,9 +48,14 @@
                             </table>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="cols-sm-2">
+                            <input type="button" value="Modificar Familiar" onclick="modifyRelative()" class="btn btn-primary" />
+                        </div>
+                    </div>
                 </div>
                 <div id="tabNew" class="tab-pane"><jsp:include page="Tabs/NewRelative.jsp" /></div>
-                <div id="tabEdit" class="tab-pane"></div>
+                <div id="tabEdit" class="tab-pane"><jsp:include page="Tabs/ModifyRelative.jsp" /></div>
         </div>
     </div>
 </div>
@@ -70,3 +76,5 @@
 
 <script src="${relativeHomeJS}" type="text/javascript"></script>
 <script src="${newRelativeTabJS}" type="text/javascript"></script>
+<script src="${modifyRelativeTabJS}" type="text/javascript"></script>
+

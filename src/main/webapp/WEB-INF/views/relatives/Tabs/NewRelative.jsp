@@ -175,5 +175,5 @@
     <div class="col-sm-2">
         <button type="submit" class="btn btn-primary">Guardar</button>
     </div>
-</row>    
+</div>    
 </form>
