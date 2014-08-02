@@ -14,4 +14,5 @@ import java.util.List;
 public interface ConsultationService extends GenericService<Consultation> {
     
     public List<Consultation> getConsultationsByPatient(int idPatient);
+    public List<Consultation> getConsultationByCie(int idCie);
 }

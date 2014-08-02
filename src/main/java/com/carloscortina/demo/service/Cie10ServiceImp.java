@@ -73,4 +73,9 @@ public class Cie10ServiceImp implements Cie10Service{
         return cie10Dao.getCie10ByUser(id);
     }
 
+    @Override
+    public List<Cie10> getAvaibleCie10ByUser(int idUser) {
+        return cie10Dao.getAvaibleCie10ByUser(idUser);
+    }
+
 }

@@ -40,7 +40,7 @@ body {
                     <sec:authorize access="isAuthenticated()">
                         <ul class="nav navbar-nav">
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="${contextPath}/patients/home">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                         Pacientes<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -48,7 +48,15 @@ body {
                                     <li><a href="${contextPath}/relatives/home">Familiares</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">Link</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Diagnosticos/Tratamientos<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/diagnostictreatment/cie10Home">Diagnosticos CIE10</a></li>
+                                    <li><a href="${contextPath}/diagnostictreatment/diagnosticHome">Diagnosticos</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </sec:authorize>
 

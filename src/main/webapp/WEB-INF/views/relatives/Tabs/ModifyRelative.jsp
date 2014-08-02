@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 <form id="formModifyRelative" >
+<input type="hidden" value="" id="inputModifyRelativePatient" name="idRelative" />
 <div class="row">
     <div class="col-sm-3">
         <div class="form-group">
@@ -89,7 +90,7 @@
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputModifyRelativeEmail">Email</label>
-            <input type="text" class="form-control inputNormal" id="inputModifyRelativeEmail" placeholder="Email" name="email"/>
+            <input type="text" class="form-control inputEmail" id="inputModifyRelativeEmail" placeholder="Email" name="email"/>
         </div>
     </div>
 </div>
@@ -175,5 +176,5 @@
     <div class="col-sm-2">
         <button type="submit" class="btn btn-primary">Guardar</button>
     </div>
-</row>    
+</div>    
 </form>

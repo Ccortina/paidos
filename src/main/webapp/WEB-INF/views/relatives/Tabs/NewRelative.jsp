@@ -89,7 +89,7 @@
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeEmail">Email</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeEmail" placeholder="Email" name="email"/>
+            <input type="text" class="form-control inputEmail" id="inputNewRelativeEmail" placeholder="Email" name="email"/>
         </div>
     </div>
 </div>

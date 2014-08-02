@@ -6,4 +6,5 @@ import java.util.List;
 public interface Cie10Dao extends GenericDao<Cie10> {
 
     public List<Cie10> getCie10ByUser(int id);
+    public List<Cie10> getAvaibleCie10ByUser(int idUser);
 }

@@ -6,4 +6,5 @@ import java.util.List;
 public interface Cie10Service extends GenericService<Cie10> {
     
     public List<Cie10> getCie10ByUser(int id);
+    public List<Cie10> getAvaibleCie10ByUser(int idUser);
 }

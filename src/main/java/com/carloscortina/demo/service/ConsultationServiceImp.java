@@ -73,5 +73,10 @@ public class ConsultationServiceImp implements ConsultationService{
     public List<Consultation> getConsultationsByPatient(int idPatient) {
         return consultationDao.getConsultationsByPatient(idPatient);
     }
+
+    @Override
+    public List<Consultation> getConsultationByCie(int idCie) {
+        return consultationDao.getConsultationByCie(idCie);
+    }
     
 }

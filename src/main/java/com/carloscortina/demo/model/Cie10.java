@@ -87,6 +87,12 @@ public class Cie10 implements Serializable {
         this.idCIE10 = idCIE10;
     }
 
+    public Cie10(Integer idCIE10, String cieCode, String diagnostic) {
+        this.idCIE10 = idCIE10;
+        this.cieCode = cieCode;
+        this.diagnostic = diagnostic;
+    }
+
     public Cie10(Integer idCIE10, String cieCode, String diagnostic, short active) {
         this.idCIE10 = idCIE10;
         this.cieCode = cieCode;

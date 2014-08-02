@@ -13,6 +13,7 @@ $(document).ready(function(){
                                         "as|bc|bs|cc|cs|ch|cl|cm|df|dg|gt|gr|hg|jc|mc|mn|ms|nt|nl|oc|pl|qt|qr|sp|sl|sr|tc|ts|tl|vz|yn|zs|ne)"+
                                         "[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]{3}" +
                                         "[0-9A-Za-z]{1}[0-9]{1}$"});
+    $('.inputEmail').inputmask('Regex', {regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });                        
     initializeNewRelativeForm();
 });
 
@@ -64,7 +65,7 @@ function addNewRelative(){
         type: "POST",
         success:function(response){
             //Reload the patient table
-            console.log(response);
+            $('#relativesTabMenu a[href="#tabMain"]').tab('show');
         },
         error: function(data, status, error) {
             displayDangerAlert("error");

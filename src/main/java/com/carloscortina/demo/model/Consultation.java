@@ -106,6 +106,10 @@ public class Consultation implements Serializable {
         this.idConsultation = idConsultation;
     }
 
+    public Consultation(Appointment idAppointment) {
+        this.idAppointment = idAppointment;
+    }
+
     public Consultation(Integer idConsultation, Double weigth, Double size, Double temperature, Double pc, Double ta, Double ta2, Double taAverage, String peea, String ef, String prescription, Appointment idAppointment) {
         this.idConsultation = idConsultation;
         this.weigth = weigth;

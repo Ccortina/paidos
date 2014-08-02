@@ -14,4 +14,5 @@ import java.util.List;
 public interface ConsultationDao extends GenericDao<Consultation>{
     
     public List<Consultation> getConsultationsByPatient(int idPatient);
+    public List<Consultation> getConsultationByCie(int idCie);
 }

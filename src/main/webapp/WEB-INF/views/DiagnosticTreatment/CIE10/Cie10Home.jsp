@@ -1,6 +1,13 @@
+<%-- 
+    Document   : Cie10Home
+    Created on : Aug 1, 2014, 11:32:20 PM
+    Author     : Carlos Cortina
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="windows-1252"%>
+<!DOCTYPE html>
 
-<jsp:include page="../Includes/header.jsp"/>
+<jsp:include page="../../Includes/header.jsp"/>
 
 <!-- Files for data tables function-->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
@@ -17,9 +24,9 @@
 
 <c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
 
-<c:url var="relativeHomeJS" value="/resources/js/RelativeHome/RelativeHome.js" />
-<c:url var="newRelativeTabJS" value="/resources/js/RelativeHome/NewRelativeTab.js" />
-<c:url var="modifyRelativeTabJS" value="/resources/js/RelativeHome/ModifyRelativeTab.js" />
+<c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
+
+<c:url var="cieHomeJs" value="/resources/js/DiagnosticTreatment/Cie10Home.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
@@ -27,35 +34,30 @@
 <link href="${bvCSS}" rel="stylesheet" />
 
 <div class="container-fluid">
-    <div class="row">
+    <div classs="row">
         <div class="col-sm-12">
-            <ul id="relativesTabMenu" class="nav nav-tabs">
-              <li class="active"><a href="#tabMain" data-toggle="tab">Familiares</a></li>
-              <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
-              <li><a href="#tabEdit" data-toggle="tab">Modificar</a></li>
-            </ul>
-            <div class="tab-content">
-                <div id="tabMain" class="tab-pane active">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Diagnósticos CIE</h3>
+                </div>
+                <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="hover row-border" id="tblRelative">
+                            <table class="row-border hover" id="tblCie">
                                 <thead>
-                                    <th>Apellido Paterno</th>
-                                    <th>Apellido Materno</th>
-                                    <th>Nombre</th>
-                                    <th>Activo</th>
+                                    <th>Codigo</th>
+                                    <th>Diagnóstico</th>
                                 </thead>
-                            </table>
+                            </table> 
                         </div>
                     </div>
                     <div class="row">
-                        <div class="cols-sm-2">
-                            <input type="button" value="Modificar Familiar" onclick="modifyRelative()" class="btn btn-primary" />
+                        <div class="col-sm-2">
+                            <input type="button" class="btn btn-primary" value="Agregar Diagnóstico" onclick="addCie()" />
                         </div>
                     </div>
                 </div>
-                <div id="tabNew" class="tab-pane"><jsp:include page="Tabs/NewRelative.jsp" /></div>
-                <div id="tabEdit" class="tab-pane"><jsp:include page="Tabs/ModifyRelative.jsp" /></div>
+            </div>
         </div>
     </div>
 </div>
@@ -74,7 +76,6 @@
 
 <script src="${bootboxJs}" type="text/javascript"></script>
 
-<script src="${relativeHomeJS}" type="text/javascript"></script>
-<script src="${newRelativeTabJS}" type="text/javascript"></script>
-<script src="${modifyRelativeTabJS}" type="text/javascript"></script>
+<script src="${utilityJs}" type="text/javascript"></script>
 
+<script src="${cieHomeJs}" type="text/javascript"></script>

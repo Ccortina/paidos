@@ -38,4 +38,12 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
         }
         return consultations;
     }
+    
+    @Override
+    public List<Consultation> getConsultationByCie(int idCie){
+        Query query = getSession().createQuery("SELECT new Consultation(c.idAppointment) FROM Consultation c JOIN c.consultationdiagnosticList d"
+                + " WHERE d.idDiagnostic.idCIE10.idCIE10=:idCie");
+        query.setParameter("idCie", idCie);
+        return query.list();
+    }
 }

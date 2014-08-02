@@ -52,7 +52,7 @@ public class RelativesController {
         }
         
         @RequestMapping(value="saveNewRelative",produces = "application/json")
-        public @ResponseBody Relative getAllRelatives(@RequestParam Map<String,String> params){
+        public @ResponseBody Relative saveNewRelative(@RequestParam Map<String,String> params){
             Relative relative = new Relative();
             
             //Travel the map entries
@@ -81,6 +81,34 @@ public class RelativesController {
             return (relative);
         }
 	
+        @RequestMapping(value="saveModifyRelative",produces = "application/json")
+        public @ResponseBody Relative saveModifyRelative(@RequestParam Map<String,String> params){
+            Relative relative = relativeService.getRelative(Integer.parseInt(params.get("idRelative")));
+            
+            //Travel the map entries
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                //Fill relative data
+                try{
+                    for(Method m: relative.getClass().getMethods()){
+                        if(m.getName().startsWith("set")){
+                            if( m.getName().equalsIgnoreCase("set"+entry.getKey())){
+                                if( m.getName().equalsIgnoreCase("setReligion")){
+                                    m.invoke(relative,religionService.getReligion(Integer.parseInt(entry.getValue())));
+                                }else if( !m.getName().equalsIgnoreCase("setIdRelative")){
+                                    m.invoke(relative,entry.getValue());
+                                }    
+                            }
+                        }
+                    }
+                    relativeService.updateRelative(relative);
+                }catch(Exception e){ 
+                    e.printStackTrace();
+                }
+            }
+            
+            return (relative);
+        }
+        
 	private Relative toRelative(RelativeRegistrationForm form){
 		
 		Religion religion = religionService.getReligion(1);
