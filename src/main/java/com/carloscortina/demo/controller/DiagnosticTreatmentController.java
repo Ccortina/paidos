@@ -11,11 +11,16 @@ import com.carloscortina.demo.model.CIE10Doctor;
 import com.carloscortina.demo.model.CIE10DoctorPK;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Consultation;
+import com.carloscortina.demo.model.Drug;
+import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.Cie10DoctorService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.ConsultationService;
+import com.carloscortina.demo.service.DrugService;
+import com.carloscortina.demo.service.TreatmentService;
 import com.carloscortina.demo.service.UserService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +45,10 @@ public class DiagnosticTreatmentController {
     private Cie10DoctorService cieDoctorService;
     @Autowired
     private ConsultationService consultationService;
+    @Autowired
+    private TreatmentService treatmentService;
+    @Autowired
+    private DrugService drugService;
     
     private User loggedUser;
     
@@ -61,6 +70,15 @@ public class DiagnosticTreatmentController {
         return ( "DiagnosticTreatment/Diagnostic/DiagnosticHome" );
     }
     
+    @RequestMapping(value="treatmentHome")
+    public String treatmentHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "DiagnosticTreatment/Treatment/TreatmentHome" );
+    }
+    
     @RequestMapping(value="getAllCie")
     public @ResponseBody JsonPack<Cie10> getAllCie(){
         return (new JsonPack<Cie10>(cieService.getAvaibleCie10ByUser(loggedUser.getIdUser())));
@@ -69,6 +87,17 @@ public class DiagnosticTreatmentController {
     @RequestMapping(value="getCieByUser")
     public @ResponseBody JsonPack<Cie10> getCieByUser(){
         return (new JsonPack < Cie10 >(cieService.getCie10ByUser(loggedUser.getIdUser())));
+    }
+    
+    @RequestMapping(value="getDrugsByUser")
+    public @ResponseBody JsonPack<Drug> getDrugsByUser()
+    {
+        return new JsonPack<Drug>(drugService.getDrugByUser(loggedUser.getIdUser()));
+    }
+    
+    @RequestMapping(value="getDrugIncompatibility",produces = "application/json")
+    public @ResponseBody List<Drug> getDrugIncompatibility(int idDrug){
+        return drugService.getDrugIncompatibilities(idDrug);
     }
     
     @RequestMapping(value="addCieToUserCatalog")
@@ -93,5 +122,11 @@ public class DiagnosticTreatmentController {
     public @ResponseBody JsonPack<Consultation> getConsultationByCie(int idCie){
         
         return (new JsonPack<Consultation>(consultationService.getConsultationByCie(idCie)));
+    }
+    
+    @RequestMapping(value="getTreatmentsByUser")
+    public @ResponseBody JsonPack<Treatment> getTreatmentsByUser()
+    {   
+        return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(loggedUser.getIdUser()));
     }
 }

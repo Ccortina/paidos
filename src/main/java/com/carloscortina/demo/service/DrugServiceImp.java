@@ -79,4 +79,9 @@ public class DrugServiceImp implements DrugService
     public void mergeItem(Drug item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Drug> getDrugIncompatibilities(int idDrug) {
+        return drugDao.getDrugIncompatibilities(idDrug);
+    }
 }

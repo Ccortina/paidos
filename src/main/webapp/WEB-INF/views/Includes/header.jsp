@@ -55,6 +55,7 @@ body {
                                 <ul class="dropdown-menu">
                                     <li><a href="${contextPath}/diagnostictreatment/cie10Home">Diagnosticos CIE10</a></li>
                                     <li><a href="${contextPath}/diagnostictreatment/diagnosticHome">Diagnosticos</a></li>
+                                    <li><a href="${contextPath}/diagnostictreatment/treatmentHome">Tratamientos</a></li>
                                 </ul>
                             </li>
                         </ul>
