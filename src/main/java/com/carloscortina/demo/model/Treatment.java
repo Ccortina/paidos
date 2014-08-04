@@ -10,8 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 
 import javax.persistence.NamedQueries;
@@ -43,16 +44,17 @@ public class Treatment implements Serializable {
     @Column(name = "IdTreatment")
     private Integer idTreatment;
     @Basic(optional = false)
-    @Lob
     @Column(name = "treatment")
     private String treatment;
-    @Lob
     @Column(name = "directions")
     private String directions;
     @Basic(optional = false)
     @Column(name = "active")
     private String active;
-    @ManyToMany(mappedBy = "treatmentList")
+    @JoinTable(name = "doctortreatmentcatalog", joinColumns = {
+        @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")}, inverseJoinColumns = {
+        @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
+    @ManyToMany
     @JsonIgnore
     private List<User> userList;
     @ManyToMany(mappedBy = "treatmentList")

@@ -8,6 +8,7 @@ $(document).ready(function(){
     initializeAsociatedDiagnosticTable();
     initializeDrugTable();
     initializeDrugAsociatedDrugTable();
+    initializeNewTreatmentForm();
 });
 
 function initializeDiagnosticTable(){
@@ -88,7 +89,9 @@ function initializeDrugTable(){
         },
         "ajax":"/demo/diagnostictreatment/getDrugsByUser",
         "columns":[
-            {"data":"idDrug","visible":false},
+            {"render":function(data,row,full){
+                    return ("-"+full["idDrug"]+"-");
+            },"visible":false},
             {"data":"drug"},
             {"data":"drugPresentationId.presentation"}
         ],
@@ -120,7 +123,9 @@ function initializeDrugAsociatedDrugTable(){
             "search": "Buscar"
         },
         "columns":[
-            {"data":"idDrug","visible":false},
+            {"render":function(data,row,full){
+                    return ("-"+full["idDrug"]+"-");
+            },"visible":false},
             {"data":"drug"},
             {"data":"drugPresentationId.presentation"}
         ],
@@ -136,7 +141,62 @@ function initializeDrugAsociatedDrugTable(){
                 }
                 
             });         
-        }        
+        }
+    });
+}
+
+function initializeNewTreatmentForm(){
+    $('#formNewTreatment').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            treatment: {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del tratamiento no puede estar vacio'
+                    }
+                }
+            }
+        },
+        submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
+        e.preventDefault();
+        saveNewTreatment();
+    });
+}
+
+function saveNewTreatment(){
+    var data = [];
+    data.push({name:"treatment",value:$("#inputNewTreatmentTreatment").val()});
+    data.push({name:"directions",value:$("#inputNewTreatmentDirections").val()});
+    data.push({name:"active",value:$('#inputNewTreatmentActive').is(':checked')});
+    //Collect Diagnostic data
+    var cont = 0;
+    $("#tblAsociatedDiagnostic").DataTable().rows().data().each(function(value,index){
+        data.push({name:"diagnostic"+cont,value:value["idCIE10"]});
+        cont++;
+    });
+    data.push({name:"diagnosticCont",value:cont});
+    
+    cont = 0;
+    $("#tblAsociatedDrug").DataTable().rows().data().each(function(value,index){
+        data.push({name:"drug"+cont,value:value["idDrug"]});
+        cont++;
+    });
+    data.push({name:"drugCont",value:cont});
+    
+    $.ajax({
+        url:"/demo/diagnostictreatment/saveNewTreatment",
+        data:data,
+        success:function(response,textStatus,jqXHR){
+            displaySuccessAlert("Se ha agregado el tratamiento correctamente");
+        },
+        error:function(response){
+            displayDangerAlert("Ha ocurrido un error: "+response);
+        }
     });
 }
 
@@ -168,7 +228,7 @@ function atachTreatmentDrug(){
     if(checkNotUndefined(data)){
         $("#tblAsociatedDrug").DataTable().row.add(data).draw();
         $("#tblDrug").DataTable().row('.selected').remove().draw();
-        
+        //checkIncompatibilities();
     }else{
         displayWarningAlert("No se ha seleccionado un medicamento");
     }
@@ -183,4 +243,32 @@ function detachTreatmentDrug(){
     }else{
         displayWarningAlert("No se ha seleccionado un medicamento");
     }
+}
+
+function checkIncompatibilities(incompatibilities){
+    var rows = [];
+    var table = $("#tblDrug").DataTable();
+    $("#tblAsociatedDrug").DataTable().rows().data().each(function ( value, index ) {
+        $.ajax({
+            url:"/demo/diagnostictreatment/getDrugIncompatibility",
+            data:{idDrug:value["idDrug"]},
+            success:function(response,textStatus,jqXHR){
+                $.each(response,function(index,value){     
+                    table.rows().data().each(function( val, idx){
+                        if(val["idDrug"] === value["idDrug"]){
+                            rows.push(idx);
+                        }
+                    });
+                    
+                });
+            },
+            error:function(response){
+                displayDangerAlert("Ha ocurrido un error: "+response);
+            }
+        });
+    });
+    $.each(rows,function(index,value){
+        $(table.row(value)).addClass("vpExpired");
+                //.node().to$().css({"background-color":"#FF6961"});
+    });
 }

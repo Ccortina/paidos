@@ -11,6 +11,7 @@
         <h3>Agregar nuevo tratamiento</h3>
     </div>
 </div>
+<form role="form" id="formNewTreatment">
 <div class="row">
     <div class="col-sm-12">
         <ul id="newTreatmentTabMenu" class="nav nav-tabs">
@@ -27,22 +28,21 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <form role="form" id="formNewTreatment">
-                            <div class="form-group">
-                                <label for="inputNewTreatmentTreatment">Tratamiento</label>
-                                <input type="text" class="form-control inputNormal" id="inputNewTreatmentTreatment" placeholder="Tratamiento" name="treatment"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputNewTreatmentDirections">Indicaciones</label>
-                                <textarea class="form-control" id="inputNewTreatmentDirections" placeholder="Indicaciones" name="directions"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="active" checked>
-                                    Activo
-                                </label>
-                            </div>
-                        </form>
+                        
+                        <div class="form-group">
+                            <label for="inputNewTreatmentTreatment">Tratamiento</label>
+                            <input type="text" class="form-control inputNormal" id="inputNewTreatmentTreatment" placeholder="Tratamiento" name="treatment"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputNewTreatmentDirections">Indicaciones</label>
+                            <textarea class="form-control" id="inputNewTreatmentDirections" placeholder="Indicaciones" name="directions"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input id="inputNewTreatmentActive" type="checkbox" name="active" checked>
+                                Activo
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,3 +139,13 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-sm-2">
+        <input type="submit" value="Guardar" class="btn btn-primary" />
+    </div>
+    <div class="col-sm-2">
+        <input type="button" value="Cancelar" class="btn btn-danger" />
+    </div>
+</div>
+</form>
+    

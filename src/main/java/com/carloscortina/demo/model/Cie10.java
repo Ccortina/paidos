@@ -28,6 +28,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -55,11 +57,9 @@ public class Cie10 implements Serializable {
     private String cieCode;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Size(min = 1, max = 65535)
     @Column(name = "diagnostic")
     private String diagnostic;
-    @Lob
     @Size(max = 65535)
     @Column(name = "description")
     private String description;
@@ -72,6 +72,7 @@ public class Cie10 implements Serializable {
         @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")}, inverseJoinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Treatment> treatmentList;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCIE10")

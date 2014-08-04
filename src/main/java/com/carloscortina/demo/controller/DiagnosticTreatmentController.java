@@ -20,13 +20,16 @@ import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.DrugService;
 import com.carloscortina.demo.service.TreatmentService;
 import com.carloscortina.demo.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -105,6 +108,39 @@ public class DiagnosticTreatmentController {
         CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());
         CIE10Doctor add = new CIE10Doctor(id);
         cieDoctorService.create(add);
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveNewTreatment")
+    public @ResponseBody String saveNewTreatment(@RequestParam Map<String,String> params){
+        Treatment newTreatment = new Treatment();
+        newTreatment.setActive(params.get("active"));
+        newTreatment.setTreatment(params.get("treatment"));
+        newTreatment.setDirections(params.get("directions"));
+        List<User> userL = new ArrayList<User>();
+        userL.add(loggedUser);
+        newTreatment.setUserList(userL);
+        
+        treatmentService.create(newTreatment);
+        
+        for(int i=0; i < Integer.parseInt(params.get("diagnosticCont")); i++){
+            Cie10 up = cieService.getById(Integer.parseInt(params.get("diagnostic"+i)));
+            up.getTreatmentList().add(newTreatment);
+            cieService.updateItem(up);
+        }
+        
+        for(int i=0; i < Integer.parseInt(params.get("drugCont")); i++){
+            Drug up= drugService.getById(Integer.parseInt(params.get("drug"+i)));
+            up.getTreatmentList().add(newTreatment);
+            drugService.updateItem(up);
+        }
+        
+        /*User us = userService.getById(loggedUser.getIdUser());
+        us.getTreatmentList().add(newTreatment);
+        userService.updateItem(us);
+        loggedUser.getTreatmentList().add(newTreatment);
+        userService.updateItem(loggedUser);*/
         
         return "";
     }

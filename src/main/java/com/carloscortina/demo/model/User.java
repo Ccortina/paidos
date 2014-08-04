@@ -71,10 +71,7 @@ public class User implements Serializable {
     @ManyToMany
     @JsonIgnore
     private List<Drug> drugList;
-    @JoinTable(name = "DoctorTreatmentCatalog", joinColumns = {
-        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
-        @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "userList")
     @JsonIgnore
     private List<Treatment> treatmentList;
     @JoinColumn(name = "idStaffMember", referencedColumnName = "idStaffMember")

@@ -49,7 +49,6 @@ public class Drug implements Serializable {
     @Basic(optional = false)
     @Column(name = "idDrug")
     private Integer idDrug;
-    @Lob
     @Column(name = "drug")
     private String drug;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -57,12 +56,10 @@ public class Drug implements Serializable {
     private Double concentration;
     @Column(name = "treatmentDays")
     private Integer treatmentDays;
-    @Lob
     @Column(name = "applicationSchedule")
     private String applicationSchedule;
     @Column(name = "dailyFrequency")
     private Integer dailyFrequency;
-    @Lob
     @Column(name = "notes")
     private String notes;
     @Column(name = "active")
