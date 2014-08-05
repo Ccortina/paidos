@@ -48,7 +48,7 @@ function removeCie(){
     
     if(checkNotUndefined(cie)){
         $.ajax({
-            url:"/demo/diagnostictreatment/addCieToUserCatalog",
+            url:"/demo/diagnostictreatment/removeCieFromUserCatalog",
             data:{idCie:cie["idCIE10"]},
             type: "POST",
             success:function(response){

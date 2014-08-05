@@ -38,4 +38,17 @@ public class HbnCie10Dao extends GenericHbnDao<Cie10> implements Cie10Dao {
         
         return result;
     }
+    
+    @Override
+    public List<Cie10> getCie10ByTreatmentAndUser(int idUser,int idTreatment){
+    
+        String hql = "SELECT new Cie10(cie.idCIE10,cie.cieCode,cie.diagnostic) FROM Cie10 as cie"
+                + " JOIN cie.cie10doctorList u JOIN cie.treatmentList t WHERE u.user.idUser=:idUser AND t.idTreatment=:idTreatment";
+        Query query = getSession().createQuery(hql);
+        
+        query.setParameter("idUser",idUser);
+        query.setParameter("idTreatment",idTreatment);
+        
+        return query.list();
+    }
 }

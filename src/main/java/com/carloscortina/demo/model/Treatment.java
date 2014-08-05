@@ -56,9 +56,11 @@ public class Treatment implements Serializable {
         @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
     @ManyToMany
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<User> userList;
     @ManyToMany(mappedBy = "treatmentList")
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Drug> drugList;
     @ManyToMany(mappedBy = "treatmentList")
     @LazyCollection(LazyCollectionOption.FALSE)

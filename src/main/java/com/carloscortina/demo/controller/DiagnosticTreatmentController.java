@@ -112,10 +112,19 @@ public class DiagnosticTreatmentController {
         return "";
     }
     
+    @RequestMapping(value="removeCieFromUserCatalog")
+    public @ResponseBody String removeCieFromUserCatalog(int idCie){
+        CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());
+        CIE10Doctor add = new CIE10Doctor(id);
+        cieDoctorService.delete(add);
+        
+        return "";
+    }
+    
     @RequestMapping(value="saveNewTreatment")
     public @ResponseBody String saveNewTreatment(@RequestParam Map<String,String> params){
         Treatment newTreatment = new Treatment();
-        newTreatment.setActive(params.get("active"));
+        newTreatment.setActive(params.get("active").compareTo("true") == 0? "1":"0");
         newTreatment.setTreatment(params.get("treatment"));
         newTreatment.setDirections(params.get("directions"));
         List<User> userL = new ArrayList<User>();
@@ -136,11 +145,74 @@ public class DiagnosticTreatmentController {
             drugService.updateItem(up);
         }
         
-        /*User us = userService.getById(loggedUser.getIdUser());
-        us.getTreatmentList().add(newTreatment);
-        userService.updateItem(us);
-        loggedUser.getTreatmentList().add(newTreatment);
-        userService.updateItem(loggedUser);*/
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyTreatment")
+    public @ResponseBody String saveModifyTreatment(@RequestParam Map<String,String> params){
+        Treatment newTreatment = treatmentService.getById(Integer.parseInt(params.get("idTreatment")));
+        
+        newTreatment.setActive(params.get("active").compareTo("true") == 0? "1":"0");
+        newTreatment.setTreatment(params.get("treatment"));
+        newTreatment.setDirections(params.get("directions"));
+        
+        /*List<User> userL = new ArrayList<User>();
+        userL.add(loggedUser);
+        newTreatment.setUserList(userL);*/
+        
+        treatmentService.updateItem(newTreatment);
+        List<Cie10> actualCieList = newTreatment.getCie10List();
+        List<Drug> actualDrugList = newTreatment.getDrugList();
+        
+        List<Cie10> modifiedCieList = new ArrayList<Cie10>();
+        List<Drug> modifiedDrugList = new ArrayList<Drug>();
+        
+        for(int i=0; i < Integer.parseInt(params.get("diagnosticCont")); i++){
+            modifiedCieList.add(cieService.getById(Integer.parseInt(params.get("diagnostic"+i))));
+        }
+        
+        for(int i=0; i < Integer.parseInt(params.get("drugCont")); i++){
+            modifiedDrugList.add(drugService.getById(Integer.parseInt(params.get("drug"+i))));
+        }
+        
+        //Remove repeated
+        actualCieList.removeAll(modifiedCieList);
+        actualDrugList.removeAll(modifiedDrugList);
+        
+        //Delete 
+        for(Cie10 cie: actualCieList){
+            cie.getTreatmentList().remove(newTreatment);
+            cieService.updateItem(cie);
+        }
+        
+        for(Drug drug: actualDrugList){
+            drug.getTreatmentList().remove(newTreatment);
+            drugService.updateItem(drug);
+        }
+        actualCieList = treatmentService.getById(Integer.parseInt(params.get("idTreatment"))).getCie10List();
+        actualDrugList = treatmentService.getById(Integer.parseInt(params.get("idTreatment"))).getDrugList();
+        
+        modifiedCieList.removeAll(actualCieList);
+        modifiedDrugList.removeAll(actualDrugList);
+        //add
+        for(Cie10 cie: modifiedCieList){
+            cie.getTreatmentList().add(newTreatment);
+            cieService.updateItem(cie);
+        }
+        
+        for(Drug drug: modifiedDrugList){
+            drug.getTreatmentList().add(newTreatment);
+            drugService.updateItem(drug);
+        }
+        
+        return "";
+    }
+    
+    @RequestMapping(value="removeTreatment")
+    public @ResponseBody String removeTreatment(int idTreatment){
+        Treatment treatment = treatmentService.getById(idTreatment);
+        treatment.getUserList().remove(loggedUser);
+        treatmentService.updateItem(treatment);
         
         return "";
     }
@@ -160,9 +232,43 @@ public class DiagnosticTreatmentController {
         return (new JsonPack<Consultation>(consultationService.getConsultationByCie(idCie)));
     }
     
+    @RequestMapping(value="getConsultationByTreatment")
+    public @ResponseBody JsonPack<Consultation> getConsultationByTreatment(int idTreatment){
+        
+        return (new JsonPack<Consultation>(consultationService.getConsultationByTreatment(idTreatment)));
+    }
+    
     @RequestMapping(value="getTreatmentsByUser")
     public @ResponseBody JsonPack<Treatment> getTreatmentsByUser()
     {   
         return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(loggedUser.getIdUser()));
+    }
+    
+    @RequestMapping(value="getDrugsByTreatment")
+    public @ResponseBody JsonPack<Drug> getDrugsByTreatment(int idTreatment)
+    {   
+        return new JsonPack<Drug>(drugService.getDrugByTreatmentAndUser(idTreatment, loggedUser.getIdUser()));
+    }
+    
+    @RequestMapping(value="getAvaibleDrugsByTreatment")
+    public @ResponseBody JsonPack<Drug> geAvaibleDrugsByTreatment(int idTreatment)
+    {   
+        List<Drug> allDrugs = drugService.getDrugByUser(loggedUser.getIdUser());
+        allDrugs.removeAll(drugService.getDrugByTreatmentAndUser(idTreatment, loggedUser.getIdUser()));
+        return new JsonPack<Drug>(allDrugs);
+    }
+    
+    @RequestMapping(value="getDiagnosticByTreatment")
+    public @ResponseBody JsonPack<Cie10> getDiagnosticByTreatment(int idTreatment)
+    {   
+        return new JsonPack<Cie10>(cieService.getCie10ByTreatmentAndUser(loggedUser.getIdUser(), idTreatment));
+    }
+    
+    @RequestMapping(value="getAvaibleDiagnosticByTreatment")
+    public @ResponseBody JsonPack<Cie10> getAvaibleDiagnosticByTreatment(int idTreatment)
+    {   
+        List<Cie10> all = cieService.getCie10ByUser(loggedUser.getIdUser());
+        all.removeAll(cieService.getCie10ByTreatmentAndUser(loggedUser.getIdUser(), idTreatment));
+        return (new JsonPack<Cie10>(all));
     }
 }

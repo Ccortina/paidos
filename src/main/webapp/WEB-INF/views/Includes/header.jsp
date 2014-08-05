@@ -56,6 +56,12 @@ body {
                                     <li><a href="${contextPath}/diagnostictreatment/cie10Home">Diagnosticos CIE10</a></li>
                                     <li><a href="${contextPath}/diagnostictreatment/diagnosticHome">Diagnosticos</a></li>
                                     <li><a href="${contextPath}/diagnostictreatment/treatmentHome">Tratamientos</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li role="presentation" class="dropdown-header">Medicamentos</li>
+                                    <li><a href="${contextPath}/drug/drugHome">Medicamentos</a></li>
+                                    <li><a href="${contextPath}/drug/drugPresentationHome">Presentaciones</a></li>
+                                    <li><a href="${contextPath}/drug/drugAdministrationMethodHome">Modos de Administración</a></li>
+                                    <li><a href="${contextPath}/drug/drugAdministrationUnitHome">Unidades de Administración</a></li>
                                 </ul>
                             </li>
                         </ul>
