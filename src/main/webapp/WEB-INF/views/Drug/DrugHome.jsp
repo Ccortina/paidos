@@ -27,6 +27,7 @@
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
 <c:url var="drugHomeJs" value="/resources/js/Drug/DrugHome.js" />
+<c:url var="newDrugJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
@@ -127,3 +128,5 @@
 <script src="${utilityJs}" type="text/javascript"></script>
 
 <script src="${drugHomeJs}" type="text/javascript"></script>
+<script src="${newDrugJs}" type="text/javascript"></script>
+
