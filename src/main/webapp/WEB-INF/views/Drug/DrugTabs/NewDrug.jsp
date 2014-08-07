@@ -84,7 +84,6 @@
                                             <thead>
                                                 <th>Regla</th>
                                                 <th>Dosis</th>
-                                                <th>Criterio</th>
                                             </thead>
                                         </table>    
                                     </div>

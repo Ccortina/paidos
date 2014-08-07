@@ -14,7 +14,6 @@ function initializeNewDrugDoseTable(){
         "scrollCollapse": true,
         "paging": false,
         "info":false,
-        "deferRender": true,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
@@ -81,26 +80,67 @@ function initializeNewDoseFormWeight(){
                 }
             }
         });
+        clearFormInputTextFields("formNewDose");
         $('#modalNewDose').modal('show');
     }
 }
 
 function initializeNewDoseFormAge(){
     //Check if theres previous criterias
-    
+    var table = $("#tblNewDrugDose").DataTable();
+
+    $("#formNewDose").bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            dose: {
+                validators: {
+                    notEmpty: {
+                        message: 'La dosis no puede estar vacia'
+                    }
+                }
+            },
+            criteria: {
+                validators: {
+                    notEmpty: {
+                        message: 'No puede estar vacia'
+                    }
+                }
+            }
+        }
+    });
+    $("#inputNewDoseCriteria").prop( "disabled", false );
+    clearFormInputTextFields("formNewDose");
+    $('#modalNewDose').modal('show');  
 }
 
 
 function addDose(){
-    var data=[];
-    data.push({name:"criteria",value:$("#inputNewDoseCriteria").val()});
-    data.push({name:"dose",value:$("#inputNewDoseDose").val()});
-    data.push({name:"idCalculationCriteria",value:$("#inputNewDrugDoseCalculationCriteria").val()});
+    var data={};
+    data["criteria"]=$("#inputNewDoseCriteria").val();
+    data["dose"] = $("#inputNewDoseDose").val();
+    data["idCalculationCriteria"] = $("#inputNewDrugDoseCalculationCriteria").val();
     
-    if($("#inputNewDrugDoseCalculationCriteria").val() === 1){
-        
-    }
-        
+    $("#inputNewDrugDoseCalculationCriteria").prop( "disabled", true );
+    
     $("#tblNewDrugDose").DataTable().row.add(data).draw();
     
+    $("#formNewDose").data('bootstrapValidator').resetForm();
+    $('#modalNewDose').modal('hide');
+}
+
+function removeDose(){
+    var table = $("#tblNewDrugDose").DataTable();
+    
+    if( checkNotUndefined(table.row('.selected').data()) ){
+        table.row('.selected').remove().draw();
+        if(table.rows().data().length === 0){
+            $("#inputNewDrugDoseCalculationCriteria").prop( "disabled", false );
+        }
+    }else{
+        displayWarningAlert("No ha seleccionado una medida");
+    }
 }
