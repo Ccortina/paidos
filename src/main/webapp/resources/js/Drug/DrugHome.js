@@ -5,6 +5,8 @@
  */
 $(document).ready(function(){
     initializeDrugTable();
+    
+    $('.inputDecimal').inputmask('Regex',{regex:"[0-9]+(\.[0-9][0-9]?)?"});
 });
 
 function initializeDrugTable(){

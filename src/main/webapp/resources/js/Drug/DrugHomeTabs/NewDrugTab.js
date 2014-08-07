@@ -19,6 +19,10 @@ function initializeNewDrugDoseTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
+        "columns":[
+            {"data":"criteria"},
+            {"data":"dose"}
+        ],
         "initComplete":function(settings,json){
             var table = $('#tblNewDrugDose').DataTable();
             
@@ -34,8 +38,69 @@ function initializeNewDrugDoseTable(){
     });
 }
 
+function loadNewDrugDoseModal(){
+    var table = $("#tblNewDrugDose").DataTable();
+    
+    //Check wich criteria is going to be used
+    var criteria = $("#inputNewDrugDoseCalculationCriteria").val();
+    
+    switch(criteria){
+        case "1":
+            initializeNewDoseFormWeight();
+            break;
+        case "2":
+            initializeNewDoseFormAge();
+            break;
+        case"3":
+            break;    
+    }
+}
+
+function initializeNewDoseFormWeight(){
+    var table = $("#tblNewDrugDose").DataTable();
+    
+    //Check if theres already a dose
+    if(table.rows().data().length === 1){
+        displayWarningAlert("Solo puede haber una dosis en el peso");
+    }else{
+        $("#inputNewDoseCriteria").prop( "disabled", true );
+        
+        $("#formNewDose").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                dose: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La dosis no puede estar vacia'
+                        }
+                    }
+                }
+            }
+        });
+        $('#modalNewDose').modal('show');
+    }
+}
+
+function initializeNewDoseFormAge(){
+    //Check if theres previous criterias
+    
+}
+
+
 function addDose(){
     var data=[];
+    data.push({name:"criteria",value:$("#inputNewDoseCriteria").val()});
+    data.push({name:"dose",value:$("#inputNewDoseDose").val()});
+    data.push({name:"idCalculationCriteria",value:$("#inputNewDrugDoseCalculationCriteria").val()});
     
+    if($("#inputNewDrugDoseCalculationCriteria").val() === 1){
+        
+    }
+        
+    $("#tblNewDrugDose").DataTable().row.add(data).draw();
     
 }

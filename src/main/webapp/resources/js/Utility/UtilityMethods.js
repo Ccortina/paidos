@@ -37,3 +37,11 @@ function displaySuccessAlert(message){
     window.setTimeout(function(){bootbox.hideAll();}, 2000);
 }
 
+
+function clearFormInputTextFields(form){
+    var inputs = $("#"+form+" input[type=text]");
+    
+    $.each(inputs,function( index, value ){
+        $(value).val("");
+    });
+}

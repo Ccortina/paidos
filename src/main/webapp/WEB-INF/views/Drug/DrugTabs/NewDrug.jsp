@@ -92,7 +92,7 @@
                                 <div class="col-sm-2">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalNewDose" value="Nuevo"/>
+                                            <input type="button" class="btn btn-primary" data-toggle="modal" onclick="loadNewDrugDoseModal()" value="Nuevo"/>
                                         </div>                                       
                                     </div>
                                     <div class="row">
@@ -139,11 +139,26 @@
             <h4 class="modal-title">Agregar nueva dosis</h4>
         </div>
         <div class="modal-body">
-        ...
+            <form role="form" id="formNewDose">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputNewDoseCriteria">Criterio</label>
+                        <input type="text" class="form-control inputDecimal" id="inputNewDoseCriteria" placeholder="Criterio" name="criteria"/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputNewDoseDose">Dosis</label>
+                        <input type="text" class="form-control inputDecimal" id="inputNewDoseDose" placeholder="Dosis" name="dose"/>
+                    </div>
+                </div>
+            </div>
+            </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" onclick="addDose()">Agregar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         </div>
     </div>
   </div>
