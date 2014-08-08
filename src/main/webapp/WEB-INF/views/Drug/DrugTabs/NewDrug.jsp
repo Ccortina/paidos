@@ -11,6 +11,7 @@
         <div class="col-sm-12">
             <ul id="newDrugTabMenu" class="nav nav-tabs">
                 <li class="active"><a href="#tabMainNewDrug" data-toggle="tab">Informacion general</a></li>
+                <li><a href="#tabCommercialName" data-toggle="tab">Nombres comerciales</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tabMainNewDrug" class="tab-pane active">
@@ -116,6 +117,28 @@
                         <div class="col-sm-2">                       
                         </div>
                     </div>   
+                </div>
+                <div id="tabCommercialName" class="tab-pane">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="hover row-border" id="tblNewDrugCommercialName">
+                                <thead>
+                                    <th>Nombres comerciales asociados al medicamento</th>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input type="button" class="btn btn-primary" value="Nuevo" />
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" class="btn btn-primary" value="Modificar" />
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" class="btn btn-danger" value="Borrar" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>        
