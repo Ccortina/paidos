@@ -130,7 +130,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input type="button" class="btn btn-primary" value="Nuevo" />
+                            <input type="button" class="btn btn-primary" onclick="loadNewCommercialNameModal()" value="Nuevo"/>
                         </div>
                         <div class="col-sm-2">
                             <input type="button" class="btn btn-primary" value="Modificar" />
@@ -157,31 +157,57 @@
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalNewDose" aria-hidden="true" id="modalNewDose">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
+        <form role="form" id="formNewDose">
         <div class="modal-header">
             <h4 class="modal-title">Agregar nueva dosis</h4>
         </div>
         <div class="modal-body">
-            <form role="form" id="formNewDose">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inputNewDoseCriteria">Criterio</label>
-                        <input type="text" class="form-control inputDecimal" id="inputNewDoseCriteria" placeholder="Criterio" name="criteria"/>
+                        <input type="text" class="form-control" id="inputNewDoseCriteria" placeholder="Criterio" name="criteria"/>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="inputNewDoseDose">Dosis</label>
-                        <input type="text" class="form-control inputDecimal" id="inputNewDoseDose" placeholder="Dosis" name="dose"/>
+                        <input type="text" class="form-control" id="inputNewDoseDose" placeholder="Dosis" name="dose"/>
                     </div>
                 </div>
             </div>
-            </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="addDose()">Agregar</button>
+            <button type="submit" class="btn btn-primary">Agregar</button>
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNewCommercialName" aria-hidden="true" id="modalNewCommercialName">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <form role="form" id="formNewCommercialName">
+        <div class="modal-header">
+            <h4 class="modal-title">Agregar nuevo nombre comercial</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="inputNewCommercialName">Nombre comercial</label>
+                        <input type="text" class="form-control inputNormal" id="inputNewCommercialName" placeholder="Nombre comercial" name="commercialName"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+        </form>
     </div>
   </div>
 </div>

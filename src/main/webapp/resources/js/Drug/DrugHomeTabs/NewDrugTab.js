@@ -5,6 +5,7 @@
  */
 $(document).ready(function(){
     initializeNewDrugDoseTable();
+    initializeNewDrugCommercialNameTable();
 });
 
 function initializeNewDrugDoseTable(){
@@ -38,7 +39,6 @@ function initializeNewDrugDoseTable(){
 }
 
 function loadNewDrugDoseModal(){
-    var table = $("#tblNewDrugDose").DataTable();
     
     //Check wich criteria is going to be used
     var criteria = $("#inputNewDrugDoseCalculationCriteria").val();
@@ -59,7 +59,7 @@ function initializeNewDoseFormWeight(){
     var table = $("#tblNewDrugDose").DataTable();
     
     //Check if theres already a dose
-    if(table.rows().data().length === 1){
+    if(table.rows().data().length >= 1){
         displayWarningAlert("Solo puede haber una dosis en el peso");
     }else{
         $("#inputNewDoseCriteria").prop( "disabled", true );
@@ -75,10 +75,18 @@ function initializeNewDoseFormWeight(){
                     validators: {
                         notEmpty: {
                             message: 'La dosis no puede estar vacia'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
+                            message: 'Formato invalido [0-9].[0-9][09]'
                         }
                     }
                 }
-            }
+            },
+            submitButtons: 'button[type="submit"]'
+        }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            addDose();
         });
         clearFormInputTextFields("formNewDose");
         $('#modalNewDose').modal('show');
@@ -86,9 +94,6 @@ function initializeNewDoseFormWeight(){
 }
 
 function initializeNewDoseFormAge(){
-    //Check if theres previous criterias
-    var table = $("#tblNewDrugDose").DataTable();
-
     $("#formNewDose").bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -100,6 +105,10 @@ function initializeNewDoseFormAge(){
                 validators: {
                     notEmpty: {
                         message: 'La dosis no puede estar vacia'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
+                        message: 'Formato invalido [0-9].[0-9][09]'
                     }
                 }
             },
@@ -107,10 +116,18 @@ function initializeNewDoseFormAge(){
                 validators: {
                     notEmpty: {
                         message: 'No puede estar vacia'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
+                        message: 'Formato invalido [0-9].[0-9][09]'
                     }
                 }
             }
-        }
+        },
+    submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
+        e.preventDefault();
+        addDose();
     });
     $("#inputNewDoseCriteria").prop( "disabled", false );
     clearFormInputTextFields("formNewDose");
@@ -127,8 +144,9 @@ function addDose(){
     $("#inputNewDrugDoseCalculationCriteria").prop( "disabled", true );
     
     $("#tblNewDrugDose").DataTable().row.add(data).draw();
+  
+    $("#formNewDose").data('bootstrapValidator').destroy();
     
-    $("#formNewDose").data('bootstrapValidator').resetForm();
     $('#modalNewDose').modal('hide');
 }
 
@@ -143,4 +161,68 @@ function removeDose(){
     }else{
         displayWarningAlert("No ha seleccionado una medida");
     }
+}
+
+function initializeNewDrugCommercialNameTable(){
+    $("#tblNewDrugCommercialName").DataTable({
+        "ordering":false,
+        "scrollY": "200px",
+        "scrollCollapse": true,
+        "paging": false,
+        "info":false,
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar"
+        },
+        "columns":[
+            {"data":"commercialName"}
+        ],
+        "initComplete":function(settings,json){
+            var table = $('#tblNewDrugCommercialName').DataTable();
+            
+            $('#tblNewDrugCommercialName tbody').on( 'click', 'tr', function (e) {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        }
+    });
+}
+
+function loadNewCommercialNameModal(){
+    $("#formNewCommercialName").bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            commercialName: {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre puede estar vacio'
+                    }
+                }
+            }
+        },
+        submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
+        e.preventDefault();
+        addCommercialName();
+    });
+    
+    $('#modalNewCommercialName').modal('show');
+}
+
+
+
+function addCommercialName(){
+    var name = $("#inputNewCommercialName").val();
+    $('#tblNewDrugCommercialName').DataTable().row.add({"commercialName":name}).draw();
+    clearFormInputTextFields("formNewCommercialName");
+    $("#formNewCommercialName").data('bootstrapValidator').destroy();
+    $('#modalNewCommercialName').modal('hide');
 }
