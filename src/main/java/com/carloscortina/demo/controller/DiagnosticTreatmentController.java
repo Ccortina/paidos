@@ -97,12 +97,7 @@ public class DiagnosticTreatmentController {
     {
         return new JsonPack<Drug>(drugService.getDrugByUser(loggedUser.getIdUser()));
     }
-    
-    @RequestMapping(value="getDrugIncompatibility",produces = "application/json")
-    public @ResponseBody List<Drug> getDrugIncompatibility(int idDrug){
-        return drugService.getDrugIncompatibilities(idDrug);
-    }
-    
+
     @RequestMapping(value="addCieToUserCatalog")
     public @ResponseBody String addCieToUserCatalog(int idCie){
         CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());

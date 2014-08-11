@@ -63,15 +63,6 @@ public class Drug implements Serializable {
     private String notes;
     @Column(name = "active")
     private Short active;
-    @JoinTable(name = "incompatibledrugs", joinColumns = {
-        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
-        @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idDrug")})
-    @ManyToMany
-    @JsonIgnore
-    private List<Drug> drugList;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "drugList")
-    private List<Drug> drugList1;
     @JsonIgnore
     @ManyToMany(mappedBy = "drugList")
     private List<User> userList;
@@ -99,6 +90,15 @@ public class Drug implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDrug")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<DrugDose> drugDoseList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
+    @JsonIgnore
+    private List<CommercialName> incompatibleCommercialNameList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
+    @JsonIgnore
+    private List<Drugrisk> drugriskList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug1")
+    @JsonIgnore
+    private List<Drugrisk> drugriskList1;
 
     public Drug() {
     }
@@ -149,8 +149,32 @@ public class Drug implements Serializable {
         return concentration;
     }
 
+    public List<CommercialName> getCommercialnameList1() {
+        return incompatibleCommercialNameList;
+    }
+
+    public void setCommercialnameList1(List<CommercialName> commercialnameList1) {
+        this.incompatibleCommercialNameList = commercialnameList1;
+    }
+
     public void setConcentration(Double concentration) {
         this.concentration = concentration;
+    }
+
+    public List<Drugrisk> getDrugriskList() {
+        return drugriskList;
+    }
+
+    public void setDrugriskList(List<Drugrisk> drugriskList) {
+        this.drugriskList = drugriskList;
+    }
+
+    public List<Drugrisk> getDrugriskList1() {
+        return drugriskList1;
+    }
+
+    public void setDrugriskList1(List<Drugrisk> drugriskList1) {
+        this.drugriskList1 = drugriskList1;
     }
 
     public Integer getTreatmentDays() {
@@ -193,22 +217,12 @@ public class Drug implements Serializable {
         this.active = active;
     }
 
-    @XmlTransient
-    public List<Drug> getDrugList() {
-        return drugList;
+    public List<CommercialName> getIncompatibleCommercialNameList() {
+        return incompatibleCommercialNameList;
     }
 
-    public void setDrugList(List<Drug> drugList) {
-        this.drugList = drugList;
-    }
-
-    @XmlTransient
-    public List<Drug> getDrugList1() {
-        return drugList1;
-    }
-
-    public void setDrugList1(List<Drug> drugList1) {
-        this.drugList1 = drugList1;
+    public void setIncompatibleCommercialNameList(List<CommercialName> incompatibleCommercialNameList) {
+        this.incompatibleCommercialNameList = incompatibleCommercialNameList;
     }
 
     @XmlTransient

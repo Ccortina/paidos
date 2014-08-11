@@ -4,6 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.DrugDose;
 import com.carloscortina.demo.model.Treatment;
@@ -61,20 +62,4 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         
         return result;
     }
-    
-    @Override
-    public List<Drug> getDrugIncompatibilities(int idDrug){
-        String hql = "FROM Drug d WHERE d.idDrug=:idDrug";
-        Query query = getSession().createQuery(hql);
-        query.setParameter("idDrug", idDrug);
-        Drug drug = (Drug)query.uniqueResult();
-        List<Drug> result = new ArrayList<Drug>();
-        for(Drug d: drug.getDrugList()){
-            Drug dd = new Drug();
-            dd.setIdDrug(d.getIdDrug());
-            result.add(dd);
-        }
-        
-        return result;
-    }
-}
+ }

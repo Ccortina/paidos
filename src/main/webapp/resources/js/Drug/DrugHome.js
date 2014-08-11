@@ -8,6 +8,11 @@ $(document).ready(function(){
     
     $('.inputDecimal').inputmask('Regex',{regex:"[0-9]+(\.[0-9][0-9]?)?"});                                        
     
+    $('[id]').each(function(){
+  var ids = $('[id="'+this.id+'"]');
+  if(ids.length>1 && ids[0]==this)
+    console.warn('Multiple IDs #'+this.id);
+});
 });
 
 function initializeDrugTable(){

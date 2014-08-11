@@ -65,6 +65,12 @@ public class DrugDose implements Serializable {
         this.dose = dose;
     }
 
+    public DrugDose(int age, float dose, Drug idDrug) {
+        this.age = age;
+        this.dose = dose;
+        this.idDrug = idDrug;
+    }
+
     public Integer getIdDrugDose() {
         return idDrugDose;
     }

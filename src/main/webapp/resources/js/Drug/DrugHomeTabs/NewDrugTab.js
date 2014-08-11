@@ -6,6 +6,10 @@
 $(document).ready(function(){
     initializeNewDrugDoseTable();
     initializeNewDrugCommercialNameTable();
+    initializeNewDrugForm();
+    $('#modalNewDose').on('hidden.bs.modal', function (e) {
+        $("#formNewDose").data('bootstrapValidator').destroy();
+    });
 });
 
 function initializeNewDrugDoseTable(){
@@ -53,6 +57,8 @@ function loadNewDrugDoseModal(){
         case"3":
             break;    
     }
+    
+    clearFormInputTextFields("formNewDose");
 }
 
 function initializeNewDoseFormWeight(){
@@ -88,8 +94,7 @@ function initializeNewDoseFormWeight(){
             e.preventDefault();
             addDose();
         });
-        clearFormInputTextFields("formNewDose");
-        $('#modalNewDose').modal('show');
+            $('#modalNewDose').modal('show');  
     }
 }
 
@@ -130,7 +135,6 @@ function initializeNewDoseFormAge(){
         addDose();
     });
     $("#inputNewDoseCriteria").prop( "disabled", false );
-    clearFormInputTextFields("formNewDose");
     $('#modalNewDose').modal('show');  
 }
 
@@ -144,8 +148,6 @@ function addDose(){
     $("#inputNewDrugDoseCalculationCriteria").prop( "disabled", true );
     
     $("#tblNewDrugDose").DataTable().row.add(data).draw();
-  
-    $("#formNewDose").data('bootstrapValidator').destroy();
     
     $('#modalNewDose').modal('hide');
 }
@@ -225,4 +227,130 @@ function addCommercialName(){
     clearFormInputTextFields("formNewCommercialName");
     $("#formNewCommercialName").data('bootstrapValidator').destroy();
     $('#modalNewCommercialName').modal('hide');
+}
+
+function initializeNewDrugForm(){
+    $("#formNewDrug").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                drug: {
+                    validators: {
+                        notEmpty: {
+                            message: 'El nombre del medicamento no puede estar vacio'
+                        }
+                    }
+                },
+                concentration: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La concentracion del medicamento no puede estar vacio'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
+                            message: 'Formato invalido [0-9].[0-9][09]'
+                        }
+                    }
+                },
+                dailyFrequency: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La frecuencia del medicamento no puede estar vacio'
+                        }
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/i,
+                        message: 'Formato invalido [0-9] una o mas veces'
+                    }
+                },
+                treatmentDays: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Los dias de tratamienot para el medicamento no puede estar vacio'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/i,
+                            message: 'Formato invalido [0-9] una o mas veces'
+                        }
+                    }
+                },
+                applicationSchedule: {
+                    validators: {
+                        notEmpty: {
+                            message: 'El horario de aplicacion para el medicamento no puede estar vacio'
+                        }
+                    }
+                }
+            },
+            submitButtons: 'button[type="submit"]'
+        }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            saveNewDrug();
+        });
+}
+
+function cancel(){
+    $('#drugTabMenu a[href="#tabMain"]').tab('show');
+}
+
+function saveNewDrug(){
+    var data = [];
+    
+    $('#formNewDrug :input').each(function(){
+        if(this.name == 'active'){
+            data.push({name:this.name,value:$(this).prop('checked')});
+        }else{
+            data.push({name:this.name,value:$(this).val()});
+        }
+    });
+    var doseCont = 0;
+    $("#tblNewDrugDose").DataTable().rows().data().each(function(rdata,rindex){
+        data.push({name:"dose"+doseCont,value:rdata["dose"]});
+        data.push({name:"criteria"+doseCont,value:rdata["criteria"]});
+        doseCont++;
+    });
+    data.push({name:"doseCont",value:doseCont});
+    
+    var cnCont = 0;
+    $("#tblNewDrugCommercialName").DataTable().rows().data().each(function(rdata,rindex){
+        data.push({name:"commercialName"+cnCont,value:rdata["commercialName"]});
+        cnCont++;
+    });
+    data.push({name:"cnCont",value:cnCont});
+    
+    var iCont = 0;
+    $("#tblIncompatibles").DataTable().rows().data().each(function(rdata,rindex){
+        data.push({name:"incompatibleCN"+iCont,value:rdata["idcommercialName"]});
+        iCont++;
+    });
+    data.push({name:"iCont",value:iCont});
+    
+    var rCont = 0;
+    $("#tblIncompatibilityRisk").DataTable().rows().data().each(function(rdata,rindex){
+        data.push({name:"risk"+rCont,value:rdata["risk"]});
+        data.push({name:"riskDrug"+rCont,value:rdata["idDrug"]});
+        rCont++;
+    });
+    data.push({name:"rCont",value:rCont});
+    
+    var tCont = 0;
+    $("#tblTreatmentsAssociated").DataTable().rows().data().each(function(rdata,rindex){
+        data.push({name:"treatment"+tCont,value:rdata["idTreatment"]});
+        tCont++;
+    });
+    data.push({name:"tCont",value:tCont});
+
+    $.ajax({
+        url:"/demo/drug/saveNewDrug",
+        data:data,
+        success:function(response,textStatus,jqXHR){
+            displaySuccessAlert("Se ha agregado el medicamento correctamente");
+        },
+        error:function(response){
+            displayDangerAlert("Ha ocurrido un error: "+response);
+        }
+    });
 }

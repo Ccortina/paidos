@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -52,6 +53,12 @@ public class CommercialName implements Serializable {
     @ManyToOne(optional = false)
     @LazyCollection(LazyCollectionOption.FALSE)
     private Drug drugId;
+    @JoinTable(name = "incompatibledrugs", joinColumns = {
+        @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idcommercialName")}, inverseJoinColumns = {
+        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")})
+    @ManyToMany
+    @JsonIgnore
+    private List<Drug> incompatibleDrugList;
 
     public CommercialName() {
     }
@@ -64,6 +71,13 @@ public class CommercialName implements Serializable {
         this.idcommercialName = idcommercialName;
         this.commercialName = commercialName;
         this.active = active;
+    }
+
+    public CommercialName(String commercialName, short active, List<User> userList, Drug drugId) {
+        this.commercialName = commercialName;
+        this.active = active;
+        this.userList = userList;
+        this.drugId = drugId;
     }
 
     public CommercialName(Integer idcommercialName, String commercialName, short active, Drug drugId) {
@@ -87,6 +101,14 @@ public class CommercialName implements Serializable {
 
     public void setCommercialName(String commercialName) {
         this.commercialName = commercialName;
+    }
+
+    public List<Drug> getDrugList() {
+        return incompatibleDrugList;
+    }
+
+    public void setDrugList(List<Drug> drugList) {
+        this.incompatibleDrugList = drugList;
     }
 
     public short getActive() {

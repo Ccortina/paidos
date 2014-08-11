@@ -319,22 +319,6 @@ public class ConsultationController {
 		JsonPack<DrugDose> result = new JsonPack<DrugDose>(drugDoseService.getListOfItem(query));
 		return result;
 	}
-
-        @RequestMapping(value="checkDrugIncompatibility")
-        public @ResponseBody boolean checkDrugIncompatibility(int drugId1, int drugId2){
-        
-            Drug drug1 = drugService.getById(drugId1);
-            Drug drug2 = drugService.getById(drugId2);
-            
-            for(Drug temp: drug1.getDrugList()){
-                for(Drug temp2: drug2.getDrugList()){
-                    if(temp.getIdDrug() == temp2.getIdDrug()){
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
         
         //This method returns a json with all the activities 
         @RequestMapping(value={"/getActivities","getActivities"})
