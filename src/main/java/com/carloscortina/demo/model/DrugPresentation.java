@@ -42,7 +42,6 @@ public class DrugPresentation implements Serializable {
     @Size(min = 1, max = 60)
     @Column(name = "presentation")
     private String presentation;
-    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
@@ -60,6 +59,11 @@ public class DrugPresentation implements Serializable {
 
     public DrugPresentation(Integer drugPresentationId, String presentation, short active) {
         this.drugPresentationId = drugPresentationId;
+        this.presentation = presentation;
+        this.active = active;
+    }
+
+    public DrugPresentation(String presentation, short active) {
         this.presentation = presentation;
         this.active = active;
     }

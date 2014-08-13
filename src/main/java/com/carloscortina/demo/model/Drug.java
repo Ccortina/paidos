@@ -63,8 +63,11 @@ public class Drug implements Serializable {
     private String notes;
     @Column(name = "active")
     private Short active;
+    @JoinTable(name = "doctordrugcatalog", joinColumns = {
+    @JoinColumn(name = "IdDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
+    @ManyToMany
     @JsonIgnore
-    @ManyToMany(mappedBy = "drugList")
     private List<User> userList;
     @JoinTable(name = "treatmentdrug", joinColumns = {
         @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {

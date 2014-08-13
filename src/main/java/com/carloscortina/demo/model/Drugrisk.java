@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,7 +33,6 @@ public class Drugrisk implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected DrugriskPK drugriskPK;
-    @Lob
     @Size(max = 65535)
     @Column(name = "risk")
     private String risk;

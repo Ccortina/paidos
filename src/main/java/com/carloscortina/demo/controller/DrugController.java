@@ -7,7 +7,6 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
-import com.carloscortina.demo.model.AdministrationUnit;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.DrugDose;
@@ -83,6 +82,15 @@ public class DrugController {
         return ( "Drug/DrugHome" );
     }
     
+    @RequestMapping(value="drugPresentationHome")
+    public String drugPresentationHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "Drug/DrugPresentation" );
+    }
+    
     @RequestMapping(value="getDrugByUser")
     public @ResponseBody JsonPack<Drug> getDrugByUser(){
         return (new JsonPack<Drug>(drugService.getDrugByUser(loggedUser.getIdUser())));
@@ -120,12 +128,22 @@ public class DrugController {
             newDrug.setConcentration(Double.parseDouble(params.get("concentration")));
             newDrug.setUserList(userList);
             List<Treatment> treatmentList = new ArrayList<Treatment>();
+            
             for(int i = 0 ; i < Integer.parseInt(params.get("tCont")); i++){
                 treatmentList.add(treatmentService.getById(Integer.parseInt(params.get("treatment"+i))));
             }
             newDrug.setTreatmentList(treatmentList);
+            
             drugService.create(newDrug);
             
+            for(int i = 0 ; i < Integer.parseInt(params.get("iCont")); i++){
+                CommercialName cn = commercialNameService.getById(Integer.parseInt(params.get("incompatibleCN"+i)));
+                List<Drug> incompatible = cn.getIncompatibleDrugList();
+                incompatible.add(newDrug);
+                cn.setIncompatibleDrugList(incompatible);
+                commercialNameService.updateItem(cn);
+            }
+                    
             //Add Drug dose
             for(int i = 0 ; i < Integer.parseInt(params.get("doseCont")); i++){
                 DrugDose dd = new DrugDose();
@@ -137,19 +155,17 @@ public class DrugController {
                 drugDoseService.create(dd);
             }
             
-            List<CommercialName> cnList = new ArrayList<CommercialName>();
-            
             for(int i = 0 ; i < Integer.parseInt(params.get("cnCont")); i++){
                 CommercialName ncn = new CommercialName(params.get("commercialName"+i), (short)1, userList, newDrug);
                 commercialNameService.create(ncn);
             }
             
             for(int i = 0 ; i < Integer.parseInt(params.get("rCont")); i++){
-                
-                Drugrisk dr = new Drugrisk(params.get("risk"+i), newDrug, drugService.getById(Integer.parseInt(params.get("riskDrug"+i))));
+                DrugriskPK drPK = new DrugriskPK(newDrug.getIdDrug(), Integer.parseInt(params.get("riskDrug"+i)));
+                Drugrisk dr = new Drugrisk(drPK);
+                dr.setRisk(params.get("risk"+i));
                 drugriskService.create(dr);
             }
-            
             
         }catch(Exception e){
             e.printStackTrace();
@@ -157,4 +173,29 @@ public class DrugController {
         
         return "";
     }
+    
+    @RequestMapping(value="getDrugPresentation")
+    public @ResponseBody JsonPack<DrugPresentation> getDrugPresentation(){
+        return (new JsonPack<DrugPresentation> (drugPresentationService.getAll("DrugPresentation")));
+    }
+    
+    @RequestMapping(value="saveNewDrugPresentation")
+    public @ResponseBody String saveNewDrugPresentation(@RequestParam Map<String,String> params){
+        
+        drugPresentationService.create(new DrugPresentation(params.get("presentation"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyDrugPresentation")
+    public @ResponseBody String saveModifyDrugPresentation(@RequestParam Map<String,String> params){
+        DrugPresentation modifyDP = drugPresentationService.getById(Integer.parseInt(params.get("idPresentation")));
+        modifyDP.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
+        modifyDP.setPresentation(params.get("presentation"));
+        
+        drugPresentationService.updateItem(modifyDP);
+        
+        return "";
+    }
+    
 }

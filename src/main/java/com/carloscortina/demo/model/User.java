@@ -59,17 +59,13 @@ public class User implements Serializable {
     @Column(name = "AddedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedDate;
-    @JoinTable(name = "DoctorCommercialNamesCatalog", joinColumns = {
-        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
-        @JoinColumn(name = "idCommercialName", referencedColumnName = "idcommercialName")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "userList")
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<CommercialName> commercialnameList;
-    @JoinTable(name = "DoctorDrugCatalog", joinColumns = {
-        @JoinColumn(name = "idUser", referencedColumnName = "idUser")}, inverseJoinColumns = {
-        @JoinColumn(name = "IdDrug", referencedColumnName = "idDrug")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "userList")
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Drug> drugList;
     @ManyToMany(mappedBy = "userList")
     @JsonIgnore

@@ -46,7 +46,10 @@ public class CommercialName implements Serializable {
     @Basic(optional = false)
     @Column(name = "active")
     private short active;
-    @ManyToMany(mappedBy = "commercialnameList")
+    @JoinTable(name = "doctorcommercialnamescatalog", joinColumns = {
+    @JoinColumn(name = "idCommercialName", referencedColumnName = "idcommercialName")}, inverseJoinColumns = {
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
+    @ManyToMany
     @JsonIgnore
     private List<User> userList;
     @JoinColumn(name = "drugId", referencedColumnName = "idDrug")
@@ -58,6 +61,7 @@ public class CommercialName implements Serializable {
         @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")})
     @ManyToMany
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Drug> incompatibleDrugList;
 
     public CommercialName() {
@@ -89,6 +93,14 @@ public class CommercialName implements Serializable {
 
     public Integer getIdcommercialName() {
         return idcommercialName;
+    }
+
+    public List<Drug> getIncompatibleDrugList() {
+        return incompatibleDrugList;
+    }
+
+    public void setIncompatibleDrugList(List<Drug> incompatibleDrugList) {
+        this.incompatibleDrugList = incompatibleDrugList;
     }
 
     public void setIdcommercialName(Integer idcommercialName) {
