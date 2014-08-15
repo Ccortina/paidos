@@ -63,6 +63,11 @@ public class AdministrationUnit implements Serializable {
         this.active = active;
     }
 
+    public AdministrationUnit(String administrationUnit, short active) {
+        this.administrationUnit = administrationUnit;
+        this.active = active;
+    }
+
     public Integer getIdAdministrationUnit() {
         return idAdministrationUnit;
     }

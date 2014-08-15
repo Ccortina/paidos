@@ -90,4 +90,9 @@ public class DrugServiceImp implements DrugService
         return drugDao.getDrugByApplicationMethodAndUser(applicationId, userId);
     }
 
+    @Override
+    public List<Drug> getDrugByAdministrationUnitAndUser(int unitId, int userId) {
+        return drugDao.getDrugByAdministrationUnitAndUser(unitId, userId);
+    }
+
 }

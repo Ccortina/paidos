@@ -68,7 +68,6 @@ function initializeDrugPresentationTable(){
 }
 
 function initializeAdditionalInfoTable(){
-        var row = $("#tblDrugP").DataTable().row('.selected').data()["drugPresentationId"];
         $("#tblAdditionalInfo").DataTable({
         "ordering":false,
         "scrollY": "300px",
@@ -82,7 +81,7 @@ function initializeAdditionalInfoTable(){
         "ajax":{
             "url":"/demo/drug/getDrugPresentationRelatedInfo",
             "data":function(){
-                return ({dpId:row});
+                return ({dpId:$("#tblDrugP").DataTable().row('.selected').data()["drugPresentationId"]});
             }
         },
         "columns":[

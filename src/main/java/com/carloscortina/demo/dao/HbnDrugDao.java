@@ -4,11 +4,9 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.DrugDose;
 import com.carloscortina.demo.model.Treatment;
-import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -83,6 +81,18 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         Query query = getSession().createQuery(hql);
         query.setParameter("idUser",userId);
         query.setParameter("applicationId",applicationId);
+        
+        return query.list();
+    }
+
+    @Override
+    public List<Drug> getDrugByAdministrationUnitAndUser(int unitId, int userId) {
+        String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,"
+                + "drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.administrationUnitId) FROM Drug as drug"
+                + " JOIN drug.userList u WHERE u.idUser=:idUser AND drug.administrationUnitId.idAdministrationUnit=:unitId";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("idUser",userId);
+        query.setParameter("unitId",unitId);
         
         return query.list();
     }

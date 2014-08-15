@@ -4,30 +4,30 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    initializeDrugAMTable();
-    initializeNewAMForm();
-    initializeModifyAMForm();
+    initializeDrugAUTable();
+    initializeNewAUForm();
+    initializeModifyAUForm();
 });
 
-function newAM(){
-    $('#drugAMTabMenu a[href="#tabNew"]').tab('show');
+function newAU(){
+    $('#drugAUTabMenu a[href="#tabNew"]').tab('show');
 }
 
 function additionalInfo(){
-    if(checkNotUndefined($("#tblAM").DataTable().row('.selected').data())){
+    if(checkNotUndefined($("#tblAU").DataTable().row('.selected').data())){
         if (  $.fn.DataTable.isDataTable( "#tblAdditionalInfo" ) ) {
           $('#tblAdditionalInfo').DataTable().ajax.reload();
         }else{
             initializeAdditionalInfoTable();
         }
-        $('#drugAMTabMenu a[href="#tabAdditionalInfo"]').tab('show');
+        $('#drugAUTabMenu a[href="#tabAdditionalInfo"]').tab('show');
     }else{
         displayWarningAlert("No se ha seleccionado una metodo");
     }
 }
 
-function initializeDrugAMTable(){
-    $("#tblAM").DataTable({
+function initializeDrugAUTable(){
+    $("#tblAU").DataTable({
         "ordering":false,
         "scrollY": "300px",
         "scrollCollapse": true,
@@ -37,11 +37,11 @@ function initializeDrugAMTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":"/demo/drug/getDrugApplicationMethod",
+        "ajax":"/demo/drug/getDrugAdministrationUnit",
         "columns":[
-            {"data":"applicationMethod"},
+            {"data":"administrationUnit"},
             {"render":function(data,type,row){ 
-                if(row['active'] === "1"){
+                if(row['active'] === 1){
                     return ('<span class="glyphicon glyphicon-ok"></span>');
                 }else{
                     return ('<span class="glyphicon glyphicon-remove"></span>');
@@ -49,8 +49,8 @@ function initializeDrugAMTable(){
             }}
         ],
         "initComplete":function(settings,json){
-            $('#tblAM tbody').on( 'click', 'tr', function (e) {
-                var table = $('#tblAM').DataTable();
+            $('#tblAU tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblAU').DataTable();
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
                 }else{
@@ -60,7 +60,7 @@ function initializeDrugAMTable(){
             });
         },
         "createdRow": function( row, data, dataIndex ) {
-            if(data.active !== "1"){
+            if(data.active !== 1){
                 $(row).css({"background-color":"#FDFD96"});
             }
         }
@@ -68,7 +68,6 @@ function initializeDrugAMTable(){
 }
 
 function initializeAdditionalInfoTable(){
-
         $("#tblAdditionalInfo").DataTable({
         "ordering":false,
         "scrollY": "300px",
@@ -80,9 +79,9 @@ function initializeAdditionalInfoTable(){
             "search": "Buscar"
         },
         "ajax":{
-            "url":"/demo/drug/getDrugApplicationMethodRelatedInfo",
+            "url":"/demo/drug/getDrugAdministrationUnitRelatedInfo",
             "data":function(){
-                return ({dpId:$("#tblAM").DataTable().row('.selected').data()["idApplicationMethod"]});
+                return ({auId:$("#tblAU").DataTable().row('.selected').data()["idAdministrationUnit"]});
             }
         },
         "columns":[
@@ -94,16 +93,16 @@ function initializeAdditionalInfoTable(){
     });
 }
 
-function initializeNewAMForm(){
+function initializeNewAUForm(){
         
-    $("#formNewAM").bootstrapValidator({
+    $("#formNewAU").bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            applicationMethod: {
+            administrationUnit: {
                 validators: {
                     notEmpty: {
                         message: 'La presentacion no puede estar vacia'
@@ -114,19 +113,19 @@ function initializeNewAMForm(){
         submitButtons: 'button[type="submit"]'
     }).on('success.form.bv', function(e) {
         e.preventDefault();
-        saveNewAM();
+        saveNewAU();
     });
 }
 
-function initializeModifyAMForm(){   
-    $("#formModifyAM").bootstrapValidator({
+function initializeModifyAUForm(){   
+    $("#formModifyAU").bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            applicationMethod: {
+            administrationUnit: {
                 validators: {
                     notEmpty: {
                         message: 'La presentacion no puede estar vacia'
@@ -137,26 +136,26 @@ function initializeModifyAMForm(){
         submitButtons: 'button[type="submit"]'
     }).on('success.form.bv', function(e) {
         e.preventDefault();
-        saveModifyAM();
+        saveModifyAU();
     });
 }
 
 function cancel(){
-    $('#drugAMTabMenu a[href="#tabMain"]').tab('show');
+    $('#drugAUTabMenu a[href="#tabMain"]').tab('show');
 }
 
-function saveNewAM(){
+function saveNewAU(){
     var data = [];
-    data.push({name:"active",value:$("#inputNewAMActive").prop('checked')});
-    data.push({name:"applicationMethod",value:$("#inputNewAM").val()});
+    data.push({name:"active",value:$("#inputNewAUActive").prop('checked')});
+    data.push({name:"administrationUnit",value:$("#inputNewAU").val()});
     
     $.ajax({
-        url:"/demo/drug/saveNewDrugApplicationMethod",
+        url:"/demo/drug/saveNewDrugAdministrationUnit",
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha agregado la presentacion correctamente");
-            $("#tblAM").DataTable().ajax.reload();
-            $('#drugAMTabMenu a[href="#tabMain"]').tab('show');
+            $("#tblAU").DataTable().ajax.reload();
+            $('#drugAUTabMenu a[href="#tabMain"]').tab('show');
         },
         error:function(response){
             displayDangerAlert("Ha ocurrido un error: "+response);
@@ -164,43 +163,45 @@ function saveNewAM(){
     });
 }
 
-function modifyAM(){
-    var row = $("#tblAM").DataTable().row('.selected').data();
+function modifyAU(){
+    var row = $("#tblAU").DataTable().row('.selected').data();
     
     if(checkNotUndefined(row)){
-        $("#inputModifyAM").val(row["applicationMethod"]);
+        $("#inputModifyAU").val(row["administrationUnit"]);
         if(row["active"] == "1" ){
-            $("#inputModifyAMActive").prop('checked',true);
+            $("#inputModifyAUActive").prop('checked',true);
         }else{
-            $("#inputModifyAMActive").prop('checked',false);
+            $("#inputModifyAUActive").prop('checked',false);
         }
-        $("#inputIdAM").val(row["idApplicationMethod"]);
+        $("#inputIdAU").val(row["idAdministrationUnit"]);
         
-        $('#drugAMTabMenu a[href="#tabModify"]').tab('show');
+        $('#drugAUTabMenu a[href="#tabModify"]').tab('show');
     }else{
         displayWarningAlert("No ha seleccionado una presentacion para modificar");
     }
 }
 
-function saveModifyAM(){
+function saveModifyAU(){
     var data = [];
-    data.push({name:"active",value:$("#inputModifyAMActive").prop('checked')});
-    data.push({name:"applicationMethod",value:$("#inputModifyAM").val()});
-    data.push({name:"idApplicationMethod",value:$("#inputIdAM").val()});
+    data.push({name:"active",value:$("#inputModifyAUActive").prop('checked')});
+    data.push({name:"administrationUnit",value:$("#inputModifyAU").val()});
+    data.push({name:"idAdministrationUnit",value:$("#inputIdAU").val()});
     
     $.ajax({
-        url:"/demo/drug/saveModifyDrugApplicationMethod",
+        url:"/demo/drug/saveModifyDrugAdministrationUnit",
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha modificado la presentacion correctamente");
-            $("#tblAM").DataTable().ajax.reload();
-            $('#drugAMTabMenu a[href="#tabMain"]').tab('show');
+            $("#tblAU").DataTable().ajax.reload();
+            $('#drugAUTabMenu a[href="#tabMain"]').tab('show');
         },
         error:function(response){
             displayDangerAlert("Ha ocurrido un error: "+response);
         }
     });
 }
+
+
 
 
 

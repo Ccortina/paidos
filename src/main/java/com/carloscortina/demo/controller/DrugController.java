@@ -7,6 +7,7 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
+import com.carloscortina.demo.model.AdministrationUnit;
 import com.carloscortina.demo.model.ApplicationMethod;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
@@ -99,6 +100,15 @@ public class DrugController {
         loggedUser = userService.getUserByUsername(auth.getName());
         
         return ( "Drug/ApplicationMethodHome" );
+    }
+    
+    @RequestMapping(value="drugAdministrationUnitHome")
+    public String drugAdministrationUnitHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "Drug/AdministrationUnitsHome" );
     }
     
     @RequestMapping(value="getDrugByUser")
@@ -242,5 +252,37 @@ public class DrugController {
     public @ResponseBody JsonPack<Drug> getDrugApplicationMethodRelatedInfo(int dpId){
     
         return (new JsonPack<Drug>(drugService.getDrugByApplicationMethodAndUser(dpId, loggedUser.getIdUser())));
+    }
+    
+    //Administration Unit section
+    
+    @RequestMapping(value="getDrugAdministrationUnit")
+    public @ResponseBody JsonPack<AdministrationUnit> getDrugAdministrationUnit(){
+        return (new JsonPack<AdministrationUnit> (administrationUnitService.getAll("AdministrationUnit")));
+    }
+    
+    @RequestMapping(value="saveNewDrugAdministrationUnit")
+    public @ResponseBody String saveNewDrugAdministrationUnit(@RequestParam Map<String,String> params){
+        
+        administrationUnitService.create(new AdministrationUnit(params.get("administrationUnit"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyDrugAdministrationUnit")
+    public @ResponseBody String saveModifyDrugAdministrationUnit(@RequestParam Map<String,String> params){
+        AdministrationUnit modifyAU = administrationUnitService.getById(Integer.parseInt(params.get("idAdministrationUnit")));
+        modifyAU.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
+        modifyAU.setAdministrationUnit(params.get("administrationUnit"));
+        
+        administrationUnitService.updateItem(modifyAU);
+        
+        return "";
+    }
+    
+    @RequestMapping(value="getDrugAdministrationUnitRelatedInfo")
+    public @ResponseBody JsonPack<Drug> getDrugAdministrationUnitRelatedInfo(int auId){
+    
+        return (new JsonPack<Drug>(drugService.getDrugByAdministrationUnitAndUser(auId, loggedUser.getIdUser())));
     }
 }
