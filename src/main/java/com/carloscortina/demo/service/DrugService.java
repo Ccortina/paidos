@@ -15,4 +15,6 @@ public interface DrugService extends GenericService<Drug>{
 
     public List<Drug> getDrugByUser(int id);
     public List<Drug> getDrugByTreatmentAndUser(int treatmentId,int userId);
+    public List<Drug> getDrugByPresentationAndUser(int presentationId, int userId);
+    public List<Drug> getDrugByApplicationMethodAndUser(int applicationId,int userId);
 }

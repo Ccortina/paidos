@@ -115,6 +115,15 @@ public class Drug implements Serializable {
         this.drug = drug;
     }
 
+    public Drug(Integer idDrug, String drug, Double concentration, DrugPresentation drugPresentationId, DoseCalculationCriteria doseCalculationCriteriaId, AdministrationUnit administrationUnitId) {
+        this.idDrug = idDrug;
+        this.drug = drug;
+        this.concentration = concentration;
+        this.drugPresentationId = drugPresentationId;
+        this.doseCalculationCriteriaId = doseCalculationCriteriaId;
+        this.administrationUnitId = administrationUnitId;
+    }
+
     public Drug(Integer idDrug, String drug, Double concentration, Integer treatmentDays, String applicationSchedule, Integer dailyFrequency, String notes, Short active, DrugPresentation drugPresentationId, DoseCalculationCriteria doseCalculationCriteriaId, ApplicationMethod applicationMethodId, AdministrationUnit administrationUnitId) {
         this.idDrug = idDrug;
         this.drug = drug;
@@ -129,8 +138,6 @@ public class Drug implements Serializable {
         this.applicationMethodId = applicationMethodId;
         this.administrationUnitId = administrationUnitId;
     }
-    
-    
 
     public Integer getIdDrug() {
         return idDrug;

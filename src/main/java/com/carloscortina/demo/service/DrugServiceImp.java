@@ -80,4 +80,14 @@ public class DrugServiceImp implements DrugService
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<Drug> getDrugByPresentationAndUser(int presentationId, int userId) {
+        return drugDao.getDrugByPresentationAndUser(presentationId, userId);
+    }
+
+    @Override
+    public List<Drug> getDrugByApplicationMethodAndUser(int applicationId, int userId) {
+        return drugDao.getDrugByApplicationMethodAndUser(applicationId, userId);
+    }
+
 }

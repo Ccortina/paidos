@@ -64,6 +64,11 @@ public class ApplicationMethod implements Serializable {
         this.active = active;
     }
 
+    public ApplicationMethod(String applicationMethod, String active) {
+        this.applicationMethod = applicationMethod;
+        this.active = active;
+    }
+
     public Integer getIdApplicationMethod() {
         return idApplicationMethod;
     }

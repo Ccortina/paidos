@@ -7,6 +7,7 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
+import com.carloscortina.demo.model.ApplicationMethod;
 import com.carloscortina.demo.model.CommercialName;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.DrugDose;
@@ -89,6 +90,15 @@ public class DrugController {
         loggedUser = userService.getUserByUsername(auth.getName());
         
         return ( "Drug/DrugPresentation" );
+    }
+    
+    @RequestMapping(value="drugApplicationMethodHome")
+    public String drugApplicationMethodHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "Drug/ApplicationMethodHome" );
     }
     
     @RequestMapping(value="getDrugByUser")
@@ -198,4 +208,39 @@ public class DrugController {
         return "";
     }
     
+    @RequestMapping(value="getDrugPresentationRelatedInfo")
+    public @ResponseBody JsonPack<Drug> getDrugPresentationRelatedInfo(int dpId){
+    
+        return (new JsonPack<Drug>(drugService.getDrugByPresentationAndUser(dpId,loggedUser.getIdUser())));
+    }
+    
+    @RequestMapping(value="getDrugApplicationMethod")
+    public @ResponseBody JsonPack<ApplicationMethod> getDrugAdministrationMethod(){
+        return (new JsonPack<ApplicationMethod> (applicationMethodService.getAll("ApplicationMethod")));
+    }
+    
+    @RequestMapping(value="saveNewDrugApplicationMethod")
+    public @ResponseBody String saveNewDrugApplicationMethod(@RequestParam Map<String,String> params){
+        
+        applicationMethodService.create(new ApplicationMethod(params.get("applicationMethod"), params.get("active").equalsIgnoreCase("true")?"1":"0"));
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyDrugApplicationMethod")
+    public @ResponseBody String saveModifyDrugApplicationMethod(@RequestParam Map<String,String> params){
+        ApplicationMethod modifyAM = applicationMethodService.getById(Integer.parseInt(params.get("idApplicationMethod")));
+        modifyAM.setActive(params.get("active").equalsIgnoreCase("true")?"1":"0");
+        modifyAM.setApplicationMethod(params.get("applicationMethod"));
+        
+        applicationMethodService.updateItem(modifyAM);
+        
+        return "";
+    }
+    
+    @RequestMapping(value="getDrugApplicationMethodRelatedInfo")
+    public @ResponseBody JsonPack<Drug> getDrugApplicationMethodRelatedInfo(int dpId){
+    
+        return (new JsonPack<Drug>(drugService.getDrugByApplicationMethodAndUser(dpId, loggedUser.getIdUser())));
+    }
 }

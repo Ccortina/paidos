@@ -60,7 +60,7 @@ body {
                                     <li role="presentation" class="dropdown-header">Medicamentos</li>
                                     <li><a href="${contextPath}/drug/drugHome">Medicamentos</a></li>
                                     <li><a href="${contextPath}/drug/drugPresentationHome">Presentaciones</a></li>
-                                    <li><a href="${contextPath}/drug/drugAdministrationMethodHome">Modos de Administración</a></li>
+                                    <li><a href="${contextPath}/drug/drugApplicationMethodHome">Modos de Aplicacion</a></li>
                                     <li><a href="${contextPath}/drug/drugAdministrationUnitHome">Unidades de Administración</a></li>
                                 </ul>
                             </li>
