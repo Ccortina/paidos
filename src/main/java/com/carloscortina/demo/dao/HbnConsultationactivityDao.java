@@ -7,6 +7,8 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationactivity;
+import java.util.List;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,5 +17,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class HbnConsultationactivityDao extends GenericHbnDao<Consultationactivity> implements ConsultationactivityDao{
-    
+
+    @Override
+    public List<Consultationactivity> getConsultationsByActivity(int idActivity){
+        Query query = getSession().createQuery("FROM Consultationactivity c"
+                + " WHERE c.activity.idActivity=:idActivity");
+        query.setParameter("idActivity", idActivity);
+
+        return query.list();
+    }
 }

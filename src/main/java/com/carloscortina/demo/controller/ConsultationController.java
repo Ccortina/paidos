@@ -1142,7 +1142,7 @@ public class ConsultationController {
             }
             consultation.setConsultationdiagnosticList(cdList);
             consultation.setConsultationactivityList(caList);
-            consultation.setConsultationmeasureList(cmList);
+            //consultation.setConsultationmeasureList(cmList);
             consultationService.updateItem(consultation);
             //Update the appointment status
             appointment.setIdStatus(apsService.getById(1));

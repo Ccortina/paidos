@@ -58,4 +58,11 @@ public class HbnAppointmentDao extends GenericHbnDao<Appointment> implements App
         query.setParameter("end", end);
         return query.list();
     }
+
+    @Override
+    public List<Appointment> getAppointmentsByStatus(int idStatus) {
+        Query query = getSession().createQuery("FROM Appointment a WHERE a.idStatus.idAppointmentStatus=:idStatus");
+        query.setParameter("idStatus", idStatus);
+        return query.list();
+    }
 }

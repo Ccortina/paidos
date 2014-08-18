@@ -71,7 +71,7 @@ public class DrugController {
     private User loggedUser;
     
     @RequestMapping(value="drugHome")
-    public String cie10Home(Model model){
+    public String drugHome(Model model){
         //Get logged User
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         loggedUser = userService.getUserByUsername(auth.getName());

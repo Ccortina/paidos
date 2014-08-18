@@ -69,6 +69,11 @@ public class VaccineServiceImp implements VaccineService{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<Vaccine> getActiveVaccines() {
+        return vaccineDao.getActiveVaccines();
+    }
+
   
     
 }

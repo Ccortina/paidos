@@ -68,5 +68,10 @@ public class MeasuresServiceImp implements MeasuresService{
     public void mergeItem(Measures item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Measures> getMeasureByUser(int idUser) {
+        return measuresDao.getMeasureByUser(idUser);
+    }
     
 }

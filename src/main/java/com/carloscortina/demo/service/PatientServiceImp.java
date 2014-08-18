@@ -82,6 +82,16 @@ public class PatientServiceImp implements PatientService {
     public Patient getPatientBasicData(int idPatient) {
         return patientDao.getPatientBasicData(idPatient);
     }
+
+    @Override
+    public List<Patient> getPatientByLaboratoryTest(int idLaboratory) {
+        return patientDao.getPatientByLaboratoryTest(idLaboratory);
+    }
+
+    @Override
+    public List<Patient> getPatientByBirthmethod(int idBirthmethod) {
+        return patientDao.getPatientByBirthmethod(idBirthmethod);
+    }
 	
 	
 }

@@ -5,6 +5,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Activity;
+import com.carloscortina.demo.model.Consultationactivity;
 import java.util.List;
 
 /**

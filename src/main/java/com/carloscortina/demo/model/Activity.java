@@ -83,15 +83,21 @@ public class Activity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity")
     @JsonIgnore
     private List<Consultationactivity> consultationactivityList;
-    @Basic(optional = false)
-    @Column(name = "includeInBill")
-    private int includeInBill;
 
     public Activity() {
     }
 
     public Activity(Integer idActivity) {
         this.idActivity = idActivity;
+    }
+
+    public Activity(String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType) {
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idVaccine = idVaccine;
+        this.idActivityType = idActivityType;
     }
 
     public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active) {
@@ -110,16 +116,6 @@ public class Activity implements Serializable {
         this.active = active;
         this.idActivityType = idActivityType;
     }
-
-    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, ActivityType idActivityType, int includeInBill) {
-        this.idActivity = idActivity;
-        this.activity = activity;
-        this.activityCost = activityCost;
-        this.consultationDefault = consultationDefault;
-        this.active = active;
-        this.idActivityType = idActivityType;
-        this.includeInBill = includeInBill;
-    }
     
     public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType) {
         this.idActivity = idActivity;
@@ -129,17 +125,6 @@ public class Activity implements Serializable {
         this.active = active;
         this.idVaccine = idVaccine;
         this.idActivityType = idActivityType;
-    }
-
-    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType, int includeInBill) {
-        this.idActivity = idActivity;
-        this.activity = activity;
-        this.activityCost = activityCost;
-        this.consultationDefault = consultationDefault;
-        this.active = active;
-        this.idVaccine = idVaccine;
-        this.idActivityType = idActivityType;
-        this.includeInBill = includeInBill;
     }
 
     public Integer getIdActivity() {
@@ -196,14 +181,6 @@ public class Activity implements Serializable {
 
     public void setIdActivityType(ActivityType idActivityType) {
         this.idActivityType = idActivityType;
-    }
-
-    public int getIncludeInBill() {
-        return includeInBill;
-    }
-
-    public void setIncludeInBill(int includeInBill) {
-        this.includeInBill = includeInBill;
     }
     
     public List<User> getUserList() {

@@ -5,6 +5,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Vaccine;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,5 @@ import com.carloscortina.demo.model.Vaccine;
  */
 public interface VaccineDao extends GenericDao<Vaccine> {
     
+    public List<Vaccine> getActiveVaccines();
 }

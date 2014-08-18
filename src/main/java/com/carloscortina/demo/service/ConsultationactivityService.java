@@ -7,11 +7,13 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Consultationactivity;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface ConsultationactivityService extends GenericService<Consultationactivity>{
-    
+ 
+    public List<Consultationactivity> getConsultationsByActivity(int idActivity);
 }

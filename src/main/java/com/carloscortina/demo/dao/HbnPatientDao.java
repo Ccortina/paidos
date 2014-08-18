@@ -57,5 +57,25 @@ public class HbnPatientDao extends GenericHbnDao<Patient> implements PatientDao 
         result.setPatientRelativeList(prList);
         return (Patient)result;
     }
+
+    @Override
+    public List<Patient> getPatientByLaboratoryTest(int idLaboratory) {
+        String hql = "SELECT new Patient(p.firstName,p.fatherLastName,"
+                + "p.motherLastName) FROM Patient as p JOIN p.laboratoryTestResultList l"
+                +" WHERE l.idLaboratoryTestResult=:idLaboratory";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("idLaboratory", idLaboratory);
+        return query.list();
+    }
+
+    @Override
+    public List<Patient> getPatientByBirthmethod(int idBirthmethod) {
+        String hql = "SELECT new Patient(p.firstName,p.fatherLastName,"
+                + "p.motherLastName) FROM Patient as p JOIN p.recordList r"
+                +" WHERE r.idPerBackNoPat.birthMethod.idBirthMethod=:idBirthmethod";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("idBirthmethod", idBirthmethod);
+        return query.list();
+    }
     
 }

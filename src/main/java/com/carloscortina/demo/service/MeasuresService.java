@@ -5,6 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Measures;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,5 @@ import com.carloscortina.demo.model.Measures;
  */
 public interface MeasuresService extends GenericService<Measures>{
     
+    public List<Measures>getMeasureByUser(int idUser);
 }

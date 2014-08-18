@@ -90,4 +90,9 @@ public class AppointmentServiceImp implements AppointmentService {
         return appointmentDao.getAppointmentsByPatient(idPatient);
     }
 
+    @Override
+    public List<Appointment> getAppointmentsByStatus(int idStatus) {
+        return appointmentDao.getAppointmentsByStatus(idStatus);
+    }
+
 }

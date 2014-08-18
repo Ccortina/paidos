@@ -48,6 +48,10 @@ public class Relationship implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "Relationship")
     private String relationship;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private short active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRelationship")
     @JsonIgnore
     private List<PatientRelative> patientRelativeList;
@@ -57,6 +61,11 @@ public class Relationship implements Serializable {
 
     public Relationship(Integer idRelationship) {
         this.idRelationship = idRelationship;
+    }
+
+    public Relationship(String relationship, short active) {
+        this.relationship = relationship;
+        this.active = active;
     }
 
     public Relationship(Integer idRelationship, String relationship) {
@@ -78,6 +87,14 @@ public class Relationship implements Serializable {
 
     public void setRelationship(String relationship) {
         this.relationship = relationship;
+    }
+
+    public short getActive() {
+        return active;
+    }
+
+    public void setActive(short active) {
+        this.active = active;
     }
 
     @XmlTransient

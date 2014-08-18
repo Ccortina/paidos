@@ -10,4 +10,6 @@ public interface PatientDao extends GenericDao<Patient>{
     public List<Patient> getAllPatients();
     public List<Patient> getAllPatientsByDoctor(int idStaffMember);
     public Patient getPatientBasicData(int idPatient);
+    public List<Patient> getPatientByLaboratoryTest(int idLaboratory);
+    public List<Patient> getPatientByBirthmethod(int idBirthmethod);
 }

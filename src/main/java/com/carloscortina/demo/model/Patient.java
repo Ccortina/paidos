@@ -136,6 +136,12 @@ public class Patient implements Serializable {
         this.birthday = birthday;
     }
 
+    public Patient(String firstName, String fatherLastName, String motherLastName) {
+        this.firstName = firstName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+    }
+
     public Patient(String firstName, String secondName, String fatherLastName, String motherLastName, String curp, String sex, Date birthday, String notes) {
         this.firstName = firstName;
         this.secondName = secondName;

@@ -7,11 +7,13 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationactivity;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface ConsultationactivityDao extends GenericDao<Consultationactivity>{
-    
+
+    public List<Consultationactivity> getConsultationsByActivity(int idActivity);
 }
