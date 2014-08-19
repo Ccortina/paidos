@@ -159,8 +159,8 @@ public class PatientsController {
             
             try{
                 Date birthday =  df.parse(params.get("birthday"));
-                Patient newPatient = new Patient(params.get("fName"), 
-                    params.get("flName"), params.get("mlName"), params.get("curp"), params.get("gender"), birthday, params.get("notes"));
+                Patient newPatient = new Patient(params.get("fName"),params.get("flName"), params.get("mlName"),
+                        params.get("curp"), params.get("gender"), birthday, params.get("notes"));
                 newPatient.setIdDoctor(userService.getById(Integer.parseInt(params.get("doctor"))).getIdStaffMember());
                 newPatient.setActive((short)1);
                 patientService.create(newPatient);
