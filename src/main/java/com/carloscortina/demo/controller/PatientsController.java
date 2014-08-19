@@ -132,6 +132,7 @@ public class PatientsController {
 	public String patientHome(Model model){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 doctor = userService.getUserByUsername(auth.getName());
+                
                 model.addAttribute("user",doctor.getIdUser());
                 model.addAttribute("doctors",userService.getUserByRole(2));
                 model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
@@ -158,7 +159,7 @@ public class PatientsController {
             
             try{
                 Date birthday =  df.parse(params.get("birthday"));
-                Patient newPatient = new Patient(params.get("fName"), params.get("sName"), 
+                Patient newPatient = new Patient(params.get("fName"), 
                     params.get("flName"), params.get("mlName"), params.get("curp"), params.get("gender"), birthday, params.get("notes"));
                 newPatient.setIdDoctor(userService.getById(Integer.parseInt(params.get("doctor"))).getIdStaffMember());
                 newPatient.setActive((short)1);
@@ -190,6 +191,7 @@ public class PatientsController {
                 ap.setIdStatus(appointmentStatusService.getById(11));
                 appointmentService.updateItem(ap);
             }
+            patientService.updateItem(patientDelete);
             return "";
         }
         
@@ -202,7 +204,6 @@ public class PatientsController {
                 Date birthday =  df.parse(params.get("birthday"));
                 Patient updatePatient = patientService.getById(Integer.parseInt(params.get("idPatient")));
                 updatePatient.setFirstName(params.get("fName"));
-                updatePatient.setSecondName(params.get("sName"));
                 updatePatient.setFatherLastName(params.get("flName"));
                 updatePatient.setMotherLastName(params.get("mlName"));
                 updatePatient.setCurp(params.get("curp"));

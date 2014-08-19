@@ -40,17 +40,18 @@ function initializeDoctorAppointments(){
             {"data":"idStatus.status"}
         ],
         "initComplete":function(settings,json){
-
+        
             $('#tblAppointmentsList tbody').on( 'click', 'tr', function (e) {
-                var table = $('#tblAppointmentsList').DataTable();
-                if ( !$(this).hasClass('selected') ) {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    //Load appointment data
-                    loadAppointmentData();
-                }   
-            });
-        }
+                    var table = $('#tblAppointmentsList').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        loadAppointmentData();
+                    }
+                });
+            }
     });
 }
 

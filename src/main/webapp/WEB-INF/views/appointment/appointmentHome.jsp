@@ -28,7 +28,7 @@
 <c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
 <c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
 
-<c:url var="appointmentJS" value="/resources/js/Appointment/Tabs/NewAppointment.js" />
+<c:url var="newAppointmentJs" value="/resources/js/Appointment/Tabs/NewAppointment.js" />
 <c:url var="relativesJS" value="/resources/js/Appointment/Tabs/Relatives.js" />
 <c:url var="inmunizationJS" value="/resources/js/Appointment/Tabs/Inmunization.js" />
 <c:url var="appListJS" value="/resources/js/Appointment/Tabs/AppointmentsList.js" />
@@ -58,7 +58,7 @@
 <script src="${fullcalendarLangJS}" type="text/javascript"></script>
 <script src="${bootboxJs}" type="text/javascript"></script>
 <script src="${dataTablesJS}" type="text/javascript"></script>
-<script src="${appointmentJS}" type="text/javascript"></script>
+<script src="${newAppointmentJs}" type="text/javascript"></script>
 <script src="${relativesJS}" type="text/javascript"></script>
 <script src="${inmunizationJS}" type="text/javascript"></script>
 <script src="${bvJs}" type="text/javascript"></script>

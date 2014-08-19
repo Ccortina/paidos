@@ -68,6 +68,11 @@ public class Holyday implements Serializable {
         return idHolydays;
     }
 
+    public Holyday(String holyday, Date date) {
+        this.holyday = holyday;
+        this.date = date;
+    }
+
     public void setIdHolydays(Integer idHolydays) {
         this.idHolydays = idHolydays;
     }

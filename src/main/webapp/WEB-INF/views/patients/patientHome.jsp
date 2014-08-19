@@ -51,6 +51,7 @@
                                     <input type='button' id="btngetAllPatients" value='Todos los pacientes' class="btn btn-primary" onclick='getAllPatients()'/>
                                 </div>
                                 <div class="col-sm-2">
+                                    <label>Doctor</label>
                                     <select class="form-control" id="selectFilterPatientsByDoctor" name="doctor">
                                         <c:forEach var="doctor" items="${doctors}">
                                             <option value="${doctor.idStaffMember.idStaffMember}"><c:out value="${doctor.idStaffMember.name} ${doctor.idStaffMember.lastName}" /></option>
@@ -69,7 +70,6 @@
                                     <table id="tblPatients" class="hover row-border">
                                         <thead>
                                             <th>Nombre</th>
-                                            <th>S. Nombre</th>
                                             <th>A. Paterno</th>
                                             <th>A. Materno</th>
                                             <th>Fecha Nacimiento</th>

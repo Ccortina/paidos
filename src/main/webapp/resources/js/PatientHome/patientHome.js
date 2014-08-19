@@ -37,7 +37,6 @@ function initializePatientsTable(){
         "ajax":"/demo/patients/getPatientsByDoctor",
         "columns":[
             {"data":"firstName"},
-            {"data":"secondName"},
             {"data":"fatherLastName"},
             {"data":"motherLastName"},
             {"data":"birthday"},
@@ -50,7 +49,7 @@ function initializePatientsTable(){
                 }
             }},
             {"data":"idDoctor.idStaffMember",
-            "visible":false}
+            "visible":true}
         ],
         "initComplete":function(settings,json){
 
@@ -63,6 +62,11 @@ function initializePatientsTable(){
                     $(this).addClass('selected');
                 }   
             });
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if(data.active !== 1){
+                $(row).css({"background-color":"#FDFD96"});
+            }
         }
     });
 }
@@ -96,11 +100,11 @@ function getAllPatients(){
 function filterPatientsByDoctor(){
     var idDoctor = $("#selectFilterPatientsByDoctor").val();
     
-    $("#tblPatients").DataTable().column(7).search(idDoctor,false,false).draw();
+    $("#tblPatients").DataTable().column(6).search(idDoctor,false,false).draw();
 }
 
 function quitFilter(){
-    $("#tblPatients").DataTable().column(7).search('',false,false).draw();
+    $("#tblPatients").DataTable().column(6).search('',false,false).draw();
 }
 
 function deletePatient(){
