@@ -5,11 +5,13 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Vaccine;
+import java.util.List;
 
 /**
  *
  * @author Ccortina_Mac
  */
 public interface VaccineService extends GenericService<Vaccine>{
-    
+
+    public List<Vaccine> getActiveVaccines();
 }

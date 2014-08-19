@@ -70,5 +70,10 @@ public class ConsultationactivityServiceImp implements ConsultationactivityServi
     public void mergeItem(Consultationactivity item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Consultationactivity> getConsultationsByActivity(int idActivity) {
+        return caDao.getConsultationsByActivity(idActivity);
+    }
     
 }

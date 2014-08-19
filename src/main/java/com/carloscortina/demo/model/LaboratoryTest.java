@@ -59,6 +59,11 @@ public class LaboratoryTest implements Serializable {
         this.idLaboratoryTest = idLaboratoryTest;
     }
 
+    public LaboratoryTest(String laboratoryTest, int active) {
+        this.laboratoryTest = laboratoryTest;
+        this.active = active;
+    }
+
     public LaboratoryTest(Integer idLaboratoryTest, String laboratoryTest, int active) {
         this.idLaboratoryTest = idLaboratoryTest;
         this.laboratoryTest = laboratoryTest;

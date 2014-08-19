@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -51,9 +52,10 @@ public class Measures implements Serializable {
     @Basic(optional = false)
     @Column(name = "includePrescription")
     private short includePrescription;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "measures")
-    @JsonIgnore
-    private List<Consultationmeasure> consultationmeasureList;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private short active;
     @JoinColumn(name = "idUser", referencedColumnName = "idUser")
     @ManyToOne(optional = false)
     @JsonIgnore
@@ -69,6 +71,14 @@ public class Measures implements Serializable {
     public Measures(String measure, String units) {
         this.measure = measure;
         this.units = units;
+    }
+
+    public Measures(String measure, String units, short includePrescription, short active, User idUser) {
+        this.measure = measure;
+        this.units = units;
+        this.includePrescription = includePrescription;
+        this.active = active;
+        this.idUser = idUser;
     }
 
     public Measures(Integer idMeasures, String measure, String units) {
@@ -113,14 +123,13 @@ public class Measures implements Serializable {
         hash += (idMeasures != null ? idMeasures.hashCode() : 0);
         return hash;
     }
-    
-    @XmlTransient
-    public List<Consultationmeasure> getConsultationmeasureList() {
-        return consultationmeasureList;
+
+    public short getActive() {
+        return active;
     }
 
-    public void setConsultationmeasureList(List<Consultationmeasure> consultationmeasureList) {
-        this.consultationmeasureList = consultationmeasureList;
+    public void setActive(short active) {
+        this.active = active;
     }
 
     @Override

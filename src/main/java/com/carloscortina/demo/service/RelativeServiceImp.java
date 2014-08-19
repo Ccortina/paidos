@@ -13,31 +13,36 @@ import com.carloscortina.demo.model.Relative;
 @Transactional
 public class RelativeServiceImp implements RelativeService {
 
-	@Autowired
-	RelativeDao relativeDao;
-	
-	@Override
-	public void createRelative(Relative relative) {
-		// TODO Auto-generated method stub
-		relativeDao.createRelative(relative);
-		
-	}
+    @Autowired
+    RelativeDao relativeDao;
 
-	@Override
-	public Relative getRelative(int id) {
-		// TODO Auto-generated method stub
-		return relativeDao.getRelative(id);
-	}
+    @Override
+    public void createRelative(Relative relative) {
+            // TODO Auto-generated method stub
+            relativeDao.createRelative(relative);
 
-	@Override
-	public List<Relative> getAllRelatives() {
-		// TODO Auto-generated method stub
-		return relativeDao.getAllRelatives();
-	}
-        
-        @Override
-        public void updateRelative(Relative item){
-            relativeDao.updateRelative(item);
-        }
+    }
+
+    @Override
+    public Relative getRelative(int id) {
+            // TODO Auto-generated method stub
+            return relativeDao.getRelative(id);
+    }
+
+    @Override
+    public List<Relative> getAllRelatives() {
+            // TODO Auto-generated method stub
+            return relativeDao.getAllRelatives();
+    }
+
+    @Override
+    public void updateRelative(Relative item){
+        relativeDao.updateRelative(item);
+    }
+
+    @Override
+    public List<Relative> getRelativeByRelationship(int idRelationship) {
+        return relativeDao.getRelativeByRelationship(idRelationship);
+    }
 
 }

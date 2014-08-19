@@ -8,6 +8,7 @@ package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationmeasure;
 import com.carloscortina.demo.model.ConsultationmeasurePK;
+import java.util.List;
 
 /**
  *
@@ -16,4 +17,5 @@ import com.carloscortina.demo.model.ConsultationmeasurePK;
 public interface ConsultationmeasureDao extends GenericDao<Consultationmeasure>{
 
     public Consultationmeasure getById(ConsultationmeasurePK id);
+    public List<Consultationmeasure> getConsultationsByMeasure(int idMeasure);
 }

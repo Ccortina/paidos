@@ -5,11 +5,13 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Measures;
+import java.util.List;
 
 /**
  *
  * @author Ccortina_Mac
  */
 public interface MeasuresDao extends GenericDao<Measures>{
-    
+ 
+    List<Measures> getMeasureByUser(int idUser);
 }

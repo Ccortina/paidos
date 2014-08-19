@@ -76,5 +76,10 @@ public class ConsultationmeasureServiceImp implements ConsultationmeasureService
     public void mergeItem(Consultationmeasure item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Consultationmeasure> getConsultationsByMeasure(int idMeasure) {
+        return cmDao.getConsultationsByMeasure(idMeasure);
+    }
     
 }

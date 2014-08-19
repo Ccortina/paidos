@@ -4,7 +4,9 @@
  */
 package com.carloscortina.demo.service;
 
+import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.AppointmentStatus;
+import java.util.List;
 
 /**
  *

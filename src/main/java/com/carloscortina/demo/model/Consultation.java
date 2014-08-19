@@ -54,7 +54,6 @@ public class Consultation implements Serializable {
     private Integer idConsultation;
     @Column(name = "motive")
     private String motive;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "weigth")
     private Double weigth;
     @Column(name = "size")
@@ -94,9 +93,6 @@ public class Consultation implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
     private List<Consultationactivity> consultationactivityList;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
-    private List<Consultationmeasure> consultationmeasureList;
     
 
     public Consultation() {
@@ -109,7 +105,7 @@ public class Consultation implements Serializable {
     public Consultation(Appointment idAppointment) {
         this.idAppointment = idAppointment;
     }
-
+    
     public Consultation(Integer idConsultation, Double weigth, Double size, Double temperature, Double pc, Double ta, Double ta2, Double taAverage, String peea, String ef, String prescription, Appointment idAppointment) {
         this.idConsultation = idConsultation;
         this.weigth = weigth;
@@ -220,16 +216,6 @@ public class Consultation implements Serializable {
 
     public void setConsultationactivityList(List<Consultationactivity> consultationactivityList) {
         this.consultationactivityList = consultationactivityList;
-    }
-
-    @XmlTransient
-    public List<Consultationmeasure> getConsultationmeasureList() {
-        return consultationmeasureList;
-    }
-
-    @XmlTransient
-    public void setConsultationmeasureList(List<Consultationmeasure> consultationmeasureList) {
-        this.consultationmeasureList = consultationmeasureList;
     }
 
     public List<ConsultationDiagnostic> getConsultationdiagnosticList() {

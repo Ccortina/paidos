@@ -8,6 +8,7 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Consultationmeasure;
 import com.carloscortina.demo.model.ConsultationmeasurePK;
+import java.util.List;
 
 /**
  *
@@ -16,4 +17,5 @@ import com.carloscortina.demo.model.ConsultationmeasurePK;
 public interface ConsultationmeasureService extends GenericService<Consultationmeasure>{
    
     public Consultationmeasure getById(ConsultationmeasurePK id);
+    public List<Consultationmeasure> getConsultationsByMeasure(int idMeasure);
 }

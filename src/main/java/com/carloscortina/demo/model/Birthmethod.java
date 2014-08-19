@@ -4,7 +4,9 @@
  */
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,10 +15,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -45,6 +50,14 @@ public class Birthmethod implements Serializable {
     @Size(max = 45)
     @Column(name = "description")
     private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private short active;
+    @OneToMany(mappedBy = "birthMethod")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    private List<PerBackNoPat> perbacknopatList;
 
     public Birthmethod() {
     }
@@ -56,6 +69,16 @@ public class Birthmethod implements Serializable {
     public Birthmethod(Integer idBirthMethod, String birthMethod) {
         this.idBirthMethod = idBirthMethod;
         this.birthMethod = birthMethod;
+    }
+
+    public Birthmethod(String birthMethod, short active) {
+        this.birthMethod = birthMethod;
+        this.active = active;
+    }
+
+    public Birthmethod(String birthMethod, String description) {
+        this.birthMethod = birthMethod;
+        this.description = description;
     }
 
     public Integer getIdBirthMethod() {
@@ -80,6 +103,22 @@ public class Birthmethod implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public short getActive() {
+        return active;
+    }
+
+    public void setActive(short active) {
+        this.active = active;
+    }
+
+    public List<PerBackNoPat> getPerbacknopatList() {
+        return perbacknopatList;
+    }
+
+    public void setPerbacknopatList(List<PerBackNoPat> perbacknopatList) {
+        this.perbacknopatList = perbacknopatList;
     }
 
     @Override

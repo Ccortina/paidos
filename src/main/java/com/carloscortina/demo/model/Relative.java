@@ -176,6 +176,12 @@ public class Relative implements Serializable {
         this.addedDate = addedDate;
     }
 
+    public Relative(String firstName, String fatherLastName, String motherLastName) {
+        this.firstName = firstName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+    }
+
     public Integer getIdRelative() {
         return idRelative;
     }

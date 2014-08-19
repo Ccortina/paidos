@@ -11,4 +11,5 @@ public interface RelativeDao {
 	public List<Relative> getAllRelatives();
 	public List<Relative> getRelativesByPatientId(int id);
         public void updateRelative(Relative item);
+        public List<Relative> getRelativeByRelationship(int idRelationship);
 }

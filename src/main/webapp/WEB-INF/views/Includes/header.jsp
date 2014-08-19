@@ -64,6 +64,28 @@ body {
                                     <li><a href="${contextPath}/drug/drugAdministrationUnitHome">Unidades de Administración</a></li>
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Catalogos<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/catalogs/imunizationHome">Inmunizaciones</a></li>
+                                    <li><a href="${contextPath}/catalogs/laboratoryHome">Lab. y gabinete</a></li>
+                                    <li><a href="${contextPath}/catalogs/birthMethodHome">Tipos de Nacimientos</a></li>
+                                    <li><a href="${contextPath}/catalogs/relationshipHome">Parentescos</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="${contextPath}/catalogs/consultationMeasureHome">Consultas - Medidas</a></li>
+                                    <li><a href="${contextPath}/catalogs/activityHome">Actividades</a></li>
+                                    <li><a href="${contextPath}/catalogs/holydayHome">Dias inhabiles</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="${contextPath}/catalogs/appointmentStatusHome">Estatus cita</a></li>
+                                    <li><a href="${contextPath}/catalogs/documentHome">Categoria de documentos</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="${contextPath}/catalogs/directoryHome">Directorio</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="${contextPath}/catalogs/userHome">Usuario</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </sec:authorize>
 

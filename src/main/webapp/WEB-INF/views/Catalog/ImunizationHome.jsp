@@ -1,6 +1,6 @@
 <%-- 
-    Document   : AdministrationMethodHome
-    Created on : Aug 13, 2014, 8:20:16 PM
+    Document   : ImunizationHome
+    Created on : Aug 15, 2014, 4:36:21 PM
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -26,7 +26,7 @@
 
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
-<c:url var="drugApplicationMethodJs" value="/resources/js/Drug/ApplicationMethod.js" />
+<c:url var="imunizationJs" value="/resources/js/Catalog/Imunization.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
@@ -38,13 +38,13 @@
         <div class="col-sm-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Medicamentos - Metodos de apiclacion</h3>
+                    <h3 class="panel-title">Inmunizaciones</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <ul id="drugAMTabMenu" class="nav nav-tabs">
-                              <li class="active"><a href="#tabMain" data-toggle="tab">Metodos</a></li>
+                            <ul id="mainTabMenu" class="nav nav-tabs">
+                              <li class="active"><a href="#tabMain" data-toggle="tab">Inmunizaciones</a></li>
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
                               <li><a href="#tabAdditionalInfo" data-toggle="tab">Informacion Relacionada</a></li>
@@ -53,9 +53,9 @@
                                 <div id="tabMain" class="tab-pane active">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table class="row-border hover" id="tblAM">
+                                            <table class="row-border hover" id="tblAU">
                                                 <thead>
-                                                    <th>Metodo</th>
+                                                    <th>Unidades</th>
                                                     <th>Activo</th>
                                                 </thead>
                                             </table> 
@@ -63,10 +63,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-2">
-                                            <input type="button" class="btn btn-primary" value="Nuevo metodo de aplicacion" onclick="newAM()" />
+                                            <input type="button" class="btn btn-primary" value="Nueva unidad de administracion" onclick="newAU()" />
                                         </div>
                                         <div class="col-sm-2">
-                                            <input type="button" class="btn btn-primary" value="Modificar metodo de aplicacion" onclick="modifyAM()" />
+                                            <input type="button" class="btn btn-primary" value="Modificar unidad de administracion" onclick="modifyAU()" />
                                         </div>
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Informacion Asociada" onclick="additionalInfo()" />
@@ -74,19 +74,19 @@
                                     </div>
                                 </div>
                                 <div id="tabNew" class="tab-pane">
-                                    <form role="form" id="formNewAM">
+                                    <form role="form" id="formNewAU">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <label for="inputNewAM">Metodo</label>
-                                                    <input type="text" class="form-control inputNormal" id="inputNewAM" placeholder="Metodo" name="applicationMethod"/>
+                                                    <label for="inputNewAU">Unidad</label>
+                                                    <input type="text" class="form-control inputNormal" id="inputNewAU" placeholder="Unidad" name="administrationUnit"/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group">
                                                     <label>
-                                                        <input id="inputNewAMActive" type="checkbox" name="active" checked>
+                                                        <input id="inputNewAUActive" type="checkbox" name="active" checked>
                                                         Activo
                                                     </label>
                                                 </div>   
@@ -104,20 +104,20 @@
                                     </form>
                                 </div>
                                 <div id="tabModify" class="tab-pane">
-                                    <form role="form" id="formModifyAM">
-                                    <input type="hidden" id="inputIdAM" value=""/>
+                                    <form role="form" id="formModifyAU">
+                                    <input type="hidden" id="inputIdAU" value=""/>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <label for="inputModifyAM">Metodo</label>
-                                                    <input type="text" class="form-control inputNormal" id="inputModifyAM" placeholder="Metodo" name="applicationMethod"/>
+                                                    <label for="inputModifyAU">Unidad</label>
+                                                    <input type="text" class="form-control inputNormal" id="inputModifyAU" placeholder="Unidad" name="administrationUnit"/>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group">
                                                     <label>
-                                                        <input id="inputModifyAMActive" type="checkbox" name="active" />
+                                                        <input id="inputModifyAUActive" type="checkbox" name="active" />
                                                         Activo
                                                     </label>
                                                 </div>   
@@ -137,7 +137,7 @@
                                 <div id="tabAdditionalInfo" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h3>Medicamentos asociados con el metodo de aplicacion</h3>
+                                            <h3>Medicamentos asociados con la unidad de administracion</h3>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -178,4 +178,4 @@
 
 <script src="${utilityJs}" type="text/javascript"></script>
 
-<script src="${drugApplicationMethodJs}" type="text/javascript"></script>
+<script src="${imunizationJs}" type="text/javascript"></script>
