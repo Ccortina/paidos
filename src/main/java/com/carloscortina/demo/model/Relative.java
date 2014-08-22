@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Relative.findAll", query = "SELECT r FROM Relative r"),
     @NamedQuery(name = "Relative.findByIdRelative", query = "SELECT r FROM Relative r WHERE r.idRelative = :idRelative"),
     @NamedQuery(name = "Relative.findByFirstName", query = "SELECT r FROM Relative r WHERE r.firstName = :firstName"),
-    @NamedQuery(name = "Relative.findBySecondName", query = "SELECT r FROM Relative r WHERE r.secondName = :secondName"),
     @NamedQuery(name = "Relative.findByFatherLastName", query = "SELECT r FROM Relative r WHERE r.fatherLastName = :fatherLastName"),
     @NamedQuery(name = "Relative.findByMotherLastName", query = "SELECT r FROM Relative r WHERE r.motherLastName = :motherLastName"),
     @NamedQuery(name = "Relative.findByCurp", query = "SELECT r FROM Relative r WHERE r.curp = :curp"),
@@ -76,9 +75,6 @@ public class Relative implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "FirstName")
     private String firstName;
-    @Size(max = 45)
-    @Column(name = "SecondName")
-    private String secondName;
     @Size(max = 45)
     @Column(name = "FatherLastName")
     private String fatherLastName;
@@ -196,14 +192,6 @@ public class Relative implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
     }
 
     public String getFatherLastName() {

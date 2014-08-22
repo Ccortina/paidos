@@ -14,7 +14,7 @@
                     <form:hidden path="idRecord" />
                     <div class="row">
                         <div class="col-sm-9">
-                            <form:textarea id="backAlergicBackground" class="form-control onChange" rows="10" path="alergicBackground"/>
+                            <form:textarea id="backAlergicBackground" class="form-control" rows="10" path="alergicBackground"/>
                         </div>
                     </div>
                 </form:form>
@@ -24,7 +24,7 @@
     <div class="col-sm-2">
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" class="btn btn-primary" value="Modificar" onclick="enableForm('alergicBackgroundForm');">
+                <input type="button" class="btn btn-primary" value="Guardar" onclick="saveForm('alergicBackgroundForm')">
             </div>
         </div>
         <div class="row">

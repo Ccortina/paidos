@@ -16,12 +16,6 @@
     </div>
     <div class="col-sm-3">
         <div class="form-group">
-            <label for="inputNewRelativeSecondName">Segundo nombre</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeSecondName" placeholder="Segundo Nombre" name="secondName"/>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
             <label for="inputNewRelativeFatherLastName">Apellido paterno</label>
             <input type="text" class="form-control inputNormal" id="inputNewRelativeFatherLastName" placeholder="Apellido Paterno" name="fatherLastName"/>
         </div>
@@ -122,26 +116,6 @@
 <div class="row">
     <div class="col-sm-4">
         <div class="form-group">
-            <label for="inputNewRelativeCellPhone">Celular</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeCellphone" placeholder="Celular" name="cellPhone"/>
-        </div>
-    </div>
-    <div class="col-sm-4">
-        <div class="form-group">
-            <label for="inputNewRelativeOtherPhone">Otro telefono</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeOtherPhone" placeholder="Otro telefono" name="otherPhone"/>
-        </div>
-    </div>
-    <div class="col-sm-4">
-        <div class="form-group">
-            <label for="inputNewRelativeEmail">Email</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeEmail" placeholder="Email" name="email"/>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-4">
-        <div class="form-group">
             <label for="inputNewRelativeReligion">Religion</label>
             <select class="form-control" id="inputRelativeReligionApp" name="religion">
                 <c:forEach var="religion" items="${religions}">
@@ -160,7 +134,7 @@
 <div class="row">
     <div class="col-sm-4">
         <div class="form-group">
-            <label for="inputNewRelativeRecommendedBy">Email</label>
+            <label for="inputNewRelativeRecommendedBy">Recomendado por</label>
             <input type="text" class="form-control inputNormal" id="inputNewRelativeRecommendedBy" placeholder="Recomendado por" name="recommendedBy"/>
         </div>
     </div>

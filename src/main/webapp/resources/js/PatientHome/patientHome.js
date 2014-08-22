@@ -49,7 +49,7 @@ function initializePatientsTable(){
                 }
             }},
             {"data":"idDoctor.idStaffMember",
-            "visible":true}
+            "visible":false}
         ],
         "initComplete":function(settings,json){
 

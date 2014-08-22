@@ -8,34 +8,53 @@ $(document).ready(function(){
     
     initializeSibilingsTable();
     
-    initializeAbstractPrescriptionTable();
-    
     initializePatientRelativeTable();
+    
+    initializeModifyRelativeForm();
     
     initializePatientFamilyAllRelativesTable();
     
     initializePatientFamilyPatientRelativesTable();
+    
+    $('a[href="#familia"]').on('shown.bs.tab', function (e) {
+        $("#tblPatientRelativesList").DataTable().columns.adjust().draw();
+    });
+    
+    //$('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-αινσϊρ@]*'});
 });
 
 function initializeSibilingsTable()
 {
     $('#tblSibilings').DataTable({
-        "bSort":false,
-        "scrollY": "200px",
-        "scrollCollapse": true,
-        "paging": false,
-        "info":false,
         "searching":false,
+        "info":false,
+        "ordering":false,
+        "paging":false,
         "language": {
             "emptyTable": "No hay informacion en la tabla."
-        }
-        
-    });
-}
+        },
+        "ajax":"/demo/patients/getPatientSibilings",
+        "columns":[
+            {"render":function(data,row,full){
+                    return (full["firstName"]+" "+full["fatherLastName"]+" "+full["motherLastName"]);
+            }},
+            {"render":function(data,row,full){
+                    return getAge(full["birthday"],new Date());
+            }}
+        ],
+        "initComplete":function(settings,json){
+            var table = $('#sibilingsTable').DataTable();
 
-function initializeAbstractPrescriptionTable()
-{
-    
+            $('#sibilingsTable tbody').on( 'click', 'tr', function (e) {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        }
+    });
 }
 
 function initializePatientRelativeTable(){
@@ -66,41 +85,109 @@ function initializePatientRelativeTable(){
              "defaultContent": "<input type='button' class='btn btn-danger' value='Desasociar' onclick='unrelateRelative(this);'/>"
             }],
         "initComplete": function(settings, json) {
-            addRowSelectionPatientRelativeTable();
+            var table = $('#tblPatientRelativesList').DataTable();
+    
+            $('#tblPatientRelativesList tbody').on( 'click', 'tr', function (e){
+                if ( $(this).hasClass('selected')){
+                    $(this).removeClass('selected');
+                }
+                else
+                {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                    modifyRelative();
+                }
+            });
         }
     });
 }
 
-function addRowSelectionPatientRelativeTable(){
-    var table = $('#tblPatientRelativesList').DataTable();
+function modifyRelative(){
+    var data = $('#tblPatientRelativesList').DataTable().row('.selected').data();
     
-    $('#tblPatientRelativesList tbody').on( 'click', 'tr', function (e){
-        if ( $(this).hasClass('selected')){
-            $(this).removeClass('selected');
-        }
-        else
-        {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-            //populateFormWithJSON( "formPatientFamilyDisplay" , "tblPatientRelativesList" );
-            var inputs = $('#formPatientFamilyDisplay :input');
-            var pr = table.row('.selected').data();
-            console.log(pr);
-            inputs.each(function() {
-                if(this.name === "religion"){
-                    $("option",$("#selectPatientFamilyRelationship")).each(function(){
-                       if(this.value == pr['relative']['religion']['id']){this.selected=true;}
-                    });
-                }
+    if(checkNotUndefined(data)){
+        $("#formModifyRelative :input").each(function(){
+            if(this.name === 'religion'){
+                $("option",$("#inputModifyRelativeReligionApp")).each(function(){
+                   if(this.value == data['religion']['id']){this.selected=true;}
+                });
+            }else{
                 if(this.name == "idRelationship"){
-                    $("option",$("#selectPatientFamilyReligion")).each(function(){
-                       if(this.value == pr['idRelationship']['idRelationship']){this.selected=true;}
+                    $("option",$("#selectPatientFamilyRelationship")).each(function(){
+                       if(this.value == data['idRelationship']['idRelationship']){this.selected=true;}
                     });
+                }else{
+                    $(this).val(data['relative'][this.name]);
                 }
-                $(this).val(pr['relative'][this.name]);
-            });
-        }
+            }
+        });
+    }else{
+        displayWarningAlert("No ha seleccionado un familiar");
+    }
+}
+
+function initializeModifyRelativeForm(){
+    $('#formModifyRelative').bootstrapValidator({
+        live:"disabled",
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            firstName: {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del paciente no puede estar vacio'
+                    }
+                }
+            },
+            fatherLastName: {
+                validators: {
+                    notEmpty: {
+                        message: 'El apellido paterno del paciente no puede estar vacio'
+                    }
+                }
+            } 
+        },
+        submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
+        e.preventDefault();
+        saveModifyRelative();
     });
+}
+
+
+function saveModifyRelative(){
+    
+    if(checkNotUndefined($('#tblPatientRelativesList').DataTable().row('.selected').data())){
+        var data = [];
+        var inputs = $('#formModifyRelative :input');
+
+        //Collect form data
+        inputs.each(function() {
+            data.push({name:this.name,value:$(this).val()});  
+        }); 
+        
+        //Send to controller
+        $.ajax({
+            url:"/demo/patients/saveModifyRelative",
+            data:data,
+            type: "POST",
+            success:function(response){
+                //Reload the patient table
+                displaySuccessAlert("Se ha modificado correctamente");
+                $("#tblPatientRelativesList").DataTable().ajax.reload();
+                clearFormInputTextFields("formModifyRelative");
+            },
+            error: function(data, status, error) {
+                displayDangerAlert("error"+error);
+                console.error(error);
+            }
+        });
+    }else{
+        displayWarningAlert("No se ha seleccionado un familiar");
+    }   
 }
 
 function initializePatientFamilyAllRelativesTable(){
@@ -181,49 +268,26 @@ function unrelateRelative(row){
     var rowData = $('#tblPatientRelativesList').DataTable().row($(row).parent().parent()[0]).data();
     var idPatient = $('#hiddenPatientFileId').val();
     var idRelative = rowData["id"];
-    var idRelationship = rowData["patientRelative"]["0"]["idRelationship"]["id"];
+    var idRelationship = rowData["idRelationship"]["idRelationship"];
     var data = {idPatient:idPatient,idRelative:idRelative,idRelationship:idRelationship};
     
-    $.ajax({
-        url:"../unrelateRelative",
-        data: data,
-        type:"POST",
-        success:function(response){
-            $('#tblPatientFamilyPatientRelatives').DataTable().ajax.reload(); 
-            $('#tblPatientRelativesList').DataTable().ajax.reload();
-            var node =$('#tblPatientRelativesList').DataTable().row(0).node();
-            $(node).click();
-        }
-    });
-}
-
-function enableModifyPatientRelative(){
-    $("#divHiddenModifyPatientRelative").show();
-    $("#formPatientFamilyDisplay :input").each(function(){
-       $(this).prop("disabled",false);
-    });
-    $("#divPatientFamily").hide();
-}
-
-function updateRelative(){
     
-    $.ajax({
-        url:$('#formPatientFamilyDisplay').attr("action"),
-        data: $('#formPatientFamilyDisplay').serializeObject(),
-        type:"POST",
-        success:function(response){
-            if( response === "addRelative" ){
-                $('#tblPatientFamilyPatientRelatives').DataTable().ajax.reload(); 
-                $('#tblPatientRelativesList').DataTable().ajax.reload();  
-            }
-        }
-    });
-    
-    $("#divHiddenModifiyPatientRelative").hide();
-    $("#formPatientFamilyDisplay :input").each(function(){
-       $(this).prop("disabled",true);
-    });
-    $("#divPatientFamily").show();
+    var box = bootbox.confirm("<strong>Advertencia!</strong>Esta seguro de desasociar este familiar?", function(result) {
+                    if(result){
+                        $.ajax({
+                            url:"/demo/patients/unrelateRelative",
+                            data: data,
+                            type:"POST",
+                            success:function(response){
+                                $('#tblPatientFamilyPatientRelatives').DataTable().ajax.reload(); 
+                                $('#tblPatientRelativesList').DataTable().ajax.reload();
+                                var node =$('#tblPatientRelativesList').DataTable().row(0).node();
+                                $(node).click();
+                            }
+                        });
+                    }
+                  });
+        box.find('.modal-content').css({'color': '#8a6d3b','background-color': '#fcf8e3','border-color': '#faebcc'});
 }
 
 function updateRelativeCancel(){
@@ -287,12 +351,16 @@ function ajaxCall(ID){
     $.ajax({
         url:$('#'+ID).attr("action"),
         data: $('#'+ID).serializeObject(),
-        type:"POST",
+        method:"POST",
         success:function(response){
+            displaySuccessAlert("Operacion realizada con exito");
             if( response === "addRelative" ){
                 $('#tblPatientFamilyPatientRelatives').DataTable().ajax.reload(); 
                 $('#tblPatientRelativesList').DataTable().ajax.reload();  
             }
+        },
+        error:function(data, status, error){
+            displayDangerAlert("Ha ocurrido un error en la operacion: "+ error);
         }
     });	
 }

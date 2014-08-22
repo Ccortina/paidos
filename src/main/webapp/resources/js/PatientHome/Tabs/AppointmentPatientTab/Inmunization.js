@@ -82,8 +82,7 @@ function initializePatientInmunizationAppTable(){
                 }
             });
         }
-    });
-    
+    });   
 }
 
 //This method returns the age of the patient in days months and years

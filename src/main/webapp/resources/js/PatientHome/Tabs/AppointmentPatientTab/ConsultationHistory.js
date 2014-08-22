@@ -90,7 +90,6 @@ function loadConsultationMeasures(){
                     }},
                     {"data":"temperature"},
                     {"render":function(data,row,full){
-                            console.log(full['size']);
                         return(((full['weigth']/full['size'])/full['size'])*10000);
                     }}
                 ]});

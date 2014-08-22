@@ -46,6 +46,9 @@ body {
                                 <ul class="dropdown-menu">
                                     <li><a href="${contextPath}/patients/home">Pacientes</a></li>
                                     <li><a href="${contextPath}/relatives/home">Familiares</a></li>
+                                    <li><a href="${contextPath}">Citas</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="${contextPath}/patients/immunizationHome">Inmunizaciones</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">

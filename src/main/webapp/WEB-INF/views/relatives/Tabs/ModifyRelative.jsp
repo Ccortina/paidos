@@ -17,12 +17,6 @@
     </div>
     <div class="col-sm-3">
         <div class="form-group">
-            <label for="inputModifyRelativeSecondName">Segundo nombre</label>
-            <input type="text" class="form-control inputNormal" id="inputModifyRelativeSecondName" placeholder="Segundo Nombre" name="secondName"/>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group">
             <label for="inputModifyRelativeFatherLastName">Apellido paterno</label>
             <input type="text" class="form-control inputNormal" id="inputModifyRelativeFatherLastName" placeholder="Apellido Paterno" name="fatherLastName"/>
         </div>

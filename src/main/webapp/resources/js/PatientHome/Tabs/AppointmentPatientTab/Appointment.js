@@ -158,12 +158,14 @@ function appointPatient(){
         }else{
             $("#tblPatientInmunizationApp").DataTable().ajax.reload(); 
         }    
+        
         //tblAppointmentsHistory
         if ( !$.fn.DataTable.isDataTable( '#tblAppointmentsHistory' ) ) {
             initializeAppointmentHistoryTable();
         }else{
             $("#tblAppointmentsHistory").DataTable().ajax.reload(); 
         }
+        
         //tblConsultationHistory
         if ( !$.fn.DataTable.isDataTable( '#tblConsultationHistory' ) ) {
             initializeConsultationHistoryTable();

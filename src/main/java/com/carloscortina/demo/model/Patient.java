@@ -39,7 +39,6 @@ import org.hibernate.annotations.LazyCollectionOption;
     @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p"),
     @NamedQuery(name = "Patient.findByIdPatient", query = "SELECT p FROM Patient p WHERE p.idPatient = :idPatient"),
     @NamedQuery(name = "Patient.findByFirstName", query = "SELECT p FROM Patient p WHERE p.firstName = :firstName"),
-    @NamedQuery(name = "Patient.findBySecondName", query = "SELECT p FROM Patient p WHERE p.secondName = :secondName"),
     @NamedQuery(name = "Patient.findByFatherLastName", query = "SELECT p FROM Patient p WHERE p.fatherLastName = :fatherLastName"),
     @NamedQuery(name = "Patient.findByMotherLastName", query = "SELECT p FROM Patient p WHERE p.motherLastName = :motherLastName"),
     @NamedQuery(name = "Patient.findByCurp", query = "SELECT p FROM Patient p WHERE p.curp = :curp"),

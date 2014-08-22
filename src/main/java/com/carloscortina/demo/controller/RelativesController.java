@@ -115,7 +115,6 @@ public class RelativesController {
 		
 		Relative newRelative = new Relative();
 		newRelative.setFirstName(form.getFirstName());
-		newRelative.setSecondName(form.getSecondName());
 		newRelative.setFatherLastName(form.getFatherLastName());
 		newRelative.setMotherLastName(form.getMotherLastName());
 		newRelative.setCurp(form.getCurp());

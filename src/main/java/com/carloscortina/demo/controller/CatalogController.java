@@ -14,6 +14,7 @@ import com.carloscortina.demo.model.Birthmethod;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationmeasure;
+import com.carloscortina.demo.model.Holyday;
 import com.carloscortina.demo.model.LaboratoryTest;
 import com.carloscortina.demo.model.Measures;
 import com.carloscortina.demo.model.Patient;
@@ -28,6 +29,7 @@ import com.carloscortina.demo.service.AppointmentStatusService;
 import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.ConsultationactivityService;
 import com.carloscortina.demo.service.ConsultationmeasureService;
+import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.MeasuresService;
 import com.carloscortina.demo.service.PatientService;
@@ -35,7 +37,9 @@ import com.carloscortina.demo.service.RelationshipService;
 import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +87,8 @@ public class CatalogController {
     private VaccineService vaccineService;
     @Autowired
     private ConsultationactivityService caService;
+    @Autowired
+    private HolydayService holydayService;
     
     private User loggedUser;
     
@@ -149,6 +155,15 @@ public class CatalogController {
         model.addAttribute("activitiesType", atService.getAll("ActivityType"));
         
         return "Catalog/ActivityHome";
+    }
+    
+    @RequestMapping(value="holydayHome")
+    public String holydayHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return "Catalog/HolydayHome";
     }  
     
     //Section: Laboratory test
@@ -358,5 +373,49 @@ public class CatalogController {
         }
         
         return (new JsonPack<Appointment>(aList));
+    }
+    
+     //Section: Holyday
+    @RequestMapping(value="getHolyday")
+    public @ResponseBody JsonPack<Holyday> getHolyday(){
+        return (new JsonPack<Holyday> (holydayService.getAll("Holyday")));
+    }
+    
+    @RequestMapping(value="saveNewHolyday")
+    public @ResponseBody String saveNewHolyday(@RequestParam Map<String,String> params){
+        
+        try{
+            Date date = new SimpleDateFormat("d/M/yyyy").parse(params.get("itemDate"));
+            holydayService.create(new Holyday(params.get("itemName"), date));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyHolyday")
+    public @ResponseBody String saveModifyHolyday(@RequestParam Map<String,String> params){
+        
+        try{
+            Date date = new SimpleDateFormat("d/M/yyyy").parse(params.get("itemDate"));
+            Holyday item = holydayService.getById( Integer.parseInt( params.get("idItem") ) );
+            item.setDate(date);
+            item.setHolyday(params.get("itemName"));
+            holydayService.updateItem(item);
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return "";
+    }
+    
+    @RequestMapping(value="deleteHolyday")
+    public @ResponseBody String deleteHolyday(@RequestParam Map<String,String> params){
+        
+        holydayService.delete(holydayService.getById(Integer.parseInt(params.get("idItem"))));
+        
+        return "";
     }
 }

@@ -45,3 +45,49 @@ function clearFormInputTextFields(form){
         $(value).val("");
     });
 }
+
+function getAge(fromdate, todate){
+    if(todate) todate= new Date(todate);
+    else todate= new Date();
+
+    var age= [], fromdate= new Date(fromdate),
+    y= [todate.getFullYear(), fromdate.getFullYear()],
+    ydiff= y[0]-y[1],
+    m= [todate.getMonth(), fromdate.getMonth()],
+    mdiff= m[0]-m[1],
+    d= [todate.getDate(), fromdate.getDate()],
+    ddiff= d[0]-d[1];
+
+    if(mdiff < 0 || (mdiff=== 0 && ddiff<0))--ydiff;
+    if(mdiff<0) mdiff+= 12;
+    if(ddiff<0){
+        fromdate.setMonth(m[1]+1, 0);
+        ddiff= fromdate.getDate()-d[1]+d[0];
+        --mdiff;
+    }
+    if(mdiff> 0){ 
+        age.push(mdiff+ ' M ');
+    }else{
+        age.push('0 M ');
+    }
+    if(ddiff> 0){
+        age.push(ddiff+ ' D ');
+    }else{
+        age.push(ddiff+ '0 D ');
+    }
+    if(ydiff> 0){
+        age.push(ydiff+ ' A ');
+    }else{
+        age.push('0 A ');
+    }
+      
+    return age.join('');
+}
+
+function checkNotEmptyString(value){
+    if(value === ""){
+        return false;
+    }else{
+        return true;
+    }
+}

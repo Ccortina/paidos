@@ -199,7 +199,7 @@ function deleteItem(){
                         });
                     }
                   });
-    box.find('.modal-content').css({'color': '#8a6d3b','background-color': '#fcf8e3','border-color': '#faebcc'});
+        box.find('.modal-content').css({'color': '#8a6d3b','background-color': '#fcf8e3','border-color': '#faebcc'});
     }else{
         displayWarningAlert("No se ha seleccionado un dia festivo");
     }

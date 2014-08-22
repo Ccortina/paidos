@@ -4,14 +4,10 @@
  */
 $(document).ready(function(){
     
-    addSaveOnChangeToForm();
 });
 
-function addSaveOnChangeToForm(){
-    $( ".onChange" ).change(function() {
-        ajaxCall($(this).closest('form').attr('id'));
-        
-    });
+function saveForm(form){
+    ajaxCall(form);
 }
 
 

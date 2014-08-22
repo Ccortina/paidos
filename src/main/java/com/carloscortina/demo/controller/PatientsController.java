@@ -49,12 +49,15 @@ import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.ReligionService;
 import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.UserService;
+import com.carloscortina.demo.service.VaccineService;
+import com.carloscortina.demo.service.VaccineTypeService;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,6 +114,10 @@ public class PatientsController {
         private UserService userService;
         @Autowired
         PerBackNoPatService pbService;
+        @Autowired
+        private VaccineService vaccineService;
+        @Autowired
+        private VaccineTypeService vtService;
         
         private Patient patient;
         private User doctor;
@@ -140,6 +147,17 @@ public class PatientsController {
                 model.addAttribute("religions",religionService.getAllReligions());
                 
 		return ( "patients/patientHome" );
+	}
+        
+        @RequestMapping(value="immunizationHome")
+	public String immunizationHome(Model model){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                doctor = userService.getUserByUsername(auth.getName());
+                
+                model.addAttribute("vaccines",vaccineService.getAll("Vaccine"));
+                model.addAttribute("vaccineTypes", vtService.getAll("VaccineType"));
+                
+		return ( "patients/ImmunizationHome" );
 	}
         
         @RequestMapping(value="getPatientsByDoctor")
@@ -195,6 +213,41 @@ public class PatientsController {
             return "";
         }
         
+        @RequestMapping(value="saveModifyRelative")
+        public @ResponseBody String saveModifyRelative(@RequestParam Map<String,String> params){
+            Relative relative = relativeService.getRelative(Integer.parseInt(params.get("idRelative")));
+            
+            //Travel the map entries
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                //Fill relative data
+                try{
+                    for(Method m: relative.getClass().getMethods()){
+                        if(m.getName().startsWith("set")){
+                            if( m.getName().equalsIgnoreCase("set"+entry.getKey())){
+                                if( m.getName().equalsIgnoreCase("setReligion") ){
+                                    m.invoke(relative,religionService.getReligion(Integer.parseInt(entry.getValue())));
+                                }else if( !m.getName().equalsIgnoreCase("setIdRelative")){
+                                    m.invoke(relative,entry.getValue());
+                                }    
+                            }
+                        }
+                    }
+                    relativeService.updateRelative(relative);
+                    
+                    PatientRelativePK rPK = new PatientRelativePK(patient.getIdPatient(), relative.getIdRelative());
+                    PatientRelative pr= prService.getByPK(rPK);
+                    pr.setIdRelationship(relationshipService.getById(Integer.parseInt(params.get("idRelationship"))));
+                    prService.updateItem(pr);
+                    
+                }catch(Exception e){ 
+                    e.printStackTrace();
+                }
+            }
+            
+            return ("");
+        }
+        
+        
         @RequestMapping(value="updatePatient")
         public @ResponseBody String updatePatient(@RequestParam Map<String,String> params){
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -203,8 +256,8 @@ public class PatientsController {
             try{
                 Date birthday =  df.parse(params.get("birthday"));
                 Patient updatePatient = patientService.getById(Integer.parseInt(params.get("idPatient")));
-                updatePatient.setFirstName(params.get("fName"));
-                updatePatient.setFatherLastName(params.get("flName"));
+                updatePatient.setFirstName(params.get("firstName"));
+                updatePatient.setFatherLastName(params.get("fatherlastName"));
                 updatePatient.setMotherLastName(params.get("mlName"));
                 updatePatient.setCurp(params.get("curp"));
                 updatePatient.setSex(params.get("gender"));
@@ -419,13 +472,12 @@ public class PatientsController {
          */
         @RequestMapping(value="file/{idPatient}",method= RequestMethod.GET)
         public String patientFile(Model model,@PathVariable int idPatient){
-            patient = patientService.getById(idPatient);
+            patient = patientService.getById( idPatient );
             
-            Record record = recordService.getByPatientId(patient);
+            Record record = recordService.getByPatientId( patient );
             
             PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
             String[] age = calculateAge(patient.getBirthday()).split("-");
-            //List<Relative> sibilings = getSibilings(patient.getPatientRelativeList());
             
             model.addAttribute("birthday",formatDate(patient.getBirthday()));
             model.addAttribute("father",getFather(patient.getPatientRelativeList()));
@@ -435,7 +487,6 @@ public class PatientsController {
             model.addAttribute("patient",patient);
             model.addAttribute("record",record);
             model.addAttribute("perBackNoPat",perBackNoPat);
-            //model.addAttribute("sibilings",sibilings );
             model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
             model.addAttribute("religionType", religionService.getAllReligions());
             model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
@@ -483,8 +534,11 @@ public class PatientsController {
          * This section contains mainly methods that run querys on the database.
         */
         
+        /*
+        * This method uses the global variable patient to get the relatives
+        */
         @RequestMapping(value="getPatientSibilings")
-        public @ResponseBody JsonPack<Patient> getPatientSibilings(int idPatient){
+        public @ResponseBody JsonPack<Patient> getPatientSibilings(){
             //Patient patient = patientService.getById(idPatient);
             List<Patient> relatives = new ArrayList();
             
@@ -603,7 +657,6 @@ public class PatientsController {
         
             Relative updateRelative = relativeService.getRelative(idRelative);
             updateRelative.setFirstName(firstName);
-            updateRelative.setSecondName(secondName);
             updateRelative.setFatherLastName(fatherLastName);
             updateRelative.setMotherLastName(motherLastName);
             updateRelative.setCurp(curp);
@@ -778,7 +831,17 @@ public class PatientsController {
             
             return new JsonPack<Consultation>(consultationService.getListOfItem("FROM Consultation c where idPatient="+patient.getIdPatient()));
 
-        }        
+        }
+        
+        /*
+        * Method to get a list of all the programmed vaccines
+        */
+        @RequestMapping(value="getAllPatientImmunization")
+        public @ResponseBody JsonPack<PatientVaccine> getImmunization(){
+            
+            return new JsonPack<PatientVaccine>(pvService.getAll("PatientVaccine"));
+
+        }
         
         //Generic Methods
         private Relative getFather(List<PatientRelative> relatives)

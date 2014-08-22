@@ -68,7 +68,7 @@
 <input type="hidden" id="assignedDoctor" value="${doctor}">
 <input type="hidden" id="patientAge" value="${age[0]}-${age[1]}-${age[2]}">
 <input type="hidden" id="prescriptionCounter" value="${prescriptionCounter}">
-<input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}">
+<input type="hidden" id="consultationPatientName" value="${patient.firstName} ${patient.fatherLastName} ${patient.motherLastName}">
 
 <!-- Main div container , centers everything-->
 <div class="container-fluid">
@@ -88,7 +88,7 @@
                 <!-- The row of the name for the patient  -->
                 <div class="col-sm-12">
                     <strong>Paciente :</strong>
-                    ${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}
+                    ${patient.firstName} ${patient.fatherLastName} ${patient.motherLastName}
                 </div>
             </div>
             <div class="row">

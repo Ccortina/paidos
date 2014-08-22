@@ -57,7 +57,7 @@ function addNewRelative(){
             data.push({name:this.name,value:$(this).val()});
         }    
     });
-    console.log(data);
+
     //Send to controller
     $.ajax({
         url:"/demo/relatives/saveNewRelative",

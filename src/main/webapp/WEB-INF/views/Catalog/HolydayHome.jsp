@@ -68,9 +68,6 @@
                                             <input type="button" class="btn btn-primary" value="Modificar dia festivo" onclick="modifyItem()" />
                                         </div>
                                         <div class="col-sm-2">
-                                            <input type="button" class="btn btn-primary" value="Informacion Asociada" onclick="additionalInfo()" />
-                                        </div>
-                                        <div class="col-sm-2">
                                             <input type="button" class="btn btn-danger" value="Borrar" onclick="deleteItem()" />
                                         </div>
                                     </div>

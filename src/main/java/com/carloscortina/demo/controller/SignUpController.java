@@ -64,7 +64,7 @@ public class SignUpController
 		if (!result.hasErrors())	// The validation was correct?
 		{
 			Staffmember staff = toStaffMember(form);
-			staffMemberService.createStaffmember(staff);	
+			//staffMemberService.createStaffmember(staff);	
 			
 			//Role role = roleService.(Integer.parseInt(form.getRole()));
 			

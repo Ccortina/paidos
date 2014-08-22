@@ -12,19 +12,33 @@
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
 <c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
 
+<c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
+
+<c:url var="inputmaskJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.js" />
+<c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
+<c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
+
+<c:url var="bvCSS" value="/resources/CSS/BootstrapValidator/bootstrapValidator.min.css" />
+<c:url var="bvJs" value="/resources/js/BootstrapPlugins/BootstrapValidator/bootstrapValidator.min.js" />
+
+<c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
+
 <!-- Files for the offcanvas function of bootstrap -->
 <c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
 <c:url var="offcanvasCss" value="/resources/CSS/offcanvas.css" />
 
 <c:url var="patientFileJS" value="/resources/js/PatientFile/${jsFile}" />
 
+<c:url var="uploaderJs" value="/resources/js/JQueryPlugins/Uploader/fileinput.min.js" />
+<c:url var="uploaderCss" value="/resources/CSS/uploader/fileinput.min.css" />
+
 <!-- Tabs -->
 <c:url var="patientBackgroundJS" value="/resources/js/PatientFile/Tabs/background.js" />
 <c:url var="documentsJS" value="/resources/js/PatientFile/Tabs/file.js" />
 <c:url var="laboratoryJS" value="/resources/js/PatientFile/Tabs/laboratoryTest.js" />
-<!--<c:url var="previousConsultationJS" value="/resources/js/PatientFile/Tabs/PreviousConsultation.js" />-->
 
-<script src="${dataTablesJS}" type="text/javascript"></script>
+<!-- Utilities -->
+<c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 
@@ -34,17 +48,37 @@
 
 <link href="${datePickerCSS}" rel="stylesheet" />
 
+<link href="${uploaderCss}" rel="stylesheet" />
+
+<link href="${bvCSS}" rel="stylesheet" />
+
+<script src="${dataTablesJS}" type="text/javascript"></script>
+
+<script src="${uploaderJs}" type="text/javascript"></script>
+
+<script src="${momentJs}" type="text/javascript"></script>
+
+<script src="${inputmaskJs}" type="text/javascript"></script>
+<script src="${inputmaskDateJs}" type="text/javascript"></script>
+<script src="${inputmaskRegexJs}" type="text/javascript"></script>
+
+<script src="${bvJs}" type="text/javascript"></script>
+
+<script src="${bootboxJs}" type="text/javascript"></script>
+
+<script src="${utilityJs}" type="text/javascript"></script>
+
+<script src="${patientFileJS}" type="text/javascript"></script>
+<script src="${patientBackgroundJS}" type="text/javascript"></script>
+<script src="${documentsJS}" type="text/javascript"></script>
+<script src="${laboratoryJS}" type="text/javascript"></script>
+
 <style type="text/css">
 	#modalPatientFamilyAddRelative .modal-dialog
 	{
 		width:60%;
 	}
 </style>
-
-<script src="${patientFileJS}" type="text/javascript"></script>
-<script src="${patientBackgroundJS}" type="text/javascript"></script>
-<script src="${documentsJS}" type="text/javascript"></script>
-<script src="${laboratoryJS}" type="text/javascript"></script>
 
 <!-- Main div container , centers everything-->
 <input type="hidden" id="hiddenPatientFileId" value="${patient.idPatient}">
@@ -63,19 +97,19 @@
                 <!-- The row of the name for the patient  -->
                 <div class="col-sm-12">
                     <strong>Paciente : </strong>
-                    ${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}
+                    ${patient.firstName} ${patient.fatherLastName} ${patient.motherLastName}
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <strong>Madre : </strong>
-                    ${mother.firstName} ${mother.secondName} ${mother.fatherLastName} ${mother.motherLastName}
+                    ${mother.firstName} ${mother.fatherLastName} ${mother.motherLastName}
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <strong>Padre : </strong>
-                    ${father.firstName} ${father.secondName} ${father.fatherLastName} ${father.motherLastName}
+                    ${father.firstName} ${father.fatherLastName} ${father.motherLastName}
                 </div>
             </div>
             <div class="row">
@@ -158,10 +192,9 @@
             
             <div class="tab-content">
                 <div id="resumen" class="tab-pane active"> <jsp:include page="PatientFileTabs/PatientAbstractTab.jsp" /></div>
-                <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /></div>
+                <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /> </div>
+                <div id="antecedentes" class="tab-pane"><jsp:include page="PatientFileTabs/PatientBackgroundTab.jsp" /></div>
             </div><!-- tab-content div -->
         </div>
-    </div>
-        
+    </div>        
 </div><!--/.container-->
-<!--<script src="${previousConsultationJS}" type="text/javascript"></script>-->
