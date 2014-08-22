@@ -10,6 +10,40 @@ $(document).ready(function() {
     uploadFile();    
 });
 
+function initializeUploadForm(){
+    $('#formUploadFile').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            date: {
+                validators: {
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    },
+                    date: {
+                        format: 'DD/MM/YYYY',
+                        message: 'No es una fecha valida dd/mm/aaaa'
+                    }
+                }
+            },
+            description: {
+                validators: {
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    }
+                }
+            }
+        },
+        submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
+        e.preventDefault();
+        uploadFile();
+    });
+}
+
 function uploadFile(){
     
     $("#formUploadFile").on('submit',function(e){
@@ -32,7 +66,6 @@ function uploadFile(){
         
         e.preventDefault();
     });
-    //$("#formUploadFile").submit();
 }
 
 function initializePatientDocumentsTable(){
@@ -46,8 +79,7 @@ function initializePatientDocumentsTable(){
        "info":false,
        "ajax":"/demo/patients/getPatientDocument",
        "columns":[
-           {"data":"name"},
-           {"data":"deleteBtn"}],
+           {"data":"name"}],
        "initComplete": function(settings,json){
             $('#tblConsultationPatientDocuments tbody tr').dblclick(function(e){
                 openDocument($("#tblConsultationPatientDocuments").DataTable().row(this).data()["name"]);

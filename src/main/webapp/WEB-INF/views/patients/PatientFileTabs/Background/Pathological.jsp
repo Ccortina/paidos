@@ -24,12 +24,11 @@
     <div class="col-sm-2">
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" class="btn btn-primary" value="Modificar" onclick="enableForm('pathologicalBackgroundForm');" />
+                <input type="button" class="btn btn-primary" value="Guardar" onclick="saveForm('pathologicalBackgroundForm');" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" id="btnpathologicalBackgroundFormCancelEditForm"class="btn btn-danger" value="Cancelar" onclick="disableForms();" />
             </div>
         </div>
     </div>

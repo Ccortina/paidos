@@ -6,7 +6,7 @@
 					<div class="from-group">
 						<label for="mother">Madre :</label> <input
 							class="form-control input-sm" id="mother" type="text"
-                                                        value="${mother.firstName} ${mother.secondName} ${mother.fatherLastName} ${mother.motherLastName}" disabled="true"/>
+                                                        value="${mother.firstName} ${mother.fatherLastName} ${mother.motherLastName}" disabled="true"/>
 					</div>
 				</div>
 			</div>
@@ -15,7 +15,7 @@
 					<div class="from-group">
 						<label for="father">Padre :</label> <input
 							class="form-control input-sm" id="father" type="text"
-							value="${father.firstName} ${father.secondName} ${father.fatherLastName} ${father.motherLastName}" disabled="true"/>
+							value="${father.firstName} ${father.fatherLastName} ${father.motherLastName}" disabled="true"/>
 					</div>
 				</div>
 			</div>

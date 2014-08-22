@@ -117,6 +117,9 @@ public class Patient implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     @JsonIgnore
     private List<AppointmentVaccine> appointmentVaccineList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
+    @JsonIgnore
+    private List<Documents> documentsList;
 
     public Patient() {
     }
@@ -200,6 +203,14 @@ public class Patient implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public List<Documents> getDocumentsList() {
+        return documentsList;
+    }
+
+    public void setDocumentsList(List<Documents> documentsList) {
+        this.documentsList = documentsList;
     }
 
     public String getSecondName() {

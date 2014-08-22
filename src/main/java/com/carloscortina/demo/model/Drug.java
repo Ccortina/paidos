@@ -159,14 +159,6 @@ public class Drug implements Serializable {
         return concentration;
     }
 
-    public List<CommercialName> getCommercialnameList1() {
-        return incompatibleCommercialNameList;
-    }
-
-    public void setCommercialnameList1(List<CommercialName> commercialnameList1) {
-        this.incompatibleCommercialNameList = commercialnameList1;
-    }
-
     public void setConcentration(Double concentration) {
         this.concentration = concentration;
     }

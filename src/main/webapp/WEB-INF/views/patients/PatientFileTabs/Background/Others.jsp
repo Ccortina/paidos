@@ -25,12 +25,11 @@
     <div class="col-sm-2">
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" class="btn btn-primary" value="Modificar" onclick="enableForm('othersForm');">
+                <input type="button" class="btn btn-primary" value="Guardar" onclick="saveForm('othersForm');">
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <input type="button" id="btnothersFormCancelEditForm" class="btn btn-danger" value="Cancelar" onclick="disableForms();">
             </div>
         </div>
     </div>

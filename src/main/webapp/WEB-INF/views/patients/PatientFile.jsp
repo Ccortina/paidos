@@ -11,6 +11,7 @@
 <!-- Files for data tables function -->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
 <c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
+<c:url var="dataTablesModCSS" value="/resources/CSS/DataTables/datatables.mod.css" />
 
 <c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
 
@@ -36,11 +37,13 @@
 <c:url var="patientBackgroundJS" value="/resources/js/PatientFile/Tabs/background.js" />
 <c:url var="documentsJS" value="/resources/js/PatientFile/Tabs/file.js" />
 <c:url var="laboratoryJS" value="/resources/js/PatientFile/Tabs/laboratoryTest.js" />
+<c:url var="immunizationJS" value="/resources/js/PatientFile/Tabs/Inmunization.js" />
 
 <!-- Utilities -->
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
+<link href="${dataTablesModCSS}" rel="stylesheet" />
 
 <script src="${offcanvasJs}" type="text/javascript"></script>
 
@@ -72,6 +75,7 @@
 <script src="${patientBackgroundJS}" type="text/javascript"></script>
 <script src="${documentsJS}" type="text/javascript"></script>
 <script src="${laboratoryJS}" type="text/javascript"></script>
+<script src="${immunizationJS}" type="text/javascript"></script>
 
 <style type="text/css">
 	#modalPatientFamilyAddRelative .modal-dialog
@@ -194,6 +198,8 @@
                 <div id="resumen" class="tab-pane active"> <jsp:include page="PatientFileTabs/PatientAbstractTab.jsp" /></div>
                 <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /> </div>
                 <div id="antecedentes" class="tab-pane"><jsp:include page="PatientFileTabs/PatientBackgroundTab.jsp" /></div>
+                <div id="documentos" class="tab-pane"><jsp:include page="PatientFileTabs/Files.jsp" /></div>
+                <div id="inmunizaciones" class="tab-pane"><jsp:include page="PatientFileTabs/inmunization.jsp" /></div>
             </div><!-- tab-content div -->
         </div>
     </div>        

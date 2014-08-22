@@ -3,6 +3,7 @@ package com.carloscortina.demo.controller;
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.AppointmentStatus;
+import com.carloscortina.demo.model.AppointmentVaccine;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationmotive;
 import com.carloscortina.demo.model.Document;
@@ -27,6 +28,7 @@ import com.carloscortina.demo.model.PatientRegistrationForm;
 import com.carloscortina.demo.model.PatientRelative;
 import com.carloscortina.demo.model.PatientRelativePK;
 import com.carloscortina.demo.model.PatientVaccine;
+import com.carloscortina.demo.model.PatientVaccinePK;
 import com.carloscortina.demo.model.PerBackNoPat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
@@ -34,9 +36,12 @@ import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.AppointmentStatusService;
+import com.carloscortina.demo.service.AppointmentVaccineService;
 import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.ConsultationmotiveService;
+import com.carloscortina.demo.service.DocumentService;
+import com.carloscortina.demo.service.DocumentcategoryService;
 import com.carloscortina.demo.service.LaboratoryTestResultService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.PatientRelativeService;
@@ -66,6 +71,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -118,6 +124,14 @@ public class PatientsController {
         private VaccineService vaccineService;
         @Autowired
         private VaccineTypeService vtService;
+        @Autowired
+        private DocumentcategoryService dcService;
+        @Autowired
+        private DocumentService documentService;
+        @Autowired
+        AppointmentVaccineService avService;
+        @Autowired
+        AppointmentStatusService apsService;
         
         private Patient patient;
         private User doctor;
@@ -398,9 +412,9 @@ public class PatientsController {
         }
         
         @RequestMapping(value="getPatientProgrammedVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getPatientProgrammedVaccine(int idPatient){
+        public @ResponseBody JsonPack<PatientVaccine> getPatientProgrammedVaccine(){
             Date currentDate = new Date();
-            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+idPatient);
+            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
             //Check if any vaccine is outdated
             for(PatientVaccine vaccine: pv){
                 //check if there's a programmed date
@@ -416,8 +430,54 @@ public class PatientsController {
                     }
                 }
             }
-            pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+idPatient);
+            pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
             return new JsonPack<PatientVaccine>(pv);
+        }
+        
+        @RequestMapping(value="editProgrammedVaccine",method=RequestMethod.POST)
+        public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
+            
+            PatientVaccinePK id = new PatientVaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
+            PatientVaccine currentPV = pvService.getById(id);
+            
+            
+            PatientVaccine pv = new PatientVaccine();
+            pv.setPatientVaccinePK(id);
+            try{
+                Date applicationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("applicationDate"));
+                Date programmedDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("programedDate"));
+                Date expirationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("expirationDate"));
+                pv.setApplicationDate(applicationDate);
+                pv.setProgramedDate(programmedDate);
+                pv.setBatch(params.get("batch"));
+                pv.setName(params.get("name"));
+                pv.setExpirationDate(expirationDate);
+                pv.setProgramManual((short)1);
+                if(params.get("suspended") != null){
+                    pv.setSuspended((short)1);
+                }else{
+                    pv.setSuspended(currentPV.getSuspended());
+                }
+                pv.setNotes(params.get("notes"));
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            if(currentPV.getApplicationDate() == null){
+                if(pv.getApplicationDate() != null){
+                    //The vaccine was applied
+                    pv.setSuspended((short)0);
+                    List<AppointmentVaccine> avList = avService.getListOfItem("FROM AppointmentVaccine WHERE idVaccine="+id.getIdVaccine()+" AND idPatient="+id.getIdPatient());
+                    for(AppointmentVaccine av: avList ){
+                        av.getAppointment().setIdStatus(apsService.getById(1));
+                    }
+                }
+            }
+
+            pvService.updateItem(pv);
+            
+            return "";
         }
 	
         @RequestMapping(value="patientConsultation")
@@ -491,6 +551,7 @@ public class PatientsController {
             model.addAttribute("religionType", religionService.getAllReligions());
             model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
             model.addAttribute("jsFile","patientFile.js");
+            model.addAttribute("documentCategories",dcService.getAll("Documentcategory"));
             
             return("patients/PatientFile");
         }
@@ -704,9 +765,9 @@ public class PatientsController {
 
             try{
                 inputStream = file.getInputStream();
-                File newFolder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient());
+                File newFolder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
                 newFolder.mkdir();
-                File newFile = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+fileName);
+                File newFile = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient()+"/"+fileName);
                 if(!newFile.exists()){
                     newFile.createNewFile();
                 }
@@ -727,7 +788,11 @@ public class PatientsController {
 	
         @RequestMapping(value="getPatientDocument")
         public @ResponseBody JsonPack<Document> getDocuments(){
-            File folder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient());
+
+            File folder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
+            if(!folder.exists()){
+                return new JsonPack<Document>(null);
+            }
             File[] listOfFiles = folder.listFiles();
             List<Document> documents = new ArrayList<Document>();
             

@@ -22,7 +22,7 @@ public class HbnActivityDao extends GenericHbnDao<Activity> implements ActivityD
         
         String hql = "SELECT new Activity(activity.idActivity,activity.activity,activity.activityCost,"
                 + "activity.consultationDefault,activity.active,"
-                + "activity.idActivityType,activity.includeInBill) FROM Activity as activity JOIN activity.userList user WHERE user.idUser=:idUser "
+                + "activity.idActivityType) FROM Activity as activity JOIN activity.userList user WHERE user.idUser=:idUser "
                 + "AND activity.active = 1";
         Query query = getSession().createQuery(hql);
         
