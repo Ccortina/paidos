@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DrugDoseDao;
-import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.Drugdose;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,47 +25,52 @@ public class DrugDoseServiceImp implements DrugDoseService{
     private DrugDoseDao drugDose;
 
     @Override
-    public void create(DrugDose item) {
+    public void create(Drugdose item) {
         drugDose.create(item);
     }
 
     @Override
-    public DrugDose getById(int id) {
+    public Drugdose getById(int id) {
         return drugDose.getById(id);
     }
 
     @Override
-    public void updateItem(DrugDose item) {
+    public void updateItem(Drugdose item) {
         drugDose.updateItem(item);
     }
 
     @Override
-    public List<DrugDose> getAll(String table) {
+    public List<Drugdose> getAll(String table) {
         return drugDose.getAll(table);
     }
 
     @Override
-    public List<DrugDose> getListOfItem(String query) {
+    public List<Drugdose> getListOfItem(String query) {
         return drugDose.getListOfItem(query);
     }
 
     @Override
-    public void delete(DrugDose item) {
+    public void delete(Drugdose item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<DrugDose> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Drugdose> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<DrugDose> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Drugdose> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(DrugDose item) {
+    public void mergeItem(Drugdose item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Drugdose> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

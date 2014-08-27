@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.VaccineType;
+import com.carloscortina.demo.model.Vaccinetype;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface VaccineTypeDao extends GenericDao<VaccineType>{
+public interface VaccineTypeDao extends GenericDao<Vaccinetype>{
     
 }

@@ -75,5 +75,10 @@ public class ConsultationactivityServiceImp implements ConsultationactivityServi
     public List<Consultationactivity> getConsultationsByActivity(int idActivity) {
         return caDao.getConsultationsByActivity(idActivity);
     }
+
+    @Override
+    public List<Consultationactivity> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

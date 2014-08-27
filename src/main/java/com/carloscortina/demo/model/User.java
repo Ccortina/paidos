@@ -1,3 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -5,40 +11,32 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "user")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.findByIdUser", query = "SELECT u FROM User u WHERE u.idUser = :idUser"),
-    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findByAddedDate", query = "SELECT u FROM User u WHERE u.addedDate = :addedDate")})
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")})
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,38 +45,46 @@ public class User implements Serializable {
     @Column(name = "idUser")
     private Integer idUser;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "Username")
     private String username;
+    @JsonIgnore
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "Password")
     private String password;
+    @JsonIgnore
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "Email")
     private String email;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "AddedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedDate;
-    @ManyToMany(mappedBy = "userList")
+    @Column(name = "active")
+    private int active;
     @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<CommercialName> commercialnameList;
-    @ManyToMany(mappedBy = "userList")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
+    private List<Consultation> consultationList;
     @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Drug> drugList;
-    @ManyToMany(mappedBy = "userList")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Cie10doctor> cie10doctorList;
     @JsonIgnore
-    private List<Treatment> treatmentList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
+    private List<Appointment> appointmentList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registeredBy")
+    private List<Appointment> appointmentList1;
     @JoinColumn(name = "idStaffMember", referencedColumnName = "idStaffMember")
     @ManyToOne(optional = false)
     private Staffmember idStaffMember;
-    @ManyToMany(mappedBy = "userList")
     @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Activity> activityList;
-    @Column(name = "active")
-    private Short active;
     @JoinColumn(name = "idRole", referencedColumnName = "idRole")
     @ManyToOne(optional = false)
     private Userrole idRole;
@@ -143,31 +149,44 @@ public class User implements Serializable {
         this.addedDate = addedDate;
     }
 
-    @XmlTransient
-    public List<CommercialName> getCommercialnameList() {
-        return commercialnameList;
+    public int getActive() {
+        return active;
     }
 
-    public void setCommercialnameList(List<CommercialName> commercialnameList) {
-        this.commercialnameList = commercialnameList;
+    public void setActive(int active) {
+        this.active = active;
     }
 
-    @XmlTransient
-    public List<Drug> getDrugList() {
-        return drugList;
+    public List<Consultation> getConsultationList() {
+        return consultationList;
     }
 
-    public void setDrugList(List<Drug> drugList) {
-        this.drugList = drugList;
+    public void setConsultationList(List<Consultation> consultationList) {
+        this.consultationList = consultationList;
     }
 
-    @XmlTransient
-    public List<Treatment> getTreatmentList() {
-        return treatmentList;
+    public List<Cie10doctor> getCie10doctorList() {
+        return cie10doctorList;
     }
 
-    public void setTreatmentList(List<Treatment> treatmentList) {
-        this.treatmentList = treatmentList;
+    public void setCie10doctorList(List<Cie10doctor> cie10doctorList) {
+        this.cie10doctorList = cie10doctorList;
+    }
+
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
+    }
+
+    public void setAppointmentList(List<Appointment> appointmentList) {
+        this.appointmentList = appointmentList;
+    }
+
+    public List<Appointment> getAppointmentList1() {
+        return appointmentList1;
+    }
+
+    public void setAppointmentList1(List<Appointment> appointmentList1) {
+        this.appointmentList1 = appointmentList1;
     }
 
     public Staffmember getIdStaffMember() {
@@ -176,22 +195,6 @@ public class User implements Serializable {
 
     public void setIdStaffMember(Staffmember idStaffMember) {
         this.idStaffMember = idStaffMember;
-    }
-
-    public List<Activity> getActivityList() {
-        return activityList;
-    }
-
-    public void setActivityList(List<Activity> activityList) {
-        this.activityList = activityList;
-    } 
-
-    public Short getActive() {
-        return active;
-    }
-
-    public void setActive(Short active) {
-        this.active = active;
     }
 
     public Userrole getIdRole() {
@@ -224,7 +227,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.User[ idUser=" + idUser + " ]";
+        return "com.carloscortina.demo.model.User[ idUser=" + idUser + " ]";
     }
     
 }

@@ -15,8 +15,8 @@ import org.hibernate.criterion.LogicalExpression;
 @Transactional
 public class StaffMemberServiceImp implements StaffMemberService {
 
-	@Autowired
-	private StaffMemberDao staffMemberDao;
+    @Autowired
+    private StaffMemberDao staffMemberDao;
 
     @Override
     public void create(Staffmember item) {
@@ -61,6 +61,11 @@ public class StaffMemberServiceImp implements StaffMemberService {
     @Override
     public List<Staffmember> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return staffMemberDao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Staffmember> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 	
 }

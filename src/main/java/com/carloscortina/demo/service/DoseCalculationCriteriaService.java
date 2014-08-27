@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.DoseCalculationCriteria;
+import com.carloscortina.demo.model.Dosecalculationcriteria;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DoseCalculationCriteriaService extends GenericService<DoseCalculationCriteria>{
+public interface DoseCalculationCriteriaService extends GenericService<Dosecalculationcriteria>{
     
 }

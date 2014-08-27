@@ -95,4 +95,9 @@ public class DrugServiceImp implements DrugService
         return drugDao.getDrugByAdministrationUnitAndUser(unitId, userId);
     }
 
+    @Override
+    public List<Drug> getAllActiveItems() {
+        return drugDao.getAllActiveItems();
+    }
+
 }

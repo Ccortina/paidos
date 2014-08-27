@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.Drugdose;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface DrugDoseDao extends GenericDao<DrugDose> {
+public interface DrugDoseDao extends GenericDao<Drugdose> {
     
 }

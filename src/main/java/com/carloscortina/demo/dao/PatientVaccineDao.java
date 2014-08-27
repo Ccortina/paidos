@@ -4,14 +4,16 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.PatientVaccine;
-import com.carloscortina.demo.model.PatientVaccinePK;
+import com.carloscortina.demo.model.Patientvaccine;
+import com.carloscortina.demo.model.PatientvaccinePK;
+import java.util.List;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface PatientVaccineDao extends GenericDao<PatientVaccine>{
+public interface PatientVaccineDao extends GenericDao<Patientvaccine>{
 
-    public PatientVaccine getById(PatientVaccinePK id);
+    public Patientvaccine getById(PatientvaccinePK id);
+    public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine);
 }

@@ -1,60 +1,65 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.carloscortina.demo.model;
 
+import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 /**
  *
- * @author carlos cortina
+ * @author Carlos Cortina
  */
-
 @Entity
 @Table(name = "record")
-public class Record {
-
+@NamedQueries({
+    @NamedQuery(name = "Record.findAll", query = "SELECT r FROM Record r")})
+public class Record implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "idRecord")
     private Integer idRecord;
-    
     @Size(max = 65535)
     @Column(name = "perinatalBackground")
     private String perinatalBackground;
-    
     @Size(max = 65535)
     @Column(name = "developmentBackground")
     private String developmentBackground;
-
     @Size(max = 65535)
     @Column(name = "surgicalHistory")
     private String surgicalHistory;
-
     @Size(max = 65535)
     @Column(name = "hereditaryAndFamilyBackground")
     private String hereditaryAndFamilyBackground;
- 
     @Size(max = 65535)
     @Column(name = "others")
     private String others;
-    
     @Size(max = 65535)
     @Column(name = "pathologicalBackgorund")
     private String pathologicalBackgorund;
-    
     @Size(max = 65535)
     @Column(name = "alergicBackground")
     private String alergicBackground;
-    
     @JoinColumn(name = "idPerBackNoPat", referencedColumnName = "idPerinatalBackground")
     @ManyToOne(optional = false)
-    private PerBackNoPat idPerBackNoPat;
+    private Perbacknopat idPerBackNoPat;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
@@ -66,7 +71,7 @@ public class Record {
         this.idRecord = idRecord;
     }
 
-    public Record(PerBackNoPat idPerBackNoPat, Patient idPatient) {
+    public Record(Perbacknopat idPerBackNoPat, Patient idPatient) {
         this.idPerBackNoPat = idPerBackNoPat;
         this.idPatient = idPatient;
     }
@@ -135,11 +140,11 @@ public class Record {
         this.alergicBackground = alergicBackground;
     }
 
-    public PerBackNoPat getIdPerBackNoPat() {
+    public Perbacknopat getIdPerBackNoPat() {
         return idPerBackNoPat;
     }
 
-    public void setIdPerBackNoPat(PerBackNoPat idPerBackNoPat) {
+    public void setIdPerBackNoPat(Perbacknopat idPerBackNoPat) {
         this.idPerBackNoPat = idPerBackNoPat;
     }
 
@@ -173,7 +178,7 @@ public class Record {
 
     @Override
     public String toString() {
-        return "entities.Record[ idRecord=" + idRecord + " ]";
+        return "com.carloscortina.demo.model.Record[ idRecord=" + idRecord + " ]";
     }
     
 }

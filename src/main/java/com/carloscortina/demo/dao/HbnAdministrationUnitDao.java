@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.AdministrationUnit;
+import com.carloscortina.demo.model.Administrationunit;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnAdministrationUnitDao extends GenericHbnDao<AdministrationUnit> implements AdministrationUnitDao{
+public class HbnAdministrationUnitDao extends GenericHbnDao<Administrationunit> implements AdministrationUnitDao{
     
 }

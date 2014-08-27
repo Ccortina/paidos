@@ -7,7 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DrugPresentationDao;
-import com.carloscortina.demo.model.DrugPresentation;
+import com.carloscortina.demo.model.Drugpresentation;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -27,48 +27,53 @@ public class ServiceDrugPresentationImp implements ServiceDrugPresentation{
     private DrugPresentationDao drugPresentationDao;
     
     @Override
-    public void create(DrugPresentation item) {
+    public void create(Drugpresentation item) {
         drugPresentationDao.create(item);
     }
 
     @Override
-    public void delete(DrugPresentation item) {
+    public void delete(Drugpresentation item) {
         drugPresentationDao.delete(item);
     }
 
     @Override
-    public DrugPresentation getById(int id) {
+    public Drugpresentation getById(int id) {
         return drugPresentationDao.getById(id);
     }
 
     @Override
-    public void updateItem(DrugPresentation item) {
+    public void updateItem(Drugpresentation item) {
         drugPresentationDao.updateItem(item);
     }
 
     @Override
-    public void mergeItem(DrugPresentation item) {
+    public void mergeItem(Drugpresentation item) {
         drugPresentationDao.mergeItem(item);
     }
 
     @Override
-    public List<DrugPresentation> getAll(String table) {
+    public List<Drugpresentation> getAll(String table) {
         return drugPresentationDao.getAll(table);
     }
 
     @Override
-    public List<DrugPresentation> getListOfItem(String query) {
+    public List<Drugpresentation> getListOfItem(String query) {
         return drugPresentationDao.getListOfItem(query);
     }
 
     @Override
-    public List<DrugPresentation> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Drugpresentation> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         return drugPresentationDao.getSpecificColumnsList(columns, restrictions);
     }
 
     @Override
-    public List<DrugPresentation> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Drugpresentation> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return drugPresentationDao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Drugpresentation> getAllActiveItems() {
+        return drugPresentationDao.getAllActiveItems();
     }
     
 }

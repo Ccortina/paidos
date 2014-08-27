@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,38 +18,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "drug")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Drug.findAll", query = "SELECT d FROM Drug d"),
-    @NamedQuery(name = "Drug.findByIdDrug", query = "SELECT d FROM Drug d WHERE d.idDrug = :idDrug"),
-    @NamedQuery(name = "Drug.findByConcentration", query = "SELECT d FROM Drug d WHERE d.concentration = :concentration"),
-    @NamedQuery(name = "Drug.findByTreatmentDays", query = "SELECT d FROM Drug d WHERE d.treatmentDays = :treatmentDays"),
-    @NamedQuery(name = "Drug.findByDailyFrequency", query = "SELECT d FROM Drug d WHERE d.dailyFrequency = :dailyFrequency"),
-    @NamedQuery(name = "Drug.findByActive", query = "SELECT d FROM Drug d WHERE d.active = :active")})
+    @NamedQuery(name = "Drug.findAll", query = "SELECT d FROM Drug d")})
 public class Drug implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idDrug")
     private Integer idDrug;
+    @Size(max = 65535)
     @Column(name = "drug")
     private String drug;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -55,53 +54,48 @@ public class Drug implements Serializable {
     private Double concentration;
     @Column(name = "treatmentDays")
     private Integer treatmentDays;
+    @Size(max = 65535)
     @Column(name = "applicationSchedule")
     private String applicationSchedule;
     @Column(name = "dailyFrequency")
     private Integer dailyFrequency;
+    @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "active")
-    private Short active;
-    @JoinTable(name = "doctordrugcatalog", joinColumns = {
-    @JoinColumn(name = "IdDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
-    @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
-    @ManyToMany
-    @JsonIgnore
-    private List<User> userList;
+    private int active;
+    @JoinColumn(name = "drugPresentationId", referencedColumnName = "drugPresentationId")
+    @ManyToOne(optional = false)
+    private Drugpresentation drugPresentationId;
+    @JoinColumn(name = "doseCalculationCriteriaId", referencedColumnName = "idDoseCalculationCriteria")
+    @ManyToOne(optional = false)
+    private Dosecalculationcriteria doseCalculationCriteriaId;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDrug")
+    private List<Drugdose> drugdoseList;
+    @JoinColumn(name = "applicationMethodId", referencedColumnName = "idApplicationMethod")
+    @ManyToOne(optional = false)
+    private Applicationmethod applicationMethodId;
+    @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
+    @ManyToOne(optional = false)
+    private Administrationunit administrationUnitId;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "treatmentdrug", joinColumns = {
         @JoinColumn(name = "drugId", referencedColumnName = "idDrug")}, inverseJoinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
     @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Treatment> treatmentList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
-    @JsonIgnore
-    private List<CommercialName> commercialnameList;
-    @JoinColumn(name = "drugPresentationId", referencedColumnName = "drugPresentationId")
-    @ManyToOne
-    private DrugPresentation drugPresentationId;
-    @JoinColumn(name = "doseCalculationCriteriaId", referencedColumnName = "idDoseCalculationCriteria")
-    @ManyToOne
-    private DoseCalculationCriteria doseCalculationCriteriaId;
-    @JoinColumn(name = "applicationMethodId", referencedColumnName = "idApplicationMethod")
-    @ManyToOne
-    private ApplicationMethod applicationMethodId;
-    @JoinColumn(name = "administrationUnitId", referencedColumnName = "idAdministrationUnit")
-    @ManyToOne
-    private AdministrationUnit administrationUnitId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDrug")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<DrugDose> drugDoseList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
-    @JsonIgnore
-    private List<CommercialName> incompatibleCommercialNameList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Incompatibledrugs> incompatibledrugsList;
+    @JoinTable(name = "patientdrugalergic", joinColumns = {
+        @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
+        @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")})
+    @ManyToMany
     @JsonIgnore
-    private List<Drugrisk> drugriskList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug1")
-    @JsonIgnore
-    private List<Drugrisk> drugriskList1;
+    private List<Patient> patientList;
 
     public Drug() {
     }
@@ -110,33 +104,9 @@ public class Drug implements Serializable {
         this.idDrug = idDrug;
     }
 
-    public Drug(Integer idDrug, String drug) {
+    public Drug(Integer idDrug, int active) {
         this.idDrug = idDrug;
-        this.drug = drug;
-    }
-
-    public Drug(Integer idDrug, String drug, Double concentration, DrugPresentation drugPresentationId, DoseCalculationCriteria doseCalculationCriteriaId, AdministrationUnit administrationUnitId) {
-        this.idDrug = idDrug;
-        this.drug = drug;
-        this.concentration = concentration;
-        this.drugPresentationId = drugPresentationId;
-        this.doseCalculationCriteriaId = doseCalculationCriteriaId;
-        this.administrationUnitId = administrationUnitId;
-    }
-
-    public Drug(Integer idDrug, String drug, Double concentration, Integer treatmentDays, String applicationSchedule, Integer dailyFrequency, String notes, Short active, DrugPresentation drugPresentationId, DoseCalculationCriteria doseCalculationCriteriaId, ApplicationMethod applicationMethodId, AdministrationUnit administrationUnitId) {
-        this.idDrug = idDrug;
-        this.drug = drug;
-        this.concentration = concentration;
-        this.treatmentDays = treatmentDays;
-        this.applicationSchedule = applicationSchedule;
-        this.dailyFrequency = dailyFrequency;
-        this.notes = notes;
         this.active = active;
-        this.drugPresentationId = drugPresentationId;
-        this.doseCalculationCriteriaId = doseCalculationCriteriaId;
-        this.applicationMethodId = applicationMethodId;
-        this.administrationUnitId = administrationUnitId;
     }
 
     public Integer getIdDrug() {
@@ -161,22 +131,6 @@ public class Drug implements Serializable {
 
     public void setConcentration(Double concentration) {
         this.concentration = concentration;
-    }
-
-    public List<Drugrisk> getDrugriskList() {
-        return drugriskList;
-    }
-
-    public void setDrugriskList(List<Drugrisk> drugriskList) {
-        this.drugriskList = drugriskList;
-    }
-
-    public List<Drugrisk> getDrugriskList1() {
-        return drugriskList1;
-    }
-
-    public void setDrugriskList1(List<Drugrisk> drugriskList1) {
-        this.drugriskList1 = drugriskList1;
     }
 
     public Integer getTreatmentDays() {
@@ -211,87 +165,68 @@ public class Drug implements Serializable {
         this.notes = notes;
     }
 
-    public Short getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(Short active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
-    public List<CommercialName> getIncompatibleCommercialNameList() {
-        return incompatibleCommercialNameList;
-    }
-
-    public void setIncompatibleCommercialNameList(List<CommercialName> incompatibleCommercialNameList) {
-        this.incompatibleCommercialNameList = incompatibleCommercialNameList;
-    }
-
-    @XmlTransient
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
-    @XmlTransient
-    public List<Treatment> getTreatmentList() {
-        return treatmentList;
-    }
-
-    public void setTreatmentList(List<Treatment> treatmentList) {
-        this.treatmentList = treatmentList;
-    }
-
-    @XmlTransient
-    public List<CommercialName> getCommercialnameList() {
-        return commercialnameList;
-    }
-
-    public void setCommercialnameList(List<CommercialName> commercialnameList) {
-        this.commercialnameList = commercialnameList;
-    }
-
-    public DrugPresentation getDrugPresentationId() {
+    public Drugpresentation getDrugPresentationId() {
         return drugPresentationId;
     }
 
-    public void setDrugPresentationId(DrugPresentation drugPresentationId) {
+    public void setDrugPresentationId(Drugpresentation drugPresentationId) {
         this.drugPresentationId = drugPresentationId;
     }
 
-    public DoseCalculationCriteria getDoseCalculationCriteriaId() {
+    public Dosecalculationcriteria getDoseCalculationCriteriaId() {
         return doseCalculationCriteriaId;
     }
 
-    public void setDoseCalculationCriteriaId(DoseCalculationCriteria doseCalculationCriteriaId) {
+    public void setDoseCalculationCriteriaId(Dosecalculationcriteria doseCalculationCriteriaId) {
         this.doseCalculationCriteriaId = doseCalculationCriteriaId;
     }
 
-    public ApplicationMethod getApplicationMethodId() {
+    public List<Drugdose> getDrugdoseList() {
+        return drugdoseList;
+    }
+
+    public void setDrugdoseList(List<Drugdose> drugdoseList) {
+        this.drugdoseList = drugdoseList;
+    }
+
+    public Applicationmethod getApplicationMethodId() {
         return applicationMethodId;
     }
 
-    public void setApplicationMethodId(ApplicationMethod applicationMethodId) {
+    public void setApplicationMethodId(Applicationmethod applicationMethodId) {
         this.applicationMethodId = applicationMethodId;
     }
 
-    public AdministrationUnit getAdministrationUnitId() {
+    public Administrationunit getAdministrationUnitId() {
         return administrationUnitId;
     }
 
-    public void setAdministrationUnitId(AdministrationUnit administrationUnitId) {
+    public void setAdministrationUnitId(Administrationunit administrationUnitId) {
         this.administrationUnitId = administrationUnitId;
     }
 
-    public List<DrugDose> getDrugDoseList() {
-        return drugDoseList;
+    public List<Incompatibledrugs> getIncompatibledrugsList() {
+        return incompatibledrugsList;
     }
 
-    public void setDrugDoseList(List<DrugDose> drugDoseList) {
-        this.drugDoseList = drugDoseList;
+    public void setIncompatibledrugsList(List<Incompatibledrugs> incompatibledrugsList) {
+        this.incompatibledrugsList = incompatibledrugsList;
+    }
+
+    public List<Patient> getPatientList() {
+        return patientList;
+    }
+
+    public void setPatientList(List<Patient> patientList) {
+        this.patientList = patientList;
     }
 
     @Override
@@ -316,7 +251,15 @@ public class Drug implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.Drug[ idDrug=" + idDrug + " ]";
+        return "com.carloscortina.demo.model.Drug[ idDrug=" + idDrug + " ]";
+    }
+
+    public List<Treatment> getTreatmentList() {
+        return treatmentList;
+    }
+
+    public void setTreatmentList(List<Treatment> treatmentList) {
+        this.treatmentList = treatmentList;
     }
     
 }

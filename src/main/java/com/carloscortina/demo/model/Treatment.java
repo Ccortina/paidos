@@ -1,8 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,32 +15,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "treatment")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Treatment.findAll", query = "SELECT t FROM Treatment t"),
-    @NamedQuery(name = "Treatment.findByIdTreatment", query = "SELECT t FROM Treatment t WHERE t.idTreatment = :idTreatment"),
-    @NamedQuery(name = "Treatment.findByActive", query = "SELECT t FROM Treatment t WHERE t.active = :active")})
+    @NamedQuery(name = "Treatment.findAll", query = "SELECT t FROM Treatment t")})
 public class Treatment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,27 +42,26 @@ public class Treatment implements Serializable {
     @Column(name = "IdTreatment")
     private Integer idTreatment;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 65535)
     @Column(name = "treatment")
     private String treatment;
+    @Size(max = 65535)
     @Column(name = "directions")
     private String directions;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "active")
-    private String active;
-    @JoinTable(name = "doctortreatmentcatalog", joinColumns = {
-        @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")}, inverseJoinColumns = {
-        @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
-    @ManyToMany
+    private int active;
     @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<User> userList;
     @ManyToMany(mappedBy = "treatmentList")
-    @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Drug> drugList;
-    @ManyToMany(mappedBy = "treatmentList")
     @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(mappedBy = "treatmentList")
     private List<Cie10> cie10List;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idTreatment")
+    private List<Diagnostic> diagnosticList;
 
     public Treatment() {
     }
@@ -73,20 +70,11 @@ public class Treatment implements Serializable {
         this.idTreatment = idTreatment;
     }
 
-    public Treatment(Integer idTreatment, String treatment, String active) {
+    public Treatment(Integer idTreatment, String treatment, int active) {
         this.idTreatment = idTreatment;
         this.treatment = treatment;
         this.active = active;
     }
-
-    public Treatment(Integer idTreatment, String treatment, String directions, String active) {
-        this.idTreatment = idTreatment;
-        this.treatment = treatment;
-        this.directions = directions;
-        this.active = active;
-    }
-    
-    
 
     public Integer getIdTreatment() {
         return idTreatment;
@@ -112,24 +100,14 @@ public class Treatment implements Serializable {
         this.directions = directions;
     }
 
-    public String getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(String active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
-    @XmlTransient
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
-    @XmlTransient
     public List<Drug> getDrugList() {
         return drugList;
     }
@@ -144,6 +122,14 @@ public class Treatment implements Serializable {
 
     public void setCie10List(List<Cie10> cie10List) {
         this.cie10List = cie10List;
+    }
+
+    public List<Diagnostic> getDiagnosticList() {
+        return diagnosticList;
+    }
+
+    public void setDiagnosticList(List<Diagnostic> diagnosticList) {
+        this.diagnosticList = diagnosticList;
     }
 
     @Override
@@ -168,7 +154,7 @@ public class Treatment implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.Treatment[ idTreatment=" + idTreatment + " ]";
+        return "com.carloscortina.demo.model.Treatment[ idTreatment=" + idTreatment + " ]";
     }
     
 }

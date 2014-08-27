@@ -1,6 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package com.carloscortina.demo.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,23 +15,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author carloscortina
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "diagnostic")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Diagnostic.findAll", query = "SELECT d FROM Diagnostic d"),
-    @NamedQuery(name = "Diagnostic.findByIdDiagnostic", query = "SELECT d FROM Diagnostic d WHERE d.idDiagnostic = :idDiagnostic"),
-    @NamedQuery(name = "Diagnostic.findByIdCommercialName", query = "SELECT d FROM Diagnostic d WHERE d.idCommercialName = :idCommercialName")})
+    @NamedQuery(name = "Diagnostic.findAll", query = "SELECT d FROM Diagnostic d")})
 public class Diagnostic implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,18 +36,19 @@ public class Diagnostic implements Serializable {
     @Basic(optional = false)
     @Column(name = "idDiagnostic")
     private Integer idDiagnostic;
-    @Basic(optional = false)
-    @JoinColumn(name = "IdCommercialName", referencedColumnName = "idcommercialName")
-    @ManyToOne
-    private CommercialName idCommercialName;
+    @ManyToMany(mappedBy = "diagnosticList")
+    private List<Consultation> consultationList;
     @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Treatment idTreatment;
     @JoinColumn(name = "idMedecine", referencedColumnName = "idDrug")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Drug idMedecine;
+    @JoinColumn(name = "IdCommercialName", referencedColumnName = "idcommercialName")
+    @ManyToOne
+    private Commercialname idCommercialName;
     @JoinColumn(name = "idCIE10", referencedColumnName = "idCIE10")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Cie10 idCIE10;
 
     public Diagnostic() {
@@ -51,13 +56,6 @@ public class Diagnostic implements Serializable {
 
     public Diagnostic(Integer idDiagnostic) {
         this.idDiagnostic = idDiagnostic;
-    }
-    
-    public Diagnostic(CommercialName idCommercialName, Treatment idTreatment, Drug idMedecine, Cie10 idCIE10) {
-        this.idCommercialName = idCommercialName;
-        this.idTreatment = idTreatment;
-        this.idMedecine = idMedecine;
-        this.idCIE10 = idCIE10;
     }
 
     public Integer getIdDiagnostic() {
@@ -68,12 +66,12 @@ public class Diagnostic implements Serializable {
         this.idDiagnostic = idDiagnostic;
     }
 
-    public CommercialName getIdCommercialName() {
-        return idCommercialName;
+    public List<Consultation> getConsultationList() {
+        return consultationList;
     }
 
-    public void setIdCommercialName(CommercialName idCommercialName) {
-        this.idCommercialName = idCommercialName;
+    public void setConsultationList(List<Consultation> consultationList) {
+        this.consultationList = consultationList;
     }
 
     public Treatment getIdTreatment() {
@@ -92,6 +90,14 @@ public class Diagnostic implements Serializable {
         this.idMedecine = idMedecine;
     }
 
+    public Commercialname getIdCommercialName() {
+        return idCommercialName;
+    }
+
+    public void setIdCommercialName(Commercialname idCommercialName) {
+        this.idCommercialName = idCommercialName;
+    }
+
     public Cie10 getIdCIE10() {
         return idCIE10;
     }
@@ -99,44 +105,30 @@ public class Diagnostic implements Serializable {
     public void setIdCIE10(Cie10 idCIE10) {
         this.idCIE10 = idCIE10;
     }
-    
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + (this.idDiagnostic != null ? this.idDiagnostic.hashCode() : 0);
-        hash = 37 * hash + (this.idTreatment != null ? this.idTreatment.hashCode() : 0);
-        hash = 37 * hash + (this.idMedecine != null ? this.idMedecine.hashCode() : 0);
-        hash = 37 * hash + (this.idCIE10 != null ? this.idCIE10.hashCode() : 0);
+        int hash = 0;
+        hash += (idDiagnostic != null ? idDiagnostic.hashCode() : 0);
         return hash;
     }
-    
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Diagnostic)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Diagnostic other = (Diagnostic) obj;
-        if (this.idDiagnostic != other.idDiagnostic && (this.idDiagnostic == null || !this.idDiagnostic.equals(other.idDiagnostic))) {
-            return false;
-        }
-        if (this.idCommercialName != other.idCommercialName) {
-            return false;
-        }
-        if (this.idTreatment != other.idTreatment && (this.idTreatment == null || !this.idTreatment.equals(other.idTreatment))) {
-            return false;
-        }
-        if (this.idMedecine != other.idMedecine && (this.idMedecine == null || !this.idMedecine.equals(other.idMedecine))) {
-            return false;
-        }
-        if (this.idCIE10 != other.idCIE10 && (this.idCIE10 == null || !this.idCIE10.equals(other.idCIE10))) {
+        Diagnostic other = (Diagnostic) object;
+        if ((this.idDiagnostic == null && other.idDiagnostic != null) || (this.idDiagnostic != null && !this.idDiagnostic.equals(other.idDiagnostic))) {
             return false;
         }
         return true;
     }
 
-    
+    @Override
+    public String toString() {
+        return "com.carloscortina.demo.model.Diagnostic[ idDiagnostic=" + idDiagnostic + " ]";
+    }
     
 }

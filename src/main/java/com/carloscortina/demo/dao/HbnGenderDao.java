@@ -4,14 +4,16 @@
  * and open the template in the editor.
  */
 
-package com.carloscortina.demo.service;
+package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.Drugrisk;
+import com.carloscortina.demo.model.Gender;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DrugriskService extends GenericService<Drugrisk>{
+@Repository
+public class HbnGenderDao extends GenericHbnDao<Gender> implements GenderDao{
     
 }

@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.DoseCalculationCriteria;
+import com.carloscortina.demo.model.Dosecalculationcriteria;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DoseCalculationCriteriaDao extends GenericDao<DoseCalculationCriteria>{
+public interface DoseCalculationCriteriaDao extends GenericDao<Dosecalculationcriteria>{
     
 }

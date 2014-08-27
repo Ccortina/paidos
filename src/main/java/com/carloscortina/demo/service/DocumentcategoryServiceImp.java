@@ -70,5 +70,10 @@ public class DocumentcategoryServiceImp implements DocumentcategoryService{
     public List<Documentcategory> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Documentcategory> getAllActiveItems() {
+        return dao.getAllActiveItems();
+    }
     
 }

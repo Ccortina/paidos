@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.CommercialNameDao;
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Commercialname;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,52 +25,57 @@ public class CommercialNameServiceImp implements CommercialNameService{
     private CommercialNameDao commercialName;
     
     @Override
-    public void create(CommercialName item) {
+    public void create(Commercialname item) {
         commercialName.create(item);
     }
 
     @Override
-    public CommercialName getById(int id) {
+    public Commercialname getById(int id) {
         return commercialName.getById(id);
     }
 
     @Override
-    public void updateItem(CommercialName item) {
+    public void updateItem(Commercialname item) {
         commercialName.updateItem(item);
     }
 
     @Override
-    public List<CommercialName> getAll(String table) {
+    public List<Commercialname> getAll(String table) {
         return commercialName.getAll(table);
     }
 
     @Override
-    public List<CommercialName> getListOfItem(String query) {
+    public List<Commercialname> getListOfItem(String query) {
         return commercialName.getListOfItem(query);
     }
 
     @Override
-    public void delete(CommercialName item) {
+    public void delete(Commercialname item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<CommercialName> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Commercialname> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<CommercialName> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Commercialname> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<CommercialName> getCommercialNameByUser(int id) {
+    public List<Commercialname> getCommercialNameByUser(int id) {
         return commercialName.getCommercialNameByUser(id);
     }
 
     @Override
-    public void mergeItem(CommercialName item) {
+    public void mergeItem(Commercialname item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Commercialname> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

@@ -21,7 +21,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -29,12 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "consultationmotive")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Consultationmotive.findAll", query = "SELECT c FROM Consultationmotive c"),
-    @NamedQuery(name = "Consultationmotive.findByIdconsultationmotive", query = "SELECT c FROM Consultationmotive c WHERE c.idconsultationmotive = :idconsultationmotive"),
-    @NamedQuery(name = "Consultationmotive.findByMotive", query = "SELECT c FROM Consultationmotive c WHERE c.motive = :motive"),
-    @NamedQuery(name = "Consultationmotive.findByLastUsed", query = "SELECT c FROM Consultationmotive c WHERE c.lastUsed = :lastUsed")})
+    @NamedQuery(name = "Consultationmotive.findAll", query = "SELECT c FROM Consultationmotive c")})
 public class Consultationmotive implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

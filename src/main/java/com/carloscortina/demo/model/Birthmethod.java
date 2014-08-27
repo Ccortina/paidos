@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,22 +21,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "birthmethod")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Birthmethod.findAll", query = "SELECT b FROM Birthmethod b"),
-    @NamedQuery(name = "Birthmethod.findByIdBirthMethod", query = "SELECT b FROM Birthmethod b WHERE b.idBirthMethod = :idBirthMethod"),
-    @NamedQuery(name = "Birthmethod.findByBirthMethod", query = "SELECT b FROM Birthmethod b WHERE b.birthMethod = :birthMethod"),
-    @NamedQuery(name = "Birthmethod.findByDescription", query = "SELECT b FROM Birthmethod b WHERE b.description = :description")})
+    @NamedQuery(name = "Birthmethod.findAll", query = "SELECT b FROM Birthmethod b")})
 public class Birthmethod implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,17 +42,13 @@ public class Birthmethod implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "birthMethod")
     private String birthMethod;
-    @Size(max = 45)
-    @Column(name = "description")
-    private String description;
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
-    private short active;
-    @OneToMany(mappedBy = "birthMethod")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    private int active;
     @JsonIgnore
-    private List<PerBackNoPat> perbacknopatList;
+    @OneToMany(mappedBy = "birthMethod")
+    private List<Perbacknopat> perbacknopatList;
 
     public Birthmethod() {
     }
@@ -66,19 +57,15 @@ public class Birthmethod implements Serializable {
         this.idBirthMethod = idBirthMethod;
     }
 
-    public Birthmethod(Integer idBirthMethod, String birthMethod) {
+    public Birthmethod(Integer idBirthMethod, String birthMethod, int active) {
         this.idBirthMethod = idBirthMethod;
-        this.birthMethod = birthMethod;
-    }
-
-    public Birthmethod(String birthMethod, short active) {
         this.birthMethod = birthMethod;
         this.active = active;
     }
 
-    public Birthmethod(String birthMethod, String description) {
+    public Birthmethod(String birthMethod, int active) {
         this.birthMethod = birthMethod;
-        this.description = description;
+        this.active = active;
     }
 
     public Integer getIdBirthMethod() {
@@ -97,27 +84,11 @@ public class Birthmethod implements Serializable {
         this.birthMethod = birthMethod;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public short getActive() {
-        return active;
-    }
-
-    public void setActive(short active) {
-        this.active = active;
-    }
-
-    public List<PerBackNoPat> getPerbacknopatList() {
+    public List<Perbacknopat> getPerbacknopatList() {
         return perbacknopatList;
     }
 
-    public void setPerbacknopatList(List<PerBackNoPat> perbacknopatList) {
+    public void setPerbacknopatList(List<Perbacknopat> perbacknopatList) {
         this.perbacknopatList = perbacknopatList;
     }
 
@@ -144,6 +115,14 @@ public class Birthmethod implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Birthmethod[ idBirthMethod=" + idBirthMethod + " ]";
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
     
 }

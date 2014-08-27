@@ -22,8 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,12 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "userrole")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Userrole.findAll", query = "SELECT u FROM Userrole u"),
-    @NamedQuery(name = "Userrole.findByIdRole", query = "SELECT u FROM Userrole u WHERE u.idRole = :idRole"),
-    @NamedQuery(name = "Userrole.findByRole", query = "SELECT u FROM Userrole u WHERE u.role = :role"),
-    @NamedQuery(name = "Userrole.findByDescription", query = "SELECT u FROM Userrole u WHERE u.description = :description")})
+    @NamedQuery(name = "Userrole.findAll", query = "SELECT u FROM Userrole u")})
 public class Userrole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,9 +43,6 @@ public class Userrole implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "Role")
     private String role;
-    @Size(max = 45)
-    @Column(name = "Description")
-    private String description;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRole")
     private List<User> userList;
@@ -84,15 +75,6 @@ public class Userrole implements Serializable {
         this.role = role;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @XmlTransient
     public List<User> getUserList() {
         return userList;
     }
@@ -123,7 +105,7 @@ public class Userrole implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.Userrole[ idRole=" + idRole + " ]";
+        return "com.carloscortina.demo.model.Userrole[ idRole=" + idRole + " ]";
     }
     
 }

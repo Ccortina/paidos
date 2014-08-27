@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.AppointmentVaccine;
+import com.carloscortina.demo.model.Appointmentvaccine;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface AppointmentVaccineService extends GenericService<AppointmentVaccine>{
+public interface AppointmentVaccineService extends GenericService<Appointmentvaccine>{
     
 }

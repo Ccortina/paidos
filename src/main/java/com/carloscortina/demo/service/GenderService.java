@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 
-package com.carloscortina.demo.dao;
+package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.Drugrisk;
+import com.carloscortina.demo.model.Gender;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DrugriskDao extends GenericDao<Drugrisk>{
+public interface GenderService extends GenericService<Gender>{
     
 }

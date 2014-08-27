@@ -4,7 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.ActivityType;
+import com.carloscortina.demo.model.Activitytype;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  * @author Ccortina_Mac
  */
 @Repository
-public class HbnActivityTypeDao extends GenericHbnDao<ActivityType> implements ActivityTypeDao{
+public class HbnActivityTypeDao extends GenericHbnDao<Activitytype> implements ActivityTypeDao{
     
 }

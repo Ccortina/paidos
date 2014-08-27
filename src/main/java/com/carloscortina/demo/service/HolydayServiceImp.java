@@ -68,4 +68,9 @@ public class HolydayServiceImp implements HolydayService{
     public void mergeItem(Holyday item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Holyday> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

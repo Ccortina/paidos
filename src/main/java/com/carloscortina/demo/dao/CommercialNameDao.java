@@ -4,15 +4,15 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Commercialname;
 import java.util.List;
 
 /**
  *
  * @author Ccortina
  */
-public interface CommercialNameDao extends GenericDao<CommercialName>{
+public interface CommercialNameDao extends GenericDao<Commercialname>{
 
-    public List<CommercialName> getCommercialNameByUser(int id);
+    public List<Commercialname> getCommercialNameByUser(int id);
     
 }

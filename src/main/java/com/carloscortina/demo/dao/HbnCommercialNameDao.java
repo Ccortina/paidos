@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Commercialname;
 import com.carloscortina.demo.model.Drug;
 import java.util.List;
 import org.hibernate.Query;
@@ -17,19 +17,19 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnCommercialNameDao extends GenericHbnDao<CommercialName> implements CommercialNameDao{
+public class HbnCommercialNameDao extends GenericHbnDao<Commercialname> implements CommercialNameDao{
 
     @Override
-    public List<CommercialName> getCommercialNameByUser(int id){
+    public List<Commercialname> getCommercialNameByUser(int id){
         String hql = "SELECT new CommercialName(commercialName.idcommercialName,commercialName.commercialName,"
                 + "commercialName.active,commercialName.drugId) FROM CommercialName as commercialName "
                 + "JOIN commercialName.userList u WHERE u.idUser=:idUser ";
         Query query = getSession().createQuery(hql);
         query.setParameter("idUser",id);
         
-        List<CommercialName> result = query.list();
+        List<Commercialname> result = query.list();
         
-        for(CommercialName temp: result){
+        for(Commercialname temp: result){
             String hql1 = "SELECT new Drug(drug.idDrug) FROM Drug as drug WHERE drug.idDrug = :idDrug ";
             List<Drug> drugList = getSession().createQuery(hql1).setParameter("idDrug", temp.getDrugId().getIdDrug()).list();
             if(drugList != null){

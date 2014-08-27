@@ -18,7 +18,7 @@ $(document).ready(function(){
        events: function(start,end,timezone,callback){
            
            $.ajax({
-               url:'./appointment/getAppointments',
+               url:'/demo/appointment/getDoctorAppointmentsList',
                dataType:'json',
                data:{
                    start:start.toISOString(),
@@ -28,7 +28,6 @@ $(document).ready(function(){
                success:function(doc){
                    var events = [];
                    $(doc["aaData"]).each(function(){
-                       console.log(this);
                       events.push({
                           title: this.idPatient.firstName+" "+this.idPatient.fatherLastName,
                           start:this.date+"T"+this.startTime+"-06:00",

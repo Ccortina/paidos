@@ -71,7 +71,7 @@
 		p:sessionFactory-ref="sessionFactory" />
         
         <!-- File Validator -->
-        <bean id="fielaValidator"  class="com.carloscortina.demo.model.FileValidator"/>
+        <!--<bean id="fielaValidator"  class="com.carloscortina.demo.model.FileValidator"/>-->
         
         <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 		

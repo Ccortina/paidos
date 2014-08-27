@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.DoseCalculationCriteria;
+import com.carloscortina.demo.model.Dosecalculationcriteria;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnDoseCalculationCriteriaDao extends GenericHbnDao<DoseCalculationCriteria> implements DoseCalculationCriteriaDao{
+public class HbnDoseCalculationCriteriaDao extends GenericHbnDao<Dosecalculationcriteria> implements DoseCalculationCriteriaDao{
     
 }

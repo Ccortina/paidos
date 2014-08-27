@@ -74,6 +74,21 @@ public class VaccineServiceImp implements VaccineService{
         return vaccineDao.getActiveVaccines();
     }
 
+    @Override
+    public List<Vaccine> getAllActiveItems() {
+        return vaccineDao.getAllActiveItems();
+    }
+
+    @Override
+    public List<Vaccine> getAllVaccines() {
+        return vaccineDao.getAllVaccines();
+    }
+
+    @Override
+    public List<Vaccine> getAllActiveVaccines() {
+        return vaccineDao.getAllActiveVaccines();
+    }
+
   
     
 }

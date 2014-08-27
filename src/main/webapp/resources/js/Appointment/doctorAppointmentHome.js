@@ -18,7 +18,7 @@ $(document).ready(function(){
        events: function(start,end,timezone,callback){
            
            $.ajax({
-               url:'/demo/appointment/getDoctorAppointments',
+               url:'/demo/appointment/getDoctorAppointmentsList',
                dataType:'JSON',
                data:{
                    start:start.toISOString(),

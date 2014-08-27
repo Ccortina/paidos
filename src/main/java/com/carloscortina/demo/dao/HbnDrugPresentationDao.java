@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.DrugPresentation;
+import com.carloscortina.demo.model.Drugpresentation;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnDrugPresentationDao extends GenericHbnDao<DrugPresentation> implements DrugPresentationDao{
+public class HbnDrugPresentationDao extends GenericHbnDao<Drugpresentation> implements DrugPresentationDao{
     
 }

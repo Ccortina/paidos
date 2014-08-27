@@ -79,5 +79,10 @@ public class PatientRelativeServiceImp implements PatientRelativeService{
     public List<PatientRelative> getSibilingsByPatient(int idPatient) {
         return patientRelativeDao.getSibilingsByPatient(idPatient);
     }
+
+    @Override
+    public List<PatientRelative> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

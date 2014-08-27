@@ -7,7 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DoseCalculationCriteriaDao;
-import com.carloscortina.demo.model.DoseCalculationCriteria;
+import com.carloscortina.demo.model.Dosecalculationcriteria;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -27,48 +27,53 @@ public class DoseCalculationCriteriaServiceImp implements DoseCalculationCriteri
     private DoseCalculationCriteriaDao dao;
     
     @Override
-    public void create(DoseCalculationCriteria item) {
+    public void create(Dosecalculationcriteria item) {
         dao.create(item);
     }
 
     @Override
-    public void delete(DoseCalculationCriteria item) {
+    public void delete(Dosecalculationcriteria item) {
         dao.delete(item);
     }
 
     @Override
-    public DoseCalculationCriteria getById(int id) {
+    public Dosecalculationcriteria getById(int id) {
         return dao.getById(id);
     }
 
     @Override
-    public void updateItem(DoseCalculationCriteria item) {
+    public void updateItem(Dosecalculationcriteria item) {
         dao.updateItem(item);
     }
 
     @Override
-    public void mergeItem(DoseCalculationCriteria item) {
+    public void mergeItem(Dosecalculationcriteria item) {
         dao.mergeItem(item);
     }
 
     @Override
-    public List<DoseCalculationCriteria> getAll(String table) {
+    public List<Dosecalculationcriteria> getAll(String table) {
         return dao.getAll(table);
     }
 
     @Override
-    public List<DoseCalculationCriteria> getListOfItem(String query) {
+    public List<Dosecalculationcriteria> getListOfItem(String query) {
         return dao.getListOfItem(query);
     }
 
     @Override
-    public List<DoseCalculationCriteria> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Dosecalculationcriteria> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
     }
 
     @Override
-    public List<DoseCalculationCriteria> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Dosecalculationcriteria> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Dosecalculationcriteria> getAllActiveItems() {
+        return dao.getAllActiveItems();
     }
     
 }

@@ -70,7 +70,6 @@ public class AppointmentController {
     
     @RequestMapping(value="getAppointments")
     public @ResponseBody JsonPack<Appointment> getAppointments(String start,String end,String timezone){
-        idDoctor=25;
         
         SimpleDateFormat parseDate = new SimpleDateFormat("yyyy-M-d");
         List<Appointment> appointments = new ArrayList<Appointment>();
@@ -118,6 +117,7 @@ public class AppointmentController {
     
     @RequestMapping(value="getDoctorAppointmentsList")
     public @ResponseBody JsonPack<Appointment> getDoctorAppointmentsByStart(String start){
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         idDoctor=userService.getUserByUsername(currentPrincipalName).getIdUser();
@@ -156,14 +156,13 @@ public class AppointmentController {
             try{
                 appointment.setDate(sdf.parse(params.get("date")));
                 appointment.setStartTime(stf.parse(params.get("startTime")));
-                appointment.setEndTime(new Date(stf.parse(params.get("startTime")).getTime()+(30*ONE_MINUTE_IN_MILLIS)));
                 appointment.setMotive(params.get("motive"));
                 appointment.setIdDoctor(userService.getById(Integer.parseInt(params.get("idDoctor"))));
                 appointment.setIdPatient(patientService.getById(Integer.parseInt(params.get("idPatient"))));
                 appointment.setIdStatus(apsService.getById(Integer.parseInt(params.get("idStatus"))));
-                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true"));
+                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true")? 1:0);
                 appointment.setProgrammedBySystem((short)0);
-                appointment.setRegisteredBy(userService.getUserByUsername(currentPrincipalName));
+                appointment.setRegisteredBy(userService.getUserByUsername(currentPrincipalName)); //Mod
                 appointment.setNotes(params.get("notes"));
                 if(!params.get("pc").isEmpty()){appointment.setPc(Double.parseDouble(params.get("pc")));}
                 if(!params.get("size").isEmpty()){appointment.setSize(Double.parseDouble(params.get("size")));}
@@ -198,12 +197,11 @@ public class AppointmentController {
             try{
                 appointment.setDate(sdf.parse(params.get("date")));
                 appointment.setStartTime(stf.parse(params.get("startTime")));
-                appointment.setEndTime(new Date(stf.parse(params.get("startTime")).getTime()+(30*ONE_MINUTE_IN_MILLIS)));
                 appointment.setMotive(params.get("motive"));
                 appointment.setIdDoctor(userService.getById(Integer.parseInt(params.get("idDoctor"))));
                 appointment.setIdPatient(patientService.getById(Integer.parseInt(params.get("idPatient"))));
                 appointment.setIdStatus(apsService.getById(Integer.parseInt(params.get("idStatus"))));
-                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true"));
+                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true")? 1:0);
                 appointment.setProgrammedBySystem((short)0);
                 appointment.setRegisteredBy(userService.getUserByUsername(currentPrincipalName));
                 appointment.setNotes(params.get("notes"));
@@ -232,6 +230,6 @@ public class AppointmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             
-            return new JsonPack<Patient>(patientService.getAllPatientsByDoctor(userService.getUserByUsername(currentPrincipalName).getIdStaffMember().getIdStaffMember()));
+            return new JsonPack<Patient>(patientService.getAllActivePatientsByDoctor(userService.getUserByUsername(currentPrincipalName).getIdStaffMember().getIdStaffMember()));
         }
 }

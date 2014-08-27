@@ -18,6 +18,41 @@
     <class>com.carloscortina.demo.model.Consultation</class>
     <class>com.carloscortina.demo.model.Holyday</class>
     <class>com.carloscortina.demo.model.Consultationmotive</class>
+    <class>com.carloscortina.demo.model.Userrole</class>
+    <class>com.carloscortina.demo.model.Diagnostic</class>
+    <class>com.carloscortina.demo.model.Documentcategory</class>
+    <class>com.carloscortina.demo.model.Appointment</class>
+    <class>com.carloscortina.demo.model.Laboratorytestresult</class>
+    <class>com.carloscortina.demo.model.Patientvaccine</class>
+    <class>com.carloscortina.demo.model.Consultationactivity</class>
+    <class>com.carloscortina.demo.model.Gender</class>
+    <class>com.carloscortina.demo.model.Patient</class>
+    <class>com.carloscortina.demo.model.Treatment</class>
+    <class>com.carloscortina.demo.model.User</class>
+    <class>com.carloscortina.demo.model.Applicationmethod</class>
+    <class>com.carloscortina.demo.model.Administrationunit</class>
+    <class>com.carloscortina.demo.model.Cie10</class>
+    <class>com.carloscortina.demo.model.Appointmentstatus</class>
+    <class>com.carloscortina.demo.model.Cie10doctor</class>
+    <class>com.carloscortina.demo.model.Vaccinetype</class>
+    <class>com.carloscortina.demo.model.Relationship</class>
+    <class>com.carloscortina.demo.model.Staffmember</class>
+    <class>com.carloscortina.demo.model.Commercialname</class>
+    <class>com.carloscortina.demo.model.Relative</class>
+    <class>com.carloscortina.demo.model.Ageweight0to36months</class>
+    <class>com.carloscortina.demo.model.Documents</class>
+    <class>com.carloscortina.demo.model.Consultationmeasure</class>
+    <class>com.carloscortina.demo.model.Perbacknopat</class>
+    <class>com.carloscortina.demo.model.Dosecalculationcriteria</class>
+    <class>com.carloscortina.demo.model.Record</class>
+    <class>com.carloscortina.demo.model.Appointmentvaccine</class>
+    <class>com.carloscortina.demo.model.Laboratorytest</class>
+    <class>com.carloscortina.demo.model.Drugdose</class>
+    <class>com.carloscortina.demo.model.Religion</class>
+    <class>com.carloscortina.demo.model.Activitytype</class>
+    <class>com.carloscortina.demo.model.Drugpresentation</class>
+    <class>com.carloscortina.demo.model.Incompatibledrugs</class>
+    <class>com.carloscortina.demo.model.Drug</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

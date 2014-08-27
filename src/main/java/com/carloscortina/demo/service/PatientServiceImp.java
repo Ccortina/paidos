@@ -92,6 +92,21 @@ public class PatientServiceImp implements PatientService {
     public List<Patient> getPatientByBirthmethod(int idBirthmethod) {
         return patientDao.getPatientByBirthmethod(idBirthmethod);
     }
+
+    @Override
+    public List<Patient> getAllActiveItems() {
+        return patientDao.getAllActiveItems();
+    }
+
+    @Override
+    public List<Patient> getAllActivePatientsByDoctor(int idStaffMember) {
+        return patientDao.getAllActivePatientsByDoctor(idStaffMember);
+    }
+
+    @Override
+    public List<Patient> getPatientWithoutVaccine(int idVaccine) {
+        return patientDao.getPatientWithoutVaccine(idVaccine);
+    }
 	
 	
 }

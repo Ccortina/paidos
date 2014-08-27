@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.LaboratoryTestResult;
+import com.carloscortina.demo.model.Laboratorytestresult;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface LaboratoryTestResultService extends GenericService<LaboratoryTestResult>{
+public interface LaboratoryTestResultService extends GenericService<Laboratorytestresult>{
     
 }

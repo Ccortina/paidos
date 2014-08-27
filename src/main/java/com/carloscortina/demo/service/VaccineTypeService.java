@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.VaccineType;
+import com.carloscortina.demo.model.Vaccinetype;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface VaccineTypeService extends GenericService<VaccineType>{
+public interface VaccineTypeService extends GenericService<Vaccinetype>{
     
 }

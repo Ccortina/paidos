@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.carloscortina.demo.model.Appointment;
+import com.carloscortina.demo.model.Patient;
 import java.util.Date;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 
 
 @Repository
@@ -28,11 +27,21 @@ public class HbnAppointmentDao extends GenericHbnDao<Appointment> implements App
         query.setParameter("start", start);
         query.setParameter("end", end);
         query.setParameter("doctor", idDoctor);
-        Criteria criteria = getSession().createCriteria(Appointment.class);
-        criteria.add(Restrictions.eq("idDoctor.idUser", idDoctor));
-        criteria.add(Restrictions.between("date", start, end));
-        System.out.println(criteria.list());
-        return query.list();
+        List<Appointment> appointmentList = query.list();
+        
+        for(Appointment a: appointmentList){
+            /*Query subQuery = getSession().createQuery("SELECT new Patient(p.idPatient,p.firstName,p.fatherLastName,"
+                + "p.motherLastName,p.sex,p.birthday,p.active,p.idDoctor) FROM Patient as p"
+                + " WHERE p.isUser=:idPatient");
+            subQuery.setParameter("idPatient", a.getIdPatient().getIdPatient());*/
+            Patient patient = new Patient(a.getIdPatient().getIdPatient(), a.getIdPatient().getFirstName(),
+                    a.getIdPatient().getFatherLastName(), a.getIdPatient().getMotherLastName(),
+                    a.getIdPatient().getSex(), a.getIdPatient().getBirthday(), a.getIdPatient().getActive(),
+                    a.getIdPatient().getIdDoctor());
+            //a.setIdPatient((Patient)subQuery.uniqueResult());
+            a.setIdPatient(patient);
+        }
+        return appointmentList;
     }
     
     @Override

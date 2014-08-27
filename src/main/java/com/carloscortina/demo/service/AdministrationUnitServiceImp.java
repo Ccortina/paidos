@@ -7,7 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.AdministrationUnitDao;
-import com.carloscortina.demo.model.AdministrationUnit;
+import com.carloscortina.demo.model.Administrationunit;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -27,48 +27,53 @@ public class AdministrationUnitServiceImp implements AdministrationUnitService{
     private AdministrationUnitDao dao;
     
     @Override
-    public void create(AdministrationUnit item) {
+    public void create(Administrationunit item) {
         dao.create(item);
     }
 
     @Override
-    public void delete(AdministrationUnit item) {
+    public void delete(Administrationunit item) {
         dao.delete(item);
     }
 
     @Override
-    public AdministrationUnit getById(int id) {
+    public Administrationunit getById(int id) {
         return dao.getById(id);
     }
 
     @Override
-    public void updateItem(AdministrationUnit item) {
+    public void updateItem(Administrationunit item) {
         dao.updateItem(item);
     }
 
     @Override
-    public void mergeItem(AdministrationUnit item) {
+    public void mergeItem(Administrationunit item) {
         dao.mergeItem(item);
     }
 
     @Override
-    public List<AdministrationUnit> getAll(String table) {
+    public List<Administrationunit> getAll(String table) {
         return dao.getAll(table);
     }
 
     @Override
-    public List<AdministrationUnit> getListOfItem(String query) {
+    public List<Administrationunit> getListOfItem(String query) {
         return dao.getListOfItem(query);
     }
 
     @Override
-    public List<AdministrationUnit> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Administrationunit> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
     }
 
     @Override
-    public List<AdministrationUnit> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Administrationunit> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Administrationunit> getAllActiveItems() {
+        return dao.getAllActiveItems();
     }
     
 }

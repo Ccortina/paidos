@@ -75,5 +75,10 @@ public class ConsultationmotiveServiceImp implements ConsultationmotiveService{
     public Consultationmotive getMotiveByName(String motive) {
         return cmDao.getMotiveByName(motive);
     }
+
+    @Override
+    public List<Consultationmotive> getAllActiveItems() {
+        return cmDao.getAllActiveItems();
+    }
     
 }

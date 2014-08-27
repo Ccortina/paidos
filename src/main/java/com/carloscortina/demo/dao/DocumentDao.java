@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.Document;
+import com.carloscortina.demo.model.Documents;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DocumentDao extends GenericDao<Document>{
+public interface DocumentDao extends GenericDao<Documents>{
     
 }

@@ -6,7 +6,6 @@
 
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +26,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,33 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "relative")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Relative.findAll", query = "SELECT r FROM Relative r"),
-    @NamedQuery(name = "Relative.findByIdRelative", query = "SELECT r FROM Relative r WHERE r.idRelative = :idRelative"),
-    @NamedQuery(name = "Relative.findByFirstName", query = "SELECT r FROM Relative r WHERE r.firstName = :firstName"),
-    @NamedQuery(name = "Relative.findByFatherLastName", query = "SELECT r FROM Relative r WHERE r.fatherLastName = :fatherLastName"),
-    @NamedQuery(name = "Relative.findByMotherLastName", query = "SELECT r FROM Relative r WHERE r.motherLastName = :motherLastName"),
-    @NamedQuery(name = "Relative.findByCurp", query = "SELECT r FROM Relative r WHERE r.curp = :curp"),
-    @NamedQuery(name = "Relative.findByOccupation", query = "SELECT r FROM Relative r WHERE r.occupation = :occupation"),
-    @NamedQuery(name = "Relative.findByRfc", query = "SELECT r FROM Relative r WHERE r.rfc = :rfc"),
-    @NamedQuery(name = "Relative.findByHomePhone", query = "SELECT r FROM Relative r WHERE r.homePhone = :homePhone"),
-    @NamedQuery(name = "Relative.findByOfficePhone", query = "SELECT r FROM Relative r WHERE r.officePhone = :officePhone"),
-    @NamedQuery(name = "Relative.findByOfficeExt", query = "SELECT r FROM Relative r WHERE r.officeExt = :officeExt"),
-    @NamedQuery(name = "Relative.findByEmail", query = "SELECT r FROM Relative r WHERE r.email = :email"),
-    @NamedQuery(name = "Relative.findByCellPhone", query = "SELECT r FROM Relative r WHERE r.cellPhone = :cellPhone"),
-    @NamedQuery(name = "Relative.findByOtherPhone", query = "SELECT r FROM Relative r WHERE r.otherPhone = :otherPhone"),
-    @NamedQuery(name = "Relative.findByNotes", query = "SELECT r FROM Relative r WHERE r.notes = :notes"),
-    @NamedQuery(name = "Relative.findByRecommendedBy", query = "SELECT r FROM Relative r WHERE r.recommendedBy = :recommendedBy"),
-    @NamedQuery(name = "Relative.findByGinecologist", query = "SELECT r FROM Relative r WHERE r.ginecologist = :ginecologist"),
-    @NamedQuery(name = "Relative.findByAddedDate", query = "SELECT r FROM Relative r WHERE r.addedDate = :addedDate"),
-    @NamedQuery(name = "Relative.findByCp", query = "SELECT r FROM Relative r WHERE r.cp = :cp"),
-    @NamedQuery(name = "Relative.findByStreet", query = "SELECT r FROM Relative r WHERE r.street = :street"),
-    @NamedQuery(name = "Relative.findByColony", query = "SELECT r FROM Relative r WHERE r.colony = :colony"),
-    @NamedQuery(name = "Relative.findByCountry", query = "SELECT r FROM Relative r WHERE r.country = :country"),
-    @NamedQuery(name = "Relative.findByState", query = "SELECT r FROM Relative r WHERE r.state = :state"),
-    @NamedQuery(name = "Relative.findByCity", query = "SELECT r FROM Relative r WHERE r.city = :city"),
-    @NamedQuery(name = "Relative.findByNumber", query = "SELECT r FROM Relative r WHERE r.number = :number")})
+    @NamedQuery(name = "Relative.findAll", query = "SELECT r FROM Relative r")})
 public class Relative implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -148,16 +120,12 @@ public class Relative implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthday;
     @Column(name = "active")
-    private Short active;
+    private Integer active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relative")
-    @JsonIgnore
     private List<PatientRelative> patientRelativeList;
     @JoinColumn(name = "Religion", referencedColumnName = "idReligion")
     @ManyToOne(optional = false)
     private Religion religion;
-    @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
-    @ManyToOne
-    private Patient idPatient;
 
     public Relative() {
     }
@@ -170,12 +138,6 @@ public class Relative implements Serializable {
         this.idRelative = idRelative;
         this.firstName = firstName;
         this.addedDate = addedDate;
-    }
-
-    public Relative(String firstName, String fatherLastName, String motherLastName) {
-        this.firstName = firstName;
-        this.fatherLastName = fatherLastName;
-        this.motherLastName = motherLastName;
     }
 
     public Integer getIdRelative() {
@@ -264,14 +226,6 @@ public class Relative implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
     }
 
     public String getCellPhone() {
@@ -378,15 +332,22 @@ public class Relative implements Serializable {
         this.number = number;
     }
 
-    public Short getActive() {
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Integer getActive() {
         return active;
     }
 
-    public void setActive(Short active) {
+    public void setActive(Integer active) {
         this.active = active;
     }
 
-    @XmlTransient
     public List<PatientRelative> getPatientRelativeList() {
         return patientRelativeList;
     }
@@ -401,14 +362,6 @@ public class Relative implements Serializable {
 
     public void setReligion(Religion religion) {
         this.religion = religion;
-    }
-
-    public Patient getIdPatient() {
-        return idPatient;
-    }
-
-    public void setIdPatient(Patient idPatient) {
-        this.idPatient = idPatient;
     }
 
     @Override
@@ -433,7 +386,7 @@ public class Relative implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.Relative[ idRelative=" + idRelative + " ]";
+        return "com.carloscortina.demo.model.Relative[ idRelative=" + idRelative + " ]";
     }
     
 }

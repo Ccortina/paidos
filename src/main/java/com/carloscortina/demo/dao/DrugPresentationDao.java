@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.DrugPresentation;
+import com.carloscortina.demo.model.Drugpresentation;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DrugPresentationDao extends GenericDao<DrugPresentation>{
+public interface DrugPresentationDao extends GenericDao<Drugpresentation>{
     
 }

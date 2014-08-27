@@ -9,15 +9,15 @@ package com.carloscortina.demo.controller;
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.AppointmentStatus;
+import com.carloscortina.demo.model.Appointmentstatus;
 import com.carloscortina.demo.model.Birthmethod;
-import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationmeasure;
 import com.carloscortina.demo.model.Holyday;
-import com.carloscortina.demo.model.LaboratoryTest;
+import com.carloscortina.demo.model.Laboratorytest;
 import com.carloscortina.demo.model.Measures;
 import com.carloscortina.demo.model.Patient;
+import com.carloscortina.demo.model.Patientvaccine;
 import com.carloscortina.demo.model.Relationship;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.User;
@@ -33,10 +33,12 @@ import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.MeasuresService;
 import com.carloscortina.demo.service.PatientService;
+import com.carloscortina.demo.service.PatientVaccineService;
 import com.carloscortina.demo.service.RelationshipService;
 import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
+import com.carloscortina.demo.service.VaccineTypeService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,6 +91,10 @@ public class CatalogController {
     private ConsultationactivityService caService;
     @Autowired
     private HolydayService holydayService;
+    @Autowired
+    private VaccineTypeService vtService;
+    @Autowired
+    private PatientVaccineService pvService;
     
     private User loggedUser;
     
@@ -97,6 +103,7 @@ public class CatalogController {
         //Get logged User
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         loggedUser = userService.getUserByUsername(auth.getName());
+        model.addAttribute("inmmunizationType", vtService.getAll("")); 
         
         return "Catalog/ImunizationHome";
     }
@@ -169,20 +176,20 @@ public class CatalogController {
     //Section: Laboratory test
     
     @RequestMapping(value="getLaboratoryTest")
-    public @ResponseBody JsonPack<LaboratoryTest> getDrugAdministrationUnit(){
-        return (new JsonPack<LaboratoryTest> (laboratoryTestService.getAll("LaboratoryTest")));
+    public @ResponseBody JsonPack<Laboratorytest> getDrugAdministrationUnit(){
+        return (new JsonPack<Laboratorytest> (laboratoryTestService.getAll("LaboratoryTest")));
     }
     
     @RequestMapping(value="saveNewLaboratoryTest")
     public @ResponseBody String saveNewLaboratoryTest(@RequestParam Map<String,String> params){
         
-        laboratoryTestService.create(new LaboratoryTest(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?1:0));        
+        laboratoryTestService.create(new Laboratorytest(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?1:0));        
         return "";
     }
     
     @RequestMapping(value="saveModifyLaboratoryTest")
     public @ResponseBody String saveModifyLaboratoryTest(@RequestParam Map<String,String> params){
-        LaboratoryTest item = laboratoryTestService.getById(Integer.parseInt(params.get("idItem")));
+        Laboratorytest item = laboratoryTestService.getById(Integer.parseInt(params.get("idItem")));
         item.setActive(params.get("active").equalsIgnoreCase("true")?1:0);
         item.setLaboratoryTest(params.get("itemName"));
         
@@ -205,7 +212,7 @@ public class CatalogController {
     
     @RequestMapping(value="saveNewBirthmethod")
     public @ResponseBody String saveNewBirthmethod(@RequestParam Map<String,String> params){
-        birthmethodService.create(new Birthmethod(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        birthmethodService.create(new Birthmethod(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?1:0));
       
         return "";
     }
@@ -243,7 +250,7 @@ public class CatalogController {
     @RequestMapping(value="saveModifyRelationship")
     public @ResponseBody String saveModifyRelationship(@RequestParam Map<String,String> params){
         Relationship item = relationshipService.getById(Integer.parseInt(params.get("idItem")));
-        item.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
+        item.setActive(params.get("active").equalsIgnoreCase("true")? 1:0);
         item.setRelationship(params.get("itemName"));
         
         relationshipService.updateItem(item);
@@ -259,20 +266,20 @@ public class CatalogController {
     //Section: Appointment Status
     
     @RequestMapping(value="getAppointmentStatus")
-    public @ResponseBody JsonPack<AppointmentStatus> getAppointmentStatus(){
-        return (new JsonPack<AppointmentStatus> (apsService.getAll("AppointmentStatus")));
+    public @ResponseBody JsonPack<Appointmentstatus> getAppointmentStatus(){
+        return (new JsonPack<Appointmentstatus> (apsService.getAll("AppointmentStatus")));
     }
     
     @RequestMapping(value="saveNewAppointmentStatus")
     public @ResponseBody String saveNewAppointmentStatus(@RequestParam Map<String,String> params){
-        apsService.create(new AppointmentStatus(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        apsService.create(new Appointmentstatus(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?1:0));
       
         return "";
     }
     
     @RequestMapping(value="saveModifyAppointmentStatus")
     public @ResponseBody String saveModifyAppointmentStatus(@RequestParam Map<String,String> params){
-        AppointmentStatus item = apsService.getById(Integer.parseInt(params.get("idItem")));
+        Appointmentstatus item = apsService.getById(Integer.parseInt(params.get("idItem")));
         item.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
         item.setStatus(params.get("itemName"));
         
@@ -294,10 +301,7 @@ public class CatalogController {
     
     @RequestMapping(value="saveNewMeasure")
     public @ResponseBody String saveNewMeasure(@RequestParam Map<String,String> params){
-        measureService.create(new Measures(params.get("itemName"), params.get("unit"), 
-                params.get("include").equalsIgnoreCase("true")?(short)1:(short)0, 
-                params.get("active").equalsIgnoreCase("true")?(short)1:(short)0, 
-                loggedUser));
+        measureService.create(new Measures(params.get("itemName"), params.get("unit"), params.get("include").equalsIgnoreCase("true")?1:0, params.get("active").equalsIgnoreCase("true")?1:0));
         
         return "";
     }
@@ -334,7 +338,7 @@ public class CatalogController {
     
     @RequestMapping(value="getVaccine")
     public @ResponseBody JsonPack<Vaccine> getVaccine(){
-        return (new JsonPack<Vaccine> (vaccineService.getActiveVaccines()));
+        return (new JsonPack<Vaccine> (vaccineService.getAllActiveVaccines()));
     }
     
     @RequestMapping(value="saveNewActivity")
@@ -384,12 +388,9 @@ public class CatalogController {
     @RequestMapping(value="saveNewHolyday")
     public @ResponseBody String saveNewHolyday(@RequestParam Map<String,String> params){
         
-        try{
-            Date date = new SimpleDateFormat("d/M/yyyy").parse(params.get("itemDate"));
-            holydayService.create(new Holyday(params.get("itemName"), date));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        
+        holydayService.create(new Holyday(params.get("itemName"), Integer.parseInt(params.get("month")), Integer.parseInt(params.get("day"))));
+
         
         return "";
     }
@@ -397,16 +398,11 @@ public class CatalogController {
     @RequestMapping(value="saveModifyHolyday")
     public @ResponseBody String saveModifyHolyday(@RequestParam Map<String,String> params){
         
-        try{
-            Date date = new SimpleDateFormat("d/M/yyyy").parse(params.get("itemDate"));
-            Holyday item = holydayService.getById( Integer.parseInt( params.get("idItem") ) );
-            item.setDate(date);
-            item.setHolyday(params.get("itemName"));
-            holydayService.updateItem(item);
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        Holyday item = holydayService.getById( Integer.parseInt( params.get( "idItem" ) ) );
+        item.setDay(Integer.parseInt( params.get( "day" ) ) );
+        item.setMont(Integer.parseInt( params.get( "month" ) ) );
+        item.setHolyday( params.get("itemName") );
+        holydayService.updateItem( item );
         
         return "";
     }
@@ -418,4 +414,62 @@ public class CatalogController {
         
         return "";
     }
+    
+    //Section: Immunization
+    @RequestMapping(value="getAllVacine")
+    public @ResponseBody JsonPack<Vaccine> getAllImmunization(){
+        return new JsonPack<Vaccine>(vaccineService.getAllVaccines()); 
+    }
+    
+    @RequestMapping(value="saveNewVaccine")
+    public @ResponseBody String saveNewVaccine(@RequestParam Map<String,String> params){
+        Vaccine vaccine = new Vaccine(params.get("itemName"), Integer.parseInt(params.get("itemAppYear")), Integer.parseInt(params.get("itemAppMonth")),
+                Integer.parseInt(params.get("itemAppDay")), Integer.parseInt(params.get("itemAppYear")),
+                Integer.parseInt(params.get("itemAppMonth")), Integer.parseInt(params.get("itemAppDay")),
+                params.get("multiple").equalsIgnoreCase("true")? 1 : 0,
+                params.get("active").equalsIgnoreCase("true")? 1 : 0,
+                vtService.getById(Integer.parseInt(params.get("type"))));
+        
+        vaccineService.create(vaccine);
+        
+        for(int i = 0; i < Integer.parseInt(params.get("cont")); i++){
+            Vaccine updateV = vaccineService.getById(Integer.parseInt(params.get("eq"+i)));
+            updateV.getVaccineList().add(vaccine);
+            vaccineService.updateItem(updateV);
+        }
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyVaccine")
+    public @ResponseBody String saveModifyVaccine(@RequestParam Map<String,String> params){
+        Vaccine vaccine = vaccineService.getById(Integer.parseInt(params.get("inputIdItem")));
+        vaccine.setVaccine(params.get("itemName"));
+        vaccine.setYearApply(Integer.parseInt(params.get("itemAppYear")));
+        vaccine.setMonthApply(Integer.parseInt(params.get("itemAppMonth")));
+        vaccine.setDayApply(Integer.parseInt(params.get("itemAppDay")));
+        vaccine.setMultipleShots(params.get("multiple").equalsIgnoreCase("true")? 1 : 0);
+        vaccine.setActive(params.get("active").equalsIgnoreCase("true")? 1 : 0);
+
+        for(int i = 0; i < Integer.parseInt(params.get("cont")); i++){
+            Vaccine updateV = vaccineService.getById(Integer.parseInt(params.get("eq"+i)));
+            //List<Vaccine> equivalentList = .getVaccineList();
+            //equivalentList.add(vaccine);
+            updateV.getVaccineList().add(vaccine);
+            vaccineService.updateItem(updateV);
+        }
+
+        return "";
+    }
+    
+    @RequestMapping(value="getVaccineRelatedInfo")
+    public @ResponseBody JsonPack<Patientvaccine> getVaccineRelatedInfo(int idVaccine){
+        return new JsonPack<Patientvaccine>(pvService.getPatientVaccineByVaccine(idVaccine));
+    }
+    
+    @RequestMapping(value="getPatientWOVaccine")
+    public @ResponseBody JsonPack<Patient> getPatientWithoutVaccine(int idVaccine){
+        return new JsonPack<Patient>(patientService.getPatientWithoutVaccine(idVaccine));
+    }
+    
 }

@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -24,28 +24,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "consultationactivity")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Consultationactivity.findAll", query = "SELECT c FROM Consultationactivity c"),
-    @NamedQuery(name = "Consultationactivity.findByIdConsultation", query = "SELECT c FROM Consultationactivity c WHERE c.consultationactivityPK.idConsultation = :idConsultation"),
-    @NamedQuery(name = "Consultationactivity.findByIdActivity", query = "SELECT c FROM Consultationactivity c WHERE c.consultationactivityPK.idActivity = :idActivity"),
-    @NamedQuery(name = "Consultationactivity.findByCost", query = "SELECT c FROM Consultationactivity c WHERE c.cost = :cost")})
+    @NamedQuery(name = "Consultationactivity.findAll", query = "SELECT c FROM Consultationactivity c")})
 public class Consultationactivity implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ConsultationactivityPK consultationactivityPK;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "cost")
     private double cost;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "includeInBill")
+    private int includeInBill;
     @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Consultation consultation;
     @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Activity activity;
-    @Basic(optional = false)
-    @Column(name = "includeInBill")
-    private int includeInBill;
 
     public Consultationactivity() {
     }
@@ -59,20 +57,9 @@ public class Consultationactivity implements Serializable {
         this.cost = cost;
         this.includeInBill = includeInBill;
     }
-    
-    public Consultationactivity(double cost, Consultation consultation, Activity activity, int includeInBill) {
-        this.cost = cost;
-        this.consultation = consultation;
-        this.activity = activity;
-        this.includeInBill = includeInBill;
-        this.consultationactivityPK.setIdActivity(activity.getIdActivity());
-        this.consultationactivityPK.setIdConsultation(consultation.getIdConsultation());
-    }
 
-    public Consultationactivity(double cost, Activity activity, int includeInBill) {
-        this.cost = cost;
-        this.activity = activity;
-        this.includeInBill = includeInBill;
+    public Consultationactivity(int idConsultation, int idActivity) {
+        this.consultationactivityPK = new ConsultationactivityPK(idConsultation, idActivity);
     }
 
     public ConsultationactivityPK getConsultationactivityPK() {
@@ -91,6 +78,14 @@ public class Consultationactivity implements Serializable {
         this.cost = cost;
     }
 
+    public int getIncludeInBill() {
+        return includeInBill;
+    }
+
+    public void setIncludeInBill(int includeInBill) {
+        this.includeInBill = includeInBill;
+    }
+
     public Consultation getConsultation() {
         return consultation;
     }
@@ -107,14 +102,6 @@ public class Consultationactivity implements Serializable {
         this.activity = activity;
     }
 
-    public int getIncludeInBill() {
-        return includeInBill;
-    }
-
-    public void setIncludeInBill(int includeInBill) {
-        this.includeInBill = includeInBill;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -137,7 +124,7 @@ public class Consultationactivity implements Serializable {
 
     @Override
     public String toString() {
-        return "Modelos.Consultationactivity[ consultationactivityPK=" + consultationactivityPK + " ]";
+        return "com.carloscortina.demo.model.Consultationactivity[ consultationactivityPK=" + consultationactivityPK + " ]";
     }
     
 }

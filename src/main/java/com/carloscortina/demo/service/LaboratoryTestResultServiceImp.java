@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.LaboratoryTestResultDao;
-import com.carloscortina.demo.model.LaboratoryTestResult;
+import com.carloscortina.demo.model.Laboratorytestresult;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,47 +25,52 @@ public class LaboratoryTestResultServiceImp implements LaboratoryTestResultServi
     LaboratoryTestResultDao labResDao;
     
     @Override
-    public void create(LaboratoryTestResult item) {
+    public void create(Laboratorytestresult item) {
         labResDao.create(item);
     }
 
     @Override
-    public void delete(LaboratoryTestResult item) {
+    public void delete(Laboratorytestresult item) {
         labResDao.delete(item);
     }
 
     @Override
-    public LaboratoryTestResult getById(int id) {
+    public Laboratorytestresult getById(int id) {
         return labResDao.getById(id);
     }
 
     @Override
-    public void updateItem(LaboratoryTestResult item) {
+    public void updateItem(Laboratorytestresult item) {
         labResDao.updateItem(item);
     }
 
     @Override
-    public List<LaboratoryTestResult> getAll(String table) {
+    public List<Laboratorytestresult> getAll(String table) {
         return labResDao.getAll(table);
     }
 
     @Override
-    public List<LaboratoryTestResult> getListOfItem(String query) {
+    public List<Laboratorytestresult> getListOfItem(String query) {
         return labResDao.getListOfItem(query);
     }
 
     @Override
-    public List<LaboratoryTestResult> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Laboratorytestresult> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<LaboratoryTestResult> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Laboratorytestresult> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(LaboratoryTestResult item) {
+    public void mergeItem(Laboratorytestresult item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Laboratorytestresult> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

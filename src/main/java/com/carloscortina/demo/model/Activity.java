@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,8 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,24 +24,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "activity")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Activity.findAll", query = "SELECT a FROM Activity a"),
-    @NamedQuery(name = "Activity.findByIdActivity", query = "SELECT a FROM Activity a WHERE a.idActivity = :idActivity"),
-    @NamedQuery(name = "Activity.findByActivity", query = "SELECT a FROM Activity a WHERE a.activity = :activity"),
-    @NamedQuery(name = "Activity.findByActivityCost", query = "SELECT a FROM Activity a WHERE a.activityCost = :activityCost"),
-    @NamedQuery(name = "Activity.findByConsultationDefault", query = "SELECT a FROM Activity a WHERE a.consultationDefault = :consultationDefault"),
-    @NamedQuery(name = "Activity.findByActive", query = "SELECT a FROM Activity a WHERE a.active = :active")})
+    @NamedQuery(name = "Activity.findAll", query = "SELECT a FROM Activity a")})
 public class Activity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -71,17 +62,9 @@ public class Activity implements Serializable {
     private Vaccine idVaccine;
     @JoinColumn(name = "IdActivityType", referencedColumnName = "IdActivityType")
     @ManyToOne(optional = false)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private ActivityType idActivityType;
-    @JoinTable(name = "doctoractivitycatalog", joinColumns = {
-        @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity")}, inverseJoinColumns = {
-        @JoinColumn(name = "idUser", referencedColumnName = "idUser")})
-    @ManyToMany
+    private Activitytype idActivityType;
     @JsonIgnore
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<User> userList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity")
-    @JsonIgnore
     private List<Consultationactivity> consultationactivityList;
 
     public Activity() {
@@ -89,15 +72,6 @@ public class Activity implements Serializable {
 
     public Activity(Integer idActivity) {
         this.idActivity = idActivity;
-    }
-
-    public Activity(String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType) {
-        this.activity = activity;
-        this.activityCost = activityCost;
-        this.consultationDefault = consultationDefault;
-        this.active = active;
-        this.idVaccine = idVaccine;
-        this.idActivityType = idActivityType;
     }
 
     public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active) {
@@ -108,17 +82,7 @@ public class Activity implements Serializable {
         this.active = active;
     }
 
-    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, ActivityType idActivityType) {
-        this.idActivity = idActivity;
-        this.activity = activity;
-        this.activityCost = activityCost;
-        this.consultationDefault = consultationDefault;
-        this.active = active;
-        this.idActivityType = idActivityType;
-    }
-    
-    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, ActivityType idActivityType) {
-        this.idActivity = idActivity;
+    public Activity(String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, Activitytype idActivityType) {
         this.activity = activity;
         this.activityCost = activityCost;
         this.consultationDefault = consultationDefault;
@@ -175,20 +139,12 @@ public class Activity implements Serializable {
         this.idVaccine = idVaccine;
     }
 
-    public ActivityType getIdActivityType() {
+    public Activitytype getIdActivityType() {
         return idActivityType;
     }
 
-    public void setIdActivityType(ActivityType idActivityType) {
+    public void setIdActivityType(Activitytype idActivityType) {
         this.idActivityType = idActivityType;
-    }
-    
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
     }
 
     public List<Consultationactivity> getConsultationactivityList() {
@@ -198,7 +154,6 @@ public class Activity implements Serializable {
     public void setConsultationactivityList(List<Consultationactivity> consultationactivityList) {
         this.consultationactivityList = consultationactivityList;
     }
-    
 
     @Override
     public int hashCode() {

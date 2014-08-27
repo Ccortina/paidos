@@ -2,13 +2,13 @@ package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.AppointmentStatus;
-import com.carloscortina.demo.model.AppointmentVaccine;
+import com.carloscortina.demo.model.Appointmentstatus;
+import com.carloscortina.demo.model.Appointmentvaccine;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationmotive;
-import com.carloscortina.demo.model.Document;
-import com.carloscortina.demo.model.LaboratoryTest;
-import com.carloscortina.demo.model.LaboratoryTestResult;
+import com.carloscortina.demo.model.Documents;
+import com.carloscortina.demo.model.Laboratorytest;
+import com.carloscortina.demo.model.Laboratorytestresult;
 import com.carloscortina.demo.model.Patient;
 import java.util.List;
 
@@ -24,12 +24,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.carloscortina.demo.model.PatientRegistrationForm;
 import com.carloscortina.demo.model.PatientRelative;
 import com.carloscortina.demo.model.PatientRelativePK;
-import com.carloscortina.demo.model.PatientVaccine;
-import com.carloscortina.demo.model.PatientVaccinePK;
-import com.carloscortina.demo.model.PerBackNoPat;
+import com.carloscortina.demo.model.Patientvaccine;
+import com.carloscortina.demo.model.PatientvaccinePK;
+import com.carloscortina.demo.model.Perbacknopat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Staffmember;
@@ -42,6 +41,7 @@ import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.ConsultationmotiveService;
 import com.carloscortina.demo.service.DocumentService;
 import com.carloscortina.demo.service.DocumentcategoryService;
+import com.carloscortina.demo.service.GenderService;
 import com.carloscortina.demo.service.LaboratoryTestResultService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.PatientRelativeService;
@@ -132,6 +132,8 @@ public class PatientsController {
         AppointmentVaccineService avService;
         @Autowired
         AppointmentStatusService apsService;
+        @Autowired
+        GenderService genderService;
         
         private Patient patient;
         private User doctor;
@@ -192,9 +194,9 @@ public class PatientsController {
             try{
                 Date birthday =  df.parse(params.get("birthday"));
                 Patient newPatient = new Patient(params.get("fName"),params.get("flName"), params.get("mlName"),
-                        params.get("curp"), params.get("gender"), birthday, params.get("notes"));
+                        params.get("curp"), birthday, params.get("notes"), genderService.getById(Integer.parseInt(params.get("gender"))));
                 newPatient.setIdDoctor(userService.getById(Integer.parseInt(params.get("doctor"))).getIdStaffMember());
-                newPatient.setActive((short)1);
+                newPatient.setActive( 1 );
                 patientService.create(newPatient);
                 for(int i = 0; i < Integer.parseInt(params.get("relativesCounter"));i++ ){
                     PatientRelativePK rPK = new PatientRelativePK(newPatient.getIdPatient(), Integer.parseInt(params.get("idRelative"+(i+1))));
@@ -202,7 +204,7 @@ public class PatientsController {
                     relatives.add(pr);
                 }
                 newPatient.setPatientRelativeList(relatives);
-                PerBackNoPat newPerBackNoPat= new PerBackNoPat();
+                Perbacknopat newPerBackNoPat= new Perbacknopat();
                 pbService.create(newPerBackNoPat);
                 
                 Record newRecord = new Record(newPerBackNoPat, newPatient);
@@ -274,7 +276,7 @@ public class PatientsController {
                 updatePatient.setFatherLastName(params.get("fatherlastName"));
                 updatePatient.setMotherLastName(params.get("mlName"));
                 updatePatient.setCurp(params.get("curp"));
-                updatePatient.setSex(params.get("gender"));
+                updatePatient.setSex(genderService.getById(Integer.parseInt(params.get("gender"))));
                 updatePatient.setBirthday(birthday);
                 updatePatient.setNotes(params.get("notes"));
                 Staffmember staff =  staffService.getById(Integer.parseInt(params.get("doctor")));
@@ -325,10 +327,10 @@ public class PatientsController {
         }
         
         @RequestMapping(value="getAppointmentStatus", produces = "application/json")
-        public @ResponseBody JsonPack<AppointmentStatus> getAppointmentStatus(){
-            List<AppointmentStatus> allAS = appointmentStatusService.getAll("AppointmentStatus");
+        public @ResponseBody JsonPack<Appointmentstatus> getAppointmentStatus(){
+            List<Appointmentstatus> allAS = appointmentStatusService.getAll("Appointmentstatus");
             
-            return new JsonPack<AppointmentStatus>(allAS);
+            return new JsonPack<Appointmentstatus>(allAS);
         }
         
         @RequestMapping(value="getConsultationMotives", produces = "application/json")
@@ -382,12 +384,11 @@ public class PatientsController {
             try{
                 appointment.setDate(sdf.parse(params.get("date")));
                 appointment.setStartTime(stf.parse(params.get("startTime")));
-                appointment.setEndTime(new Date(stf.parse(params.get("startTime")).getTime()+(30*ONE_MINUTE_IN_MILLIS)));
                 appointment.setMotive(params.get("motive"));
                 appointment.setIdDoctor(userService.getById(Integer.parseInt(params.get("idDoctor"))));
                 appointment.setIdPatient(patientService.getById(Integer.parseInt(params.get("idPatient"))));
                 appointment.setIdStatus(appointmentStatusService.getById(Integer.parseInt(params.get("idStatus"))));
-                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true"));
+                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true")? 1 : 0);
                 appointment.setProgrammedBySystem((short)0);
                 appointment.setRegisteredBy(userService.getUserByUsername(currentPrincipalName));
                 appointment.setNotes(params.get("notes"));
@@ -412,11 +413,11 @@ public class PatientsController {
         }
         
         @RequestMapping(value="getPatientProgrammedVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getPatientProgrammedVaccine(){
+        public @ResponseBody JsonPack<Patientvaccine> getPatientProgrammedVaccine(){
             Date currentDate = new Date();
-            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            List<Patientvaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
             //Check if any vaccine is outdated
-            for(PatientVaccine vaccine: pv){
+            for(Patientvaccine vaccine: pv){
                 //check if there's a programmed date
                 if(vaccine.getProgramedDate() != null){
                     //check if not applied
@@ -431,18 +432,18 @@ public class PatientsController {
                 }
             }
             pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
-            return new JsonPack<PatientVaccine>(pv);
+            return new JsonPack<Patientvaccine>(pv);
         }
         
         @RequestMapping(value="editProgrammedVaccine",method=RequestMethod.POST)
         public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
             
-            PatientVaccinePK id = new PatientVaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
-            PatientVaccine currentPV = pvService.getById(id);
+            PatientvaccinePK id = new PatientvaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
+            Patientvaccine currentPV = pvService.getById(id);
             
             
-            PatientVaccine pv = new PatientVaccine();
-            pv.setPatientVaccinePK(id);
+            Patientvaccine pv = new Patientvaccine();
+            pv.setPatientvaccinePK(id);
             try{
                 Date applicationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("applicationDate"));
                 Date programmedDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("programedDate"));
@@ -468,8 +469,8 @@ public class PatientsController {
                 if(pv.getApplicationDate() != null){
                     //The vaccine was applied
                     pv.setSuspended((short)0);
-                    List<AppointmentVaccine> avList = avService.getListOfItem("FROM AppointmentVaccine WHERE idVaccine="+id.getIdVaccine()+" AND idPatient="+id.getIdPatient());
-                    for(AppointmentVaccine av: avList ){
+                    List<Appointmentvaccine> avList = avService.getListOfItem("FROM AppointmentVaccine WHERE idVaccine="+id.getIdVaccine()+" AND idPatient="+id.getIdPatient());
+                    for(Appointmentvaccine av: avList ){
                         av.getAppointment().setIdStatus(apsService.getById(1));
                     }
                 }
@@ -486,45 +487,15 @@ public class PatientsController {
             Appointment appointment = new Appointment();
             //Create a default appointment
             try{
-                appointment = new Appointment(new Date(), stf.parse("09:00"), stf.parse("09:30"), "Consulta",
-                    "Programada pro el sistema", false, appointmentStatusService.getById(3), doctor, patientService.getById(idPatient), 
-                    doctor, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                appointment = new Appointment(new Date(), stf.parse("09:00"), "Consulta",
+                    "Programada pro el sistema", 0,0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1 , doctor,
+                        doctor, appointmentStatusService.getById(3),patientService.getById(idPatient));
             }catch(Exception e){ e.printStackTrace(); }
             appointmentService.create(appointment);
             
             return (appointment.getIdAppointment().toString());
         }
-	@RequestMapping(value="new",method=RequestMethod.GET)
-	public String loadRegistrationForm(Model model){
-		
-		model.addAttribute("form", new PatientRegistrationForm());
-		return ("patients/patientsRegistrationForm");
-	}
-	
-        /*
-         * 
-         */
-	@RequestMapping(value="addNew",method=RequestMethod.POST)
-	public String processRegistrationForm(@ModelAttribute("form") @Valid PatientRegistrationForm form, 
-				BindingResult result,Model model){
-		
-		if (!result.hasErrors())	// The validation was correct?
-		{
-			Patient patient = toPatient(form);
-			patientService.create(patient);	
-			model.addAttribute("response","Paciente Agregado correctamente");
-			return ( "redirect:patientHome" );
-		}
-		
-		return ("patients/patientsRegistrationForm");
-	}
 
-	private Patient toPatient(PatientRegistrationForm form){
-		Patient patient = new Patient();
-		
-		
-		return patient;
-	}
         
         /*
          * This method renders the patient file, based on the patient. This is 
@@ -536,7 +507,7 @@ public class PatientsController {
             
             Record record = recordService.getByPatientId( patient );
             
-            PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
+            Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
             String[] age = calculateAge(patient.getBirthday()).split("-");
             
             model.addAttribute("birthday",formatDate(patient.getBirthday()));
@@ -566,7 +537,7 @@ public class PatientsController {
             Appointment appointment = appointmentService.getById(idAppointment);
             patient = appointment.getIdPatient();
             Record record = recordService.getByPatientId(patient);
-            PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
+            Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
             String[] age = calculateAge(patient.getBirthday()).split("-");
             List<Relative> sibilings = getSibilings(patient.getPatientRelativeList());
             
@@ -600,15 +571,15 @@ public class PatientsController {
         */
         @RequestMapping(value="getPatientSibilings")
         public @ResponseBody JsonPack<Patient> getPatientSibilings(){
-            //Patient patient = patientService.getById(idPatient);
+            
             List<Patient> relatives = new ArrayList();
             
-            for(PatientRelative r: patient.getPatientRelativeList())
+            /*for(PatientRelative r: patient.getPatientRelativeList())
             {
                 if(r.getRelative().getIdPatient() != null){
                     relatives.add(r.getRelative().getIdPatient());
                 }
-            }
+            }*/
 
             return new JsonPack<Patient>(relatives);
             
@@ -673,9 +644,8 @@ public class PatientsController {
                                                      @RequestParam(value="idRelative")int idRelative,
                                                      @RequestParam(value="idRelationship")int idRelationship){
         
-            PatientRelative patientRelative = new PatientRelative();
             PatientRelativePK id = new PatientRelativePK(idPatient, idRelative);
-            patientRelative.setPatienRelativePK(id);
+            PatientRelative patientRelative = new PatientRelative(id);
             patientRelative.setIdRelationship(relationshipService.getById(idRelationship));
             patientRelative.setPatient(patientService.getById(idPatient));
             patientRelative.setRelative(relativeService.getRelative(idRelative));
@@ -787,22 +757,22 @@ public class PatientsController {
         }
 	
         @RequestMapping(value="getPatientDocument")
-        public @ResponseBody JsonPack<Document> getDocuments(){
+        public @ResponseBody JsonPack<Documents> getDocuments(){
 
             File folder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
             if(!folder.exists()){
-                return new JsonPack<Document>(null);
+                return new JsonPack<Documents>(null);
             }
             File[] listOfFiles = folder.listFiles();
-            List<Document> documents = new ArrayList<Document>();
+            List<Documents> documents = new ArrayList<Documents>();
             
             
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                    
-                    Document doc = new Document();
-                    doc.setName(listOfFiles[i].getName());
-                    doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
+                    Documents doc = new Documents();
+                    //doc.setName(listOfFiles[i].getName());
+                    //doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
                     documents.add(doc);
                     
                 } else if (listOfFiles[i].isDirectory()) {
@@ -810,9 +780,9 @@ public class PatientsController {
                 }
             }
             
-            JsonPack<Document> result = new JsonPack<Document>(documents);
+            //JsonPack<Document> result = new JsonPack<Document>(documents);
             
-            return result;
+            return new JsonPack<Documents>(null);
         }
         
         @RequestMapping(value="deletePatientDocument")
@@ -843,12 +813,12 @@ public class PatientsController {
         //Laboratory Tests
         
         @RequestMapping(value="getLaboratoryTestsPatientData")
-        public @ResponseBody JsonPack<LaboratoryTestResult> getLaboratoryTestByPatient(){
+        public @ResponseBody JsonPack<Laboratorytestresult> getLaboratoryTestByPatient(){
             
             String query = "FROM LaboratoryTestResult l where l.idPatient="+patient.getIdPatient();
-            List<LaboratoryTestResult> ret = labResService.getListOfItem(query);
+            List<Laboratorytestresult> ret = labResService.getListOfItem(query);
             
-            return new JsonPack<LaboratoryTestResult>(ret);
+            return new JsonPack<Laboratorytestresult>(ret);
         }
         
         @RequestMapping(value="saveLaboratoryTestResult")
@@ -856,9 +826,9 @@ public class PatientsController {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
             try{
                 Date fDate = sdf.parse(date);
-                LaboratoryTest lab = labService.getById(idLaboratoryTest);
+                Laboratorytest lab = labService.getById(idLaboratoryTest);
                 System.out.println(fDate);
-                LaboratoryTestResult labRes = new LaboratoryTestResult(fDate, testResult, patient, lab);
+                Laboratorytestresult labRes = new Laboratorytestresult(testResult, fDate, patient, lab);
                 labResService.create(labRes);
                 
             }catch (Exception e){ e.printStackTrace();}
@@ -871,7 +841,7 @@ public class PatientsController {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
             try{
                 Date fDate = sdf.parse(date);
-                LaboratoryTestResult labRes = labResService.getById(idLaboratoryTestResult);
+                Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
                 labRes.setDate(fDate);
                 labRes.setIdLaboratoryTest(labService.getById(idLaboratoryTest));
                 labRes.setResult(result);
@@ -885,7 +855,7 @@ public class PatientsController {
         
         @RequestMapping(value="deleteLaboratoryTestResult")
         public @ResponseBody String delteLaboratoryTestResult(int idResult){
-            LaboratoryTestResult labRes = labResService.getById(idResult);
+            Laboratorytestresult labRes = labResService.getById(idResult);
             labResService.delete(labRes);
             
             return "Se ha borrado la informacion correctamente";
@@ -902,9 +872,9 @@ public class PatientsController {
         * Method to get a list of all the programmed vaccines
         */
         @RequestMapping(value="getAllPatientImmunization")
-        public @ResponseBody JsonPack<PatientVaccine> getImmunization(){
+        public @ResponseBody JsonPack<Patientvaccine> getImmunization(){
             
-            return new JsonPack<PatientVaccine>(pvService.getAll("PatientVaccine"));
+            return new JsonPack<Patientvaccine>(pvService.getAll("Patientvaccine"));
 
         }
         

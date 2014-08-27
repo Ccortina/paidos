@@ -100,14 +100,14 @@ function loadAppointmentData(){
     inputs.each(function() {
         if($(this).prop("name") === 'idStatus'){
             $("#selectStatusModifyApp option").each(function(){
-                if($(this).val() === appointment['idStatus']['idStatus']){
-                    $(this).attr('selected',true);
+                if(parseInt($(this).val()) === appointment['idStatus']['idAppointmentStatus']){
+                    $(this).prop('selected',true);
                 }
             });
-        }else if ($(this).prop("name") === 'idDoctor'){
+        }else if ($(this).prop("name") == 'idDoctor'){
             $("#inputDoctorModifyApp option").each(function(){
-                if($(this).val() === appointment['idDoctor']['idUser']){
-                    $(this).attr('selected',true);
+                if(parseInt($(this).val()) === appointment['idDoctor']['idUser']){
+                    $(this).prop('selected',true);
                 }
             });
         }else if($(this).prop("name") === 'immunization'){

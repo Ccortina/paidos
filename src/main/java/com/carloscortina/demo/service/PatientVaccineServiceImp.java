@@ -5,8 +5,8 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.PatientVaccineDao;
-import com.carloscortina.demo.model.PatientVaccine;
-import com.carloscortina.demo.model.PatientVaccinePK;
+import com.carloscortina.demo.model.Patientvaccine;
+import com.carloscortina.demo.model.PatientvaccinePK;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -26,54 +26,64 @@ public class PatientVaccineServiceImp implements PatientVaccineService{
     PatientVaccineDao pvDao;
     
     @Override
-    public void create(PatientVaccine item) {
+    public void create(Patientvaccine item) {
         pvDao.create(item);
     }
 
     @Override
-    public void delete(PatientVaccine item) {
+    public void delete(Patientvaccine item) {
         pvDao.delete(item);
     }
 
     @Override
-    public PatientVaccine getById(int id) {
+    public Patientvaccine getById(int id) {
         return pvDao.getById(id);
     }
 
     @Override
-    public void updateItem(PatientVaccine item) {
+    public void updateItem(Patientvaccine item) {
         pvDao.updateItem(item);
     }
     
 
     @Override
-    public List<PatientVaccine> getAll(String table) {
+    public List<Patientvaccine> getAll(String table) {
         return pvDao.getAll(table);
     }
 
     @Override
-    public List<PatientVaccine> getListOfItem(String query) {
+    public List<Patientvaccine> getListOfItem(String query) {
         return pvDao.getListOfItem(query);
     }
 
     @Override
-    public PatientVaccine getById(PatientVaccinePK id) {
+    public Patientvaccine getById(PatientvaccinePK id) {
         return pvDao.getById(id);
     }
 
     @Override
-    public List<PatientVaccine> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Patientvaccine> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<PatientVaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Patientvaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(PatientVaccine item) {
+    public void mergeItem(Patientvaccine item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Patientvaccine> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine) {
+        return pvDao.getPatientVaccineByVaccine(idVaccine);
     }
     
     

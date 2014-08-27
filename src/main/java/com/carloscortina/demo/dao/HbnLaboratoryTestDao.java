@@ -4,7 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.LaboratoryTest;
+import com.carloscortina.demo.model.Laboratorytest;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  * @author Ccortina_Mac
  */
 @Repository
-public class HbnLaboratoryTestDao extends GenericHbnDao<LaboratoryTest> implements LaboratoryTestDao{
+public class HbnLaboratoryTestDao extends GenericHbnDao<Laboratorytest> implements LaboratoryTestDao{
     
 }

@@ -4,14 +4,14 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Commercialname;
 import java.util.List;
 
 /**
  *
  * @author Ccortina
  */
-public interface CommercialNameService extends GenericService<CommercialName>{
+public interface CommercialNameService extends GenericService<Commercialname>{
 
-    public List<CommercialName> getCommercialNameByUser(int id);
+    public List<Commercialname> getCommercialNameByUser(int id);
 }

@@ -2,8 +2,10 @@ package com.carloscortina.demo.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.DateFormat.Field;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -67,10 +69,17 @@ public abstract class GenericHbnDao<T> implements GenericDao<T> {
 	@SuppressWarnings("unchecked")
 	public List<T> getAll(String table) {
 		// TODO Auto-generated method stub
-		List<T> list = (List<T>) getSession().createQuery("from "+ table ).list();
+		List<T> list = (List<T>) getSession().createQuery("FROM "+ type.getName() ).list();
 		return (list);
 	}
 	
+        @Override
+        public List<T> getAllActiveItems(){
+        
+            Query query = getSession().createQuery("FROM " + type.getName() + " WHERE active=1");
+            return query.list();
+        }
+        
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> getListOfItem(String query) {

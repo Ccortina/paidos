@@ -18,33 +18,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
-import com.carloscortina.demo.model.Ageweight0To36Months;
+import com.carloscortina.demo.model.Ageweight0to36months;
 import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.AppointmentVaccine;
-import com.carloscortina.demo.model.AppointmentVaccinePK;
-import com.carloscortina.demo.model.AuxGraphTable;
-import com.carloscortina.demo.model.CIE10Doctor;
-import com.carloscortina.demo.model.CIE10DoctorPK;
+import com.carloscortina.demo.model.Appointmentvaccine;
+import com.carloscortina.demo.model.AppointmentvaccinePK;
+import com.carloscortina.demo.model.Cie10doctor;
+import com.carloscortina.demo.model.Cie10doctorPK;
 import com.carloscortina.demo.model.Cie10;
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Commercialname;
 import com.carloscortina.demo.model.Consultation;
-import com.carloscortina.demo.model.ConsultationDiagnostic;
 import com.carloscortina.demo.model.Diagnostic;
-import com.carloscortina.demo.model.Document;
+import com.carloscortina.demo.model.Documents;
 import com.carloscortina.demo.model.Drug;
-import com.carloscortina.demo.model.DrugDose;
-import com.carloscortina.demo.model.GraphData;
+import com.carloscortina.demo.model.Drugdose;
 import com.carloscortina.demo.model.Holyday;
-import com.carloscortina.demo.model.LaboratoryTest;
-import com.carloscortina.demo.model.LaboratoryTestResult;
+import com.carloscortina.demo.model.Laboratorytest;
+import com.carloscortina.demo.model.Laboratorytestresult;
 import com.carloscortina.demo.model.Consultationmeasure;
 import com.carloscortina.demo.model.ConsultationmeasurePK;
 import com.carloscortina.demo.model.Measures;
 import com.carloscortina.demo.model.Patient;
-import com.carloscortina.demo.model.PatientVaccine;
-import com.carloscortina.demo.model.PatientVaccinePK;
+import com.carloscortina.demo.model.Patientvaccine;
+import com.carloscortina.demo.model.PatientvaccinePK;
 import com.carloscortina.demo.model.PatientRelative;
-import com.carloscortina.demo.model.PerBackNoPat;
+import com.carloscortina.demo.model.Perbacknopat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Treatment;
@@ -60,7 +57,6 @@ import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.Cie10DoctorService;
 import com.carloscortina.demo.service.Cie10Service;
 import com.carloscortina.demo.service.CommercialNameService;
-import com.carloscortina.demo.service.ConsultationDiagnosticService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.DiagnosticService;
 import com.carloscortina.demo.service.DrugDoseService;
@@ -78,7 +74,6 @@ import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.ConsultationactivityPK;
-import com.carloscortina.demo.model.ConsultationdiagnosticPK;
 import com.carloscortina.demo.service.ConsultationactivityService;
 import com.carloscortina.demo.service.PatientRelativeService;
 import java.awt.Desktop;
@@ -135,8 +130,6 @@ public class ConsultationController {
         @Autowired
         MeasuresService measuresService;
         @Autowired
-        ConsultationDiagnosticService cdService;
-        @Autowired
         ConsultationmeasureService cmService;
         @Autowired
         DiagnosticService diagnosticService;
@@ -168,7 +161,7 @@ public class ConsultationController {
 		patient = appointment.getIdPatient();
                 doctor = appointment.getIdDoctor();
 		Record record = recordService.getByPatientId(patient);
-		PerBackNoPat perBackNoPat = record.getIdPerBackNoPat();
+		Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
                 age = calculateAge(patient.getBirthday()).split("-");
  
 		model.addAttribute("father",getFather(patient.getPatientRelativeList()));
@@ -214,12 +207,8 @@ public class ConsultationController {
                 if( cDefault != null && cDefault.compareTo("") != 0){ 
                     newActivity.setConsultationDefault(Integer.parseInt(cDefault));
                 }
-                List<User> userList = new ArrayList<User>();
-                userList.add(doctor);
-                newActivity.setUserList(userList);
+                
                 activityService.create(newActivity);
-                doctor.getActivityList().add(newActivity);
-                userService.mergeItem(doctor);
                 return (Integer.toString(newActivity.getIdActivity()));
 	}
         
@@ -264,18 +253,8 @@ public class ConsultationController {
         public @ResponseBody JsonPack<Relative> getConsultationSibilings(){
             
             List<Relative> relatives = getBrothers(patient.getPatientRelativeList());
-            List<Relative> sibiling = new ArrayList<Relative>();
             
-            for(Relative r: relatives)
-            {
-                if(r.getIdPatient() != null)
-                {
-                        sibiling.add(r);
-                }
-            }
-            
-            
-            return (new JsonPack<Relative>(sibiling));
+            return (new JsonPack<Relative>(relatives));
         }
         
         @RequestMapping(value="updateAppointmentData")
@@ -284,10 +263,10 @@ public class ConsultationController {
         }
 	
 	@RequestMapping(value="getDiagnostics")
-	public @ResponseBody JsonPack<CIE10Doctor> getDiagnosticsByUser()
+	public @ResponseBody JsonPack<Cie10doctor> getDiagnosticsByUser()
 	{
 		//String query = "FROM CIE10Doctor WHERE idUser="+doctor.getIdUser()+" AND cie10.active=1";
-		return  new JsonPack<CIE10Doctor>(c10dService.getCie10ByUser(doctor.getIdUser()));
+		return  new JsonPack<Cie10doctor>(c10dService.getCie10ByUser(doctor.getIdUser()));
 		
 	}
 	
@@ -306,17 +285,17 @@ public class ConsultationController {
 	
         //This method gives a json response with all the commercial names related to a drug
         @RequestMapping(value="getDrugsCommercialNames")
-	public @ResponseBody JsonPack<CommercialName> allDrugCommercialNames()
+	public @ResponseBody JsonPack<Commercialname> allDrugCommercialNames()
 	{
-            return new JsonPack<CommercialName>(commercialNameService.getCommercialNameByUser(doctor.getIdUser()));
+            return new JsonPack<Commercialname>(commercialNameService.getCommercialNameByUser(doctor.getIdUser()));
 	}
         
         @RequestMapping(value="drugDose")
-	public @ResponseBody JsonPack<DrugDose> getDrugDoseByDrugId(@RequestParam int drugId)
+	public @ResponseBody JsonPack<Drugdose> getDrugDoseByDrugId(@RequestParam int drugId)
 	{
 		String query = "FROM DrugDose t WHERE t.idDrug = " + drugId;
                 
-		JsonPack<DrugDose> result = new JsonPack<DrugDose>(drugDoseService.getListOfItem(query));
+		JsonPack<Drugdose> result = new JsonPack<Drugdose>(drugDoseService.getListOfItem(query));
 		return result;
 	}
         
@@ -373,18 +352,18 @@ public class ConsultationController {
         }
 	
         @RequestMapping(value="getPatientDocument")
-        public @ResponseBody JsonPack<Document> getDocuments(){
+        public @ResponseBody JsonPack<Documents> getDocuments(){
             File folder = new File("E:\\Documents\\Paidos\\Files\\paciente"+patient.getIdPatient());
             File[] listOfFiles = folder.listFiles();
-            List<Document> documents = new ArrayList<Document>();
+            List<Documents> documents = new ArrayList<Documents>();
             
             if(listOfFiles != null){
                 for(int i = 0; i < listOfFiles.length; i++) {
                     if (listOfFiles[i].isFile()) {
 
-                        Document doc = new Document();
-                        doc.setName(listOfFiles[i].getName());
-                        doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
+                        Documents doc = new Documents();
+                        doc.setDescription(listOfFiles[i].getName());
+                        //doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
                         documents.add(doc);
 
                     } else if (listOfFiles[i].isDirectory()) {
@@ -392,7 +371,7 @@ public class ConsultationController {
                     }
                 }
             }
-            JsonPack<Document> result = new JsonPack<Document>(documents);
+            JsonPack<Documents> result = new JsonPack<Documents>(documents);
             
             return result;
         }
@@ -400,7 +379,7 @@ public class ConsultationController {
         @RequestMapping(value="deletePatientDocument")
         public @ResponseBody String deleteDocument(String file){
             try{
-                File fileDelete = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+file);
+                File fileDelete = new File("E:\\Documents\\Paidos\\Files\\paciente"+patient.getIdPatient()+"/"+file);
                 fileDelete.delete();
                 
             }catch(Exception e){
@@ -423,118 +402,22 @@ public class ConsultationController {
         }
         
         //Section: Graphs/Charts
-        
-        @RequestMapping(value="getGraphPatientData")
-        public @ResponseBody String getGraphPatientConsults(){
-            
-            /*String query = "FROM Consultation c where c.idPatient="+patient.getIdPatient();
-            List<Consultation> list = consultationService.getListOfItem(query);
-            List<AuxGraphTable> ret = new ArrayList<AuxGraphTable>();
-            AuxGraphTable data;
-            
-            for(Consultation cs: list){
-                data = new AuxGraphTable(cs.getIdConsultation(),
-                                            cs.getIdAppointment().getDate(),
-                                                "8-3-1",
-                                                    cs.getWeigth() == null? 0: cs.getWeigth(),
-                                                        cs.getSize()== null? 0: cs.getSize(),
-                                                            cs.getPc() == null? 0: cs.getPc(),
-                                                                cs.getTa() == null? 0: cs.getTa(),
-                                                                    cs.getTa2() == null? 0: cs.getTa2(),
-                                                                        cs.getTaAverage() == null? 0: cs.getTaAverage(),
-                                                                            cs.getTemperature() == null? 0: cs.getTemperature(),
-                                                                                cs.getWeigth() == null? 0: cs.getWeigth()/Math.pow((cs.getSize()== null? 0: cs.getSize()/100.00),2));
-                ret.add(data);
-            }
-            
-            return new JsonPack<AuxGraphTable>(ret);*/
-            return "";
-        }
-        
-        @RequestMapping(value="editGraphPatientData")
-        public @ResponseBody String editPatientConsults(@RequestParam(value="idConsultation")int idConsultation,
-                                                        @RequestParam(value="weight")double weight,
-                                                        @RequestParam(value="size",required = false)double size,
-                                                        @RequestParam(value="pc",required = false)double pc,
-                                                        @RequestParam(value="imc")double imc,
-                                                        @RequestParam(value="ta",required = false)double ta,
-                                                        @RequestParam(value="ta2",required = false)double ta2,
-                                                        @RequestParam(value="taaverage",required = false)double taaverage,
-                                                        @RequestParam(value="temperature",required = false)double temperature){
-            Consultation cs = consultationService.getById(idConsultation);
-            cs.setWeigth(weight);
-            cs.setSize(size);
-            cs.setPc(pc);
-            cs.setTa(ta);
-            cs.setTa2(ta2);
-            cs.setTaAverage(taaverage);
-            cs.setTemperature(temperature);
-            
-            consultationService.updateItem(cs);
-            return "";
-        }
-        
-        @RequestMapping(value="graph1")
-        public @ResponseBody JsonPack<List<GraphData>> graphAge_Weight0_36(@RequestParam(value="patient")int idPatient){
-            
-            List<Ageweight0To36Months> data = aw036Service.getAll("Ageweight0To36Months");
-            List<List<GraphData>> allData = new ArrayList<List<GraphData>>();
-            List<GraphData> list = new ArrayList<GraphData>();
-            Ageweight0To36Months aux = new Ageweight0To36Months();
-            GraphData singleD = new GraphData();
-            Patient patient = patientService.getById(idPatient);
-            String query = "FROM Consultation c where c.idPatient=" + idPatient;
-            String gender = (patient.getSex().compareTo("masculino")) == 0? "M" : "F"; 
-            
-            for(Method m: aux.getClass().getMethods()){
-                
-                if(m.getName().startsWith("getP") && m.getParameterTypes().length == 0){
-                    list = new ArrayList<GraphData>();
-                    for(Ageweight0To36Months aw: data)
-                    {   
-                        System.out.println(aw.getGender() +","+gender);
-                        if(aw.getGender().compareTo(gender) == 0){
-                            try{
-                                Object p =  m.invoke(aw);
-                                singleD  = new GraphData(aw.getAgeInMonths(),Double.valueOf(p.toString()).doubleValue());
-                                list.add(singleD);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    allData.add(list);
-                }
-            }
-            
-            list = new ArrayList<GraphData>();
-            List<Consultation> patientData = consultationService.getListOfItem(query);
-            //double ageMonths= Double.parseDouble(age[0]) * 12 + Double.parseDouble(age[1] + Double.parseDouble(age[2])/365);
-            double ageMonths=27.01;
-            for(Consultation cs: patientData){
-                singleD = new GraphData(ageMonths,cs.getSize());
-                list.add(singleD);
-            }
-            allData.add(list);
-
-            return new JsonPack<List<GraphData>>(allData);
-        }
-        
+ 
         //Section: Laboratory Test Tabs
         
         @RequestMapping(value="getLaboratoryTests")
-        public @ResponseBody JsonPack<LaboratoryTest> getAllLaboratoryTest(){
-            return new JsonPack<LaboratoryTest> (labService.getAll("LaboratoryTest"));
+        public @ResponseBody JsonPack<Laboratorytest> getAllLaboratoryTest(){
+            return new JsonPack<Laboratorytest> (labService.getAll("LaboratoryTest"));
         
         }
         
         @RequestMapping(value="getLaboratoryTestsPatientData")
-        public @ResponseBody JsonPack<LaboratoryTestResult> getLaboratoryTestByPatient(){
+        public @ResponseBody JsonPack<Laboratorytestresult> getLaboratoryTestByPatient(){
             
             String query = "FROM LaboratoryTestResult l where l.idPatient="+patient.getIdPatient();
-            List<LaboratoryTestResult> ret = labResService.getListOfItem(query);
+            List<Laboratorytestresult> ret = labResService.getListOfItem(query);
             
-            return new JsonPack<LaboratoryTestResult>(ret);
+            return new JsonPack<Laboratorytestresult>(ret);
         }
         
         @RequestMapping(value="saveLaboratoryTestResult")
@@ -542,9 +425,9 @@ public class ConsultationController {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
             try{
                 Date fDate = sdf.parse(date);
-                LaboratoryTest lab = labService.getById(idLaboratoryTest);
+                Laboratorytest lab = labService.getById(idLaboratoryTest);
                 System.out.println(fDate);
-                LaboratoryTestResult labRes = new LaboratoryTestResult(fDate, testResult, patient, lab);
+                Laboratorytestresult labRes = new Laboratorytestresult(testResult, fDate, patient, lab);
                 labResService.create(labRes);
                 
             }catch (Exception e){ e.printStackTrace();}
@@ -557,7 +440,7 @@ public class ConsultationController {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
             try{
                 Date fDate = sdf.parse(date);
-                LaboratoryTestResult labRes = labResService.getById(idLaboratoryTestResult);
+                Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
                 labRes.setDate(fDate);
                 labRes.setIdLaboratoryTest(labService.getById(idLaboratoryTest));
                 labRes.setResult(result);
@@ -571,7 +454,7 @@ public class ConsultationController {
         
         @RequestMapping(value="deleteLaboratoryTestResult")
         public @ResponseBody String delteLaboratoryTestResult(int idResult){
-            LaboratoryTestResult labRes = labResService.getById(idResult);
+            Laboratorytestresult labRes = labResService.getById(idResult);
             labResService.delete(labRes);
             
             return "Se ha borrado la informacion correctamente";
@@ -613,11 +496,11 @@ public class ConsultationController {
         //Section: inmunization
         
         @RequestMapping(value="getProgrammedVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getProgrammedVaccine(){
+        public @ResponseBody JsonPack<Patientvaccine> getProgrammedVaccine(){
             Date currentDate = new Date();
-            List<PatientVaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            List<Patientvaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
             //Check if any vaccine is outdated
-            for(PatientVaccine vaccine: pv){
+            for(Patientvaccine vaccine: pv){
                 //check if there's a programmed date
                 if(vaccine.getProgramedDate() != null){
                     //check if not applied
@@ -632,31 +515,31 @@ public class ConsultationController {
                 }
             }
             pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
-            return new JsonPack<PatientVaccine>(pv);
+            return new JsonPack<Patientvaccine>(pv);
         }
         
         //Return all the vaccines in the system even not active
         @RequestMapping(value="getExpiredVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getExpiredVaccine(){
+        public @ResponseBody JsonPack<Patientvaccine> getExpiredVaccine(){
             
-            List<PatientVaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+2);
-            return new JsonPack<PatientVaccine>(pvList);
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+2);
+            return new JsonPack<Patientvaccine>(pvList);
         }
         
         @RequestMapping(value="getSuspendedVaccine")
-        public @ResponseBody JsonPack<PatientVaccine> getSuspendedVaccine(){
+        public @ResponseBody JsonPack<Patientvaccine> getSuspendedVaccine(){
             
-            List<PatientVaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+1);
-            return new JsonPack<PatientVaccine>(pvList);
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+1);
+            return new JsonPack<Patientvaccine>(pvList);
         }
         
         @RequestMapping(value="getAvaibleVaccine")
         public @ResponseBody JsonPack<Vaccine> getAvaibleVaccine(){
             List<Vaccine> vaccineList = vaccineService.getAll("Vaccine");
-            List<PatientVaccine> pvList = pvService.getAll("PatientVaccine");
+            List<Patientvaccine> pvList = pvService.getAll("PatientVaccine");
             List<Vaccine> remove = new ArrayList<Vaccine>();
             for(Vaccine vaccine: vaccineList){
-                for(PatientVaccine pv: pvList){
+                for(Patientvaccine pv: pvList){
                     if(pv.getVaccine().getIdVaccine() == vaccine.getIdVaccine()){
                         //this vaccine has already been programmed
                         remove.add(vaccine);
@@ -671,7 +554,7 @@ public class ConsultationController {
         @RequestMapping(value="addProgrammedVaccine")
         public @ResponseBody String addProgrammedVaccine(int idVaccine){
             Vaccine vaccine = vaccineService.getById(idVaccine);
-            PatientVaccine patientVaccine = new PatientVaccine(patient.getIdPatient(), idVaccine);
+            Patientvaccine patientVaccine = new Patientvaccine(patient.getIdPatient(), idVaccine);
             patientVaccine.setPatient(patient);
             patientVaccine.setVaccine(vaccine);
             patientVaccine.setProgramManual((short)1);
@@ -699,9 +582,9 @@ public class ConsultationController {
         
         @RequestMapping(value="deleteProgrammedVaccine")
         public @ResponseBody String deleteProgrammedVaccine(int idVaccine){
-            PatientVaccine pv = pvService.getById(new PatientVaccinePK(patient.getIdPatient(), idVaccine));
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
             pvService.delete(pv);
-            List<AppointmentVaccine> result = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+idVaccine);
+            List<Appointmentvaccine> result = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+idVaccine);
             if(!result.isEmpty()){
                 Appointment ap = result.get(0).getAppointment();
                 ap.setIdStatus(apsService.getById(11));
@@ -713,7 +596,7 @@ public class ConsultationController {
         
         @RequestMapping(value="suspendProgrammedVaccine")
         public @ResponseBody String suspendProgrammedVaccine(int idVaccine){
-            PatientVaccine pv = pvService.getById(new PatientVaccinePK(patient.getIdPatient(), idVaccine));
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
             pv.setSuspended((short)1);
             pv.setProgramManual((short)1);
             pv.setSuspensionDate(new Date());
@@ -723,7 +606,7 @@ public class ConsultationController {
         
         @RequestMapping(value="retriveProgrammedVaccine")
         public @ResponseBody String retriveProgrammedVaccine(int idVaccine){
-            PatientVaccine pv = pvService.getById(new PatientVaccinePK(patient.getIdPatient(), idVaccine));
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
             pv.setSuspended((short)2);
             pv.setProgramManual((short)1);
             pv.setSuspensionDate(null);
@@ -776,7 +659,7 @@ public class ConsultationController {
                         do{
                             for(Holyday holyday: holydays){
                                 checkedHolydays = true;
-                                if( cal.getTime().compareTo(holyday.getDate()) == 0 ){
+                                if( (cal.get(Calendar.MONTH)+1) == holyday.getMont() && cal.get(Calendar.DAY_OF_MONTH) == holyday.getDay()){
                                     cal.add(Calendar.DAY_OF_MONTH, 1);
 
                                     //Check if didnt land on saturday or sunday    
@@ -793,15 +676,15 @@ public class ConsultationController {
                     }
 
                     //Check if there are previous appointments or programmed vaccines
-                    List<PatientVaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
-                    List<AppointmentVaccine> appointments = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+1+" AND idVaccine="+vaccine.getIdVaccine());
+                    List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
+                    List<Appointmentvaccine> appointments = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+1+" AND idVaccine="+vaccine.getIdVaccine());
 
                     if(pvList.isEmpty()){
                         if(appointments.isEmpty()){
                             //If there are no previous inmunization appopintments or programmed vaccines
                             //Create new Programmed Vaccines
-                            PatientVaccine newPV = new PatientVaccine();
-                            PatientVaccinePK newPVPK = new PatientVaccinePK();
+                            Patientvaccine newPV = new Patientvaccine();
+                            PatientvaccinePK newPVPK = new PatientvaccinePK();
                             newPV.setProgramedDate(cal.getTime());
                             newPV.setProgramManual((short)0);
 
@@ -824,35 +707,34 @@ public class ConsultationController {
                                 try{
                                     newAppointment.setDate(cal.getTime());
                                     newAppointment.setStartTime(timeFormat.parse("09:00:00"));
-                                    newAppointment.setEndTime(timeFormat.parse("09:30:00"));
                                     newAppointment.setIdPatient(patient);
                                     newAppointment.setMotive(vaccine.getVaccine());
                                     newAppointment.setIdStatus(apsService.getById(9));
                                     newAppointment.setRegisteredBy(doctor);
                                     newAppointment.setIdDoctor(doctor);
-                                    newAppointment.setImmunization(true);
+                                    newAppointment.setImmunization(1);
                                     newAppointment.setProgrammedBySystem((short)1);
                                 }catch(ParseException p){
                                     p.printStackTrace();
                                 }
                                 //Register the appointment
                                 appointmentService.create(newAppointment);
-                                AppointmentVaccinePK apvPK = new AppointmentVaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
-                                AppointmentVaccine newAV = new AppointmentVaccine(apvPK);
+                                AppointmentvaccinePK apvPK = new AppointmentvaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
+                                Appointmentvaccine newAV = new Appointmentvaccine(apvPK);
                                 avService.create(newAV);
 
                             }
                             //Register the programmed vaccine
                             newPVPK.setIdPatient(patient.getIdPatient());
                             newPVPK.setIdVaccine(vaccine.getIdVaccine());
-                            newPV.setPatientVaccinePK(newPVPK);
+                            newPV.setPatientvaccinePK(newPVPK);
                             pvService.create(newPV);
                         }else{ // End (pv,empty),(av,empty)
 
                             //If there are appointments but no programmed vaccines
                             //Update appointments and create programmed vaccines
-                            PatientVaccine newPV = new PatientVaccine();
-                            PatientVaccinePK newPVPK = new PatientVaccinePK();
+                            Patientvaccine newPV = new Patientvaccine();
+                            PatientvaccinePK newPVPK = new PatientvaccinePK();
                             newPV.setProgramedDate(cal.getTime());
                             newPV.setProgramManual((short)0);
 
@@ -902,7 +784,7 @@ public class ConsultationController {
                             }
                             newPVPK.setIdPatient(patient.getIdPatient());
                             newPVPK.setIdVaccine(vaccine.getIdVaccine());
-                            newPV.setPatientVaccinePK(newPVPK);
+                            newPV.setPatientvaccinePK(newPVPK);
                             pvService.create(newPV);
                         }
                     }else{ // End (pv,empty),(av,not empty)
@@ -914,7 +796,7 @@ public class ConsultationController {
                             //if the programmed vaccine has been edited or modified by a user, dont modify
 
                             if(pvList.get(0).getProgramManual() != 1 || !d){
-                                PatientVaccine currentPv = pvList.get(0);
+                                Patientvaccine currentPv = pvList.get(0);
                                 currentPv.setProgramedDate(cal.getTime());
                                 if(cal.getTime().compareTo(currentDate) <= 0){
                                     if(e){
@@ -937,21 +819,20 @@ public class ConsultationController {
                                     try{
                                         newAppointment.setDate(cal.getTime());
                                         newAppointment.setStartTime(timeFormat.parse("09:00:00"));
-                                        newAppointment.setEndTime(timeFormat.parse("09:30:00"));
                                         newAppointment.setIdPatient(patient);
                                         newAppointment.setMotive(vaccine.getVaccine());
                                         newAppointment.setIdStatus(apsService.getById(9));
                                         newAppointment.setRegisteredBy(doctor);
                                         newAppointment.setIdDoctor(doctor);
-                                        newAppointment.setImmunization(true);
+                                        newAppointment.setImmunization(1);
                                         newAppointment.setProgrammedBySystem((short)1);
                                     }catch(ParseException p){
                                         p.printStackTrace();
                                     }
                                     //Register the appointment
                                     appointmentService.create(newAppointment);
-                                    AppointmentVaccinePK apvPK = new AppointmentVaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
-                                    AppointmentVaccine newAV = new AppointmentVaccine(apvPK);
+                                    AppointmentvaccinePK apvPK = new AppointmentvaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
+                                    Appointmentvaccine newAV = new Appointmentvaccine(apvPK);
                                     avService.create(newAV);
 
                                 }
@@ -963,7 +844,7 @@ public class ConsultationController {
                             //if there are previous programmed vaccine and previous appointment
                             //update both
                             if(pvList.get(0).getProgramManual() != 1 || !d){
-                                PatientVaccine currentPv = pvList.get(0);
+                                Patientvaccine currentPv = pvList.get(0);
                                 currentPv.setProgramedDate(cal.getTime());
                                 if(cal.getTime().compareTo(currentDate) <= 0){
                                     if(e){
@@ -1024,12 +905,12 @@ public class ConsultationController {
         @RequestMapping(value="editProgrammedVaccine")
         public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
             
-            PatientVaccinePK id = new PatientVaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
-            PatientVaccine currentPV = pvService.getById(id);
+            PatientvaccinePK id = new PatientvaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
+            Patientvaccine currentPV = pvService.getById(id);
             
             
-            PatientVaccine pv = new PatientVaccine();
-            pv.setPatientVaccinePK(id);
+            Patientvaccine pv = new Patientvaccine();
+            pv.setPatientvaccinePK(id);
             try{
                 Date applicationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("applicationDate"));
                 Date programmedDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("programedDate"));
@@ -1055,8 +936,8 @@ public class ConsultationController {
                 if(pv.getApplicationDate() != null){
                     //The vaccine was applied
                     pv.setSuspended((short)0);
-                    List<AppointmentVaccine> avList = avService.getListOfItem("FROM AppointmentVaccine WHERE idVaccine="+id.getIdVaccine()+" AND idPatient="+id.getIdPatient());
-                    for(AppointmentVaccine av: avList ){
+                    List<Appointmentvaccine> avList = avService.getListOfItem("FROM AppointmentVaccine WHERE idVaccine="+id.getIdVaccine()+" AND idPatient="+id.getIdPatient());
+                    for(Appointmentvaccine av: avList ){
                         av.getAppointment().setIdStatus(apsService.getById(1));
                     }
                 }
@@ -1079,8 +960,8 @@ public class ConsultationController {
         
         @RequestMapping(value="saveNewMeasure")
         public @ResponseBody String saveMeasure(String measure,String units){
-            Measures newMeasure = new Measures(measure, units,doctor);
-            measuresService.create(newMeasure);
+            //Measures newMeasure = new Measures(measure, units,doctor);
+            //measuresService.create(newMeasure);
             
             return "";
             
@@ -1099,50 +980,37 @@ public class ConsultationController {
             Consultation consultation = filterConsultation(parameters);
             //Save the diagnostic
             List<Diagnostic> diagnostic = filterDiagnostic(parameters);
-            List<ConsultationDiagnostic> cdList = new ArrayList<ConsultationDiagnostic>();
             List<Consultationactivity> caList = new ArrayList<Consultationactivity>();
             List<Consultationmeasure> cmList = new ArrayList<Consultationmeasure>();
             
             Integer activitySize = Integer.parseInt(parameters.get("activitySize"));
             consultation.setIdAppointment(appointment);
-            consultationService.create(consultation);
             
             for(Diagnostic d: diagnostic){
-                ConsultationdiagnosticPK cdPK = new ConsultationdiagnosticPK(consultation.getIdConsultation(), d.getIdDiagnostic());
-                ConsultationDiagnostic cd = new ConsultationDiagnostic(cdPK);
-                cdList.add(cd);
-                //Save the relation
-                //cdService.create(cd);
+                consultation.getDiagnosticList().add(d);
             }
+            
+            consultationService.create(consultation);
             
             Integer measureSize = Integer.parseInt(parameters.get("measureSize"));
             
             for(int i=0; i < measureSize; i++){
-                //ConsultationmeasurePK cmId = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
-                //Consultationmeasure mes = new Consultationmeasure(cmId,parameters.get("mValue"+i));
                 ConsultationmeasurePK cmPK = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
                 Consultationmeasure cm = new Consultationmeasure(cmPK, parameters.get("mValue"+i));
-                //Consultationmeasure cm = new Consultationmeasure(parameters.get("mValue"+i), measuresService.getById(Integer.parseInt(parameters.get("measure"+i))), consultation);
+                
                 cmList.add(cm);
-                //cmService.create(mes);
+
             }
             
             for(int i=0; i < activitySize; i++){
                 Activity a = activityService.getById(Integer.parseInt(parameters.get("activity"+i)));
-                //ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
-                //Consultationactivity ca = new Consultationactivity(caPK);
-                //Set the cost
-                //Consultationactivity ca = new Consultationactivity(Double.parseDouble(parameters.get("activityPrice"+i)), consultation, a, Integer.parseInt(parameters.get("activityInclude"+i)));
-                //ca.setCost(Double.parseDouble(parameters.get("activityPrice"+i)));
-                //ca.setIncludeInBill(Integer.parseInt(parameters.get("activityInclude"+i)));
-                //caService.create(ca);
                 ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
                 Consultationactivity ca = new Consultationactivity(caPK, Double.parseDouble(parameters.get("activityPrice"+i)), Integer.parseInt(parameters.get("activityInclude"+i)));
                 caList.add(ca);
             }
-            consultation.setConsultationdiagnosticList(cdList);
+
             consultation.setConsultationactivityList(caList);
-            //consultation.setConsultationmeasureList(cmList);
+
             consultationService.updateItem(consultation);
             //Update the appointment status
             appointment.setIdStatus(apsService.getById(1));
@@ -1229,8 +1097,8 @@ public class ConsultationController {
                         diagnostic.setIdTreatment(treatmentService.getById(Integer.parseInt(t)));
                         diagnostic.setIdMedecine(drugService.getById(Integer.parseInt(m)));
                         diagnostic.setIdCommercialName(commercialNameService.getById(Integer.parseInt(n)));
-                        CIE10DoctorPK cdPK = new CIE10DoctorPK(Integer.parseInt(d), doctor.getIdUser());
-                        CIE10Doctor updateCie10 = new CIE10Doctor(cdPK, new Date());
+                        Cie10doctorPK cdPK = new Cie10doctorPK(Integer.parseInt(d), doctor.getIdUser());
+                        Cie10doctor updateCie10 = new Cie10doctor(cdPK, new Date());
                         c10dService.updateItem(updateCie10);
                     }
                 }

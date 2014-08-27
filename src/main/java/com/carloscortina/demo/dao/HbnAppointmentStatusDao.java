@@ -4,7 +4,7 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.AppointmentStatus;
+import com.carloscortina.demo.model.Appointmentstatus;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  * @author Ccortina_Mac
  */
 @Repository
-public class HbnAppointmentStatusDao extends GenericHbnDao<AppointmentStatus> implements appointmentStatusDao{
+public class HbnAppointmentStatusDao extends GenericHbnDao<Appointmentstatus> implements appointmentStatusDao{
     
 }

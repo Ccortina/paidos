@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.appointmentStatusDao;
-import com.carloscortina.demo.model.AppointmentStatus;
+import com.carloscortina.demo.model.Appointmentstatus;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,48 +25,53 @@ public class AppointmentStatusServiceImp implements AppointmentStatusService{
     appointmentStatusDao apsDao; 
     
     @Override
-    public void create(AppointmentStatus item) {
+    public void create(Appointmentstatus item) {
         apsDao.create(item);
     }
 
     @Override
-    public void delete(AppointmentStatus item) {
+    public void delete(Appointmentstatus item) {
         apsDao.delete(item);
     }
 
     @Override
-    public AppointmentStatus getById(int id) {
+    public Appointmentstatus getById(int id) {
         return apsDao.getById(id);
     }
 
     @Override
-    public void updateItem(AppointmentStatus item) {
+    public void updateItem(Appointmentstatus item) {
         apsDao.updateItem(item);
     }
 
     @Override
-    public List<AppointmentStatus> getAll(String table) {
+    public List<Appointmentstatus> getAll(String table) {
         return apsDao.getAll(table);
     }
 
     @Override
-    public List<AppointmentStatus> getListOfItem(String query) {
+    public List<Appointmentstatus> getListOfItem(String query) {
         return apsDao.getListOfItem(query);
     }
 
     @Override
-    public List<AppointmentStatus> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Appointmentstatus> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<AppointmentStatus> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Appointmentstatus> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(AppointmentStatus item) {
+    public void mergeItem(Appointmentstatus item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Appointmentstatus> getAllActiveItems() {
+        return apsDao.getAllActiveItems();
     }
 
     

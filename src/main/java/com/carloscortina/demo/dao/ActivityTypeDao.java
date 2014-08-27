@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.ActivityType;
+import com.carloscortina.demo.model.Activitytype;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface ActivityTypeDao extends GenericDao<ActivityType>{
+public interface ActivityTypeDao extends GenericDao<Activitytype>{
     
 }

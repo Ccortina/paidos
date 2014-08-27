@@ -12,6 +12,7 @@ public interface GenericDao<T> {
         public void mergeItem(T item);
 	public T getById(int id);
 	public List<T> getAll(String table);
+        public List<T> getAllActiveItems();
 	public List<T> getListOfItem(String query);
         public List<T> getSpecificColumnsList(List<String> columns,Criterion restrictions);
         public List<T> getSpecificColumnsList(List<String> columns, LogicalExpression restriction);

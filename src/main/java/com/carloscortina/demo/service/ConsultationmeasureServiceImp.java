@@ -81,5 +81,10 @@ public class ConsultationmeasureServiceImp implements ConsultationmeasureService
     public List<Consultationmeasure> getConsultationsByMeasure(int idMeasure) {
         return cmDao.getConsultationsByMeasure(idMeasure);
     }
+
+    @Override
+    public List<Consultationmeasure> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

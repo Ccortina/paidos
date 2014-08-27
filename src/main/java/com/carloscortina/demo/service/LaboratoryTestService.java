@@ -4,13 +4,13 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.LaboratoryTest;
+import com.carloscortina.demo.model.Laboratorytest;
 
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface LaboratoryTestService extends GenericService<LaboratoryTest>{
+public interface LaboratoryTestService extends GenericService<Laboratorytest>{
     
 }

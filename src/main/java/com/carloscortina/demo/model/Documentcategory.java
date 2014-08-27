@@ -6,7 +6,6 @@
 
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -20,8 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,11 +26,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "documentcategory")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Documentcategory.findAll", query = "SELECT d FROM Documentcategory d"),
-    @NamedQuery(name = "Documentcategory.findByIdDocumentCategory", query = "SELECT d FROM Documentcategory d WHERE d.idDocumentCategory = :idDocumentCategory"),
-    @NamedQuery(name = "Documentcategory.findByCategory", query = "SELECT d FROM Documentcategory d WHERE d.category = :category")})
+    @NamedQuery(name = "Documentcategory.findAll", query = "SELECT d FROM Documentcategory d")})
 public class Documentcategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,8 +40,11 @@ public class Documentcategory implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "category")
     private String category;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private int active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDocumentCategory")
-    @JsonIgnore
     private List<Documents> documentsList;
 
     public Documentcategory() {
@@ -57,9 +54,10 @@ public class Documentcategory implements Serializable {
         this.idDocumentCategory = idDocumentCategory;
     }
 
-    public Documentcategory(Integer idDocumentCategory, String category) {
+    public Documentcategory(Integer idDocumentCategory, String category, int active) {
         this.idDocumentCategory = idDocumentCategory;
         this.category = category;
+        this.active = active;
     }
 
     public Integer getIdDocumentCategory() {
@@ -78,7 +76,14 @@ public class Documentcategory implements Serializable {
         this.category = category;
     }
 
-    @XmlTransient
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
     public List<Documents> getDocumentsList() {
         return documentsList;
     }
@@ -109,7 +114,7 @@ public class Documentcategory implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.Documentcategory[ idDocumentCategory=" + idDocumentCategory + " ]";
+        return "com.carloscortina.demo.model.Documentcategory[ idDocumentCategory=" + idDocumentCategory + " ]";
     }
     
 }

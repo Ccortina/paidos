@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.DrugPresentation;
+import com.carloscortina.demo.model.Drugpresentation;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface ServiceDrugPresentation extends GenericService<DrugPresentation>{
+public interface ServiceDrugPresentation extends GenericService<Drugpresentation>{
     
 }

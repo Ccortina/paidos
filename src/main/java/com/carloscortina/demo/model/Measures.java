@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,28 +16,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.Size;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "measures")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Measures.findAll", query = "SELECT m FROM Measures m"),
-    @NamedQuery(name = "Measures.findByIdMeasures", query = "SELECT m FROM Measures m WHERE m.idMeasures = :idMeasures"),
-    @NamedQuery(name = "Measures.findByMeasure", query = "SELECT m FROM Measures m WHERE m.measure = :measure"),
-    @NamedQuery(name = "Measures.findByUnits", query = "SELECT m FROM Measures m WHERE m.units = :units")})
+    @NamedQuery(name = "Measures.findAll", query = "SELECT m FROM Measures m")})
 public class Measures implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,22 +39,26 @@ public class Measures implements Serializable {
     @Column(name = "idMeasures")
     private Integer idMeasures;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "measure")
     private String measure;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "units")
     private String units;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "includePrescription")
-    private short includePrescription;
+    private int includePrescription;
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
-    private short active;
-    @JoinColumn(name = "idUser", referencedColumnName = "idUser")
-    @ManyToOne(optional = false)
+    private int active;
     @JsonIgnore
-    private User idUser;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "measures")
+    private List<Consultationmeasure> consultationmeasureList;
 
     public Measures() {
     }
@@ -68,29 +67,19 @@ public class Measures implements Serializable {
         this.idMeasures = idMeasures;
     }
 
-    public Measures(String measure, String units) {
-        this.measure = measure;
-        this.units = units;
-    }
-
-    public Measures(String measure, String units, short includePrescription, short active, User idUser) {
+    public Measures(Integer idMeasures, String measure, String units, int includePrescription, int active) {
+        this.idMeasures = idMeasures;
         this.measure = measure;
         this.units = units;
         this.includePrescription = includePrescription;
         this.active = active;
-        this.idUser = idUser;
     }
 
-    public Measures(Integer idMeasures, String measure, String units) {
-        this.idMeasures = idMeasures;
+    public Measures(String measure, String units, int includePrescription, int active) {
         this.measure = measure;
         this.units = units;
-    }
-
-    public Measures(String measure, String units, User idUser) {
-        this.measure = measure;
-        this.units = units;
-        this.idUser = idUser;
+        this.includePrescription = includePrescription;
+        this.active = active;
     }
 
     public Integer getIdMeasures() {
@@ -117,19 +106,35 @@ public class Measures implements Serializable {
         this.units = units;
     }
 
+    public int getIncludePrescription() {
+        return includePrescription;
+    }
+
+    public void setIncludePrescription(int includePrescription) {
+        this.includePrescription = includePrescription;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public List<Consultationmeasure> getConsultationmeasureList() {
+        return consultationmeasureList;
+    }
+
+    public void setConsultationmeasureList(List<Consultationmeasure> consultationmeasureList) {
+        this.consultationmeasureList = consultationmeasureList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (idMeasures != null ? idMeasures.hashCode() : 0);
         return hash;
-    }
-
-    public short getActive() {
-        return active;
-    }
-
-    public void setActive(short active) {
-        this.active = active;
     }
 
     @Override
@@ -149,20 +154,5 @@ public class Measures implements Serializable {
     public String toString() {
         return "com.carloscortina.demo.model.Measures[ idMeasures=" + idMeasures + " ]";
     }
-
-    public short getIncludePrescription() {
-        return includePrescription;
-    }
-
-    public void setIncludePrescription(short includePrescription) {
-        this.includePrescription = includePrescription;
-    }
-
-    public User getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
-    }
+    
 }

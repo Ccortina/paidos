@@ -147,7 +147,7 @@ function initializeNewAppointmentPatientsTable(){
                             +" "+row['fatherLastName']+" "+replaceNull(row['motherLastName']));
             }},
             {"data":"birthday"},
-            {"data":"sex"}
+            {"data":"sex.gender"}
         ],
         "initComplete":function(settings,json){
             $('#tblPatientsNewApp tbody').on( 'click', 'tr', function (e) {
@@ -183,7 +183,7 @@ function saveNewAppointment(){
         extraInputs.each(function(){
            data.push({name:this.name,value:$(this).val()}); 
         });
-        //console.log(data);
+
         //Send to controller
         $.ajax({
             url:"/demo/appointment/saveAppointment",

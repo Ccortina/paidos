@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.Document;
+import com.carloscortina.demo.model.Documents;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnDocumentDao extends GenericHbnDao<Document> implements DocumentDao{
+public class HbnDocumentDao extends GenericHbnDao<Documents> implements DocumentDao{
     
 }

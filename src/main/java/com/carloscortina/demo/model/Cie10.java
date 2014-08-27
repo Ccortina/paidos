@@ -1,47 +1,40 @@
-/**
-*
-* @author carloscortina
-*/
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author carloscortina
+ * @author Carlos Cortina
  */
 @Entity
-@Table(name = "CIE10")
-@XmlRootElement
+@Table(name = "cie10")
 @NamedQueries({
-    @NamedQuery(name = "Cie10.findAll", query = "SELECT c FROM Cie10 c"),
-    @NamedQuery(name = "Cie10.findByIdCIE10", query = "SELECT c FROM Cie10 c WHERE c.idCIE10 = :idCIE10"),
-    @NamedQuery(name = "Cie10.findByCieCode", query = "SELECT c FROM Cie10 c WHERE c.cieCode = :cieCode"),
-    @NamedQuery(name = "Cie10.findByActive", query = "SELECT c FROM Cie10 c WHERE c.active = :active")})
+    @NamedQuery(name = "Cie10.findAll", query = "SELECT c FROM Cie10 c")})
 public class Cie10 implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -59,26 +52,22 @@ public class Cie10 implements Serializable {
     @Size(min = 1, max = 65535)
     @Column(name = "diagnostic")
     private String diagnostic;
-    @Size(max = 65535)
-    @Column(name = "description")
-    private String description;
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
-    private short active;
+    private int active;
     @JsonIgnore
     @JoinTable(name = "diagnostictreatment", joinColumns = {
         @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")}, inverseJoinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
     @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Treatment> treatmentList;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCIE10")
-    private List<Diagnostic> diagnosticList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cie10")
+    private List<Cie10doctor> cie10doctorList;
     @JsonIgnore
-    private List<CIE10Doctor> cie10doctorList;
+    @OneToMany(mappedBy = "idCIE10")
+    private List<Diagnostic> diagnosticList;
 
     public Cie10() {
     }
@@ -87,24 +76,10 @@ public class Cie10 implements Serializable {
         this.idCIE10 = idCIE10;
     }
 
-    public Cie10(Integer idCIE10, String cieCode, String diagnostic) {
+    public Cie10(Integer idCIE10, String cieCode, String diagnostic, int active) {
         this.idCIE10 = idCIE10;
         this.cieCode = cieCode;
         this.diagnostic = diagnostic;
-    }
-
-    public Cie10(Integer idCIE10, String cieCode, String diagnostic, short active) {
-        this.idCIE10 = idCIE10;
-        this.cieCode = cieCode;
-        this.diagnostic = diagnostic;
-        this.active = active;
-    }
-
-    public Cie10(Integer idCIE10, String cieCode, String diagnostic, String description, short active) {
-        this.idCIE10 = idCIE10;
-        this.cieCode = cieCode;
-        this.diagnostic = diagnostic;
-        this.description = description;
         this.active = active;
     }
 
@@ -132,23 +107,14 @@ public class Cie10 implements Serializable {
         this.diagnostic = diagnostic;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public short getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(short active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
-    @XmlTransient
     public List<Treatment> getTreatmentList() {
         return treatmentList;
     }
@@ -157,21 +123,20 @@ public class Cie10 implements Serializable {
         this.treatmentList = treatmentList;
     }
 
-    @XmlTransient
+    public List<Cie10doctor> getCie10doctorList() {
+        return cie10doctorList;
+    }
+
+    public void setCie10doctorList(List<Cie10doctor> cie10doctorList) {
+        this.cie10doctorList = cie10doctorList;
+    }
+
     public List<Diagnostic> getDiagnosticList() {
         return diagnosticList;
     }
 
     public void setDiagnosticList(List<Diagnostic> diagnosticList) {
         this.diagnosticList = diagnosticList;
-    }
-
-    public List<CIE10Doctor> getCie10doctorList() {
-        return cie10doctorList;
-    }
-
-    public void setCie10doctorList(List<CIE10Doctor> cie10doctorList) {
-        this.cie10doctorList = cie10doctorList;
     }
 
     @Override
@@ -196,7 +161,7 @@ public class Cie10 implements Serializable {
 
     @Override
     public String toString() {
-        return "diagnostic.Cie10[ idCIE10=" + idCIE10 + " ]";
+        return "com.carloscortina.demo.model.Cie10[ idCIE10=" + idCIE10 + " ]";
     }
     
 }

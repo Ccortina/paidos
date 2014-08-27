@@ -77,7 +77,7 @@ public class PatientRelativePK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.PatientRelativePK[ idPatient=" + idPatient + ", idRelative=" + idRelative + " ]";
+        return "com.carloscortina.demo.model.PatientRelativePK[ idPatient=" + idPatient + ", idRelative=" + idRelative + " ]";
     }
     
 }

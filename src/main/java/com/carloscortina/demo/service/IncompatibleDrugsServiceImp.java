@@ -6,8 +6,8 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.dao.DrugriskDao;
-import com.carloscortina.demo.model.Drugrisk;
+import com.carloscortina.demo.dao.IncompatibleDrugsDao;
+import com.carloscortina.demo.model.Incompatibledrugs;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -21,53 +21,58 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class DrugriskServiceImp implements DrugriskService{
+public class IncompatibleDrugsServiceImp implements IncompatibleDrugsService{
 
     @Autowired
-    private DrugriskDao dao;
+    private IncompatibleDrugsDao dao;
     
     @Override
-    public void create(Drugrisk item) {
+    public void create(Incompatibledrugs item) {
         dao.create(item);
     }
 
     @Override
-    public void delete(Drugrisk item) {
+    public void delete(Incompatibledrugs item) {
         dao.delete(item);
     }
 
     @Override
-    public Drugrisk getById(int id) {
+    public Incompatibledrugs getById(int id) {
         return dao.getById(id);
     }
 
     @Override
-    public void updateItem(Drugrisk item) {
+    public void updateItem(Incompatibledrugs item) {
         dao.updateItem(item);
     }
 
     @Override
-    public void mergeItem(Drugrisk item) {
+    public void mergeItem(Incompatibledrugs item) {
         dao.mergeItem(item);
     }
 
     @Override
-    public List<Drugrisk> getAll(String table) {
+    public List<Incompatibledrugs> getAll(String table) {
         return dao.getAll(table);
     }
 
     @Override
-    public List<Drugrisk> getListOfItem(String query) {
+    public List<Incompatibledrugs> getAllActiveItems() {
+        return dao.getAllActiveItems();
+    }
+
+    @Override
+    public List<Incompatibledrugs> getListOfItem(String query) {
         return dao.getListOfItem(query);
     }
 
     @Override
-    public List<Drugrisk> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Incompatibledrugs> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
     }
 
     @Override
-    public List<Drugrisk> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Incompatibledrugs> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
     }
     

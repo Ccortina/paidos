@@ -5,9 +5,8 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.AppointmentVaccineDao;
-import com.carloscortina.demo.model.AppointmentVaccine;
+import com.carloscortina.demo.model.Appointmentvaccine;
 import java.util.List;
-import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,47 +24,52 @@ public class AppointmentVaccineServiceImp implements AppointmentVaccineService{
     AppointmentVaccineDao avDao;
 
     @Override
-    public void create(AppointmentVaccine item) {
+    public void create(Appointmentvaccine item) {
         avDao.create(item);
     }
 
     @Override
-    public void delete(AppointmentVaccine item) {
+    public void delete(Appointmentvaccine item) {
         avDao.delete(item);
     }
 
     @Override
-    public AppointmentVaccine getById(int id) {
+    public Appointmentvaccine getById(int id) {
         return avDao.getById(id);
     }
 
     @Override
-    public void updateItem(AppointmentVaccine item) {
+    public void updateItem(Appointmentvaccine item) {
         avDao.updateItem(item);
     }
 
     @Override
-    public List<AppointmentVaccine> getAll(String table) {
+    public List<Appointmentvaccine> getAll(String table) {
         return avDao.getAll(table);
     }
 
     @Override
-    public List<AppointmentVaccine> getListOfItem(String query) {
+    public List<Appointmentvaccine> getListOfItem(String query) {
         return avDao.getListOfItem(query);
     }
     
     @Override
-    public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Appointmentvaccine> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<AppointmentVaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Appointmentvaccine> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(AppointmentVaccine item) {
+    public void mergeItem(Appointmentvaccine item) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Appointmentvaccine> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

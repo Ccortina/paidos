@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.ApplicationMethod;
+import com.carloscortina.demo.model.Applicationmethod;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository     
-public class HbnApplicationMethodDao extends GenericHbnDao<ApplicationMethod> implements ApplicationMethodDao{
+public class HbnApplicationMethodDao extends GenericHbnDao<Applicationmethod> implements ApplicationMethodDao{
     
 }

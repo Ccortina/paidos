@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.Document;
+import com.carloscortina.demo.model.Documents;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface DocumentService extends GenericService<Document>{
+public interface DocumentService extends GenericService<Documents>{
     
 }

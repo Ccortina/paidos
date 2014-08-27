@@ -68,5 +68,10 @@ public class BirthmethodServiceImp implements BirthmethodService{
     public void mergeItem(Birthmethod item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Birthmethod> getAllActiveItems() {
+        return birthmethodDao.getAllActiveItems();
+    }
     
 }

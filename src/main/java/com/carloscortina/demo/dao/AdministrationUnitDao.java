@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.AdministrationUnit;
+import com.carloscortina.demo.model.Administrationunit;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface AdministrationUnitDao extends GenericDao<AdministrationUnit>{
+public interface AdministrationUnitDao extends GenericDao<Administrationunit>{
     
 }

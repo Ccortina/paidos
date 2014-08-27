@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.Ageweight0To36Months;
+import com.carloscortina.demo.model.Ageweight0to36months;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface AW0to36MonthsService extends GenericService<Ageweight0To36Months>{
+public interface AW0to36MonthsService extends GenericService<Ageweight0to36months>{
     
 }

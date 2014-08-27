@@ -5,7 +5,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Drug;
-import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.Drugdose;
 import com.carloscortina.demo.model.Treatment;
 import java.util.List;
 import org.hibernate.Query;
@@ -31,9 +31,9 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         for(Drug temp: result){
             String hql1 = "SELECT new DrugDose(dose.idDrugDose,dose.age,dose.dose) FROM DrugDose as dose WHERE idDrug.idDrug = :idDrug ";
             String hql2 = "SELECT new Treatment(treatment.idTreatment) FROM Treatment as treatment JOIN treatment.drugList d WHERE d.idDrug = :idDrug ";
-            List<DrugDose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
+            List<Drugdose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
             List<Treatment> treatmentList = getSession().createQuery(hql2).setParameter("idDrug", temp.getIdDrug()).list();
-            temp.setDrugDoseList(drugDoseList);
+            temp.setDrugdoseList(drugDoseList);
             temp.setTreatmentList(treatmentList);
         }
         
@@ -54,8 +54,8 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         
         for(Drug temp: result){
             String hql1 = "SELECT new DrugDose(dose.idDrugDose,dose.age,dose.dose) FROM DrugDose as dose WHERE idDrug.idDrug = :idDrug ";
-            List<DrugDose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
-            temp.setDrugDoseList(drugDoseList);
+            List<Drugdose> drugDoseList = getSession().createQuery(hql1).setParameter("idDrug", temp.getIdDrug()).list();
+            temp.setDrugdoseList(drugDoseList);
         }
         
         return result;

@@ -33,9 +33,10 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		model.addAttribute("doctors",userService.getUserByRole(2));
-                model.addAttribute("appointmentStatus",appointmentStatusService.getAll("AppointmentStatus"));
-		return "home";
+            
+            model.addAttribute("doctors",userService.getUserByRole(2));
+            model.addAttribute("appointmentStatus",appointmentStatusService.getAllActiveItems());
+            return "home";
 	}
 	
 }

@@ -6,7 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.VaccineType;
+import com.carloscortina.demo.model.Vaccinetype;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Carlos Cortina
  */
 @Repository
-public class HbnVaccineTypeDao extends GenericHbnDao<VaccineType> implements VaccineTypeDao{
+public class HbnVaccineTypeDao extends GenericHbnDao<Vaccinetype> implements VaccineTypeDao{
     
 }

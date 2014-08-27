@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.LaboratoryTestDao;
-import com.carloscortina.demo.model.LaboratoryTest;
+import com.carloscortina.demo.model.Laboratorytest;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,48 +25,53 @@ public class LaboratoryTestServiceImp implements LaboratoryTestService{
     LaboratoryTestDao labDao;
     
     @Override
-    public void create(LaboratoryTest item) {
+    public void create(Laboratorytest item) {
         labDao.create(item);
     }
 
     @Override
-    public void delete(LaboratoryTest item) {
+    public void delete(Laboratorytest item) {
         labDao.delete(item);
     }
 
     @Override
-    public LaboratoryTest getById(int id) {
+    public Laboratorytest getById(int id) {
         return labDao.getById(id);
     }
 
     @Override
-    public void updateItem(LaboratoryTest item) {
+    public void updateItem(Laboratorytest item) {
         labDao.updateItem(item);
     }
 
     @Override
-    public List<LaboratoryTest> getAll(String table) {
+    public List<Laboratorytest> getAll(String table) {
         return labDao.getAll(table);
     }
 
     @Override
-    public List<LaboratoryTest> getListOfItem(String query) {
+    public List<Laboratorytest> getListOfItem(String query) {
         return labDao.getListOfItem(query);
     }
 
      @Override
-    public List<LaboratoryTest> getSpecificColumnsList(List<String> columns,Criterion restrictions) {
+    public List<Laboratorytest> getSpecificColumnsList(List<String> columns,Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
-    public List<LaboratoryTest> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Laboratorytest> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(LaboratoryTest item) {
+    public void mergeItem(Laboratorytest item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Laboratorytest> getAllActiveItems() {
+        return labDao.getAllActiveItems();
     }
     
 }

@@ -70,5 +70,10 @@ public class UserroleServiceImp implements UserroleService{
     public List<Userrole> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Userrole> getAllActiveItems() {
+        return dao.getAllActiveItems();
+    }
     
 }

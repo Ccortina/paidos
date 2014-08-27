@@ -71,4 +71,9 @@ public class UserServiceImp implements UserService {
         return dao.getUserByRole(idRole);
     }
 
+    @Override
+    public List<User> getAllActiveItems() {
+        return dao.getAllActiveItems();
+    }
+
 }

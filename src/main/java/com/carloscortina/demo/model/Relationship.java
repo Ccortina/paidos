@@ -22,8 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,11 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "relationship")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Relationship.findAll", query = "SELECT r FROM Relationship r"),
-    @NamedQuery(name = "Relationship.findByIdRelationship", query = "SELECT r FROM Relationship r WHERE r.idRelationship = :idRelationship"),
-    @NamedQuery(name = "Relationship.findByRelationship", query = "SELECT r FROM Relationship r WHERE r.relationship = :relationship")})
+    @NamedQuery(name = "Relationship.findAll", query = "SELECT r FROM Relationship r")})
 public class Relationship implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,9 +46,9 @@ public class Relationship implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
-    private short active;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRelationship")
+    private int active;
     @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRelationship")
     private List<PatientRelative> patientRelativeList;
 
     public Relationship() {
@@ -63,14 +58,15 @@ public class Relationship implements Serializable {
         this.idRelationship = idRelationship;
     }
 
-    public Relationship(String relationship, short active) {
+    public Relationship(Integer idRelationship, String relationship, int active) {
+        this.idRelationship = idRelationship;
         this.relationship = relationship;
         this.active = active;
     }
 
-    public Relationship(Integer idRelationship, String relationship) {
-        this.idRelationship = idRelationship;
+    public Relationship(String relationship, int active) {
         this.relationship = relationship;
+        this.active = active;
     }
 
     public Integer getIdRelationship() {
@@ -89,15 +85,14 @@ public class Relationship implements Serializable {
         this.relationship = relationship;
     }
 
-    public short getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(short active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
-    @XmlTransient
     public List<PatientRelative> getPatientRelativeList() {
         return patientRelativeList;
     }
@@ -128,7 +123,7 @@ public class Relationship implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.Relationship[ idRelationship=" + idRelationship + " ]";
+        return "com.carloscortina.demo.model.Relationship[ idRelationship=" + idRelationship + " ]";
     }
     
 }

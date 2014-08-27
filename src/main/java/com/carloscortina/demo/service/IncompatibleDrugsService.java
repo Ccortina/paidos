@@ -4,16 +4,14 @@
  * and open the template in the editor.
  */
 
-package com.carloscortina.demo.dao;
+package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.Drugrisk;
-import org.springframework.stereotype.Repository;
+import com.carloscortina.demo.model.Incompatibledrugs;
 
 /**
  *
  * @author Carlos Cortina
  */
-@Repository
-public class HbnDrugriskDao extends GenericHbnDao<Drugrisk> implements DrugriskDao{
+public interface IncompatibleDrugsService extends GenericService<Incompatibledrugs>{
     
 }

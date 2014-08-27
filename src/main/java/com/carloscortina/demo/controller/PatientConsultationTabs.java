@@ -4,7 +4,7 @@
  */
 package com.carloscortina.demo.controller;
 
-import com.carloscortina.demo.model.PerBackNoPat;
+import com.carloscortina.demo.model.Perbacknopat;
 import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.service.PerBackNoPatService;
 import com.carloscortina.demo.service.RecordService;
@@ -31,7 +31,7 @@ public class PatientConsultationTabs {
     
     //Updates the No Pathological perinatal background table individually 
     @RequestMapping(value="savePerBackNoPat",method=RequestMethod.POST)
-    public @ResponseBody String savePerBackNoPat(@ModelAttribute(value="changes") PerBackNoPat changes, BindingResult result){
+    public @ResponseBody String savePerBackNoPat(@ModelAttribute(value="changes") Perbacknopat changes, BindingResult result){
             perBackNoService.updateItem(changes);
             String message = " <div class='alert alert-success alert-dismissable'> " +
                                                             "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +

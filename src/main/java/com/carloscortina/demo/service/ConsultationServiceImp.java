@@ -83,5 +83,10 @@ public class ConsultationServiceImp implements ConsultationService{
     public List<Consultation> getConsultationByTreatment(int idTreatment) {
         return consultationDao.getConsultationByTreatment(idTreatment);
     }
+
+    @Override
+    public List<Consultation> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

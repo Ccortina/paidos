@@ -10,6 +10,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -18,9 +19,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ConsultationactivityPK implements Serializable {
     @Basic(optional = false)
+    @NotNull
     @Column(name = "idConsultation")
     private int idConsultation;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "idActivity")
     private int idActivity;
 
@@ -74,7 +77,7 @@ public class ConsultationactivityPK implements Serializable {
 
     @Override
     public String toString() {
-        return "Modelos.ConsultationactivityPK[ idConsultation=" + idConsultation + ", idActivity=" + idActivity + " ]";
+        return "com.carloscortina.demo.model.ConsultationactivityPK[ idConsultation=" + idConsultation + ", idActivity=" + idActivity + " ]";
     }
     
 }

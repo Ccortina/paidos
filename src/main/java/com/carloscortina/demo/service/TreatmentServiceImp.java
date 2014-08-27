@@ -77,6 +77,11 @@ public class TreatmentServiceImp implements TreatmentService{
     public void mergeItem(Treatment item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Treatment> getAllActiveItems() {
+        return treatmentDao.getAllActiveItems();
+    }
 	
     
 }

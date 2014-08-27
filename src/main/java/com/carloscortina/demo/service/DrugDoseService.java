@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.DrugDose;
+import com.carloscortina.demo.model.Drugdose;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface DrugDoseService extends GenericService<DrugDose>{
+public interface DrugDoseService extends GenericService<Drugdose>{
     
 }

@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.ApplicationMethod;
+import com.carloscortina.demo.model.Applicationmethod;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface ApplicationMethodService extends GenericService<ApplicationMethod>{
+public interface ApplicationMethodService extends GenericService<Applicationmethod>{
     
 }

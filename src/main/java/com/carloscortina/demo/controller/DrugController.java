@@ -7,14 +7,14 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
-import com.carloscortina.demo.model.AdministrationUnit;
-import com.carloscortina.demo.model.ApplicationMethod;
-import com.carloscortina.demo.model.CommercialName;
+import com.carloscortina.demo.model.Administrationunit;
+import com.carloscortina.demo.model.Applicationmethod;
+import com.carloscortina.demo.model.Commercialname;
 import com.carloscortina.demo.model.Drug;
-import com.carloscortina.demo.model.DrugDose;
-import com.carloscortina.demo.model.DrugPresentation;
-import com.carloscortina.demo.model.Drugrisk;
-import com.carloscortina.demo.model.DrugriskPK;
+import com.carloscortina.demo.model.Drugdose;
+import com.carloscortina.demo.model.Drugpresentation;
+import com.carloscortina.demo.model.Incompatibledrugs;
+import com.carloscortina.demo.model.IncompatibledrugsPK;
 import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.AdministrationUnitService;
@@ -23,7 +23,7 @@ import com.carloscortina.demo.service.CommercialNameService;
 import com.carloscortina.demo.service.DoseCalculationCriteriaService;
 import com.carloscortina.demo.service.DrugDoseService;
 import com.carloscortina.demo.service.DrugService;
-import com.carloscortina.demo.service.DrugriskService;
+import com.carloscortina.demo.service.IncompatibleDrugsService;
 import com.carloscortina.demo.service.ServiceDrugPresentation;
 import com.carloscortina.demo.service.TreatmentService;
 import com.carloscortina.demo.service.UserService;
@@ -66,7 +66,7 @@ public class DrugController {
     @Autowired
     private DrugDoseService drugDoseService;
     @Autowired
-    private DrugriskService drugriskService;
+    private IncompatibleDrugsService incompatibleService;
      
     private User loggedUser;
     
@@ -76,10 +76,10 @@ public class DrugController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         loggedUser = userService.getUserByUsername(auth.getName());
         
-        model.addAttribute("drugPresentations",drugPresentationService.getAll("DrugPresentation"));
-        model.addAttribute("applicationMethods", applicationMethodService.getAll("ApplicationMethod"));
-        model.addAttribute("administrationUnits", administrationUnitService.getAll("AdministrationUnit"));
-        model.addAttribute("doseCalculationCriterias", doseCalculationService.getAll("DoseCalculationCriteria"));
+        model.addAttribute("drugPresentations",drugPresentationService.getAll("Drugpresentation"));
+        model.addAttribute("applicationMethods", applicationMethodService.getAll("Applicationmethod"));
+        model.addAttribute("administrationUnits", administrationUnitService.getAll("Administrationunit"));
+        model.addAttribute("doseCalculationCriterias", doseCalculationService.getAll("Dosecalculationcriteria"));
         
         return ( "Drug/DrugHome" );
     }
@@ -102,7 +102,7 @@ public class DrugController {
         return ( "Drug/ApplicationMethodHome" );
     }
     
-    @RequestMapping(value="drugAdministrationUnitHome")
+    @RequestMapping(value="drugAdministrationunitHome")
     public String drugAdministrationUnitHome(Model model){
         //Get logged User
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -117,9 +117,9 @@ public class DrugController {
     }
     
     @RequestMapping(value="getDrugsCommercialNames")
-    public @ResponseBody JsonPack<CommercialName> allDrugCommercialNames()
+    public @ResponseBody JsonPack<Commercialname> allDrugCommercialNames()
     {
-        return new JsonPack<CommercialName>(commercialNameService.getCommercialNameByUser(loggedUser.getIdUser()));
+        return new JsonPack<Commercialname>(commercialNameService.getCommercialNameByUser(loggedUser.getIdUser()));
     }
     
     @RequestMapping(value="getTreatmentsByUser")
@@ -146,7 +146,6 @@ public class DrugController {
             newDrug.setDoseCalculationCriteriaId(doseCalculationService.getById(Integer.parseInt(params.get("doseCalculationCriteriaId"))));
             newDrug.setNotes(params.get("notes"));
             newDrug.setConcentration(Double.parseDouble(params.get("concentration")));
-            newDrug.setUserList(userList);
             List<Treatment> treatmentList = new ArrayList<Treatment>();
             
             for(int i = 0 ; i < Integer.parseInt(params.get("tCont")); i++){
@@ -157,34 +156,27 @@ public class DrugController {
             drugService.create(newDrug);
             
             for(int i = 0 ; i < Integer.parseInt(params.get("iCont")); i++){
-                CommercialName cn = commercialNameService.getById(Integer.parseInt(params.get("incompatibleCN"+i)));
-                List<Drug> incompatible = cn.getIncompatibleDrugList();
-                incompatible.add(newDrug);
-                cn.setIncompatibleDrugList(incompatible);
-                commercialNameService.updateItem(cn);
+                Commercialname cn = commercialNameService.getById(Integer.parseInt(params.get("incompatibleCN"+i)));
+                IncompatibledrugsPK incompatiblePK = new IncompatibledrugsPK(newDrug.getIdDrug(), cn.getIdcommercialName());
+                Incompatibledrugs incompatible = new Incompatibledrugs(incompatiblePK);
+                incompatible.setRisk(params.get("risk"+i));
+                incompatibleService.create(incompatible);
             }
                     
             //Add Drug dose
             for(int i = 0 ; i < Integer.parseInt(params.get("doseCont")); i++){
-                DrugDose dd = new DrugDose();
+                Drugdose dd = new Drugdose();
                 if(params.get("criteria"+i).isEmpty()){
-                    dd = new DrugDose(0, Float.parseFloat(params.get("dose"+i)), newDrug);
+                    dd = new Drugdose(0, Float.parseFloat(params.get("dose"+i)), newDrug);
                 }else{
-                    dd = new DrugDose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
+                    dd = new Drugdose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
                 }
                 drugDoseService.create(dd);
             }
             
             for(int i = 0 ; i < Integer.parseInt(params.get("cnCont")); i++){
-                CommercialName ncn = new CommercialName(params.get("commercialName"+i), (short)1, userList, newDrug);
+                Commercialname ncn = new Commercialname(params.get("commercialName"+i),  newDrug);
                 commercialNameService.create(ncn);
-            }
-            
-            for(int i = 0 ; i < Integer.parseInt(params.get("rCont")); i++){
-                DrugriskPK drPK = new DrugriskPK(newDrug.getIdDrug(), Integer.parseInt(params.get("riskDrug"+i)));
-                Drugrisk dr = new Drugrisk(drPK);
-                dr.setRisk(params.get("risk"+i));
-                drugriskService.create(dr);
             }
             
         }catch(Exception e){
@@ -195,22 +187,22 @@ public class DrugController {
     }
     
     @RequestMapping(value="getDrugPresentation")
-    public @ResponseBody JsonPack<DrugPresentation> getDrugPresentation(){
-        return (new JsonPack<DrugPresentation> (drugPresentationService.getAll("DrugPresentation")));
+    public @ResponseBody JsonPack<Drugpresentation> getDrugPresentation(){
+        return (new JsonPack<Drugpresentation> (drugPresentationService.getAll("Drugpresentation")));
     }
     
     @RequestMapping(value="saveNewDrugPresentation")
     public @ResponseBody String saveNewDrugPresentation(@RequestParam Map<String,String> params){
         
-        drugPresentationService.create(new DrugPresentation(params.get("presentation"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        drugPresentationService.create(new Drugpresentation(params.get("presentation"), params.get("active").equalsIgnoreCase("true")?1:0));
         
         return "";
     }
     
     @RequestMapping(value="saveModifyDrugPresentation")
     public @ResponseBody String saveModifyDrugPresentation(@RequestParam Map<String,String> params){
-        DrugPresentation modifyDP = drugPresentationService.getById(Integer.parseInt(params.get("idPresentation")));
-        modifyDP.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
+        Drugpresentation modifyDP = drugPresentationService.getById(Integer.parseInt(params.get("idPresentation")));
+        modifyDP.setActive(params.get("active").equalsIgnoreCase("true")? 1 : 0 );
         modifyDP.setPresentation(params.get("presentation"));
         
         drugPresentationService.updateItem(modifyDP);
@@ -225,22 +217,22 @@ public class DrugController {
     }
     
     @RequestMapping(value="getDrugApplicationMethod")
-    public @ResponseBody JsonPack<ApplicationMethod> getDrugAdministrationMethod(){
-        return (new JsonPack<ApplicationMethod> (applicationMethodService.getAll("ApplicationMethod")));
+    public @ResponseBody JsonPack<Applicationmethod> getDrugAdministrationMethod(){
+        return (new JsonPack<Applicationmethod> (applicationMethodService.getAll("ApplicationMethod")));
     }
     
     @RequestMapping(value="saveNewDrugApplicationMethod")
     public @ResponseBody String saveNewDrugApplicationMethod(@RequestParam Map<String,String> params){
         
-        applicationMethodService.create(new ApplicationMethod(params.get("applicationMethod"), params.get("active").equalsIgnoreCase("true")?"1":"0"));
+        applicationMethodService.create(new Applicationmethod(params.get("applicationMethod"), params.get("active").equalsIgnoreCase("true")? 1 : 0));
         
         return "";
     }
     
     @RequestMapping(value="saveModifyDrugApplicationMethod")
     public @ResponseBody String saveModifyDrugApplicationMethod(@RequestParam Map<String,String> params){
-        ApplicationMethod modifyAM = applicationMethodService.getById(Integer.parseInt(params.get("idApplicationMethod")));
-        modifyAM.setActive(params.get("active").equalsIgnoreCase("true")?"1":"0");
+        Applicationmethod modifyAM = applicationMethodService.getById(Integer.parseInt(params.get("idApplicationMethod")));
+        modifyAM.setActive(params.get("active").equalsIgnoreCase("true")? 1 : 0 );
         modifyAM.setApplicationMethod(params.get("applicationMethod"));
         
         applicationMethodService.updateItem(modifyAM);
@@ -257,21 +249,21 @@ public class DrugController {
     //Administration Unit section
     
     @RequestMapping(value="getDrugAdministrationUnit")
-    public @ResponseBody JsonPack<AdministrationUnit> getDrugAdministrationUnit(){
-        return (new JsonPack<AdministrationUnit> (administrationUnitService.getAll("AdministrationUnit")));
+    public @ResponseBody JsonPack<Administrationunit> getDrugAdministrationUnit(){
+        return (new JsonPack<Administrationunit> (administrationUnitService.getAll("Administrationunit")));
     }
     
     @RequestMapping(value="saveNewDrugAdministrationUnit")
     public @ResponseBody String saveNewDrugAdministrationUnit(@RequestParam Map<String,String> params){
         
-        administrationUnitService.create(new AdministrationUnit(params.get("administrationUnit"), params.get("active").equalsIgnoreCase("true")?(short)1:(short)0));
+        administrationUnitService.create(new Administrationunit(params.get("administrationUnit"), params.get("active").equalsIgnoreCase("true")? 1: 0));
         
         return "";
     }
     
     @RequestMapping(value="saveModifyDrugAdministrationUnit")
     public @ResponseBody String saveModifyDrugAdministrationUnit(@RequestParam Map<String,String> params){
-        AdministrationUnit modifyAU = administrationUnitService.getById(Integer.parseInt(params.get("idAdministrationUnit")));
+        Administrationunit modifyAU = administrationUnitService.getById(Integer.parseInt(params.get("idAdministrationUnit")));
         modifyAU.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
         modifyAU.setAdministrationUnit(params.get("administrationUnit"));
         

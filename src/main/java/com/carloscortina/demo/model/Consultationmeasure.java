@@ -16,7 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -24,17 +25,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "consultationmeasure")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Consultationmeasure.findAll", query = "SELECT c FROM Consultationmeasure c"),
-    @NamedQuery(name = "Consultationmeasure.findByIdConsultation", query = "SELECT c FROM Consultationmeasure c WHERE c.consultationmeasurePK.idConsultation = :idConsultation"),
-    @NamedQuery(name = "Consultationmeasure.findByIdMeasure", query = "SELECT c FROM Consultationmeasure c WHERE c.consultationmeasurePK.idMeasure = :idMeasure"),
-    @NamedQuery(name = "Consultationmeasure.findByValue", query = "SELECT c FROM Consultationmeasure c WHERE c.value = :value")})
+    @NamedQuery(name = "Consultationmeasure.findAll", query = "SELECT c FROM Consultationmeasure c")})
 public class Consultationmeasure implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ConsultationmeasurePK consultationmeasurePK;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "value")
     private String value;
     @JoinColumn(name = "idMeasure", referencedColumnName = "idMeasures", insertable = false, updatable = false)
@@ -58,12 +57,6 @@ public class Consultationmeasure implements Serializable {
 
     public Consultationmeasure(int idConsultation, int idMeasure) {
         this.consultationmeasurePK = new ConsultationmeasurePK(idConsultation, idMeasure);
-    }
-
-    public Consultationmeasure(String value, Measures measures, Consultation consultation) {
-        this.value = value;
-        this.measures = measures;
-        this.consultation = consultation;
     }
 
     public ConsultationmeasurePK getConsultationmeasurePK() {
@@ -120,7 +113,7 @@ public class Consultationmeasure implements Serializable {
 
     @Override
     public String toString() {
-        return "Modelos.Consultationmeasure[ consultationmeasurePK=" + consultationmeasurePK + " ]";
+        return "com.carloscortina.demo.model.Consultationmeasure[ consultationmeasurePK=" + consultationmeasurePK + " ]";
     }
     
 }

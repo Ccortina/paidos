@@ -7,7 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DocumentDao;
-import com.carloscortina.demo.model.Document;
+import com.carloscortina.demo.model.Documents;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -26,48 +26,53 @@ public class DocumentServiceImp implements DocumentService{
     private DocumentDao dao;
     
     @Override
-    public void create(Document item) {
+    public void create(Documents item) {
         dao.create(item);
     }
 
     @Override
-    public void delete(Document item) {
+    public void delete(Documents item) {
         dao.delete(item);
     }
 
     @Override
-    public Document getById(int id) {
+    public Documents getById(int id) {
         return dao.getById(id);
     }
 
     @Override
-    public void updateItem(Document item) {
+    public void updateItem(Documents item) {
         dao.updateItem(item);
     }
 
     @Override
-    public void mergeItem(Document item) {
+    public void mergeItem(Documents item) {
         dao.mergeItem(item);
     }
 
     @Override
-    public List<Document> getAll(String table) {
+    public List<Documents> getAll(String table) {
         return dao.getAll(table);
     }
 
     @Override
-    public List<Document> getListOfItem(String query) {
+    public List<Documents> getListOfItem(String query) {
         return dao.getListOfItem(query);
     }
 
     @Override
-    public List<Document> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Documents> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
     }
 
     @Override
-    public List<Document> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Documents> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Documents> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

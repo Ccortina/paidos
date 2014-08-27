@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.AppointmentVaccine;
+import com.carloscortina.demo.model.Appointmentvaccine;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface AppointmentVaccineDao extends GenericDao<AppointmentVaccine>{
+public interface AppointmentVaccineDao extends GenericDao<Appointmentvaccine>{
     
 }

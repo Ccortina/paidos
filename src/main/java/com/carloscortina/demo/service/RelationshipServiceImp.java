@@ -69,5 +69,10 @@ public class RelationshipServiceImp implements RelationshipService{
     public void mergeItem(Relationship item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Relationship> getAllActiveItems() {
+        return relationshipDao.getAllActiveItems();
+    }
     
 }

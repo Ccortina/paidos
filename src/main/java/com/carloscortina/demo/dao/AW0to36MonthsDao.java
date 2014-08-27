@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.Ageweight0To36Months;
+import com.carloscortina.demo.model.Ageweight0to36months;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface AW0to36MonthsDao extends GenericDao<Ageweight0To36Months>{
+public interface AW0to36MonthsDao extends GenericDao<Ageweight0to36months>{
     
 }

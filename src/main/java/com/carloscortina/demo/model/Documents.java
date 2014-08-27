@@ -19,7 +19,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -27,11 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "documents")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Documents.findAll", query = "SELECT d FROM Documents d"),
-    @NamedQuery(name = "Documents.findByIdDocuments", query = "SELECT d FROM Documents d WHERE d.idDocuments = :idDocuments"),
-    @NamedQuery(name = "Documents.findByDescription", query = "SELECT d FROM Documents d WHERE d.description = :description")})
+    @NamedQuery(name = "Documents.findAll", query = "SELECT d FROM Documents d")})
 public class Documents implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,12 +41,12 @@ public class Documents implements Serializable {
     @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
-    @JoinColumn(name = "idDocumentCategory", referencedColumnName = "idDocumentCategory")
-    @ManyToOne(optional = false)
-    private Documentcategory idDocumentCategory;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
+    @JoinColumn(name = "idDocumentCategory", referencedColumnName = "idDocumentCategory")
+    @ManyToOne(optional = false)
+    private Documentcategory idDocumentCategory;
 
     public Documents() {
     }
@@ -83,20 +79,20 @@ public class Documents implements Serializable {
         this.notes = notes;
     }
 
-    public Documentcategory getIdDocumentCategory() {
-        return idDocumentCategory;
-    }
-
-    public void setIdDocumentCategory(Documentcategory idDocumentCategory) {
-        this.idDocumentCategory = idDocumentCategory;
-    }
-
     public Patient getIdPatient() {
         return idPatient;
     }
 
     public void setIdPatient(Patient idPatient) {
         this.idPatient = idPatient;
+    }
+
+    public Documentcategory getIdDocumentCategory() {
+        return idDocumentCategory;
+    }
+
+    public void setIdDocumentCategory(Documentcategory idDocumentCategory) {
+        this.idDocumentCategory = idDocumentCategory;
     }
 
     @Override
@@ -121,7 +117,7 @@ public class Documents implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.Documents[ idDocuments=" + idDocuments + " ]";
+        return "com.carloscortina.demo.model.Documents[ idDocuments=" + idDocuments + " ]";
     }
     
 }

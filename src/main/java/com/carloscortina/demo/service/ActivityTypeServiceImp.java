@@ -5,7 +5,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ActivityTypeDao;
-import com.carloscortina.demo.model.ActivityType;
+import com.carloscortina.demo.model.Activitytype;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,48 +25,53 @@ public class ActivityTypeServiceImp implements ActivityTypeService{
     ActivityTypeDao activityTypeDao; 
     
     @Override
-    public void create(ActivityType item) {
+    public void create(Activitytype item) {
         activityTypeDao.create(item);
     }
 
     @Override
-    public ActivityType getById(int id) {
+    public Activitytype getById(int id) {
         return activityTypeDao.getById(id);
     }
 
     @Override
-    public void updateItem(ActivityType item) {
+    public void updateItem(Activitytype item) {
         activityTypeDao.updateItem(item);
     }
 
     @Override
-    public List<ActivityType> getAll(String table) {
+    public List<Activitytype> getAll(String table) {
         return activityTypeDao.getAll(table);
     }
 
     @Override
-    public List<ActivityType> getListOfItem(String query) {
+    public List<Activitytype> getListOfItem(String query) {
         return activityTypeDao.getListOfItem(query);
     }
 
     @Override
-    public void delete(ActivityType item) {
+    public void delete(Activitytype item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<ActivityType> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
+    public List<Activitytype> getSpecificColumnsList(List<String> columns, Criterion restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<ActivityType> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
+    public List<Activitytype> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void mergeItem(ActivityType item) {
+    public void mergeItem(Activitytype item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Activitytype> getAllActiveItems() {
+        return activityTypeDao.getAllActiveItems();
     }
     
 }

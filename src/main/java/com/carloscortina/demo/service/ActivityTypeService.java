@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.ActivityType;
+import com.carloscortina.demo.model.Activitytype;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface ActivityTypeService extends GenericService<ActivityType>{
+public interface ActivityTypeService extends GenericService<Activitytype>{
     
 }

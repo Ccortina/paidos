@@ -1,12 +1,16 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,31 +26,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.CascadeType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "vaccine")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Vaccine.findAll", query = "SELECT v FROM Vaccine v"),
-    @NamedQuery(name = "Vaccine.findByIdVaccine", query = "SELECT v FROM Vaccine v WHERE v.idVaccine = :idVaccine"),
-    @NamedQuery(name = "Vaccine.findByVaccine", query = "SELECT v FROM Vaccine v WHERE v.vaccine = :vaccine"),
-    @NamedQuery(name = "Vaccine.findByApplicationOrder", query = "SELECT v FROM Vaccine v WHERE v.applicationOrder = :applicationOrder"),
-    @NamedQuery(name = "Vaccine.findByYearApply", query = "SELECT v FROM Vaccine v WHERE v.yearApply = :yearApply"),
-    @NamedQuery(name = "Vaccine.findByMonthApply", query = "SELECT v FROM Vaccine v WHERE v.monthApply = :monthApply"),
-    @NamedQuery(name = "Vaccine.findByDayApply", query = "SELECT v FROM Vaccine v WHERE v.dayApply = :dayApply"),
-    @NamedQuery(name = "Vaccine.findByYearLimit", query = "SELECT v FROM Vaccine v WHERE v.yearLimit = :yearLimit"),
-    @NamedQuery(name = "Vaccine.findByMonthLimit", query = "SELECT v FROM Vaccine v WHERE v.monthLimit = :monthLimit"),
-    @NamedQuery(name = "Vaccine.findByDayLimit", query = "SELECT v FROM Vaccine v WHERE v.dayLimit = :dayLimit"),
-    @NamedQuery(name = "Vaccine.findByMultipleShots", query = "SELECT v FROM Vaccine v WHERE v.multipleShots = :multipleShots"),
-    @NamedQuery(name = "Vaccine.findByActive", query = "SELECT v FROM Vaccine v WHERE v.active = :active")})
+    @NamedQuery(name = "Vaccine.findAll", query = "SELECT v FROM Vaccine v")})
 public class Vaccine implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -95,32 +85,62 @@ public class Vaccine implements Serializable {
     @NotNull
     @Column(name = "active")
     private int active;
-    @JoinTable(name = "equivalentVaccine", joinColumns = {
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "equivalentvaccine", joinColumns = {
         @JoinColumn(name = "IdEquivalentVaccine", referencedColumnName = "IdVaccine")}, inverseJoinColumns = {
         @JoinColumn(name = "IdVaccine", referencedColumnName = "IdVaccine")})
     @ManyToMany
-    @JsonIgnore
     private List<Vaccine> vaccineList;
-    @ManyToMany(mappedBy = "vaccineList")
     @JsonIgnore
+    @ManyToMany(mappedBy = "vaccineList")
     private List<Vaccine> vaccineList1;
+    @JsonIgnore
     @OneToMany(mappedBy = "idVaccine")
     private List<Activity> activityList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
+    private List<Appointmentvaccine> appointmentvaccineList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
+    private List<Patientvaccine> patientvaccineList;
     @JoinColumn(name = "IdVaccineType", referencedColumnName = "IdvaccineType")
     @ManyToOne(optional = false)
-    private VaccineType idVaccineType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
-    @JsonIgnore
-    private List<PatientVaccine> patientVaccineList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vaccine")
-    @JsonIgnore
-    private List<AppointmentVaccine> appointmentVaccineList;
+    private Vaccinetype idVaccineType;
 
     public Vaccine() {
     }
 
     public Vaccine(Integer idVaccine) {
         this.idVaccine = idVaccine;
+    }
+
+    public Vaccine(Integer idVaccine, String vaccine) {
+        this.idVaccine = idVaccine;
+        this.vaccine = vaccine;
+    }
+
+    public Vaccine(String vaccine, int yearApply, int monthApply, int dayApply, int yearLimit, int monthLimit, int dayLimit, int multipleShots, int active, Vaccinetype idVaccineType) {
+        this.vaccine = vaccine;
+        this.yearApply = yearApply;
+        this.monthApply = monthApply;
+        this.dayApply = dayApply;
+        this.yearLimit = yearLimit;
+        this.monthLimit = monthLimit;
+        this.dayLimit = dayLimit;
+        this.multipleShots = multipleShots;
+        this.active = active;
+        this.idVaccineType = idVaccineType;
+    }
+
+    public Vaccine(Integer idVaccine, String vaccine, int yearApply, int monthApply, int dayApply, int multipleShots, int active, Vaccinetype idVaccineType) {
+        this.idVaccine = idVaccine;
+        this.vaccine = vaccine;
+        this.yearApply = yearApply;
+        this.monthApply = monthApply;
+        this.dayApply = dayApply;
+        this.multipleShots = multipleShots;
+        this.active = active;
+        this.idVaccineType = idVaccineType;
     }
 
     public Vaccine(Integer idVaccine, String vaccine, int applicationOrder, int yearApply, int monthApply, int dayApply, int yearLimit, int monthLimit, int dayLimit, int multipleShots, int active) {
@@ -225,8 +245,6 @@ public class Vaccine implements Serializable {
         this.active = active;
     }
 
-    @XmlTransient
-    @JsonIgnore
     public List<Vaccine> getVaccineList() {
         return vaccineList;
     }
@@ -235,8 +253,6 @@ public class Vaccine implements Serializable {
         this.vaccineList = vaccineList;
     }
 
-    @XmlTransient
-    @JsonIgnore
     public List<Vaccine> getVaccineList1() {
         return vaccineList1;
     }
@@ -245,8 +261,6 @@ public class Vaccine implements Serializable {
         this.vaccineList1 = vaccineList1;
     }
 
-    @XmlTransient
-    @JsonIgnore
     public List<Activity> getActivityList() {
         return activityList;
     }
@@ -255,30 +269,30 @@ public class Vaccine implements Serializable {
         this.activityList = activityList;
     }
 
-    public VaccineType getIdVaccineType() {
+    public List<Appointmentvaccine> getAppointmentvaccineList() {
+        return appointmentvaccineList;
+    }
+
+    public void setAppointmentvaccineList(List<Appointmentvaccine> appointmentvaccineList) {
+        this.appointmentvaccineList = appointmentvaccineList;
+    }
+
+    public List<Patientvaccine> getPatientvaccineList() {
+        return patientvaccineList;
+    }
+
+    public void setPatientvaccineList(List<Patientvaccine> patientvaccineList) {
+        this.patientvaccineList = patientvaccineList;
+    }
+
+    public Vaccinetype getIdVaccineType() {
         return idVaccineType;
     }
 
-    public void setIdVaccineType(VaccineType idVaccineType) {
+    public void setIdVaccineType(Vaccinetype idVaccineType) {
         this.idVaccineType = idVaccineType;
     }
 
-    public List<PatientVaccine> getPatientVaccineList() {
-        return patientVaccineList;
-    }
-
-    public void setPatientVaccineList(List<PatientVaccine> patientVaccineList) {
-        this.patientVaccineList = patientVaccineList;
-    }
-
-    public List<AppointmentVaccine> getAppointmentVaccineList() {
-        return appointmentVaccineList;
-    }
-
-    public void setAppointmentVaccineList(List<AppointmentVaccine> appointmentVaccineList) {
-        this.appointmentVaccineList = appointmentVaccineList;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;

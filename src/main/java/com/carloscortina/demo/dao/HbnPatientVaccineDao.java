@@ -4,8 +4,11 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.PatientVaccine;
-import com.carloscortina.demo.model.PatientVaccinePK;
+import com.carloscortina.demo.model.Patientvaccine;
+import com.carloscortina.demo.model.PatientvaccinePK;
+import com.carloscortina.demo.model.Vaccine;
+import java.util.List;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,10 +16,24 @@ import org.springframework.stereotype.Repository;
  * @author Ccortina_Mac
  */
 @Repository
-public class HbnPatientVaccineDao extends GenericHbnDao<PatientVaccine> implements PatientVaccineDao{
+public class HbnPatientVaccineDao extends GenericHbnDao<Patientvaccine> implements PatientVaccineDao{
 
     @Override
-    public PatientVaccine getById(PatientVaccinePK id) {
-        return (PatientVaccine) getSession().get(PatientVaccine.class,id);
-    }  
+    public Patientvaccine getById(PatientvaccinePK id) {
+        return (Patientvaccine) getSession().get(Patientvaccine.class,id);
+    }
+    
+    @Override
+    public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine){
+        Query query = getSession().createQuery("SELECT new Patientvaccine(p.vaccine, p.patient) FROM Patientvaccine p "
+                + "WHERE p.vaccine.idVaccine=:idVaccine");
+        query.setParameter("idVaccine", idVaccine);
+        
+        List<Patientvaccine> pv = query.list();
+        for(Patientvaccine p: pv){
+            Vaccine v = new Vaccine(p.getVaccine().getIdVaccine(),p.getVaccine().getVaccine()); 
+            p.setVaccine(v);
+        }
+        return pv;
+    }
 }

@@ -6,7 +6,6 @@
 
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -23,11 +21,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "patient_relative")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PatientRelative.findAll", query = "SELECT p FROM PatientRelative p"),
-    @NamedQuery(name = "PatientRelative.findByIdPatient", query = "SELECT p FROM PatientRelative p WHERE p.patientRelativePK.idPatient = :idPatient"),
-    @NamedQuery(name = "PatientRelative.findByIdRelative", query = "SELECT p FROM PatientRelative p WHERE p.patientRelativePK.idRelative = :idRelative")})
+    @NamedQuery(name = "PatientRelative.findAll", query = "SELECT p FROM PatientRelative p")})
 public class PatientRelative implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -40,7 +35,6 @@ public class PatientRelative implements Serializable {
     private Relationship idRelationship;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    @JsonIgnore
     private Patient patient;
 
     public PatientRelative() {
@@ -113,11 +107,7 @@ public class PatientRelative implements Serializable {
 
     @Override
     public String toString() {
-        return "com.carloscortina.model.PatientRelative[ patientRelativePK=" + patientRelativePK + " ]";
-    }
-
-    public void setPatienRelativePK(PatientRelativePK id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "com.carloscortina.demo.model.PatientRelative[ patientRelativePK=" + patientRelativePK + " ]";
     }
     
 }

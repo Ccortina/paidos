@@ -1,11 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,24 +16,17 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "holyday")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Holyday.findAll", query = "SELECT h FROM Holyday h"),
-    @NamedQuery(name = "Holyday.findByIdHolydays", query = "SELECT h FROM Holyday h WHERE h.idHolydays = :idHolydays"),
-    @NamedQuery(name = "Holyday.findByHolyday", query = "SELECT h FROM Holyday h WHERE h.holyday = :holyday"),
-    @NamedQuery(name = "Holyday.findByDate", query = "SELECT h FROM Holyday h WHERE h.date = :date")})
+    @NamedQuery(name = "Holyday.findAll", query = "SELECT h FROM Holyday h")})
 public class Holyday implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,9 +41,10 @@ public class Holyday implements Serializable {
     private String holyday;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @Column(name = "mont")
+    private int mont;
+    @Column(name = "day")
+    private Integer day;
 
     public Holyday() {
     }
@@ -58,19 +53,20 @@ public class Holyday implements Serializable {
         this.idHolydays = idHolydays;
     }
 
-    public Holyday(Integer idHolydays, String holyday, Date date) {
+    public Holyday(Integer idHolydays, String holyday, int mont) {
         this.idHolydays = idHolydays;
         this.holyday = holyday;
-        this.date = date;
+        this.mont = mont;
+    }
+
+    public Holyday(String holyday, int mont, Integer day) {
+        this.holyday = holyday;
+        this.mont = mont;
+        this.day = day;
     }
 
     public Integer getIdHolydays() {
         return idHolydays;
-    }
-
-    public Holyday(String holyday, Date date) {
-        this.holyday = holyday;
-        this.date = date;
     }
 
     public void setIdHolydays(Integer idHolydays) {
@@ -85,12 +81,20 @@ public class Holyday implements Serializable {
         this.holyday = holyday;
     }
 
-    public Date getDate() {
-        return date;
+    public int getMont() {
+        return mont;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setMont(int mont) {
+        this.mont = mont;
+    }
+
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
     }
 
     @Override

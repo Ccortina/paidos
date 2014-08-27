@@ -95,4 +95,9 @@ public class AppointmentServiceImp implements AppointmentService {
         return appointmentDao.getAppointmentsByStatus(idStatus);
     }
 
+    @Override
+    public List<Appointment> getAllActiveItems() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

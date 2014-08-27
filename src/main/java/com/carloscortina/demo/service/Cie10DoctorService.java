@@ -4,14 +4,14 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.CIE10Doctor;
+import com.carloscortina.demo.model.Cie10doctor;
 import java.util.List;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface Cie10DoctorService extends GenericService<CIE10Doctor>{
+public interface Cie10DoctorService extends GenericService<Cie10doctor>{
 
-    public List<CIE10Doctor> getCie10ByUser(int id);
+    public List<Cie10doctor> getCie10ByUser(int id);
 }

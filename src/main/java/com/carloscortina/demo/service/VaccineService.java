@@ -14,4 +14,6 @@ import java.util.List;
 public interface VaccineService extends GenericService<Vaccine>{
 
     public List<Vaccine> getActiveVaccines();
+    public List<Vaccine> getAllVaccines();
+    public List<Vaccine> getAllActiveVaccines();
 }

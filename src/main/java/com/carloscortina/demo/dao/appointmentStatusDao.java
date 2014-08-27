@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.AppointmentStatus;
+import com.carloscortina.demo.model.Appointmentstatus;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface appointmentStatusDao extends GenericDao<AppointmentStatus>{
+public interface appointmentStatusDao extends GenericDao<Appointmentstatus>{
     
 }

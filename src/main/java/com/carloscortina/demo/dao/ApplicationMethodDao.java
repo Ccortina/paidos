@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.ApplicationMethod;
+import com.carloscortina.demo.model.Applicationmethod;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface ApplicationMethodDao extends GenericDao<ApplicationMethod>{
+public interface ApplicationMethodDao extends GenericDao<Applicationmethod>{
     
 }

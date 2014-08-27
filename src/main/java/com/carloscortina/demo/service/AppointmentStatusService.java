@@ -4,14 +4,12 @@
  */
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.Appointment;
-import com.carloscortina.demo.model.AppointmentStatus;
-import java.util.List;
+import com.carloscortina.demo.model.Appointmentstatus;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface AppointmentStatusService extends GenericService<AppointmentStatus>{
+public interface AppointmentStatusService extends GenericService<Appointmentstatus>{
     
 }

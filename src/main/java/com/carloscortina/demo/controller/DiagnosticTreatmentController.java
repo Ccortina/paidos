@@ -7,8 +7,8 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
-import com.carloscortina.demo.model.CIE10Doctor;
-import com.carloscortina.demo.model.CIE10DoctorPK;
+import com.carloscortina.demo.model.Cie10doctor;
+import com.carloscortina.demo.model.Cie10doctorPK;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Drug;
@@ -100,8 +100,8 @@ public class DiagnosticTreatmentController {
 
     @RequestMapping(value="addCieToUserCatalog")
     public @ResponseBody String addCieToUserCatalog(int idCie){
-        CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());
-        CIE10Doctor add = new CIE10Doctor(id);
+        Cie10doctorPK id = new Cie10doctorPK(idCie, loggedUser.getIdUser());
+        Cie10doctor add = new Cie10doctor(id);
         cieDoctorService.create(add);
         
         return "";
@@ -109,8 +109,8 @@ public class DiagnosticTreatmentController {
     
     @RequestMapping(value="removeCieFromUserCatalog")
     public @ResponseBody String removeCieFromUserCatalog(int idCie){
-        CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());
-        CIE10Doctor add = new CIE10Doctor(id);
+        Cie10doctorPK id = new Cie10doctorPK(idCie, loggedUser.getIdUser());
+        Cie10doctor add = new Cie10doctor(id);
         cieDoctorService.delete(add);
         
         return "";
@@ -119,12 +119,12 @@ public class DiagnosticTreatmentController {
     @RequestMapping(value="saveNewTreatment")
     public @ResponseBody String saveNewTreatment(@RequestParam Map<String,String> params){
         Treatment newTreatment = new Treatment();
-        newTreatment.setActive(params.get("active").compareTo("true") == 0? "1":"0");
+        newTreatment.setActive(params.get("active").compareTo("true") == 0? 1:0);
         newTreatment.setTreatment(params.get("treatment"));
         newTreatment.setDirections(params.get("directions"));
         List<User> userL = new ArrayList<User>();
         userL.add(loggedUser);
-        newTreatment.setUserList(userL);
+        //newTreatment.setUserList(userL);
         
         treatmentService.create(newTreatment);
         
@@ -147,7 +147,7 @@ public class DiagnosticTreatmentController {
     public @ResponseBody String saveModifyTreatment(@RequestParam Map<String,String> params){
         Treatment newTreatment = treatmentService.getById(Integer.parseInt(params.get("idTreatment")));
         
-        newTreatment.setActive(params.get("active").compareTo("true") == 0? "1":"0");
+        newTreatment.setActive(params.get("active").compareTo("true") == 0? 1:0);
         newTreatment.setTreatment(params.get("treatment"));
         newTreatment.setDirections(params.get("directions"));
         
@@ -206,7 +206,7 @@ public class DiagnosticTreatmentController {
     @RequestMapping(value="removeTreatment")
     public @ResponseBody String removeTreatment(int idTreatment){
         Treatment treatment = treatmentService.getById(idTreatment);
-        treatment.getUserList().remove(loggedUser);
+        //treatment.getUserList().remove(loggedUser);
         treatmentService.updateItem(treatment);
         
         return "";
@@ -214,8 +214,8 @@ public class DiagnosticTreatmentController {
     
     @RequestMapping(value="removeCieOfUserCatalog")
     public @ResponseBody String removeCieOfUserCatalog(int idCie){
-        CIE10DoctorPK id = new CIE10DoctorPK(idCie, loggedUser.getIdUser());
-        CIE10Doctor add = new CIE10Doctor(id);
+        Cie10doctorPK id = new Cie10doctorPK(idCie, loggedUser.getIdUser());
+        Cie10doctor add = new Cie10doctor(id);
         cieDoctorService.delete(add);
         
         return "";

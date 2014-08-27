@@ -1,7 +1,7 @@
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.PerBackNoPat;
+import com.carloscortina.demo.model.Perbacknopat;
 
-public interface PerBackNoPatDao extends GenericDao<PerBackNoPat> {
+public interface PerBackNoPatDao extends GenericDao<Perbacknopat> {
 
 }

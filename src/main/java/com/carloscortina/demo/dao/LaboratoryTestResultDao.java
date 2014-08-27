@@ -4,12 +4,12 @@
  */
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.LaboratoryTestResult;
+import com.carloscortina.demo.model.Laboratorytestresult;
 
 /**
  *
  * @author Ccortina_Mac
  */
-public interface LaboratoryTestResultDao extends GenericDao<LaboratoryTestResult>{
+public interface LaboratoryTestResultDao extends GenericDao<Laboratorytestresult>{
     
 }

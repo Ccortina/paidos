@@ -6,12 +6,12 @@
 
 package com.carloscortina.demo.service;
 
-import com.carloscortina.demo.model.AdministrationUnit;
+import com.carloscortina.demo.model.Administrationunit;
 
 /**
  *
  * @author Carlos Cortina
  */
-public interface AdministrationUnitService extends GenericService<AdministrationUnit>{
+public interface AdministrationUnitService extends GenericService<Administrationunit>{
     
 }
