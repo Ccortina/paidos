@@ -12,6 +12,5 @@ import java.util.List;
  * @author Ccortina_Mac
  */
 public interface MeasuresService extends GenericService<Measures>{
-    
-    public List<Measures>getMeasureByUser(int idUser);
+
 }

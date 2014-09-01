@@ -4,9 +4,7 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    //initializeDiagnosticTable();
     initializeAsociatedDiagnosticTable();
-    //initializeDrugTable();
     initializeDrugAsociatedDrugTable();
     initializeNewTreatmentForm();
 });
@@ -16,12 +14,15 @@ function initializeDiagnosticTable(){
         "bSort":false,
         "scrollY": "200px",
         "scrollCollapse": true,
-        "paging": false,
-        "info":false,
-        "deferRender": true,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar"
+            "search": "Buscar",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Anterior",
+                "next": "Siguiente"
+            },
+            "lengthMenu": "Mostrar _MENU_ resultados"
         },
         "ajax":{
             "url":"/demo/diagnostictreatment/getCieByUser"
@@ -80,14 +81,17 @@ function initializeDrugTable(){
         "ordering":false,
         "scrollY": "200px",
         "scrollCollapse": true,
-        "paging": false,
-        "info":false,
-        "deferRender": true,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar"
+            "search": "Buscar",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Anterior",
+                "next": "Siguiente"
+            },
+            "lengthMenu": "Mostrar _MENU_ resultados"
         },
-        "ajax":"/demo/diagnostictreatment/getDrugsByUser",
+        "ajax":"/demo/diagnostictreatment/getDrugs",
         "columns":[
             {"render":function(data,row,full){
                     return ("-"+full["idDrug"]+"-");
@@ -193,6 +197,14 @@ function saveNewTreatment(){
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha agregado el tratamiento correctamente");
+            $("#tblAsociatedDiagnostic").DataTable().clear().draw();
+            $("#tblAsociatedDrug").DataTable().clear().draw();
+            $("#formNewTreatment").data('bootstrapValidator').resetForm();
+            clearFormInputTextFields("formNewTreatment");
+            $("#inputNewTreatmentDirections").val();
+            $("#tblDiagnostic").DataTable().ajax.reload();
+            $("#tblDrug").DataTable().ajax.reload();
+            $('#treatmentTabMenu a[href="#tabMain"]').tab('show');
         },
         error:function(response){
             displayDangerAlert("Ha ocurrido un error: "+response);
@@ -201,8 +213,8 @@ function saveNewTreatment(){
 }
 
 function atachTreatmentDiagnostic(){
-    var data = $("#tblDiagnostic").DataTable().row('.selected').data();
-    
+    var data = $("#tblDiagnostic").DataTable().row(".selected").data();
+
     if(checkNotUndefined(data)){
         $("#tblAsociatedDiagnostic").DataTable().row.add(data).draw();
         $("#tblDiagnostic").DataTable().row('.selected').remove().draw();

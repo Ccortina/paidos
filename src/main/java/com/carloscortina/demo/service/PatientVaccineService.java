@@ -16,4 +16,5 @@ public interface PatientVaccineService extends GenericService<Patientvaccine>{
     
     public Patientvaccine getById(PatientvaccinePK id);
     public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine);
+    public List<Patientvaccine> getAllPV();
 }

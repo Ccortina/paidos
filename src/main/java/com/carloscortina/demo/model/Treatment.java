@@ -54,6 +54,7 @@ public class Treatment implements Serializable {
     @Column(name = "active")
     private int active;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(mappedBy = "treatmentList")
     private List<Drug> drugList;
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -68,6 +69,13 @@ public class Treatment implements Serializable {
 
     public Treatment(Integer idTreatment) {
         this.idTreatment = idTreatment;
+    }
+
+    public Treatment(Integer idTreatment, String treatment, String directions, int active) {
+        this.idTreatment = idTreatment;
+        this.treatment = treatment;
+        this.directions = directions;
+        this.active = active;
     }
 
     public Treatment(Integer idTreatment, String treatment, int active) {

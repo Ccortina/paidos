@@ -21,11 +21,9 @@ public class HbnCommercialNameDao extends GenericHbnDao<Commercialname> implemen
 
     @Override
     public List<Commercialname> getCommercialNameByUser(int id){
-        String hql = "SELECT new CommercialName(commercialName.idcommercialName,commercialName.commercialName,"
-                + "commercialName.active,commercialName.drugId) FROM CommercialName as commercialName "
-                + "JOIN commercialName.userList u WHERE u.idUser=:idUser ";
+        String hql = "SELECT new Commercialname(commercialName.idcommercialName,commercialName.commercialName,"
+                + "commercialName.drugId) FROM Commercialname as commercialName";
         Query query = getSession().createQuery(hql);
-        query.setParameter("idUser",id);
         
         List<Commercialname> result = query.list();
         

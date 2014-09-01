@@ -13,5 +13,4 @@ import java.util.List;
  */
 public interface MeasuresDao extends GenericDao<Measures>{
  
-    List<Measures> getMeasureByUser(int idUser);
 }

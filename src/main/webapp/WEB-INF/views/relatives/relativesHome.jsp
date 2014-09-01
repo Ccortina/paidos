@@ -5,6 +5,7 @@
 <!-- Files for data tables function-->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
 <c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
+<c:url var="dtModCSS" value="/resources/CSS/DataTables/datatables.mod.css" />
 
 <c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
 

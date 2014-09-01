@@ -84,7 +84,7 @@
             <label for="inputRelativeReligionApp">Religion</label>
             <select class="form-control" id="inputRelativeReligionApp" name="religion">
                 <c:forEach var="religion" items="${religions}">
-                    <option value="${religion.id}"><c:out value="${religion.religion}" /></option>
+                    <option value="${religion.idReligion}"><c:out value="${religion.religion}" /></option>
                 </c:forEach>
             </select>
         </div>

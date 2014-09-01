@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -26,6 +25,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -57,6 +58,7 @@ public class Cie10 implements Serializable {
     @Column(name = "active")
     private int active;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "diagnostictreatment", joinColumns = {
         @JoinColumn(name = "diagnosticId", referencedColumnName = "idCIE10")}, inverseJoinColumns = {
         @JoinColumn(name = "treatmentId", referencedColumnName = "IdTreatment")})
@@ -74,6 +76,12 @@ public class Cie10 implements Serializable {
 
     public Cie10(Integer idCIE10) {
         this.idCIE10 = idCIE10;
+    }
+
+    public Cie10(Integer idCIE10, String cieCode, String diagnostic) {
+        this.idCIE10 = idCIE10;
+        this.cieCode = cieCode;
+        this.diagnostic = diagnostic;
     }
 
     public Cie10(Integer idCIE10, String cieCode, String diagnostic, int active) {

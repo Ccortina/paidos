@@ -24,7 +24,7 @@ function initializeRelativesTable(){
                 return (replaceNull(full['motherLastName']));
             }},
             {"render":function(data,row,full){
-                return (replaceNull(full['firstName'])+" "+replaceNull(full['secondName']));
+                return (replaceNull(full['firstName']));
             }},
             {"render":function(data,type,row){ 
                 if(row['active'] === 1){

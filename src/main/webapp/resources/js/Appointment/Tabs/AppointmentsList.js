@@ -8,10 +8,11 @@ $(document).ready(function(){
     initializeConsultationMotiveTableModifyApp();
     
     //Load today appointments
-    $('a[href="#tabList"]').on('shown.bs.tab', function (e) {
+    //$('a[href="#tabList"]').on('shown.bs.tab', function (e) {
         $("#inputDateModifyApp").val(moment().format("DD/MM/YYYY"));
         $('#formModifyAppointment').data('bootstrapValidator').validateField('date');
-    });
+        setTimeout(function() { $('#formModifyAppointment').data('bootstrapValidator').validateField('date'); }, 1000);
+    //});
 
 });
 

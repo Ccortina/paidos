@@ -40,6 +40,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 @NamedQueries({
     @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p")})
 public class Patient implements Serializable {
+    @Column(name = "tempClavePaciente")
+    private Integer tempClavePaciente;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,6 +86,7 @@ public class Patient implements Serializable {
     @ManyToMany(mappedBy = "patientList")
     private List<Drug> drugList;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     private List<PatientRelative> patientRelativeList;
     @JsonIgnore
@@ -121,6 +124,12 @@ public class Patient implements Serializable {
         this.idPatient = idPatient;
     }
 
+    public Patient(String firstName, String fatherLastName, String motherLastName) {
+        this.firstName = firstName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+    }
+
     public Patient(Integer idPatient, String firstName, String fatherLastName, String motherLastName) {
         this.idPatient = idPatient;
         this.firstName = firstName;
@@ -134,6 +143,19 @@ public class Patient implements Serializable {
         this.birthday = birthday;
         this.active = active;
         this.addedDate = addedDate;
+    }
+
+    public Patient(Integer idPatient, String firstName, String fatherLastName, String motherLastName, String curp,Gender sex, Date birthday, String notes, int active, Staffmember idDoctor) {
+        this.idPatient = idPatient;
+        this.firstName = firstName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
+        this.curp = curp;
+        this.birthday = birthday;
+        this.notes = notes;
+        this.active = active;
+        this.idDoctor = idDoctor;
+        this.sex = sex;
     }
 
     public Patient(String firstName, String fatherLastName, String motherLastName, String curp, Date birthday, String notes, Gender sex) {
@@ -363,6 +385,14 @@ public class Patient implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Patient[ idPatient=" + idPatient + " ]";
+    }
+
+    public Integer getTempClavePaciente() {
+        return tempClavePaciente;
+    }
+
+    public void setTempClavePaciente(Integer tempClavePaciente) {
+        this.tempClavePaciente = tempClavePaciente;
     }
     
 }

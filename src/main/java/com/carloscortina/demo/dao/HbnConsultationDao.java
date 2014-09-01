@@ -41,16 +41,16 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
     
     @Override
     public List<Consultation> getConsultationByCie(int idCie){
-        Query query = getSession().createQuery("SELECT new Consultation(c.idAppointment) FROM Consultation c JOIN c.consultationdiagnosticList d"
-                + " WHERE d.idDiagnostic.idCIE10.idCIE10=:idCie");
+        Query query = getSession().createQuery("SELECT new Consultation(c.idAppointment) FROM Consultation c JOIN c.diagnosticList d"
+                + " WHERE d.idCIE10.idCIE10=:idCie");
         query.setParameter("idCie", idCie);
         return query.list();
     }
     
     @Override
     public List<Consultation> getConsultationByTreatment(int idTreatment){
-        Query query = getSession().createQuery("SELECT new Consultation(c.idAppointment) FROM Consultation c JOIN c.consultationdiagnosticList d"
-                + " WHERE d.idDiagnostic.idTreatment.idTreatment=:idTreatment");
+        Query query = getSession().createQuery("SELECT new Consultation(c.idAppointment) FROM Consultation c JOIN c.diagnosticList d"
+                + " WHERE d.idTreatment.idTreatment=:idTreatment");
         query.setParameter("idTreatment", idTreatment);
         return query.list();
     }

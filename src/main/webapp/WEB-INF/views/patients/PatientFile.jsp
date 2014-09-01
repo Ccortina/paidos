@@ -131,7 +131,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <strong>Sexo : </strong>
-                    ${patient.sex}
+                    ${patient.sex.gender}
                 </div>
                 <div class="col-sm-4">
                     <strong>F. Nac. : </strong>

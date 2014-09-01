@@ -874,7 +874,7 @@ public class PatientsController {
         @RequestMapping(value="getAllPatientImmunization")
         public @ResponseBody JsonPack<Patientvaccine> getImmunization(){
             
-            return new JsonPack<Patientvaccine>(pvService.getAll("Patientvaccine"));
+            return new JsonPack<Patientvaccine>(pvService.getAllPV());
 
         }
         

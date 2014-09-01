@@ -12,6 +12,7 @@
 <!-- Files for data tables function-->
 <c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
 <c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
+<c:url var="dtModCSS" value="/resources/CSS/DataTables/datatables.mod.css" />
 
 <c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
 
@@ -153,7 +154,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <label for="inputModifyItemUnit">Costo</label>
+                                                    <label for="inputModifyItemCost">Costo</label>
                                                     <input type="text" class="form-control inputNormal" id="inputModifyItemCost" placeholder="Costo" name="cost"/>
                                                 </div>
                                             </div>

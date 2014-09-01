@@ -141,7 +141,7 @@
 </div>
 <div class="row">
     <div class="col-sm-2">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
+        <button type="submit" class="btn btn-primary" >Guardar</button>
     </div>
     <div class="col-sm-2">
         <input type="button" value="Cancelar" class="btn btn-danger" />

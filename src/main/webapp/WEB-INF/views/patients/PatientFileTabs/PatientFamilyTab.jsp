@@ -166,7 +166,7 @@
                 <label for="inputModifyRelativeReligion">Religion</label>
                 <select class="form-control" id="inputRelativeReligionApp" name="religion" >
                     <c:forEach items="${religionType}" var="type">
-                        <option value="${type.id}"><c:out value="${type.religion}" /></option>
+                        <option value="${type.idReligion}"><c:out value="${type.religion}" /></option>
                     </c:forEach>    
                 </select>
             </div>

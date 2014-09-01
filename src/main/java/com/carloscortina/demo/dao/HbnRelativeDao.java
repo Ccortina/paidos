@@ -58,7 +58,7 @@ public class HbnRelativeDao implements RelativeDao {
 
     @Override
     public List<Relative> getRelativeByRelationship(int idRelationship) {
-        String hql = "SELECT new Relative(r.firstName,r.fatherLastName,"
+        String hql = "SELECT DISTINCT new Relative(r.firstName,r.fatherLastName,"
                 + "r.motherLastName) FROM Relative as r JOIN r.patientRelativeList pr"
                 +" WHERE pr.idRelationship.idRelationship=:idRelationship";
         Query query = getSession().createQuery(hql);

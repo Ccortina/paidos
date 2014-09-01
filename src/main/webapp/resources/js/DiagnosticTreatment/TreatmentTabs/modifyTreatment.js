@@ -16,12 +16,15 @@ function initializeDiagnosticTable2(){
         "bSort":false,
         "scrollY": "200px",
         "scrollCollapse": true,
-        "paging": false,
-        "info":false,
-        "deferRender": true,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar"
+            "search": "Buscar",
+             "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Anterior",
+                "next": "Siguiente"
+            },
+            "lengthMenu": "Mostrar _MENU_ resultados"
         },
         "ajax":{
             "url":"/demo/diagnostictreatment/getAvaibleDiagnosticByTreatment",
@@ -208,6 +211,14 @@ function saveModifyTreatment(){
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha modificado el tratamiento correctamente");
+            $("#tblAsociatedDiagnostic2").DataTable().clear().draw();
+            $("#tblAsociatedDrug2").DataTable().clear().draw();
+            $("#formModifyTreatment").data('bootstrapValidator').resetForm();
+            clearFormInputTextFields("formModifyTreatment");
+            $("#inputModifyTreatmentDirections").val();
+            $("#tblDiagnostic2").DataTable().ajax.reload();
+            $("#tblDrug2").DataTable().ajax.reload();
+            $('#treatmentTabMenu a[href="#tabMain"]').tab('show');
         },
         error:function(response){
             displayDangerAlert("Ha ocurrido un error: "+response);
@@ -274,7 +285,7 @@ function loadTreatmentData(){
         if ( ! $.fn.DataTable.isDataTable( '#tblAsociatedDiagnostic2' ) ) {
             initializeAsociatedDiagnosticTable2();
         }else{
-            $("#tblAsociatedDiagnostic2").DataTable().clear.draw();
+            $("#tblAsociatedDiagnostic2").DataTable().clear().draw();
         }
         
         if ( ! $.fn.DataTable.isDataTable( '#tblDiagnostic2' ) ) {

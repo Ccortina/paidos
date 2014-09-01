@@ -92,10 +92,10 @@ public class DiagnosticTreatmentController {
         return (new JsonPack < Cie10 >(cieService.getCie10ByUser(loggedUser.getIdUser())));
     }
     
-    @RequestMapping(value="getDrugsByUser")
-    public @ResponseBody JsonPack<Drug> getDrugsByUser()
+    @RequestMapping(value="getDrugs")
+    public @ResponseBody JsonPack<Drug> getDrugs()
     {
-        return new JsonPack<Drug>(drugService.getDrugByUser(loggedUser.getIdUser()));
+        return new JsonPack<Drug>(drugService.getAllActiveDrugBasicInfo());
     }
 
     @RequestMapping(value="addCieToUserCatalog")
@@ -122,9 +122,6 @@ public class DiagnosticTreatmentController {
         newTreatment.setActive(params.get("active").compareTo("true") == 0? 1:0);
         newTreatment.setTreatment(params.get("treatment"));
         newTreatment.setDirections(params.get("directions"));
-        List<User> userL = new ArrayList<User>();
-        userL.add(loggedUser);
-        //newTreatment.setUserList(userL);
         
         treatmentService.create(newTreatment);
         
@@ -151,16 +148,17 @@ public class DiagnosticTreatmentController {
         newTreatment.setTreatment(params.get("treatment"));
         newTreatment.setDirections(params.get("directions"));
         
-        /*List<User> userL = new ArrayList<User>();
-        userL.add(loggedUser);
-        newTreatment.setUserList(userL);*/
-        
         treatmentService.updateItem(newTreatment);
-        List<Cie10> actualCieList = newTreatment.getCie10List();
-        List<Drug> actualDrugList = newTreatment.getDrugList();
         
-        List<Cie10> modifiedCieList = new ArrayList<Cie10>();
-        List<Drug> modifiedDrugList = new ArrayList<Drug>();
+        /*Treatment doesnt have the list , so it is necessary to know wich
+        diagnostic and drugs where removed from the asociation and
+        delete the current drug on each one.
+        */
+        List<Cie10> actualCieList = newTreatment.getCie10List();    //Current Cie10 diagnostics related to the treatment
+        List<Drug> actualDrugList = newTreatment.getDrugList();     //Current drugs related to the treatment
+        
+        List<Cie10> modifiedCieList = new ArrayList<Cie10>();   //The modified cie10 diagnostic list
+        List<Drug> modifiedDrugList = new ArrayList<Drug>();    //The modified drug list
         
         for(int i=0; i < Integer.parseInt(params.get("diagnosticCont")); i++){
             modifiedCieList.add(cieService.getById(Integer.parseInt(params.get("diagnostic"+i))));
@@ -170,11 +168,14 @@ public class DiagnosticTreatmentController {
             modifiedDrugList.add(drugService.getById(Integer.parseInt(params.get("drug"+i))));
         }
         
-        //Remove repeated
+        /*Remove repeated element from the current lists
+        this way only the new and the deleted elements will remain
+        */
         actualCieList.removeAll(modifiedCieList);
         actualDrugList.removeAll(modifiedDrugList);
         
-        //Delete 
+        //Delete all the extra elements , the new elements will not be affected
+        //as they dont hold any relationship yet
         for(Cie10 cie: actualCieList){
             cie.getTreatmentList().remove(newTreatment);
             cieService.updateItem(cie);
@@ -184,12 +185,16 @@ public class DiagnosticTreatmentController {
             drug.getTreatmentList().remove(newTreatment);
             drugService.updateItem(drug);
         }
+        
+        //Reload the current relationships
         actualCieList = treatmentService.getById(Integer.parseInt(params.get("idTreatment"))).getCie10List();
         actualDrugList = treatmentService.getById(Integer.parseInt(params.get("idTreatment"))).getDrugList();
         
+        //Remove the elements already on the list 
         modifiedCieList.removeAll(actualCieList);
         modifiedDrugList.removeAll(actualDrugList);
-        //add
+        
+        //add the new relationship 
         for(Cie10 cie: modifiedCieList){
             cie.getTreatmentList().add(newTreatment);
             cieService.updateItem(cie);
@@ -206,7 +211,7 @@ public class DiagnosticTreatmentController {
     @RequestMapping(value="removeTreatment")
     public @ResponseBody String removeTreatment(int idTreatment){
         Treatment treatment = treatmentService.getById(idTreatment);
-        //treatment.getUserList().remove(loggedUser);
+
         treatmentService.updateItem(treatment);
         
         return "";
@@ -233,23 +238,24 @@ public class DiagnosticTreatmentController {
         return (new JsonPack<Consultation>(consultationService.getConsultationByTreatment(idTreatment)));
     }
     
-    @RequestMapping(value="getTreatmentsByUser")
-    public @ResponseBody JsonPack<Treatment> getTreatmentsByUser()
+    @RequestMapping(value="getAllTreatments")
+    public @ResponseBody JsonPack<Treatment> getTreatments()
     {   
-        return new JsonPack<Treatment>(treatmentService.getTreatmentByUser(loggedUser.getIdUser()));
+        return new JsonPack<Treatment>(treatmentService.getAll(""));
     }
     
     @RequestMapping(value="getDrugsByTreatment")
     public @ResponseBody JsonPack<Drug> getDrugsByTreatment(int idTreatment)
     {   
-        return new JsonPack<Drug>(drugService.getDrugByTreatmentAndUser(idTreatment, loggedUser.getIdUser()));
+        return new JsonPack<Drug>(drugService.getDrugByTreatment(idTreatment));
     }
     
     @RequestMapping(value="getAvaibleDrugsByTreatment")
     public @ResponseBody JsonPack<Drug> geAvaibleDrugsByTreatment(int idTreatment)
     {   
-        List<Drug> allDrugs = drugService.getDrugByUser(loggedUser.getIdUser());
-        allDrugs.removeAll(drugService.getDrugByTreatmentAndUser(idTreatment, loggedUser.getIdUser()));
+        List<Drug> allDrugs = drugService.getAllActiveDrugBasicInfo();
+        
+        allDrugs.removeAll(drugService.getDrugByTreatment(idTreatment));
         return new JsonPack<Drug>(allDrugs);
     }
     

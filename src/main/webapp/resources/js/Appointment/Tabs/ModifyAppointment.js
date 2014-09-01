@@ -82,7 +82,7 @@ function initiliazeAppointmentFormValidation(){
         modifyAppointment();
     }).on('success.field.bv', '[name="date"]', function(e, data) {
         if ( !$.fn.DataTable.isDataTable( '#tblAppointmentsList' ) ) {
-            initializeDoctorAppointments()
+            initializeDoctorAppointments();
         }else{
             $("#tblAppointmentsList").DataTable().ajax.reload(); 
         }

@@ -69,6 +69,7 @@ function initializeMainTable(){
         "createdRow": function( row, data, dataIndex ) {
             if(data.active !== 1){
                 $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
             }
         }
     });
@@ -179,6 +180,7 @@ function saveNewItem(){
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha agregado correctamente");
             $("#tblMain").DataTable().ajax.reload();
+            clearFormInputTextFields("formNewItem");
             $('#mainTabMenu a[href="#tabMain"]').tab('show');
         },
         error:function(response){

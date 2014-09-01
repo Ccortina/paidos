@@ -46,9 +46,8 @@ public class HbnTreatmentDao extends GenericHbnDao<Treatment> implements Treatme
     public List<Treatment> getTreatmentByUser(int userId){
         
         String hql = "SELECT new Treatment(treatment.idTreatment,treatment.treatment,treatment.directions,treatment.active) FROM Treatment as treatment"
-                + " JOIN treatment.userList u WHERE u.idUser=:userId AND treatment.active=1";
+                + " WHERE treatment.active=1";
         Query query = getSession().createQuery(hql);
-        query.setParameter("userId", userId);
         List<Treatment> result = query.list();
         
         for(Treatment temp: result){

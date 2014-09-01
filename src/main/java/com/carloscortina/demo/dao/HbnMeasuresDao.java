@@ -15,13 +15,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class HbnMeasuresDao extends GenericHbnDao<Measures> implements MeasuresDao{
-
-    @Override
-    public List<Measures> getMeasureByUser(int idUser){
-        String hql = "FROM Measures m WHERE m.idUser.idUser=:idUser"; 
-        Query query = getSession().createQuery(hql);
-        query.setParameter("idUser", idUser);
-        
-        return query.list();
-    }
 }

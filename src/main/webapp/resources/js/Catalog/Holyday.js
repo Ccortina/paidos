@@ -9,10 +9,7 @@ $(document).ready(function(){
     initializeMainTable();
     initializeNewItemForm();
     initializeModifyItemForm();
-    
-    /*$('.inputDate').inputmask("dd/mm/yyyy",{"oncleared": function(){
-                        $("#"+$(this).closest("form").attr('id')).data('bootstrapValidator').revalidateField($(this).attr('name'));
-                    }});*/
+
 });
 
 function newItem(){
@@ -32,10 +29,9 @@ function initializeMainTable(){
         },
         "ajax":"/demo/catalogs/getHolyday",
         "columns":[
-            {"render":function(data,type,row){ 
-                return moment(row["date"]).format("DD , MMMM , YYYY");
-            }},
-            {"data":"holyday"}
+            {"data":"holyday"},
+            {"data":"day"},
+            {"data":"mont"}
         ],
         "initComplete":function(settings,json){
             $('#tblMain tbody').on( 'click', 'tr', function (e) {
@@ -67,19 +63,51 @@ function initializeNewItemForm(){
                     }
                 }
             },
-            itemDate:{
+            month:{
                 validators:{
-                    date: {
-                        format: 'DD/MM/YYYY',
-                        message: 'Formato invalido dd/mm/aaaa'
+                    integer: {
+                        message: 'Solo numeros enteros'
                     },
                     notEmpty: {
                         message: 'Este campo no puede estar vacio'
-                    }   
+                    },
+                    between: {
+                        min: 1,
+                        max: 12,
+                        message:"Valor minimo 1 - max 12"
+                    }
+                }  
+            },
+            day:{
+                validators:{
+                    integer: {
+                        message: 'Solo numeros enteros'
+                    },
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    },
+                    lessThan:{
+                        inclusive:true,
+                        value: function(value, validator, $field) {
+                            var month = parseInt($("#inputNewItemMonth").val());
+                            if(month === 4 || month === 6 || month === 9 || month === 11){
+                                return 30;
+                            }else{
+                                if(month === 2){
+                                    return 28;
+                                }else{
+                                    return 31;
+                                }
+                            }
+                        },
+                        message: "Este dia noes valido para este mes"
+                    }
                 }  
             }
         },
         submitButtons: 'button[type="submit"]'
+    }).on('keyup', '[name="month"]', function() {
+        $("#formNewItem").data('bootstrapValidator').revalidateField('day');
     }).on('success.form.bv', function(e) {
         e.preventDefault();
         saveNewItem();
@@ -101,19 +129,50 @@ function initializeModifyItemForm(){
                     }
                 }
             },
-            itemDate:{
+            month:{
                 validators:{
-                    date: {
-                        format: 'DD/MM/YYYY',
-                        message: 'Formato invalido dd/mm/aaaa'
+                    integer: {
+                        message: 'Solo numeros enteros'
                     },
                     notEmpty: {
                         message: 'Este campo no puede estar vacio'
+                    },
+                    between: {
+                        min: 1,
+                        max: 12
+                    }
+                }  
+            },
+            day:{
+                validators:{
+                    integer: {
+                        message: 'Solo numeros enteros'
+                    },
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    },
+                    lessThan:{
+                        inclusive:true,
+                        value: function(value, validator, $field) {
+                            var month = parseInt($("#inputModifyItemMonth").val());
+                            if(month === 4 || month === 6 || month === 9 || month === 11){
+                                return 30;
+                            }else{
+                                if(month === 2){
+                                    return 28;
+                                }else{
+                                    return 31;
+                                }
+                            }
+                        },
+                        message: "Este dia noes valido para este mes"
                     }
                 }  
             }
         },
         submitButtons: 'button[type="submit"]'
+    }).on('keyup', '[name="month"]', function() {
+        $("#formModifyItem").data('bootstrapValidator').revalidateField('day');
     }).on('success.form.bv', function(e) {
         e.preventDefault();
         saveModifyItem();
@@ -126,7 +185,8 @@ function cancel(){
 
 function saveNewItem(){
     var data = [];
-    data.push({name:"itemDate",value:$("#inputNewItemDate").val()});
+    data.push({name:"month",value:$("#inputNewItemMonth").val()});
+    data.push({name:"day",value:$("#inputNewItemDay").val()});
     data.push({name:"itemName",value:$("#inputNewItem").val()});
     
     $.ajax({
@@ -149,7 +209,8 @@ function modifyItem(){
     if(checkNotUndefined(row)){
         $("#inputModifyItem").val(row["holyday"]);
         $("#inputIdItem").val(row["idHolydays"]);
-        $("#inputModifyItemDate").val(moment(row["date"]).format("DD/MM/YYYY"));
+        $("#inputModifyItemMonth").val(row["mont"]);
+        $("#inputModifyItemDay").val(row["day"]);
         
         $('#mainTabMenu a[href="#tabModify"]').tab('show');
     }else{
@@ -159,9 +220,10 @@ function modifyItem(){
 
 function saveModifyItem(){
     var data = [];
-    data.push({name:"itemDate",value:$("#inputModifyItemDate").val()});
-    data.push({name:"itemName",value:$("#inputModifyItem").val()});
     data.push({name:"idItem",value:$("#inputIdItem").val()});
+    data.push({name:"month",value:$("#inputModifyItemMonth").val()});
+    data.push({name:"day",value:$("#inputModifyItemDay").val()});
+    data.push({name:"itemName",value:$("#inputModifyItem").val()});
     
     $.ajax({
         url:"/demo/catalogs/saveModifyHolyday",

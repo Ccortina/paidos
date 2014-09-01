@@ -6,12 +6,15 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,7 +35,7 @@ public class Documentcategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idDocumentCategory")
     private Integer idDocumentCategory;
     @Basic(optional = false)
@@ -44,6 +47,7 @@ public class Documentcategory implements Serializable {
     @NotNull
     @Column(name = "active")
     private int active;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDocumentCategory")
     private List<Documents> documentsList;
 
@@ -52,6 +56,11 @@ public class Documentcategory implements Serializable {
 
     public Documentcategory(Integer idDocumentCategory) {
         this.idDocumentCategory = idDocumentCategory;
+    }
+
+    public Documentcategory(String category, int active) {
+        this.category = category;
+        this.active = active;
     }
 
     public Documentcategory(Integer idDocumentCategory, String category, int active) {

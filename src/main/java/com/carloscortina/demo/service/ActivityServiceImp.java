@@ -79,5 +79,10 @@ public class ActivityServiceImp implements ActivityService{
         return activityDao.getAllActiveItems();
     }
 
+    @Override
+    public List<Activity> getAllActivities() {
+        return activityDao.getAllActivities();
+    }
+
     
 }

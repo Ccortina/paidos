@@ -41,6 +41,11 @@ public class Documents implements Serializable {
     @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 200)
+    @Column(name = "path")
+    private String path;
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
@@ -118,6 +123,14 @@ public class Documents implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Documents[ idDocuments=" + idDocuments + " ]";
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
     
 }

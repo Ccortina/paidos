@@ -17,7 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -73,6 +72,11 @@ public class Consultation implements Serializable {
     private String prescriptionNotes;
     @Column(name = "prescriptionNumber")
     private Integer prescriptionNumber;
+    @Column(name = "tempClaveConsulta")
+    private Integer tempClaveConsulta;
+    @JoinColumn(name = "type", referencedColumnName = "idConsultationType")
+    @ManyToOne(optional = false)
+    private Consultationtype type;
     @Size(max = 65535)
     @Column(name = "abstract")
     private String abstract1;
@@ -100,6 +104,10 @@ public class Consultation implements Serializable {
 
     public Consultation(Integer idConsultation) {
         this.idConsultation = idConsultation;
+    }
+
+    public Consultation(Appointment idAppointment) {
+        this.idAppointment = idAppointment;
     }
 
     public Integer getIdConsultation() {
@@ -293,6 +301,22 @@ public class Consultation implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Consultation[ idConsultation=" + idConsultation + " ]";
+    }
+
+    public Integer getTempClaveConsulta() {
+        return tempClaveConsulta;
+    }
+
+    public void setTempClaveConsulta(Integer tempClaveConsulta) {
+        this.tempClaveConsulta = tempClaveConsulta;
+    }
+
+    public Consultationtype getType() {
+        return type;
+    }
+
+    public void setType(Consultationtype type) {
+        this.type = type;
     }
     
 }

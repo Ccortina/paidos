@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -104,11 +103,32 @@ public class Drug implements Serializable {
         this.idDrug = idDrug;
     }
 
+    public Drug(Integer idDrug, String drug, Drugpresentation drugPresentationId) {
+        this.idDrug = idDrug;
+        this.drug = drug;
+        this.drugPresentationId = drugPresentationId;
+    }
+
     public Drug(Integer idDrug, int active) {
         this.idDrug = idDrug;
         this.active = active;
     }
 
+    public Drug(Integer idDrug, String drug, Double concentration, Integer treatmentDays, String applicationSchedule, Integer dailyFrequency, String notes, int active, Drugpresentation drugPresentationId, Dosecalculationcriteria doseCalculationCriteriaId, Applicationmethod applicationMethodId, Administrationunit administrationUnitId) {
+        this.idDrug = idDrug;
+        this.drug = drug;
+        this.concentration = concentration;
+        this.treatmentDays = treatmentDays;
+        this.applicationSchedule = applicationSchedule;
+        this.dailyFrequency = dailyFrequency;
+        this.notes = notes;
+        this.active = active;
+        this.drugPresentationId = drugPresentationId;
+        this.doseCalculationCriteriaId = doseCalculationCriteriaId;
+        this.applicationMethodId = applicationMethodId;
+        this.administrationUnitId = administrationUnitId;
+    }
+    
     public Integer getIdDrug() {
         return idDrug;
     }

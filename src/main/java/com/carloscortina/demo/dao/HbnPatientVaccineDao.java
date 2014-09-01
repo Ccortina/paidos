@@ -24,6 +24,17 @@ public class HbnPatientVaccineDao extends GenericHbnDao<Patientvaccine> implemen
     }
     
     @Override
+    public List<Patientvaccine> getAllPV(){
+        Query query = getSession().createQuery("SELECT new Patientvaccine(p.vaccine, p.patient) FROM Patientvaccine p");
+        
+        List<Patientvaccine> pv = query.list();
+        for(Patientvaccine p: pv){
+            p.getVaccine().setVaccineList(null);
+        }
+        return pv;
+    }
+    
+    @Override
     public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine){
         Query query = getSession().createQuery("SELECT new Patientvaccine(p.vaccine, p.patient) FROM Patientvaccine p "
                 + "WHERE p.vaccine.idVaccine=:idVaccine");
@@ -31,7 +42,7 @@ public class HbnPatientVaccineDao extends GenericHbnDao<Patientvaccine> implemen
         
         List<Patientvaccine> pv = query.list();
         for(Patientvaccine p: pv){
-            Vaccine v = new Vaccine(p.getVaccine().getIdVaccine(),p.getVaccine().getVaccine()); 
+            Vaccine v = new Vaccine(p.getVaccine().getIdVaccine(),p.getVaccine().getVaccine());
             p.setVaccine(v);
         }
         return pv;

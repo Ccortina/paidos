@@ -100,6 +100,8 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
+    @Column(name = "tempClaveCita")
+    private Integer tempClaveCita;
 
     public Appointment() {
     }
@@ -319,6 +321,14 @@ public class Appointment implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Appointment[ idAppointment=" + idAppointment + " ]";
+    }
+
+    public Integer getTempClaveCita() {
+        return tempClaveCita;
+    }
+
+    public void setTempClaveCita(Integer tempClaveCita) {
+        this.tempClaveCita = tempClaveCita;
     }
     
 }

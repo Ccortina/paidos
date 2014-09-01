@@ -29,7 +29,6 @@
 <c:url var="holydayJs" value="/resources/js/Catalog/Holyday.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
-<link href="${dtModCSS}" rel="stylesheet" />
 
 <link href="${bvCSS}" rel="stylesheet" />
 
@@ -54,8 +53,9 @@
                                         <div class="col-sm-12">
                                             <table class="row-border hover" id="tblMain">
                                                 <thead>
-                                                    <th>Fecha</th>
                                                     <th>Descripcion</th>
+                                                    <th>Dia</th>
+                                                    <th>Mes</th>
                                                 </thead>
                                             </table> 
                                         </div>
@@ -83,9 +83,17 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group">
-                                                    <label for="inputNewDate">Fecha</label>
-                                                    <input type="text" class="form-control inputDate" id="inputNewItemDate" placeholder="Fecha" name="itemDate"/>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label for="inputNewDay">Dia</label>
+                                                        <input type="text" class="form-control" id="inputNewItemDay" placeholder="Dia" name="day"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label for="inputNewMonth">Mes</label>
+                                                        <input type="text" class="form-control" id="inputNewItemMonth" placeholder="Mes" name="month"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -112,9 +120,17 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group">
-                                                    <label for="inputModifyItemDate">Fecha</label>
-                                                    <input type="text" class="form-control inputDate" id="inputModifyItemDate" placeholder="Descripcion" name="itemDate"/>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label for="inputModifyDay">Dia</label>
+                                                        <input type="text" class="form-control" id="inputModifyItemDay" placeholder="Dia" name="day"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label for="inputModifyMonth">Mes</label>
+                                                        <input type="text" class="form-control" id="inputModifyItemMonth" placeholder="Mes" name="month"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row">

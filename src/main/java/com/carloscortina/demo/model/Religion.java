@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -42,6 +43,7 @@ public class Religion implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "Religion")
     private String religion;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "religion")
     private List<Relative> relativeList;
 

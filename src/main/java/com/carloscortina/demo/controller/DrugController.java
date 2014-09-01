@@ -130,9 +130,7 @@ public class DrugController {
     
     @RequestMapping(value="saveNewDrug")
     public @ResponseBody String saveNewDrug(@RequestParam Map<String,String> params){
-        List<User> userList = new ArrayList<User>();
-        userList.add(loggedUser);
-        
+
         try{
             Drug newDrug = new Drug();
             newDrug.setActive(params.get("active").equalsIgnoreCase("true")? (short)1: (short)0);
@@ -146,6 +144,7 @@ public class DrugController {
             newDrug.setDoseCalculationCriteriaId(doseCalculationService.getById(Integer.parseInt(params.get("doseCalculationCriteriaId"))));
             newDrug.setNotes(params.get("notes"));
             newDrug.setConcentration(Double.parseDouble(params.get("concentration")));
+            
             List<Treatment> treatmentList = new ArrayList<Treatment>();
             
             for(int i = 0 ; i < Integer.parseInt(params.get("tCont")); i++){
@@ -159,7 +158,13 @@ public class DrugController {
                 Commercialname cn = commercialNameService.getById(Integer.parseInt(params.get("incompatibleCN"+i)));
                 IncompatibledrugsPK incompatiblePK = new IncompatibledrugsPK(newDrug.getIdDrug(), cn.getIdcommercialName());
                 Incompatibledrugs incompatible = new Incompatibledrugs(incompatiblePK);
-                incompatible.setRisk(params.get("risk"+i));
+                
+                for(int j = 0; j < Integer.parseInt(params.get("rCont")); j++){
+                    if(Integer.parseInt(params.get("riskDrug"+j)) == cn.getDrugId().getIdDrug()){
+                        incompatible.setRisk(params.get("risk"+j));
+                    } 
+                }
+
                 incompatibleService.create(incompatible);
             }
                     

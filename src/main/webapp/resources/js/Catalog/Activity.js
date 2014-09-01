@@ -80,6 +80,7 @@ function initializeMainTable(){
         "createdRow": function( row, data, dataIndex ) {
             if(data.active !== 1){
                 $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
             }
         }
     });
@@ -259,12 +260,13 @@ function modifyItem(){
 function saveModifyItem(){
     var data = [];
     data.push({name:"idItem",value:$("#inputIdItem").val()});
-    data.push({name:"active",value:$("#inputNewItemActive").prop('checked')});
-    data.push({name:"itemName",value:$("#inputNewItem").val()});
-    data.push({name:"cost",value:$("#inputNewItemCost").val()});
-    data.push({name:"type",value:$("#inputNewItemType").val()});
-    data.push({name:"include",value:$("#inputNewItemInclude").prop('checked')});
-    if(checkNotUndefined($("#tblMain").DataTable().row('.selected').data())){
+    data.push({name:"active",value:$("#inputModifyItemActive").prop('checked')});
+    data.push({name:"itemName",value:$("#inputModifyItem").val()});
+    data.push({name:"cost",value:$("#inputModifyItemCost").val()});
+    data.push({name:"type",value:$("#inputModifyItemType").val()});
+    data.push({name:"include",value:$("#inputModifyItemInclude").prop('checked')});
+    
+    if(checkNotUndefined($("#tblVaccine").DataTable().row('.selected').data())){
         data.push({name:"vaccine",value:$("#tblVaccine").DataTable().row('.selected').data()["idVaccine"]});
     }else{
         data.push({name:"vaccine",value:""});

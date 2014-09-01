@@ -70,11 +70,6 @@ public class MeasuresServiceImp implements MeasuresService{
     }
 
     @Override
-    public List<Measures> getMeasureByUser(int idUser) {
-        return measuresDao.getMeasureByUser(idUser);
-    }
-
-    @Override
     public List<Measures> getAllActiveItems() {
         return measuresDao.getAllActiveItems();
     }

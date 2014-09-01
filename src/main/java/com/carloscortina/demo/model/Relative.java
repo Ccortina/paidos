@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -121,6 +124,8 @@ public class Relative implements Serializable {
     private Date birthday;
     @Column(name = "active")
     private Integer active;
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relative")
     private List<PatientRelative> patientRelativeList;
     @JoinColumn(name = "Religion", referencedColumnName = "idReligion")
@@ -132,6 +137,12 @@ public class Relative implements Serializable {
 
     public Relative(Integer idRelative) {
         this.idRelative = idRelative;
+    }
+
+    public Relative(String firstName, String fatherLastName, String motherLastName) {
+        this.firstName = firstName;
+        this.fatherLastName = fatherLastName;
+        this.motherLastName = motherLastName;
     }
 
     public Relative(Integer idRelative, String firstName, Date addedDate) {

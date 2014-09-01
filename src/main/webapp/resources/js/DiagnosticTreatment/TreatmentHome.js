@@ -18,9 +18,16 @@ function initializeTreatmentTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":"/demo/diagnostictreatment/getTreatmentsByUser",
+        "ajax":"/demo/diagnostictreatment/getAllTreatments",
         "columns":[
             {"data":"treatment"},
+            {"render":function(data,type,row){ 
+                if(row['active'] === 1){
+                    return ('<span class="glyphicon glyphicon-ok"></span>');
+                }else{
+                    return ('<span class="glyphicon glyphicon-remove"></span>');
+                }
+            }},
             {"render":function(data,type,row){
                     var list=[];
                     row['cie10List'].forEach(function(entry){
@@ -40,18 +47,18 @@ function initializeTreatmentTable(){
                     $(this).addClass('selected');
                 }
             });
-        }          
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if(data.active !== 1){
+                $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
+            }
+        }
     });
 }
 
 function newTreatment(){
     $('#treatmentTabMenu a[href="#tabNew"]').tab('show');
-    
-    $("#tblAsociatedDiagnostic").DataTable().clear().draw();
-    $("#tblAsociatedDrug").DataTable().clear().draw();
-    $("#inputNewTreatmentTreatment").val();
-    $("#inputNewTreatmentDirections").val();
-    $("#formNewTreatment").data('bootstrapValidator').resetForm();
     
     if ( ! $.fn.DataTable.isDataTable( '#tblDiagnostic' ) ) {
         initializeDiagnosticTable();

@@ -13,6 +13,7 @@ import com.carloscortina.demo.model.Appointmentstatus;
 import com.carloscortina.demo.model.Birthmethod;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationmeasure;
+import com.carloscortina.demo.model.Documentcategory;
 import com.carloscortina.demo.model.Holyday;
 import com.carloscortina.demo.model.Laboratorytest;
 import com.carloscortina.demo.model.Measures;
@@ -29,6 +30,7 @@ import com.carloscortina.demo.service.AppointmentStatusService;
 import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.ConsultationactivityService;
 import com.carloscortina.demo.service.ConsultationmeasureService;
+import com.carloscortina.demo.service.DocumentcategoryService;
 import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.MeasuresService;
@@ -39,9 +41,7 @@ import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import com.carloscortina.demo.service.VaccineTypeService;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +95,8 @@ public class CatalogController {
     private VaccineTypeService vtService;
     @Autowired
     private PatientVaccineService pvService;
+    @Autowired
+    private DocumentcategoryService dcService;
     
     private User loggedUser;
     
@@ -171,7 +173,16 @@ public class CatalogController {
         loggedUser = userService.getUserByUsername(auth.getName());
         
         return "Catalog/HolydayHome";
-    }  
+    }
+    
+    @RequestMapping(value="documentHome")
+    public String documentHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return "Catalog/DocumentTypeHome";
+    } 
     
     //Section: Laboratory test
     
@@ -296,7 +307,7 @@ public class CatalogController {
     //Section: Consultation Measure
     @RequestMapping(value="getMeasure")
     public @ResponseBody JsonPack<Measures> getMeasure(){
-        return (new JsonPack<Measures> (measureService.getMeasureByUser(loggedUser.getIdUser())));
+        return (new JsonPack<Measures> (measureService.getAll("")));
     }
     
     @RequestMapping(value="saveNewMeasure")
@@ -333,7 +344,7 @@ public class CatalogController {
     //Section: Activity
     @RequestMapping(value="getActivity")
     public @ResponseBody JsonPack<Activity> getActivity(){
-        return (new JsonPack<Activity> (activityService.getAll("Activity")));
+        return (new JsonPack<Activity> (activityService.getAllActivities()));
     }
     
     @RequestMapping(value="getVaccine")
@@ -355,10 +366,10 @@ public class CatalogController {
     @RequestMapping(value="saveModifyActivity")
     public @ResponseBody String saveModifyActivity(@RequestParam Map<String,String> params){
         Activity item = activityService.getById(Integer.parseInt(params.get("idItem")));
-        item.setActive(params.get("active").equalsIgnoreCase("true")?(short)1:(short)0);
+        item.setActive(params.get("active").equalsIgnoreCase("true")? 1 : 0);
         item.setActivity(params.get("itemName"));
         item.setActivityCost(Double.parseDouble(params.get("cost")));
-        item.setConsultationDefault(params.get("include").equalsIgnoreCase("true")?(short)1:(short)0);
+        item.setConsultationDefault(params.get("include").equalsIgnoreCase("true")? 1 : 0);
         item.setIdActivityType(atService.getById(Integer.parseInt(params.get("type"))));
         item.setIdVaccine(params.get("vaccine").isEmpty()? null : vaccineService.getById(Integer.parseInt(params.get("vaccine"))));
         
@@ -472,4 +483,27 @@ public class CatalogController {
         return new JsonPack<Patient>(patientService.getPatientWithoutVaccine(idVaccine));
     }
     
+    //Section: DocumentType
+    @RequestMapping(value="getAllDocumentCategories")
+    public @ResponseBody JsonPack<Documentcategory> getAllDocumentCategories(){
+        return new JsonPack<Documentcategory>(dcService.getAll("")); 
+    }
+    
+    @RequestMapping(value="saveNewDocumentCategory")
+    public @ResponseBody String saveNewDocumentCategory(@RequestParam Map<String,String> params){
+        dcService.create(new Documentcategory(params.get("itemName"), params.get("active").equalsIgnoreCase("true")?1:0));
+        
+        return "";
+    }
+    
+    @RequestMapping(value="saveModifyDocumentCategory")
+    public @ResponseBody String saveModifyDocumentCategory(@RequestParam Map<String,String> params){
+        Documentcategory item = dcService.getById(Integer.parseInt(params.get("idItem")));
+        
+        item.setActive(params.get("active").equalsIgnoreCase("true")?1:0);
+        item.setCategory(params.get("itemName"));
+        
+        dcService.updateItem(item);
+        return "";
+    }
 }

@@ -40,7 +40,7 @@ function initializePatientsTable(){
             {"data":"fatherLastName"},
             {"data":"motherLastName"},
             {"data":"birthday"},
-            {"data":"sex"},
+            {"data":"sex.gender"},
             {"render":function(data,type,row){ 
                 if(row['active'] === 1){
                     return ('<span class="glyphicon glyphicon-ok"></span>');
@@ -66,6 +66,7 @@ function initializePatientsTable(){
         "createdRow": function( row, data, dataIndex ) {
             if(data.active !== 1){
                 $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
             }
         }
     });

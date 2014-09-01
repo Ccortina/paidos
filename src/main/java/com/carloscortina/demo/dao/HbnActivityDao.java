@@ -41,4 +41,17 @@ public class HbnActivityDao extends GenericHbnDao<Activity> implements ActivityD
         return result;
     }
     
+    @Override
+    public List<Activity> getAllActivities(){
+        List<Activity> activityList = getSession().createQuery("FROM Activity a").list();
+        
+        for(Activity a: activityList){
+            if(a.getIdVaccine() != null){
+                a.setIdVaccine(new Vaccine(a.getIdVaccine().getIdVaccine(), a.getIdVaccine().getVaccine()));
+            }
+        }
+        
+        return activityList;
+    }
+    
 }

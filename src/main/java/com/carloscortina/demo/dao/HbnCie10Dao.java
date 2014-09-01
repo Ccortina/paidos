@@ -11,7 +11,7 @@ public class HbnCie10Dao extends GenericHbnDao<Cie10> implements Cie10Dao {
 
     @Override
     public List<Cie10> getCie10ByUser(int id){
-        String hql = "SELECT new Cie10(cie.idCIE10,cie.cieCode,cie.diagnostic,cie.description,cie.active) FROM Cie10 as cie"
+        String hql = "SELECT new Cie10(cie.idCIE10,cie.cieCode,cie.diagnostic,cie.active) FROM Cie10 as cie"
                 + " JOIN cie.cie10doctorList u WHERE u.user.idUser=:idUser";
         Query query = getSession().createQuery(hql);
         query.setParameter("idUser",id);
@@ -24,8 +24,8 @@ public class HbnCie10Dao extends GenericHbnDao<Cie10> implements Cie10Dao {
     
     @Override
     public List<Cie10> getAvaibleCie10ByUser(int idUser){
-        String hql = "SELECT new Cie10(cie.idCIE10,cie.cieCode,cie.diagnostic) FROM Cie10 as cie"
-                + " JOIN cie.cie10doctorList u WHERE u.user.idUser=:idUser";
+        String hql = "SELECT new Cie10(cie.idCIE10,cie.cieCode,cie.diagnostic) FROM Cie10 cie "
+                + "JOIN cie.cie10doctorList dc WHERE dc.user.idUser=:idUser";
         Query query = getSession().createQuery(hql);
         
         query.setParameter("idUser",idUser);

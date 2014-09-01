@@ -53,6 +53,7 @@
     <class>com.carloscortina.demo.model.Drugpresentation</class>
     <class>com.carloscortina.demo.model.Incompatibledrugs</class>
     <class>com.carloscortina.demo.model.Drug</class>
+    <class>com.carloscortina.demo.model.Consultationtype</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

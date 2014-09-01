@@ -71,8 +71,8 @@ public class DrugServiceImp implements DrugService
     }
 
     @Override
-    public List<Drug> getDrugByTreatmentAndUser(int treatmentId,int userId) {
-        return drugDao.getDrugByTreatmentAndUser(treatmentId,userId);
+    public List<Drug> getDrugByTreatment(int treatmentId) {
+        return drugDao.getDrugByTreatment(treatmentId);
     }
 
     @Override
@@ -98,6 +98,11 @@ public class DrugServiceImp implements DrugService
     @Override
     public List<Drug> getAllActiveItems() {
         return drugDao.getAllActiveItems();
+    }
+
+    @Override
+    public List<Drug> getAllActiveDrugBasicInfo() {
+        return drugDao.getAllActiveDrugBasicInfo();
     }
 
 }
