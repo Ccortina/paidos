@@ -46,6 +46,10 @@ public class Religion implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "religion")
     private List<Relative> relativeList;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private int active;
 
     public Religion() {
     }
@@ -106,6 +110,14 @@ public class Religion implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Religion[ idReligion=" + idReligion + " ]";
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
     
 }

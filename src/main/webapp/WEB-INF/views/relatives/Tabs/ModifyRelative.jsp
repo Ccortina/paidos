@@ -165,6 +165,14 @@
             <input type="text" class="form-control inputNormal" id="inputModifyRelativeGinecologist" placeholder="Ginecologo" name="ginecologist"/>
         </div>
     </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>
+                <input id="inputModifyRelativeActive" type="checkbox" name="active">
+                Activo
+            </label>
+        </div> 
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-2">

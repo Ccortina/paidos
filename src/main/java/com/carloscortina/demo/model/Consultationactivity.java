@@ -52,6 +52,12 @@ public class Consultationactivity implements Serializable {
         this.consultationactivityPK = consultationactivityPK;
     }
 
+    public Consultationactivity(double cost, Activity activity, int includeInBill) {
+        this.cost = cost;
+        this.includeInBill = includeInBill;
+        this.activity = activity;
+    }
+
     public Consultationactivity(ConsultationactivityPK consultationactivityPK, double cost, int includeInBill) {
         this.consultationactivityPK = consultationactivityPK;
         this.cost = cost;

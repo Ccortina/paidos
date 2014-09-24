@@ -5,8 +5,10 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DiagnosticDao;
+import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Diagnostic;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +74,10 @@ public class DiagnosticServiceImp implements DiagnosticService{
     @Override
     public List<Diagnostic> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<Cie10, Long> getDiagnosticsUse() {
+        return dao.getDiagnosticsUse();
     }
 }

@@ -209,7 +209,7 @@
                                 <div id="tabAdditionalInfo" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h3>Consultas que tienen asociada la medida</h3>
+                                            <h3>Consultas que tienen asociada la actividad</h3>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -221,6 +221,7 @@
                                                     <th>A. Paterno</th>
                                                     <th>A. Materno</th>
                                                     <th>Nombre</th>
+                                                    <th>Actividad</th>
                                                 </thead>
                                             </table>
                                         </div>

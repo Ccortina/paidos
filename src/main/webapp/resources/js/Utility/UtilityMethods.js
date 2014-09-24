@@ -34,12 +34,12 @@ function displayWarningAlert(message){
 function displaySuccessAlert(message){
     var box = bootbox.alert("<center><span class='glyphicon glyphicon-ok'></span><strong> Exito! </strong>"+message+"</center>");
     box.find('.modal-content').css({'color':'#468847','background-color':'#dff0d8','border-color':'#d6e9c6'});
-    window.setTimeout(function(){bootbox.hideAll();}, 2000);
+    window.setTimeout(function(){bootbox.hideAll();}, 1000);
 }
 
 
 function clearFormInputTextFields(form){
-    var inputs = $("#"+form+" input[type=text]");
+    var inputs = $("#"+form+" :input");
     
     $.each(inputs,function( index, value ){
         $(value).val("");

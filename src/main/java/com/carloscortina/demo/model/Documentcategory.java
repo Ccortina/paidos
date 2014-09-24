@@ -50,6 +50,8 @@ public class Documentcategory implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDocumentCategory")
     private List<Documents> documentsList;
+    @Column(name = "tempClaveCategoriaDocumento")
+    private Integer tempClaveCategoriaDocumento;
 
     public Documentcategory() {
     }
@@ -124,6 +126,14 @@ public class Documentcategory implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Documentcategory[ idDocumentCategory=" + idDocumentCategory + " ]";
+    }
+
+    public Integer getTempClaveCategoriaDocumento() {
+        return tempClaveCategoriaDocumento;
+    }
+
+    public void setTempClaveCategoriaDocumento(Integer tempClaveCategoriaDocumento) {
+        this.tempClaveCategoriaDocumento = tempClaveCategoriaDocumento;
     }
     
 }

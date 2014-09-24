@@ -39,11 +39,13 @@ function initializeProgrammedVaccineTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":"/demo/patients/getPatientProgrammedVaccine",
+        "ajax":"/demo/patients/getPatientFileProgrammedVaccine",
         "columns":[
             {"data":"vaccine.vaccine"},
             {"data":"vaccine.idVaccineType.type"},
-            {"data":"programedDate"},
+            {"render":function(data, type, full, meta){
+                    return moment(full.programedDate).format("DD/MM/YYYY");
+            }},
             {"render":function(data, type, full, meta){
                 
                 return (full.vaccine.dayApply+" D "+full.vaccine.monthApply+" M "+full.vaccine.yearApply+" A");
@@ -104,8 +106,8 @@ function initializeProgrammedVaccineTable(){
 }
 
 function loadPVEdit(e){ 
-    row = $("#tblConsultationPatientInmunization").DataTable().row('.selected').data();
-    if(typeof row == 'undefined'){
+    var row = $("#tblConsultationPatientInmunization").DataTable().row('.selected').data();
+    if(!checkNotUndefined(row)){
         displayDangerAlert(" No se ha seleccionado una vacuna.");
         e.preventDefault();
     }else{
@@ -118,19 +120,50 @@ function loadPVEdit(e){
 
 function submitEditPV(){
     var suspended = $("#formEditPVPatientVaccineSection input[name=suspended]").prop('checked');
+    var row = $("#tblConsultationPatientInmunization").DataTable().row('.selected').data();
+    var data = [];
+    data.push({name:"applicationDate",value:$("#formEditPVPatientVaccineSection input[name=applicationDate]").val()});
+    data.push({name:"programedDate",value:$("#formEditPVPatientVaccineSection input[name=programedDate]").val()});
+    data.push({name:"expirationDate",value:$("#formEditPVPatientVaccineSection input[name=expirationDate]").val()});
+    data.push({name:"batch",value:$("#formEditPVPatientVaccineSection input[name=batch]").val()});
+    data.push({name:"name",value:$("#formEditPVPatientVaccineSection input[name=name]").val()});
+    data.push({name:"notes",value:$("#formEditPVPatientVaccineSection input[name=notes]").val()});
+    data.push({name:"suspended",value:$("#formEditPVPatientVaccineSection input[name=suspended]").prop('checked')});
+    data.push({name:"idVaccine",value:row["patientvaccinePK"]["idVaccine"]});
+    
     if(suspended){
         var notes = $("#formEditPVPatientVaccineSection input[name=notes]").val();
         if(notes === null || notes === "" ){
             displayDangerAlert("Las observaciones no pueden estar vacias en caso de suspension.");
         }else{
-            ajaxCall("formEditPVPatientVaccineSection");
-            $('#modalConsultationPatientEditPV').modal("hide");
+            $.ajax({
+                url:"/demo/patients/editProgrammedVaccine",
+                data:data,
+                type:"POST",
+                error:function(jqXHR,textStatus,errorThrown){
+                    displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
+                },
+                success:function(){
+                    displaySuccessAlert("Se ha modificado correctamente");
+                    $('#modalConsultationPatientEditPV').modal("hide");
+                    $("#tblConsultationPatientInmunization").DataTable().ajax.reload();
+                }
+            });
         }
     }else{
-        ajaxCall("formEditPVPatientVaccineSection");
-        $('#modalConsultationPatientEditPV').modal("hide");
-        $("#tblConsultationPatientInmunization").DataTable().ajax.reload();
-        $("#tblConsultationPatientInmunization").DataTable().draw();
+        $.ajax({
+            url:"/demo/patients/editProgrammedVaccine",
+            data:data,
+            type:"POST",
+            error:function(jqXHR,textStatus,errorThrown){
+                displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
+            },
+            success:function(){
+                displaySuccessAlert("Se ha modificado correctamente");
+                $('#modalConsultationPatientEditPV').modal("hide");
+                $("#tblConsultationPatientInmunization").DataTable().ajax.reload();
+            }
+        });
     } 
 }
 
@@ -155,7 +188,7 @@ function initializeAvaibleVaccineTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":"/demo/consultation/getAvaibleVaccine",
+        "ajax":"/demo/patients/getAvaibleVaccine",
         "columns":[
             {"data":"vaccine"},
             {"data":"idVaccineType.type"},
@@ -181,12 +214,12 @@ function initializeAvaibleVaccineTable(){
 
 function submitAddPV(){
     var row = $("#tblPVAvaibleVaccine").DataTable().row('.selected').data();
-    
-    if(typeof row === 'undefined'){
+    console.log(row);
+    if(!checkNotUndefined(row)){
         displayDangerAlert(" No se ha seleccionado una vacuna para agregar.");
     }else{
         $.ajax({
-            url:"/demo/consultation/addProgrammedVaccine",
+            url:"/demo/patients/addProgrammedVaccine",
             data:{idVaccine:$("#tblPVAvaibleVaccine").DataTable().row('.selected').data()["idVaccine"]},
             type:"POST",
             error:function(jqXHR,textStatus,errorThrown){
@@ -211,14 +244,16 @@ function deletePV(){
                     if(result){
                         
                         $.ajax({
-                            url:"/demo/consultation/deleteProgrammedVaccine",
+                            url:"/demo/patients/deleteProgrammedVaccine",
                             data:{idVaccine:row["vaccine"]["idVaccine"]},
                             type:"POST",
                             error:function(jqXHR,textStatus,errorThrown){
                                 displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
                             },
                             success:function(){
+                                displaySuccessAlert("La operacion se ha realizado correctamente");
                                 $("#tblConsultationPatientInmunization").DataTable().ajax.reload();
+                                $("#tblPVAvaibleVaccine").DataTable().ajax.reload(); 
                             }
                         });
                     }
@@ -238,7 +273,7 @@ function initializeExpiredVaccineTable(){
                 "emptyTable": "No hay informacion en la tabla.",
                 "search": "Buscar"
             },
-            "ajax":"/demo/consultation/getExpiredVaccine",
+            "ajax":"/demo/patients/getExpiredVaccine",
             "columns":[
                 {"data":"vaccine.vaccine"}
             ],
@@ -269,7 +304,7 @@ function initializeSuspendedVaccineTable(){
                 "emptyTable": "No hay informacion en la tabla.",
                 "search": "Buscar"
             },
-            "ajax":"/demo/consultation/getSuspendedVaccine",
+            "ajax":"/demo/patients/getSuspendedVaccine",
             "columns":[
                 {"data":"vaccine.vaccine"}
             ],
@@ -292,20 +327,25 @@ function initializeSuspendedVaccineTable(){
 function suspendPV(){
     var row =  $("#tblPVExpiredVaccine").DataTable().row('.selected').data();
     
-    if(typeof row == 'undefined'){
+    if(!checkNotUndefined(row)){
         displayDangerAlert("No se ha seleccionado una vacuna para suspender.");
     }else{
         if($("#inputPVSuspensionNotes").val() === ""){
             displayDangerAlert("El motivo de la suspension no puede estar vacio.");
         }else{
+            var data = [];
+            data.push({name:"idDocument",value:row["vaccine"]["idVaccine"]});
+            data.push({name:"motive",value:$("#inputPVSuspensionNotes").val()});
+            
             $.ajax({
-                url:"/demo/consultation/suspendProgrammedVaccine",
-                data:{idVaccine:row["vaccine"]["idVaccine"]},
+                url:"/demo/patients/suspendProgrammedVaccine",
+                data:data,
                 type:"POST",
                 error:function(jqXHR,textStatus,errorThrown){
                     displayDangerAlert("Hubo errores durante la operacion.\n"+textStatus);
                 },
                 success:function(){
+                    $("#tblConsultationPatientInmunization").DataTable().ajax.reload();
                     $("#tblPVExpiredVaccine").DataTable().ajax.reload();
                     $("#tblPVSuspendedVaccine").DataTable().ajax.reload();
                 }
@@ -317,12 +357,12 @@ function suspendPV(){
 function retrivePV(){
     var row =  $("#tblPVSuspendedVaccine").DataTable().row('.selected').data();
     
-    if(typeof row == 'undefined'){
+    if(!checkNotUndefined(row)){
         displayDangerAlert("No se ha seleccionado una vacuna.");
     }else{
 
         $.ajax({
-            url:"/demo/consultation/retriveProgrammedVaccine",
+            url:"/demo/patients/retriveProgrammedVaccine",
             data:{idVaccine:row["vaccine"]["idVaccine"]},
             type:"POST",
             error:function(jqXHR,textStatus,errorThrown){
@@ -338,7 +378,6 @@ function retrivePV(){
 }
 
 function populateFormWithJSON( idForm , data ){
-    
     $.each(data, function(name, val){
         $el = $('[name="'+name+'"]','#'+idForm);
         switch(name){
@@ -365,8 +404,11 @@ function populateFormWithJSON( idForm , data ){
                     $("#formEditPVPatientVaccineSection input[name=suspended]").prop('checked',false);
                 }    
                 break;
-            case 'patientVaccinePK':
-                $("#formEditPVPatientVaccineSection input[name=pvvaccine]").val(data['vaccine']['idVaccine']);
+            case 'patientvaccinePK':
+                $("#formEditPVPatientVaccineSection input[name=pvvaccine]").val(data['patientvaccinePK']['idVaccine']);
+                break;
+            case 'notes':
+                $("#formEditPVPatientVaccineSection input[name=notes]").val(data['notes']);
                 break;
             default:
                 $el.val(val);

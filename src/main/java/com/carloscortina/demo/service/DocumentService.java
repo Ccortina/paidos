@@ -7,11 +7,14 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Documents;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface DocumentService extends GenericService<Documents>{
-    
+ 
+    List<Documents> getDocumentByType(int idType);
+    public List<Documents> getDocumentByPatient(int idPatient);
 }

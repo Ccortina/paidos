@@ -18,15 +18,14 @@ import org.springframework.stereotype.Repository;
 public class HbnActivityDao extends GenericHbnDao<Activity> implements ActivityDao{
     
     @Override
-    public List<Activity> getActivitiesByUser(int idUser){
+    public List<Activity> getActiveActivities(){
         
         String hql = "SELECT new Activity(activity.idActivity,activity.activity,activity.activityCost,"
                 + "activity.consultationDefault,activity.active,"
-                + "activity.idActivityType) FROM Activity as activity JOIN activity.userList user WHERE user.idUser=:idUser "
-                + "AND activity.active = 1";
+                + "activity.idActivityType) FROM Activity as activity WHERE "
+                + "activity.active = 1";
         Query query = getSession().createQuery(hql);
         
-        query.setParameter("idUser", idUser);
         List<Activity> result = query.list();
         
         for(Activity temp: result){

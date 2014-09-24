@@ -24,20 +24,21 @@
 
 <c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
 
-<!-- Files for the offcanvas function of bootstrap -->
-<c:url var="offcanvasJs" value="/resources/js/offcanvas.js" />
-<c:url var="offcanvasCss" value="/resources/CSS/offcanvas.css" />
-
 <c:url var="patientFileJS" value="/resources/js/PatientFile/${jsFile}" />
 
-<c:url var="uploaderJs" value="/resources/js/JQueryPlugins/Uploader/fileinput.min.js" />
-<c:url var="uploaderCss" value="/resources/CSS/uploader/fileinput.min.css" />
+<c:url var="uploader1Js" value="/resources/js/JQueryPlugins/UploadFile/jquery.ui.widget.js" />
+<c:url var="uploader2Js" value="/resources/js/JQueryPlugins/UploadFile/jquery.fileupload.js" />
+<c:url var="uploader3Js" value="/resources/js/JQueryPlugins/UploadFile/jquery.iframe-transport.js" />
+<c:url var="uploaderCss" value="/resources/CSS/uploader/jquery.fileupload.css" />
 
 <!-- Tabs -->
 <c:url var="patientBackgroundJS" value="/resources/js/PatientFile/Tabs/background.js" />
 <c:url var="documentsJS" value="/resources/js/PatientFile/Tabs/file.js" />
 <c:url var="laboratoryJS" value="/resources/js/PatientFile/Tabs/laboratoryTest.js" />
+<c:url var="graphsJS" value="/resources/js/PatientFile/Tabs/Graphs.js" />
 <c:url var="immunizationJS" value="/resources/js/PatientFile/Tabs/Inmunization.js" />
+<c:url var="consultationJS" value="/resources/js/PatientFile/Tabs/ConsultationHistory.js" />
+<c:url var="appointmentJS" value="/resources/js/PatientFile/Tabs/AppointmentHistory.js" />
 
 <!-- Utilities -->
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
@@ -45,48 +46,14 @@
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dataTablesModCSS}" rel="stylesheet" />
 
-<script src="${offcanvasJs}" type="text/javascript"></script>
-
-<link href="${offcanvasCss}" rel="stylesheet" />
-
 <link href="${datePickerCSS}" rel="stylesheet" />
 
 <link href="${uploaderCss}" rel="stylesheet" />
 
 <link href="${bvCSS}" rel="stylesheet" />
 
-<script src="${dataTablesJS}" type="text/javascript"></script>
-
-<script src="${uploaderJs}" type="text/javascript"></script>
-
-<script src="${momentJs}" type="text/javascript"></script>
-
-<script src="${inputmaskJs}" type="text/javascript"></script>
-<script src="${inputmaskDateJs}" type="text/javascript"></script>
-<script src="${inputmaskRegexJs}" type="text/javascript"></script>
-
-<script src="${bvJs}" type="text/javascript"></script>
-
-<script src="${bootboxJs}" type="text/javascript"></script>
-
-<script src="${utilityJs}" type="text/javascript"></script>
-
-<script src="${patientFileJS}" type="text/javascript"></script>
-<script src="${patientBackgroundJS}" type="text/javascript"></script>
-<script src="${documentsJS}" type="text/javascript"></script>
-<script src="${laboratoryJS}" type="text/javascript"></script>
-<script src="${immunizationJS}" type="text/javascript"></script>
-
-<style type="text/css">
-	#modalPatientFamilyAddRelative .modal-dialog
-	{
-		width:60%;
-	}
-</style>
-
 <!-- Main div container , centers everything-->
 <input type="hidden" id="hiddenPatientFileId" value="${patient.idPatient}">
-<input type="hidden" id="hiddenPatientIdAppointment" value="${idAppointment}">
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-2"> <!-- primer columna foto -->
@@ -149,7 +116,7 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Fecha Nacimiento</th>
-                                <th>Consultar</th>
+                                <th>Edad</th>
                             </tr>   
                         </thead>
                     </table>
@@ -166,23 +133,16 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="button" class="btn btn-danger" value="Cerrar" />
+                            <input type="button" class="btn btn-danger" value="Cerrar" onclick="closeFile()"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div><!--Cuarta columna botones -->
     </div><!-- First row -->
-    <div id="divWarningAutosave" class="row">
-        <div class="col-sm-12">
-            <div class="alert alert-warning alert-dismissable">
-                <strong>Advertencia!</strong> La informacion se guarda automaticamente al realizar un cambio.
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-sm-12">
-            <ul id="consultationTabMenu" class="nav nav-tabs">
+            <ul id="patientFileTabMenu" class="nav nav-tabs">
               <li class="active"><a href="#resumen" data-toggle="tab">Resumen</a></li>
               <li><a href="#familia" data-toggle="tab">Familia</a></li>
               <li><a href="#antecedentes" data-toggle="tab">Antecedentes</a></li>
@@ -198,9 +158,69 @@
                 <div id="resumen" class="tab-pane active"> <jsp:include page="PatientFileTabs/PatientAbstractTab.jsp" /></div>
                 <div id="familia" class="tab-pane"><jsp:include page="PatientFileTabs/PatientFamilyTab.jsp" /> </div>
                 <div id="antecedentes" class="tab-pane"><jsp:include page="PatientFileTabs/PatientBackgroundTab.jsp" /></div>
-                <div id="documentos" class="tab-pane"><jsp:include page="PatientFileTabs/Files.jsp" /></div>
+                <div id="documentos" class="tab-pane"><jsp:include page="PatientFileTabs/Files.jsp" /> </div>
+                <div id="graficas" class="tab-pane"><jsp:include page="PatientFileTabs/Graphs.jsp" /></div>
                 <div id="inmunizaciones" class="tab-pane"><jsp:include page="PatientFileTabs/inmunization.jsp" /></div>
+                <div id="labGabinetes" class="tab-pane"><jsp:include page="PatientFileTabs/LaboratoryTest.jsp" /></div>
+                <div id="consultas" class="tab-pane"><jsp:include page="PatientFileTabs/ConsultationHistory.jsp" /></div>
+                <div id="citas" class="tab-pane"><jsp:include page="PatientFileTabs/AppointmentHistory.jsp" /></div>
             </div><!-- tab-content div -->
         </div>
     </div>        
 </div><!--/.container-->
+
+
+<!-- modal for current appointments -->
+<div class="modal fade" id="modalAvaibleAppointment" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalAvaibleAppointment" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Citas disponibles</h4>
+      </div>
+        <div class="modal-body">
+            <div class="row">
+                <table id="tblAvaibleAppointments" class="hover row-border">
+                    <thead>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Motivo</th>
+                        <th>Estatus</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  onclick="continueConsultation()">Consultar</button>
+        <button type="button" class="btn btn-primary"  onclick="goNewConsultation()">Consulta sin cita previa</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="${dataTablesJS}" type="text/javascript"></script>
+
+<script src="${uploader1Js}" type="text/javascript"></script>
+<script src="${uploader2Js}" type="text/javascript"></script>
+<script src="${uploader3Js}" type="text/javascript"></script>
+
+<script src="${momentJs}" type="text/javascript"></script>
+
+<script src="${inputmaskJs}" type="text/javascript"></script>
+<script src="${inputmaskDateJs}" type="text/javascript"></script>
+<script src="${inputmaskRegexJs}" type="text/javascript"></script>
+
+<script src="${bvJs}" type="text/javascript"></script>
+
+<script src="${bootboxJs}" type="text/javascript"></script>
+
+<script src="${utilityJs}" type="text/javascript"></script>
+
+<script src="${patientFileJS}" type="text/javascript"></script>
+<script src="${patientBackgroundJS}" type="text/javascript"></script>
+<script src="${documentsJS}" type="text/javascript"></script>
+<script src="${laboratoryJS}" type="text/javascript"></script>
+<script src="${graphsJS}" type="text/javascript"></script>
+<script src="${immunizationJS}" type="text/javascript"></script>
+<script src="${consultationJS}" type="text/javascript"></script>
+<script src="${appointmentJS}" type="text/javascript"></script>

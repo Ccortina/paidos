@@ -4,7 +4,9 @@
  */
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Diagnostic;
+import java.util.Map;
 
 /**
  *
@@ -12,4 +14,5 @@ import com.carloscortina.demo.model.Diagnostic;
  */
 public interface DiagnosticDao extends GenericDao<Diagnostic>{
     
+    public Map<Cie10,Long> getDiagnosticsUse();
 }

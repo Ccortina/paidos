@@ -66,12 +66,17 @@ public class RelativesController {
                                     if( m.getName().equalsIgnoreCase("setReligion")){
                                         m.invoke(relative,religionService.getReligion(Integer.parseInt(entry.getValue())));
                                     }else{
-                                        m.invoke(relative,entry.getValue());
+                                        if( m.getName().equalsIgnoreCase("setActive") ){
+                                            m.invoke( relative,entry.getValue().equalsIgnoreCase("true")? 1 : 0 );
+                                        }else{
+                                            m.invoke( relative,entry.getValue() );
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    relative.setAddedDate(new java.util.Date());
                     relativeService.createRelative(relative);
                 }catch(Exception e){ 
                     e.printStackTrace();
@@ -93,9 +98,13 @@ public class RelativesController {
                         if(m.getName().startsWith("set")){
                             if( m.getName().equalsIgnoreCase("set"+entry.getKey())){
                                 if( m.getName().equalsIgnoreCase("setReligion")){
-                                    m.invoke(relative,religionService.getReligion(Integer.parseInt(entry.getValue())));
+                                    m.invoke(relative,religionService.getReligion(Integer.parseInt( entry.getValue() )));
                                 }else if( !m.getName().equalsIgnoreCase("setIdRelative")){
-                                    m.invoke(relative,entry.getValue());
+                                    if( m.getName().equalsIgnoreCase("setActive") ){
+                                        m.invoke( relative,entry.getValue().equalsIgnoreCase("true")? 1 : 0 );
+                                    }else{
+                                        m.invoke( relative,entry.getValue() );
+                                    }
                                 }    
                             }
                         }

@@ -11,11 +11,14 @@ function initializeRelativesTable(){
     $('#tblRelative').DataTable({
         "scrollY": "300px",
         "scrollCollapse": true,
-        "paging": false,
-        "info":false,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar"
+            "search": "Buscar",
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+             "paginate": {
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
         },
         "ajax":"/demo/patients/getAllRelatives",
         "columns":[
@@ -27,13 +30,19 @@ function initializeRelativesTable(){
                 return (replaceNull(full['firstName']));
             }},
             {"render":function(data,type,row){ 
-                if(row['active'] === 1){
+                if(parseInt(row['active']) === 1){
                     return ('<span class="glyphicon glyphicon-ok"></span>');
                 }else{
                     return ('<span class="glyphicon glyphicon-remove"></span>');
                 }
             }}
         ],
+        "createdRow": function( row, data, dataIndex ) {
+            if(data.active !== 1){
+                $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
+            }
+        },
         "initComplete": function(settings, json) {
             $('#tblRelative tbody').on( 'click', 'tr', function (e) {
                 var table = $('#tblRelative').DataTable();
@@ -76,4 +85,7 @@ function displayWarningAlert(message){
     window.setTimeout(function(){bootbox.hideAll();}, 2000);
 }
 
+function newRelative(){
+    $('#relativesTabMenu a[href="#tabNew"]').tab('show');
+}
 

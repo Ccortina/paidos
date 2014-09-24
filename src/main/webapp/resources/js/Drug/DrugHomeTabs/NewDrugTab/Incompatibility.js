@@ -8,6 +8,13 @@ $(document).ready(function(){
     initializeIncompatibilityCommercialNamesTable();
     initializeIncompatibilityRiskTable();
     intializeIncompatibleDrugsTable();
+    initializeNewRiskForm();
+    
+    $('#modalNewRisk').on('show.bs.modal', function (e) {
+        $('#formNewRisk').bootstrapValidator('resetForm', true);
+        clearFormInputTextFields('formNewRisk');
+    });
+    
 });
 
 function initializeIncompatibilityDrugListTable(){
@@ -144,7 +151,8 @@ function intializeIncompatibleDrugsTable(){
 
 function addIncompatibility(){
     var row = $("#tblIncompatibilityCommercialName").DataTable().row('.selected');
-    if(checkNotUndefined(row)){
+    
+    if(checkNotUndefined(row.data())){
         $("#tblIncompatibles").DataTable().row.add(row.data()).draw();
         $("#tblIncompatibilityCommercialName").DataTable().row(row.node()).remove().draw();
     }else{
@@ -165,9 +173,8 @@ function removeIncompatibility(){
     
 }
 
-function loadNewRiskModal(){
-    if(checkNotUndefined($("#tblIncompatibilityDrugList").DataTable().row('.selected').data())){
-        $("#formNewRisk").bootstrapValidator({
+function initializeNewRiskForm(){
+    $("#formNewRisk").bootstrapValidator({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',
@@ -187,21 +194,28 @@ function loadNewRiskModal(){
             e.preventDefault();
             addRisk();
         });
-        
-        clearFormInputTextFields("formNewRisk");
+}
+
+function loadNewRiskModal(){
+    if(checkNotUndefined($("#tblIncompatibilityDrugList").DataTable().row('.selected').data())){
         $('#modalNewRisk').modal('show');
     }else{
         displayWarningAlert("No se ha seleccionado un medicamento"); 
-    }
-    
+    }    
 }
+
 function addRisk(){
     var data=$("#tblIncompatibilityDrugList").DataTable().row('.selected').data();
     data["risk"] = $("#inputNewRisk").val();
-    
     $("#tblIncompatibilityRisk").DataTable().row.add(data).draw();
-    
-    $("#formNewRisk").data('bootstrapValidator').destroy();
-    
+    $("#tblIncompatibilityDrugList").DataTable().row('.selected').remove().draw();  
+    //$("#formNewRisk").data('bootstrapValidator').destroy();  
     $('#modalNewRisk').modal('hide');
+}
+
+function removeRisk(){
+    var data = $("#tblIncompatibilityRisk").DataTable().row('.selected').data();
+    data["risk"]='';
+    $("#tblIncompatibilityRisk").DataTable().row('.selected').remove().draw();
+    $("#tblIncompatibilityDrugList").DataTable().row.add(data).draw();
 }

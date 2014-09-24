@@ -4,7 +4,9 @@
  */
 package com.carloscortina.demo.service;
 
+import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Diagnostic;
+import java.util.Map;
 
 /**
  *
@@ -12,4 +14,5 @@ import com.carloscortina.demo.model.Diagnostic;
  */
 public interface DiagnosticService extends GenericService<Diagnostic>{
     
+    public Map<Cie10,Long> getDiagnosticsUse();
 }

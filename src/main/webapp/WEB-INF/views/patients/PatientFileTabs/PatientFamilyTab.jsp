@@ -3,9 +3,8 @@
     Created on : May 18, 2014, 2:32:33 PM
     Author     : Ccortina_Mac
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <%@page contentType="text/html" pageEncoding="MacRoman"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <div class="row">
     <div class="col-sm-12">
@@ -196,5 +195,61 @@
         </div>
     </div>
     </form>
+    </div>
+</div>
+
+<!-- Add relative Modal -->
+<div class="modal fade" id="modalPatientFamilyAddRelative" tabindex="-1" role="dialog" aria-labelledby="modalAddRelativeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <h4 class="modal-title">Agregar un familiar</h4>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <table id="tblPatientFamilyAllRelatives" clas="row-border hover">
+                            <thead>
+                                <tr>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre</th>
+                                    <th>RFC</th>
+                                    <th>Telefono</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="selectAddPatientFamilyRelationship">Relaci—n</label>
+                                <select class="form-control" id="selectAddPatientFamilyRelationship" name="idRelationship">
+                                    <c:forEach var="relationship" items="${relationshipType}">
+                                        <option value="${relationship.idRelationship}"><c:out value="${relationship.relationship}" /></option>
+                                    </c:forEach>    
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="button" value="Asociar" class="btn btn-primary" onclick="addPatientRelative()" data-dismiss="modal">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <table id="tblPatientFamilyPatientRelatives" clas="row-border hover">
+                            <thead>
+                                <tr>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre</th>
+                                    <th>RFC</th>
+                                    <th>Relaci—n</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+            </div>
+        </div>
     </div>
 </div>

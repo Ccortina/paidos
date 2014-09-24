@@ -41,7 +41,7 @@ function initializeDrugAMTable(){
         "columns":[
             {"data":"applicationMethod"},
             {"render":function(data,type,row){ 
-                if(row['active'] === "1"){
+                if(parseInt(row['active']) === 1){
                     return ('<span class="glyphicon glyphicon-ok"></span>');
                 }else{
                     return ('<span class="glyphicon glyphicon-remove"></span>');
@@ -60,7 +60,7 @@ function initializeDrugAMTable(){
             });
         },
         "createdRow": function( row, data, dataIndex ) {
-            if(data.active !== "1"){
+            if(parseInt(data.active) !== 1){
                 $(row).css({"background-color":"#FDFD96"});
             }
         }

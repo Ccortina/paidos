@@ -195,6 +195,7 @@ function saveNewAppointment(){
                 $("#inputMotivNewApp").val('');
                 
                 $("#tblAppointmentsListNewApp").DataTable().ajax.reload();
+                $("#tblAppointmentsList").DataTable().ajax.reload();
                 $("#formNewAppointment").data('bootstrapValidator').resetForm();
                 $('#tblPatientsNewApp').DataTable().$('tr.selected').removeClass('selected');
                 $('#tblConsultationMotivesNewApp').DataTable().$('tr.selected').removeClass('selected');

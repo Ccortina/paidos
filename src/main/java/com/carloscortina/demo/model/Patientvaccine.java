@@ -6,7 +6,6 @@
 
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -14,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -83,6 +81,25 @@ public class Patientvaccine implements Serializable {
         this.patientvaccinePK = patientvaccinePK;
         this.suspended = suspended;
         this.programManual = programManual;
+    }
+
+    public Patientvaccine(Date programedDate, Vaccine vaccine, Patient patient) {
+        this.programedDate = programedDate;
+        this.vaccine = vaccine;
+        this.patient = patient;
+    }
+
+    public Patientvaccine(PatientvaccinePK patientvaccinePK, Date programedDate, Vaccine vaccine, Patient patient, int suspended, Date suspensionDate,String notes,String name,String batch,Date expirationDate) {
+        this.patientvaccinePK = patientvaccinePK;
+        this.programedDate = programedDate;
+        this.vaccine = vaccine;
+        this.patient = patient;
+        this.suspended = suspended;
+        this.suspensionDate = suspensionDate;
+        this.notes = notes;
+        this.name = name;
+        this.batch = batch;
+        this.expirationDate = expirationDate;
     }
 
     public Patientvaccine(Vaccine vaccine, Patient patient) {

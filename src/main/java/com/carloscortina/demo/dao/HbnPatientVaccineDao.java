@@ -47,4 +47,38 @@ public class HbnPatientVaccineDao extends GenericHbnDao<Patientvaccine> implemen
         }
         return pv;
     }
+    
+    @Override
+    public List<Patientvaccine> getPatientVaccineByPatient(int idPatient){
+        Query query = getSession().createQuery("SELECT new Patientvaccine(p.patientvaccinePK,p.programedDate,p.vaccine,"
+                + " p.patient,p.suspended,p.suspensionDate,p.notes,p.name,p.batch,p.expirationDate) FROM Patientvaccine p "
+                + "WHERE p.patient.idPatient=:idPatient");
+        query.setParameter("idPatient", idPatient);
+        
+        List<Patientvaccine> pv = query.list();
+        for(Patientvaccine p: pv){
+            Vaccine v = new Vaccine(p.getVaccine().getIdVaccine(),p.getVaccine().getVaccine(),p.getVaccine().getYearApply(),
+                    p.getVaccine().getMonthApply(),p.getVaccine().getDayApply(),p.getVaccine().getMultipleShots(),p.getVaccine().getActive(),
+                    p.getVaccine().getIdVaccineType());
+            p.setVaccine(v);
+        }
+        return pv;
+    }
+    
+    @Override
+    public List<Patientvaccine> getPatientVaccineSystemProgrammedByPatient(int idPatient){
+        Query query = getSession().createQuery("SELECT new Patientvaccine(p.patientvaccinePK,p.programedDate,p.vaccine,"
+                + " p.patient,p.suspended,p.suspensionDate,p.notes,p.name,p.batch,p.expirationDate) FROM Patientvaccine p "
+                + "WHERE p.patient.idPatient=:idPatient AND p.programManual=0");
+        query.setParameter("idPatient", idPatient);
+        
+        List<Patientvaccine> pv = query.list();
+        for(Patientvaccine p: pv){
+            Vaccine v = new Vaccine(p.getVaccine().getIdVaccine(),p.getVaccine().getVaccine(),p.getVaccine().getYearApply(),
+                    p.getVaccine().getMonthApply(),p.getVaccine().getDayApply(),p.getVaccine().getMultipleShots(),p.getVaccine().getActive(),
+                    p.getVaccine().getIdVaccineType());
+            p.setVaccine(v);
+        }
+        return pv;
+    }
 }

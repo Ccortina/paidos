@@ -45,6 +45,17 @@ public class HbnAppointmentDao extends GenericHbnDao<Appointment> implements App
     }
     
     @Override
+    public List<Appointment> getAvaibleAppointmentsByPatient(Date start, Date end, int idPatient) {
+        Query query = getSession().createQuery("FROM Appointment a WHERE a.date >= :start AND a.date <= :end AND a.idPatient.idPatient= :idPatient AND"
+                + " a.idStatus.idAppointmentStatus != 1 AND a.idStatus.idAppointmentStatus != 3 AND a.idStatus.idAppointmentStatus != 4 AND "
+                + "a.idStatus.idAppointmentStatus != 11");
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("idPatient", idPatient);
+        return query.list();
+    }
+    
+    @Override
     public List<Appointment> getAppointmentsByPatient(Date start, Date end, int idPatient) {
         Query query = getSession().createQuery("FROM Appointment a WHERE a.date >= :start AND a.date <= :end AND a.idPatient= :idPatient");
         query.setParameter("start", start);

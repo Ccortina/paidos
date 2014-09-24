@@ -136,9 +136,7 @@ function loadAppointmentData(){
     $("#formModifyAppointment").data('bootstrapValidator').resetForm();
     //Deselect appointment
     //$("#tblAppointmentsList").DataTable().$('tr.selected').removeClass('selected');
-    $("#tblConsultationMotivesModifyApp").DataTable().$('tr.selected').removeClass('selected');
-    
-    
+    $("#tblConsultationMotivesModifyApp").DataTable().$('tr.selected').removeClass('selected'); 
 }
 
 function modifyAppointment(){

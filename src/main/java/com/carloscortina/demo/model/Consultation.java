@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -24,6 +25,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -34,20 +37,20 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Consultation.findAll", query = "SELECT c FROM Consultation c")})
 public class Consultation implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idConsultation")
     private Integer idConsultation;
-    @Size(max = 200)
-    @Column(name = "motive")
-    private String motive;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "weigth")
     private Double weigth;
     @Column(name = "size")
     private Double size;
+    @Column(name = "bmi")
+    private Double bmi;
     @Column(name = "temperature")
     private Double temperature;
     @Column(name = "pc")
@@ -75,11 +78,12 @@ public class Consultation implements Serializable {
     @Column(name = "tempClaveConsulta")
     private Integer tempClaveConsulta;
     @JoinColumn(name = "type", referencedColumnName = "idConsultationType")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Consultationtype type;
     @Size(max = 65535)
     @Column(name = "abstract")
     private String abstract1;
+    @JsonIgnore
     @JoinTable(name = "consultationdiagnostic", joinColumns = {
         @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")}, inverseJoinColumns = {
         @JoinColumn(name = "idDiagnostic", referencedColumnName = "idDiagnostic")})
@@ -92,10 +96,12 @@ public class Consultation implements Serializable {
     @ManyToOne(optional = false)
     private User idDoctor;
     @JoinColumn(name = "idAppointment", referencedColumnName = "idAppointment")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Appointment idAppointment;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
     private List<Consultationactivity> consultationactivityList;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
     private List<Consultationmeasure> consultationmeasureList;
 
@@ -106,6 +112,56 @@ public class Consultation implements Serializable {
         this.idConsultation = idConsultation;
     }
 
+    public Consultation(Double weigth, Double size, Double bmi, Double temperature, Double pc, Patient idPatient, Appointment idAppointment) {
+        this.weigth = weigth;
+        this.size = size;
+        this.bmi = bmi;
+        this.temperature = temperature;
+        this.pc = pc;
+        this.idPatient = idPatient;
+        this.idAppointment = idAppointment;
+    }
+
+    public Consultation(Integer idConsultation, Double weigth, Double size,Double bmi, Double temperature, Double pc, Double ta, Double ta2, Double taAverage,
+            String peea, String ef, String prescription, Appointment idAppointment,String abstract1,Consultationtype type,int prescriptionNumber) {
+        this.idConsultation = idConsultation;
+        this.weigth = weigth;
+        this.size = size;
+        this.temperature = temperature;
+        this.pc = pc;
+        this.ta = ta;
+        this.ta2 = ta2;
+        this.taAverage = taAverage;
+        this.peea = peea;
+        this.ef = ef;
+        this.prescription = prescription;
+        this.idAppointment = idAppointment;
+        this.abstract1 = abstract1;
+        this.type = type;
+        this.bmi=bmi;
+        this.prescriptionNumber=prescriptionNumber;
+    }
+
+    public Consultation(Double weigth, Double size, Double bmi, Double temperature, Double pc, Double ta, Double ta2, Double taAverage, String peea, String ef, String prescription, Integer prescriptionNumber, Consultationtype type, String abstract1, Patient idPatient, User idDoctor, Appointment idAppointment) {
+        this.weigth = weigth;
+        this.size = size;
+        this.bmi = bmi;
+        this.temperature = temperature;
+        this.pc = pc;
+        this.ta = ta;
+        this.ta2 = ta2;
+        this.taAverage = taAverage;
+        this.peea = peea;
+        this.ef = ef;
+        this.prescription = prescription;
+        this.prescriptionNumber = prescriptionNumber;
+        this.type = type;
+        this.abstract1 = abstract1;
+        this.idPatient = idPatient;
+        this.idDoctor = idDoctor;
+        this.idAppointment = idAppointment;
+    }
+    
     public Consultation(Appointment idAppointment) {
         this.idAppointment = idAppointment;
     }
@@ -116,14 +172,6 @@ public class Consultation implements Serializable {
 
     public void setIdConsultation(Integer idConsultation) {
         this.idConsultation = idConsultation;
-    }
-
-    public String getMotive() {
-        return motive;
-    }
-
-    public void setMotive(String motive) {
-        this.motive = motive;
     }
 
     public Double getWeigth() {
@@ -317,6 +365,14 @@ public class Consultation implements Serializable {
 
     public void setType(Consultationtype type) {
         this.type = type;
+    }
+
+    public Double getBmi() {
+        return bmi;
+    }
+
+    public void setBmi(Double bmi) {
+        this.bmi = bmi;
     }
     
 }

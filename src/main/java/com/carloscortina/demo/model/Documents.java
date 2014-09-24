@@ -6,17 +6,22 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,8 +36,8 @@ import javax.validation.constraints.Size;
 public class Documents implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idDocuments")
     private Integer idDocuments;
     @Size(max = 200)
@@ -41,23 +46,43 @@ public class Documents implements Serializable {
     @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 200)
+    @Size(min = 1,max = 200)
     @Column(name = "path")
     private String path;
+    @JsonIgnore
     @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")
     @ManyToOne(optional = false)
     private Patient idPatient;
     @JoinColumn(name = "idDocumentCategory", referencedColumnName = "idDocumentCategory")
     @ManyToOne(optional = false)
     private Documentcategory idDocumentCategory;
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Column(name = "addedDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date addedDate;
+    @Column(name = "tempClaveDocumento")
+    private Integer tempClaveDocumento;
 
     public Documents() {
     }
 
     public Documents(Integer idDocuments) {
         this.idDocuments = idDocuments;
+    }
+
+    public Documents(String description, String notes, String path, Patient idPatient, Documentcategory idDocumentCategory, Date date, Date addedDate) {
+        this.description = description;
+        this.notes = notes;
+        this.path = path;
+        this.idPatient = idPatient;
+        this.idDocumentCategory = idDocumentCategory;
+        this.date = date;
+        this.addedDate = addedDate;
     }
 
     public Integer getIdDocuments() {
@@ -131,6 +156,30 @@ public class Documents implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
+    }
+
+    public Integer getTempClaveDocumento() {
+        return tempClaveDocumento;
+    }
+
+    public void setTempClaveDocumento(Integer tempClaveDocumento) {
+        this.tempClaveDocumento = tempClaveDocumento;
     }
     
 }

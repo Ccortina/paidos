@@ -29,7 +29,7 @@ function initializeConsultationHistoryTable(){
             {"render":function(data,row,full){
                     return (moment(full['idAppointment']['date']).format('DD/MM/YYYY'));
             }},
-            {"data":"prescription"},
+            {"data":"abstract1"},
             {"data":"idAppointment.idStatus.status"}
         ],
         "initComplete":function(settings,json){
@@ -50,10 +50,12 @@ function initializeConsultationHistoryTable(){
         "createdRow": function( row, data, dataIndex ) {
             switch(data.idAppointment.idStatus.status){
                 case 'Completa':
-                    $(row).css({'background-color':'#5BAA3A'});
+                    $(row).css({'background-color':'#5BAA3A'});//vpNormal
+                    $(row).addClass("vpNormal");
                     break;
                 case 'Cancelada':
                     $(row).css({'background-color':'#E04747'});
+                    $(row).addClass("vpExpired");
                     break;    
             }
         }
@@ -183,4 +185,3 @@ function getAge(fromdate, todate){
       
     return age.join('');
 }
-

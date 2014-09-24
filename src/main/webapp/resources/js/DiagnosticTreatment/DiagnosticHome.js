@@ -16,8 +16,8 @@ function initializeCieTable(){
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar",
-             "lengthMenu": "Mostrar _MENU_ resultados por pagina",
-             "paginate": {
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+            "paginate": {
                   "next": "Siguiente",
                   "previous": "Anterior"
               }
@@ -74,11 +74,14 @@ function getAdditionalInfo(){
             $('#tblAdditionalInfo').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
-                "paging": false,
-                "info":false,
                 "language": {
                     "emptyTable": "No hay informacion en la tabla.",
-                    "search": "Buscar"
+                    "search": "Buscar",
+                    "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                    "paginate": {
+                          "next": "Siguiente",
+                          "previous": "Anterior"
+                      }
                 },
                 "ajax":{
                     "url":"/demo/diagnostictreatment/getConsultationByCie",

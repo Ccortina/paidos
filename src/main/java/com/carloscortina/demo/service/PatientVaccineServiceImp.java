@@ -90,6 +90,16 @@ public class PatientVaccineServiceImp implements PatientVaccineService{
     public List<Patientvaccine> getAllPV() {
         return pvDao.getAllPV();
     }
+
+    @Override
+    public List<Patientvaccine> getPatientVaccineByPatient(int idPatient) {
+        return pvDao.getPatientVaccineByPatient(idPatient);
+    }
+
+    @Override
+    public List<Patientvaccine> getPatientVaccineSystemProgrammedByPatient(int idPatient) {
+        return pvDao.getPatientVaccineSystemProgrammedByPatient(idPatient);
+    }
     
     
     

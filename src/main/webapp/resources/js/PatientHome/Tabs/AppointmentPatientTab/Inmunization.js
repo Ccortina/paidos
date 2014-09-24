@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    
+    $('a[href="#tabImunizations"]').on('show.bs.tab', function (e) {
+        //$("#inputDateApp").val(moment().format("DD/MM/YYYY"));
+        $("#tblPatientInmunizationApp").DataTable().columns.adjust().draw();
+    });
 });
 
 function initializePatientInmunizationAppTable(){

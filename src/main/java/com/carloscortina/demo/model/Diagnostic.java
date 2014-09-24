@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -36,6 +37,7 @@ public class Diagnostic implements Serializable {
     @Basic(optional = false)
     @Column(name = "idDiagnostic")
     private Integer idDiagnostic;
+    @JsonIgnore
     @ManyToMany(mappedBy = "diagnosticList")
     private List<Consultation> consultationList;
     @JoinColumn(name = "idTreatment", referencedColumnName = "IdTreatment")

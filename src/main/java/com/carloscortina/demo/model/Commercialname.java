@@ -34,6 +34,12 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Commercialname.findAll", query = "SELECT c FROM Commercialname c")})
 public class Commercialname implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private int active;
+    @Column(name = "tempClaveNombreComercial")
+    private Integer tempClaveNombreComercial;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -141,6 +147,22 @@ public class Commercialname implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Commercialname[ idcommercialName=" + idcommercialName + " ]";
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public Integer getTempClaveNombreComercial() {
+        return tempClaveNombreComercial;
+    }
+
+    public void setTempClaveNombreComercial(Integer tempClaveNombreComercial) {
+        this.tempClaveNombreComercial = tempClaveNombreComercial;
     }
     
 }

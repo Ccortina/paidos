@@ -6,6 +6,7 @@
 $(document).ready(function(){
 
     $('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-αινσϊρ]*'});
+    $('.inputInteger').inputmask('Regex',{regex:'[0-9-]+'});
     $('.inputCurp').inputmask('Regex',{regex:"[A-Za-z]{1}[AEIOUaeiou]{1}[A-Za-z]{2}[0-9]{2}" +
                                         "(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])" +
                                         "[HMhm]{1}" +
@@ -54,7 +55,11 @@ function addNewRelative(){
     //Collect form data
     inputs.each(function() {
         if($(this).val() !== ''){
-            data.push({name:this.name,value:$(this).val()});
+            if( this.name === "active" ){
+                data.push({name:this.name,value:$(this).prop('checked')});  
+            }else{
+                data.push({name:this.name,value:$(this).val()});  
+            }
         }    
     });
 
@@ -65,7 +70,9 @@ function addNewRelative(){
         type: "POST",
         success:function(response){
             //Reload the patient table
+            $('#tblRelative').DataTable().ajax.reload();
             $('#relativesTabMenu a[href="#tabMain"]').tab('show');
+            displaySuccessAlert("Operacion exitosa");
         },
         error: function(data, status, error) {
             displayDangerAlert("error");

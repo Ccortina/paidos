@@ -27,10 +27,5 @@
                 <input type="button" class="btn btn-primary" value="Guardar" onclick="saveForm('alergicBackgroundForm')">
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <input type="button" id="btnalergicBackgroundFormCancelEditForm" class="btn btn-danger" value="Cancelar" onclick="disableForms();">
-            </div>
-        </div>
     </div>
 </div>

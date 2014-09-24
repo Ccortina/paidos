@@ -30,6 +30,7 @@
 <c:url var="newDrugJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab.js" />
 <c:url var="newDrugIncompatibilityJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/Incompatibility.js" />
 <c:url var="newDrugTreatmentsJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/Treatments.js" />
+<c:url var="newDrugCNJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/CommercialName.js" />
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
@@ -130,6 +131,7 @@
 <script src="${utilityJs}" type="text/javascript"></script>
 
 <script src="${drugHomeJs}" type="text/javascript"></script>
-<script src="${newDrugJs}" type="text/javascript"></script>
 <script src="${newDrugIncompatibilityJs}" type="text/javascript"></script>
 <script src="${newDrugTreatmentsJs}" type="text/javascript"></script>
+<script src="${newDrugCNJs}" type="text/javascript"></script>
+<script src="${newDrugJs}" type="text/javascript"></script>

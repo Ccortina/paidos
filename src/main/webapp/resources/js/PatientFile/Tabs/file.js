@@ -2,12 +2,47 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+var filePath;
 
 $(document).ready(function() {
 
     initializePatientDocumentsTable();
+    initializeUploadForm();
+    initializeModifyForm();
     
-    uploadFile();    
+    $("#inputUFDate").val(moment().format("DD/MM/YYYY"));
+    
+    $('#modalUploadFile').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    
+    $('#inputUF').fileupload({
+        url:'/demo/patients/uploadFile',
+        dataType: 'text',
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .bar').css(
+                'width',
+                progress + '%'
+            );
+        },
+        done:function (e, data){
+            //console.log(e);
+            if(data["result"] === "FAE"){
+                displayDangerAlert("Este archivo ya existe");
+            }else{
+                filePath = data["result"];
+                $('#modalUploadFileEnd').modal('show');
+                $('#modalUploadFileStart').modal('hide');
+            }
+        
+        },
+        fail:function (e, data){
+            //console.log( e);
+            //console.log( data);
+        }
+    }); 
 });
 
 function initializeUploadForm(){
@@ -44,28 +79,67 @@ function initializeUploadForm(){
     });
 }
 
-function uploadFile(){
-    
-    $("#formUploadFile").on('submit',function(e){
-       var oMyForm = new FormData();
-       oMyForm.append("file",file2.files[0]);
-        
-       $.ajax({
-            url:'/demo/patients/uploadFile',
-            data:oMyForm,
-            dataType:'text',
-            processData: false,
-            contentType: false,
-            cache: false,
-            type:'POST',
-            success: function(data, textStatus, jqXHR)
-            {
-                $("#tblConsultationPatientDocuments").DataTable().ajax.reload();
+function initializeModifyForm(){
+    $('#formModifyFile').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            date: {
+                validators: {
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    },
+                    date: {
+                        format: 'DD/MM/YYYY',
+                        message: 'No es una fecha valida dd/mm/aaaa'
+                    }
+                }
+            },
+            description: {
+                validators: {
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    }
+                }
             }
-        });
-        
+        },
+        submitButtons: 'button[type="submit"]'
+    }).on('success.form.bv', function(e) {
         e.preventDefault();
+        modifyFile();
     });
+}
+
+function uploadFile(){
+    var data=[];
+
+    data.push({name:"date",value:$("#inputUFDate").val()});   
+    data.push({name:"category",value:$("#inputUFCategory").val()});
+    data.push({name:"description",value:$("#inputUFDescription").val()});   
+    data.push({name:"notes",value:$("#inputUFNotes").val()});
+    data.push({name:"path",value:filePath});
+    $.ajax({
+        url:'/demo/patients/uploadFileAdditionalInfo',
+        data:data,
+        dataType: 'text',
+        type:'POST',
+        success: function(data, textStatus, jqXHR)
+        {
+            displaySuccessAlert("El archivo a sido guardado correctamente");
+            $("#tblConsultationPatientDocuments").DataTable().ajax.reload();
+            $('#modalUploadFileEnd').modal('hide');
+        },
+        error: function(data, textStatus, jqXHR){
+            displayDangerAlert("Ha habido un error en la operacion");
+            console.log(data);
+            console.log(jqXHR);
+            console.log(textStatus);
+        }
+    });
+
 }
 
 function initializePatientDocumentsTable(){
@@ -79,33 +153,99 @@ function initializePatientDocumentsTable(){
        "info":false,
        "ajax":"/demo/patients/getPatientDocument",
        "columns":[
-           {"data":"name"}],
+           {"data":"date"},
+           {"data":"idDocumentCategory.category"},
+           {"data":"description"}],
        "initComplete": function(settings,json){
-            $('#tblConsultationPatientDocuments tbody tr').dblclick(function(e){
-                openDocument($("#tblConsultationPatientDocuments").DataTable().row(this).data()["name"]);
-                
+            $('#tblConsultationPatientDocuments tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblConsultationPatientDocuments').DataTable();
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }   
             });
        }
     });
 }
 
-function deleteDocument(button){
-    var table = $("#tblConsultationPatientDocuments").DataTable();
-    var file = table.row($(button).parent().parent()[0]).data()["name"];
-    $.ajax({
-        url:'/demo/patients/deletePatientDocument',
-        data:{ 'file':file},
-        success:function(msg){
-            table.ajax.reload();
-        }
-    });
+function deleteDocument(){
+    var row = $("#tblConsultationPatientDocuments").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+       bootbox.confirm("Esta seguro de borrar este archivo?", function(result) {
+            if(result){
+                $.ajax({
+                    url:'/demo/patients/deletePatientDocument',
+                    dataType: 'text',
+                    data:({idDocument:row["idDocuments"]}),
+                    success:function(msg){
+                        $("#tblConsultationPatientDocuments").DataTable().ajax.reload();
+                    }
+                });
+            }
+        });    
+    }else{
+        displayWarningAlert("No se ha seleccionado un documento");
+    }
+        
 }
 
-function openDocument(file){
+function openDocument(){
+    var row = $("#tblConsultationPatientDocuments").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+        var myWindow = window.open("/demo/patients/openFile?idDocument="+row["idDocuments"], "Descargar archivo", "width=200, height=100");
+    }else{
+        displayWarningAlert("No se ha seleccionado un documento");
+    }
+}
+
+function loadFileData(){
+    var row = $("#tblConsultationPatientDocuments").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+        $("#inputMUFDate").val(moment(row["date"]).format("DD/MM/YYYY")); 
+        $("#inputMUFDescription").val(row["description"]);  
+        $("#inputMUFNotes").val(row["notes"]);
+        $("#inputMUFid").val(row["idDocuments"]);
+        
+        $("option",$("#inputMUFCategory")).each(function(){
+           if(this.value == row['idDocumentCategory']['idDocumentCategory']){this.selected=true;}
+        });
+        $('#modalModifyFile').modal('show');
+    }else{
+        displayWarningAlert("No se ha seleccionado un documento");
+    }    
+}
+
+function modifyFile(){
+    var data=[];
+
+    data.push({name:"date",value:$("#inputUFDate").val()});   
+    data.push({name:"category",value:$("#inputUFCategory").val()});
+    data.push({name:"description",value:$("#inputUFDescription").val()});   
+    data.push({name:"notes",value:$("#inputUFNotes").val()});
+
     $.ajax({
-        url:'/demo/patients/openPatientDocument',
-        data:{ 'file':file}
-    });
+        url:'/demo/patients/modifyFileAdditionalInfo',
+        data:$("#formModifyFile").serialize(),
+        dataType: 'text',
+        type:'POST',
+        success: function(data, textStatus, jqXHR)
+        {
+            displaySuccessAlert("El archivo a sido modificado correctamente");
+            $("#tblConsultationPatientDocuments").DataTable().ajax.reload();
+            $('#modalModifyFile').modal('hide');
+        },
+        error: function(data, textStatus, jqXHR){
+            displayDangerAlert("Ha habido un error en la operacion");
+            console.log(data);
+            console.log(jqXHR);
+            console.log(textStatus);
+        }
+    });    
 }
 
 

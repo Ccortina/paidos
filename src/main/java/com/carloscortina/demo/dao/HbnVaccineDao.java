@@ -56,4 +56,23 @@ public class HbnVaccineDao extends GenericHbnDao<Vaccine> implements VaccineDao 
         
         return vaccines;
     }
+    
+    @Override
+    public List<Vaccine> getAvaibleVaccinesForPatient(int idPatient){
+        Query query = getSession().createQuery( "Select new Vaccine(v.idVaccine,v.vaccine,v.yearApply,"
+                + "v.monthApply,v.dayApply,v.multipleShots,v.active,"
+                + "v.idVaccineType) FROM Vaccine v WHERE v.active=1 AND v.idVaccine NOT IN "
+                + "(SELECT pv.vaccine.idVaccine FROM Patientvaccine pv WHERE pv.patient.idPatient=:idPatient");
+        query.setParameter("idPatient", idPatient);
+        List<Vaccine> vaccines = query.list();
+        
+        for(Vaccine v: vaccines){
+            Query subquery = getSession().createQuery( "Select new Vaccine(v.idVaccine,v.vaccine) "
+                    + "FROM Vaccine v JOIN v.vaccineList vt WHERE vt.idVaccine=:idVaccine");
+            subquery.setParameter("idVaccine", v.getIdVaccine());
+            v.setVaccineList(subquery.list());
+        }
+        
+        return vaccines;
+    }
 }

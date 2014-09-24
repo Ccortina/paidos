@@ -3,7 +3,7 @@
     Created on : May 16, 2014, 11:42:34 AM
     Author     : Ccortina_Mac
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- Add new activity modal -->
 <div class="modal fade" id="modalAddNewActivity" tabindex="-1" role="dialog" aria-labelledby="modalAddNewActivityLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -23,9 +23,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="selectActivityType">Tipo</label>
-                                <select class="form-control" name="idActivityType">
-                                    <option value="1">Externa</option>
-                                    <option value="2">Consultorio</option>
+                                <select class="form-control" name="idActivityType" >
+                                    <c:forEach items="${activityTypes}" var="type">
+                                        <option value="${type.idActivityType}"><c:out value="${type.type}" /></option>
+                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -76,13 +77,14 @@
                             <div class="form-group">
                                 <label for="selectActivityType">Tipo</label>
                                 <select class="form-control" name="idActivityType">
-                                    <option value="1">Externa</option>
-                                    <option value="2">Consultorio</option>
+                                    <c:forEach items="${activityTypes}" var="type">
+                                        <option value="${type.idActivityType}"><c:out value="${type.type}" /></option>
+                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="consultationDefault" value="1" /> Agregar en cada consulta
+                                    <input type="checkbox" name="consultationDefault"/> Agregar en cada consulta
                                 </label>
                             </div>
                             <input type="hidden" name="idVaccine" id="editActivityIdVaccine" />
@@ -135,7 +137,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="includeInBill"/> Incluir en el recibo
+                                    <input type="checkbox" name="includeInBill" checked/> Incluir en el recibo
                                 </label>
                             </div>
                         </form>

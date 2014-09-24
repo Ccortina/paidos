@@ -64,7 +64,7 @@ body {
                                     <li><a href="${contextPath}/drug/drugHome">Medicamentos</a></li>
                                     <li><a href="${contextPath}/drug/drugPresentationHome">Presentaciones</a></li>
                                     <li><a href="${contextPath}/drug/drugApplicationMethodHome">Modos de Aplicacion</a></li>
-                                    <li><a href="${contextPath}/drug/drugAdministrationUnitHome">Unidades de Administración</a></li>
+                                    <li><a href="${contextPath}/drug/drugAdministrationunitHome">Unidades de Administración</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -89,6 +89,7 @@ body {
                                     <li><a href="${contextPath}/catalogs/userHome">Usuario</a></li>
                                 </ul>
                             </li>
+                            <li><a href="${contextPath}/reports">Reportes</a></li>
                         </ul>
                     </sec:authorize>
 

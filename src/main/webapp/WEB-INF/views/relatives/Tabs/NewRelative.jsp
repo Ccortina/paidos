@@ -51,19 +51,19 @@
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeHomePhone">Telefono</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeHomePhone" placeholder="Telefono" name="homePhone"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeHomePhone" placeholder="Telefono" name="homePhone"/>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeOfficePhone">Telefono de Oficina</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeOfficePhone" placeholder="Telefono de oficina" name="officePhone"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeOfficePhone" placeholder="Telefono de oficina" name="officePhone"/>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeExt">Ext.</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeExt" placeholder="Extension" name="officeExt"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeExt" placeholder="Extension" name="officeExt"/>
         </div>
     </div>
 </div>
@@ -71,13 +71,13 @@
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeCellPhone">Celular</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeCellphone" placeholder="Celular" name="cellPhone"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeCellphone" placeholder="Celular" name="cellPhone"/>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="form-group">
             <label for="inputNewRelativeOtherPhone">Otro telefono</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeOtherPhone" placeholder="Otro telefono" name="otherPhone"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeOtherPhone" placeholder="Otro telefono" name="otherPhone"/>
         </div>
     </div>
     <div class="col-sm-4">
@@ -109,7 +109,7 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label for="inputNewRelativeCP">Cp</label>
-            <input type="text" class="form-control inputNormal" id="inputNewRelativeCP" placeholder="Cp" name="cp"/>
+            <input type="text" class="form-control inputInteger" id="inputNewRelativeCP" placeholder="Cp" name="cp"/>
         </div>
     </div>
 </div>
@@ -143,6 +143,14 @@
             <label for="inputNewRelativeGinecologist">Ginecologo</label>
             <input type="text" class="form-control inputNormal" id="inputNewRelativeGinecologist" placeholder="Ginecologo" name="ginecologist"/>
         </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label>
+                <input id="inputNewRelativeActive" type="checkbox" name="active" checked>
+                Activo
+            </label>
+        </div> 
     </div>
 </div>
 <div class="row">

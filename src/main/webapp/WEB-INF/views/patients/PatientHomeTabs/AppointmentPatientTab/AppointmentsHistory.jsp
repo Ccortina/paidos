@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <div class="row">
     <div class="col-sm-12">
-        <table id="tblAppointmentsHistory">
+        <table id="tblAppointmentsHistory" class="hover row-border">
             <thead>
                 <th>Fecha</th>
                 <th>Hora</th>

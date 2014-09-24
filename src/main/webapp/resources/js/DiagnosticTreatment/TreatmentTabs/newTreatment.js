@@ -7,6 +7,7 @@ $(document).ready(function(){
     initializeAsociatedDiagnosticTable();
     initializeDrugAsociatedDrugTable();
     initializeNewTreatmentForm();
+    initializeDrugTable();
 });
 
 function initializeDiagnosticTable(){
@@ -197,6 +198,7 @@ function saveNewTreatment(){
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha agregado el tratamiento correctamente");
+            $("#tblTreatment").DataTable().ajax.reload();
             $("#tblAsociatedDiagnostic").DataTable().clear().draw();
             $("#tblAsociatedDrug").DataTable().clear().draw();
             $("#formNewTreatment").data('bootstrapValidator').resetForm();

@@ -13,10 +13,6 @@
             <input type="text" class="form-control inputNormal" id="inputModifyPatientName" placeholder="Nombre" name="fName">
           </div>
           <div class="form-group">
-            <label for="inputModifyPatientSName">S. Nombre</label>
-            <input type="text" class="form-control inputNormal" id="inputModifyPatientSName" placeholder="S. Nombre" name="sName">
-          </div>
-          <div class="form-group">
             <label for="inputModifyPatientFLName">A. Paterno</label>
             <input type="text" class="form-control inputNormal" id="inputModifyPatientFLName" placeholder="A. Paterno" name="flName">
           </div>
@@ -31,9 +27,9 @@
           <div class="form-group">
             <label for="inputModifyPatientGender">Sexo</label>
             <select class="form-control" id="inputModifyPatientGender" name="gender">
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
-                <option value="indefinido">Indefinido</option>
+                <c:forEach var="gender" items="${genders}">
+                    <option value="${gender.idGender}"><c:out value="${gender.gender}" /></option>
+                </c:forEach>
             </select>
           </div>
           <div class="form-group">

@@ -11,9 +11,10 @@ import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Appointmentstatus;
 import com.carloscortina.demo.model.Birthmethod;
-import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationmeasure;
 import com.carloscortina.demo.model.Documentcategory;
+import com.carloscortina.demo.model.Documents;
 import com.carloscortina.demo.model.Holyday;
 import com.carloscortina.demo.model.Laboratorytest;
 import com.carloscortina.demo.model.Measures;
@@ -28,8 +29,9 @@ import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.AppointmentStatusService;
 import com.carloscortina.demo.service.BirthmethodService;
-import com.carloscortina.demo.service.ConsultationactivityService;
+import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.ConsultationmeasureService;
+import com.carloscortina.demo.service.DocumentService;
 import com.carloscortina.demo.service.DocumentcategoryService;
 import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestService;
@@ -88,8 +90,6 @@ public class CatalogController {
     @Autowired
     private VaccineService vaccineService;
     @Autowired
-    private ConsultationactivityService caService;
-    @Autowired
     private HolydayService holydayService;
     @Autowired
     private VaccineTypeService vtService;
@@ -97,6 +97,10 @@ public class CatalogController {
     private PatientVaccineService pvService;
     @Autowired
     private DocumentcategoryService dcService;
+    @Autowired
+    private ConsultationService consultationService;
+    @Autowired 
+    private DocumentService documentService; 
     
     private User loggedUser;
     
@@ -378,16 +382,9 @@ public class CatalogController {
     }
     
     @RequestMapping(value="getActivityRelatedInfo")
-    public @ResponseBody JsonPack<Appointment> getActivityRelatedInfo(int id){
-    
-        List<Consultationactivity> caList = caService.getConsultationsByActivity(id);
-        List<Appointment> aList = new ArrayList<Appointment>();
+    public @ResponseBody JsonPack<Consultation> getActivityRelatedInfo(int id){
         
-        for(Consultationactivity ca: caList){
-            aList.add(ca.getConsultation().getIdAppointment());
-        }
-        
-        return (new JsonPack<Appointment>(aList));
+        return (new JsonPack<Consultation>(consultationService.getConsultationByActivity(id)));
     }
     
      //Section: Holyday
@@ -461,14 +458,39 @@ public class CatalogController {
         vaccine.setDayApply(Integer.parseInt(params.get("itemAppDay")));
         vaccine.setMultipleShots(params.get("multiple").equalsIgnoreCase("true")? 1 : 0);
         vaccine.setActive(params.get("active").equalsIgnoreCase("true")? 1 : 0);
-
+        vaccine.setIdVaccineType(vtService.getById(Integer.parseInt(params.get("type"))));
+        vaccineService.updateItem(vaccine);
+        
+        List<Vaccine> cevList = vaccine.getVaccineList1();
+        List<Vaccine> temp = new ArrayList(cevList);
+        
+        List<Vaccine> evList = new ArrayList<Vaccine>();
+        for(int i = 0; i < Integer.parseInt(params.get("cont")); i++){
+            evList.add(vaccineService.getById(Integer.parseInt(params.get("eq"+i))));
+        }
+        
+        temp.removeAll(evList);
+        
+        //Remove
+        for(Vaccine v: temp){
+            v.getVaccineList().remove(vaccine);
+            vaccineService.updateItem(v);
+        }
+        
+        evList.removeAll(cevList);
+        
+        //Add
+        for(Vaccine v: evList){
+            v.getVaccineList().add(vaccine);
+            vaccineService.updateItem(v);
+        }
+        
+        /*
         for(int i = 0; i < Integer.parseInt(params.get("cont")); i++){
             Vaccine updateV = vaccineService.getById(Integer.parseInt(params.get("eq"+i)));
-            //List<Vaccine> equivalentList = .getVaccineList();
-            //equivalentList.add(vaccine);
             updateV.getVaccineList().add(vaccine);
             vaccineService.updateItem(updateV);
-        }
+        }*/
 
         return "";
     }
@@ -505,5 +527,11 @@ public class CatalogController {
         
         dcService.updateItem(item);
         return "";
+    }
+    
+    @RequestMapping(value="getDocumentTypeRelatedInfo")
+    public @ResponseBody JsonPack<Documents> getDocumentTypeRelatedInfo(int id){
+        
+        return (new JsonPack<Documents>(documentService.getDocumentByType(id)));
     }
 }

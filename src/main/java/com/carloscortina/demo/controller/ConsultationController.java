@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Activity;
-import com.carloscortina.demo.model.Ageweight0to36months;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Appointmentvaccine;
 import com.carloscortina.demo.model.AppointmentvaccinePK;
 import com.carloscortina.demo.model.Cie10doctor;
 import com.carloscortina.demo.model.Cie10doctorPK;
-import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Commercialname;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Diagnostic;
@@ -47,7 +45,6 @@ import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Treatment;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.model.Vaccine;
-import com.carloscortina.demo.service.AW0to36MonthsService;
 import com.carloscortina.demo.service.ActivityService;
 import com.carloscortina.demo.service.ActivityTypeService;
 import com.carloscortina.demo.service.AppointmentService;
@@ -74,10 +71,15 @@ import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.ConsultationactivityPK;
+import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.service.ConsultationactivityService;
+import com.carloscortina.demo.service.ConsultationtypeService;
+import com.carloscortina.demo.service.DocumentService;
+import com.carloscortina.demo.service.DocumentcategoryService;
 import com.carloscortina.demo.service.PatientRelativeService;
-import java.awt.Desktop;
+import com.carloscortina.demo.service.StaffMemberService;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,6 +88,9 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -120,8 +125,6 @@ public class ConsultationController {
         @Autowired
         private BirthmethodService birthMethodService;
         @Autowired
-        private AW0to36MonthsService aw036Service;
-        @Autowired
         ConsultationService consultationService;
         @Autowired
         LaboratoryTestService labService;
@@ -149,31 +152,44 @@ public class ConsultationController {
         ConsultationactivityService caService;
         @Autowired
         PatientRelativeService prService;
+        @Autowired
+        DocumentService documentService;
+        @Autowired
+        DocumentcategoryService dcService;
+        @Autowired
+        ConsultationtypeService ctService;
+        @Autowired
+        StaffMemberService staffService;
+
         
         private Appointment appointment;
         private Patient patient;
         private User doctor;
-        private String[] age;
 	
 	@RequestMapping(value="{idAppointment}")
 	public String startConsultation(Model model,@PathVariable int idAppointment){
+
 		appointment = appointmentService.getById(idAppointment);
 		patient = appointment.getIdPatient();
                 doctor = appointment.getIdDoctor();
 		Record record = recordService.getByPatientId(patient);
 		Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
-                age = calculateAge(patient.getBirthday()).split("-");
+                String[] age = calculateAge(patient.getBirthday()).split("-");
  
+                //Catalogs
+                model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
+                model.addAttribute("documentCategories",dcService.getAll("Documentcategory"));
+                
 		model.addAttribute("father",getFather(patient.getPatientRelativeList()));
 		model.addAttribute("mother",getMother(patient.getPatientRelativeList()));
 		model.addAttribute("birthday",formatDate(patient.getBirthday()));
 		model.addAttribute("age",age);
+                model.addAttribute("appointment",appointment);
 		model.addAttribute("date",getCurrentDate());
 		model.addAttribute("patient",patient);
 		model.addAttribute("record",record);
 		model.addAttribute("perBackNoPat",perBackNoPat);
                 model.addAttribute("doctor",doctor.getIdStaffMember().getName()+" "+doctor.getIdStaffMember().getLastName());
-                model.addAttribute("birthmethods", birthMethodService.getAll("Birthmethod"));
                 model.addAttribute("measuresCatalog",measuresService.getAll("Measures"));
                 model.addAttribute("appWeight",appointment.getWeight());
                 model.addAttribute("appTemperature",appointment.getTemperature());
@@ -184,6 +200,7 @@ public class ConsultationController {
                 model.addAttribute("appPC",appointment.getPc());
                 model.addAttribute("patientDrugAllergic",patient.getDrugList());
                 model.addAttribute("prescriptionCounter",doctor.getIdStaffMember().getPresciptionNumber());
+                model.addAttribute("activityTypes",activityTypeService.getAllActiveItems());
 
 		return ( "consultation/consultation" );
 	}
@@ -204,16 +221,14 @@ public class ConsultationController {
                 if( vaccine != null && vaccine.compareTo(activity) != 0 && vaccine.compareTo("") != 0){
                     newActivity.setIdVaccine(vaccineService.getById(Integer.parseInt(vaccine)));
                 }
-                if( cDefault != null && cDefault.compareTo("") != 0){ 
-                    newActivity.setConsultationDefault(Integer.parseInt(cDefault));
-                }
+                newActivity.setConsultationDefault(cDefault.equalsIgnoreCase("true")? 1:0);
                 
                 activityService.create(newActivity);
                 return (Integer.toString(newActivity.getIdActivity()));
 	}
         
         @RequestMapping(value="editActivity", method=RequestMethod.POST)
-	public @ResponseBody String editActivity(@RequestParam(value="idActivity") String idActivity,
+	public @ResponseBody void editActivity(@RequestParam(value="idActivity") String idActivity,
                                                    @RequestParam(value="activity") String activity,
                                                    @RequestParam(value="activityCost") String cost,
                                                    @RequestParam(value="idActivityType") String type,
@@ -231,30 +246,20 @@ public class ConsultationController {
                         modifiedActivity.setIdVaccine(vaccineService.getById(Integer.parseInt(vaccine)));
                     }
                 }
-                if( cDefault != null){ 
-                    modifiedActivity.setConsultationDefault(Integer.parseInt(cDefault));
-                }
+                modifiedActivity.setConsultationDefault(cDefault.equalsIgnoreCase("true")? 1:0);
                 
                 activityService.updateItem(modifiedActivity);
-                return ("function");
+                
 	}
         
         
-        @RequestMapping(value="getConsultationSibilings2")
-        public @ResponseBody JsonPack<Patient> getConsultationSibilings2(){
+        @RequestMapping(value="getPatientSibilings")
+        public @ResponseBody JsonPack<Patient> getConsultationSibilings(){
             List<Patient> sibilings = new ArrayList<Patient>();
             for(PatientRelative pr: prService.getSibilingsByPatient(patient.getIdPatient())){
                 sibilings.add(patientService.getById(pr.getPatientRelativePK().getIdPatient()));
             }
-            return new JsonPack<Patient>(sibilings);
-        }
-        
-        @RequestMapping(value="getConsultationSibilings")
-        public @ResponseBody JsonPack<Relative> getConsultationSibilings(){
-            
-            List<Relative> relatives = getBrothers(patient.getPatientRelativeList());
-            
-            return (new JsonPack<Relative>(relatives));
+            return new JsonPack<Patient>(sibilings); 
         }
         
         @RequestMapping(value="updateAppointmentData")
@@ -303,102 +308,145 @@ public class ConsultationController {
         @RequestMapping(value={"/getActivities","getActivities"})
 	public @ResponseBody JsonPack<Activity> getActivities()
 	{
-            return  new JsonPack<Activity>(activityService.getActivitiesByUser(doctor.getIdUser()));
+            return  new JsonPack<Activity>(activityService.getActiveActivities());
 	}
         
         //This method returns a json with all the vaccines in the system 
         @RequestMapping(value="getAllVaccines")
 	public @ResponseBody JsonPack<Vaccine> allVaccines()
 	{
-		//String query = "FROM Vaccine t ";
-                
-		JsonPack<Vaccine> result = new JsonPack<Vaccine>(vaccineService.getAll("Vaccine"));
+		JsonPack<Vaccine> result = new JsonPack<Vaccine>(vaccineService.getAllActiveVaccines());
 		
                 return result;
 	}
+
+        //Section: Documents
         
-        @RequestMapping(value="uploadFile",method=RequestMethod.POST)
+        @RequestMapping(value="uploadFile",method=RequestMethod.POST,produces = "application/json")
         public @ResponseBody String uploadFile(MultipartHttpServletRequest request){
-            InputStream inputStream;
-            OutputStream outputStream;
-            
-            
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+                       
             Iterator<String> itr = request.getFileNames();
             MultipartFile file = request.getFile(itr.next());
             
             String fileName = file.getOriginalFilename();
+            String filePath = "";
 
             try{
                 inputStream = file.getInputStream();
-                File newFolder = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient());
-                newFolder.mkdir();
-                File newFile = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+fileName);
+                File newFolder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
+                if(!newFolder.exists()){
+                    newFolder.mkdir();
+                }
+                File newFile = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient()+"/"+fileName);
                 if(!newFile.exists()){
                     newFile.createNewFile();
+                }else{
+                    return ("FAE"); //El archivo ya existe
                 }
                 outputStream = new FileOutputStream(newFile);
-                int read;
+                int read =0;
                 byte[] bytes = new byte[1024];
 
                 while((read = inputStream.read(bytes)) != -1){
                     outputStream.write(bytes,0,read);
                 }
+                filePath = newFile.getAbsolutePath();
             } catch(IOException e){
                 e.printStackTrace();
             }
             
+            return (filePath);
+        }
+        
+        @RequestMapping(value="uploadFileAdditionalInfo",method=RequestMethod.POST,produces = "application/json")
+        public @ResponseBody String uploadFileAdditionalInfo(@RequestParam Map<String,String>params){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date uDate = new Date();
+            try{
+                uDate = sdf.parse(params.get("date"));
+            }catch(Exception e){  e.printStackTrace(); }
             
+            Documents document = new Documents(params.get("description"), params.get("notes"),
+                    params.get("path"), patient, dcService.getById( Integer.parseInt( params.get("category") ) ),
+                    uDate, new Date());
+            
+            documentService.create(document);
             return "";
+        }
+        
+        @RequestMapping(value="modifyFileAdditionalInfo",method=RequestMethod.POST)
+        public @ResponseBody void modifyFileAdditionalInfo(@RequestParam Map<String,String>params){
+            Documents document = documentService.getById(Integer.parseInt(params.get("idDocument")));
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date uDate = new Date();
+            try{
+                uDate = sdf.parse(params.get("date"));
+            }catch(Exception e){  e.printStackTrace(); }
+            
+            document.setDate(uDate);
+            document.setDescription( params.get("description") );
+            document.setNotes( params.get("notes") );
+            document.setIdDocumentCategory( dcService.getById( Integer.parseInt( params.get( "category" ) ) ) );
+            
+            documentService.updateItem(document);
+            
         }
 	
         @RequestMapping(value="getPatientDocument")
-        public @ResponseBody JsonPack<Documents> getDocuments(){
-            File folder = new File("E:\\Documents\\Paidos\\Files\\paciente"+patient.getIdPatient());
-            File[] listOfFiles = folder.listFiles();
-            List<Documents> documents = new ArrayList<Documents>();
-            
-            if(listOfFiles != null){
-                for(int i = 0; i < listOfFiles.length; i++) {
-                    if (listOfFiles[i].isFile()) {
-
-                        Documents doc = new Documents();
-                        doc.setDescription(listOfFiles[i].getName());
-                        //doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
-                        documents.add(doc);
-
-                    } else if (listOfFiles[i].isDirectory()) {
-                        System.out.println("Directory " + listOfFiles[i].getName());
-                    }
-                }
-            }
-            JsonPack<Documents> result = new JsonPack<Documents>(documents);
-            
-            return result;
+        public @ResponseBody JsonPack<Documents> getDocuments(){             
+            return new JsonPack<Documents>(documentService.getDocumentByPatient(patient.getIdPatient()));
         }
         
         @RequestMapping(value="deletePatientDocument")
-        public @ResponseBody String deleteDocument(String file){
+        public @ResponseBody void deleteDocument(int idDocument){
+            Documents document = documentService.getById(idDocument);
+            
             try{
-                File fileDelete = new File("E:\\Documents\\Paidos\\Files\\paciente"+patient.getIdPatient()+"/"+file);
+                File fileDelete = new File(document.getPath());
                 fileDelete.delete();
                 
             }catch(Exception e){
                 e.printStackTrace();
             }
-            return "";
+            documentService.delete(document);
         }
         
-        @RequestMapping(value="openPatientDocument")
-        public @ResponseBody String openDocument(String file){
-            try{
-                if(Desktop.isDesktopSupported()){
-                    Desktop.getDesktop().open(new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+file));
-                }
-            }catch (IOException ioe){
-                ioe.printStackTrace();
+        @RequestMapping(value = "openFile", method = RequestMethod.GET)
+        @ResponseBody void downloadFile(int idDocument,HttpServletRequest request, HttpServletResponse response) throws IOException{
+            ServletContext context = request.getSession().getServletContext();
+            
+            Documents document = documentService.getById(idDocument);
+            
+            File file = new File(document.getPath());
+            FileInputStream inputStream = new FileInputStream(file);
+            
+            String mimeType = context.getMimeType(document.getPath());
+            if (mimeType == null) {
+                // set to binary type if MIME mapping not found
+                mimeType = "application/octet-stream";
             }
             
-            return "success";
+            response.setContentType(mimeType);
+            response.setContentLength((int) file.length());
+            
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"",file.getName());
+            response.setHeader(headerKey, headerValue);
+            
+            OutputStream outStream = response.getOutputStream();
+ 
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, bytesRead);
+            }
+ 
+            inputStream.close();
+            outStream.close();   
         }
         
         //Section: Graphs/Charts
@@ -407,58 +455,54 @@ public class ConsultationController {
         
         @RequestMapping(value="getLaboratoryTests")
         public @ResponseBody JsonPack<Laboratorytest> getAllLaboratoryTest(){
-            return new JsonPack<Laboratorytest> (labService.getAll("LaboratoryTest"));
+            return new JsonPack<Laboratorytest> (labService.getAllActiveItems());
         
         }
         
         @RequestMapping(value="getLaboratoryTestsPatientData")
         public @ResponseBody JsonPack<Laboratorytestresult> getLaboratoryTestByPatient(){
             
-            String query = "FROM LaboratoryTestResult l where l.idPatient="+patient.getIdPatient();
+            String query = "FROM Laboratorytestresult l where l.idPatient="+patient.getIdPatient();
             List<Laboratorytestresult> ret = labResService.getListOfItem(query);
             
             return new JsonPack<Laboratorytestresult>(ret);
         }
         
         @RequestMapping(value="saveLaboratoryTestResult")
-        public @ResponseBody String saveLaboratoryTestResult(String date,int idLaboratoryTest,String testResult){
+        public @ResponseBody void saveLaboratoryTestResult(String date,int idLaboratoryTest,String result){
             SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date fDate = new Date();
             try{
-                Date fDate = sdf.parse(date);
-                Laboratorytest lab = labService.getById(idLaboratoryTest);
-                System.out.println(fDate);
-                Laboratorytestresult labRes = new Laboratorytestresult(testResult, fDate, patient, lab);
-                labResService.create(labRes);
-                
-            }catch (Exception e){ e.printStackTrace();}
+                sdf.parse(date);   
+            }catch (Exception e){ e.printStackTrace();
+            }
+            Laboratorytest lab = labService.getById(idLaboratoryTest);
+            Laboratorytestresult labRes = new Laboratorytestresult(result, fDate, patient, lab);
+            labResService.create(labRes);
 
-            return "Se ha guardado la informacion correctamente";
         }
         
         @RequestMapping(value="editLaboratoryTestResult")
-        public @ResponseBody String editLaboratoryTestResult(int idLaboratoryTestResult,String date,int idLaboratoryTest,String result){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        public @ResponseBody void editLaboratoryTestResult(int idLaboratoryTestResult,String date,String result){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date fDate = new Date();
             try{
-                Date fDate = sdf.parse(date);
-                Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
-                labRes.setDate(fDate);
-                labRes.setIdLaboratoryTest(labService.getById(idLaboratoryTest));
-                labRes.setResult(result);
-                
-                labResService.updateItem(labRes);
-                
+                sdf.parse(date);
             }catch (Exception e){ e.printStackTrace();}
+            Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
+            labRes.setDate(fDate);
+            labRes.setResult(result);
 
-            return "Se ha guardado la informacion correctamente";
+            labResService.updateItem(labRes);
         }
         
         @RequestMapping(value="deleteLaboratoryTestResult")
-        public @ResponseBody String delteLaboratoryTestResult(int idResult){
+        public @ResponseBody void delteLaboratoryTestResult(int idResult){
             Laboratorytestresult labRes = labResService.getById(idResult);
             labResService.delete(labRes);
             
-            return "Se ha borrado la informacion correctamente";
         }
+        
         //Alergys
         @RequestMapping(value="getPatientAlergicDrugs")
         public @ResponseBody JsonPack<Drug> getPatientAlergicDrugs(){
@@ -476,12 +520,10 @@ public class ConsultationController {
         }
         
         @RequestMapping(value="addPatientAlergicDrug")
-        public @ResponseBody String getPatientAlergicDrug(int idDrug){
-            List<Drug> alergicList = patient.getDrugList();
-            alergicList.add(drugService.getById(idDrug));
-            patient.setDrugList(alergicList);
-            patientService.mergePatient(patient);
-            return "Success";
+        public @ResponseBody void getPatientAlergicDrug(int idDrug){
+            Drug drug = drugService.getById(idDrug);
+            drug.getPatientList().add(patient);
+            drugService.updateItem(drug);
         }
         
         @RequestMapping(value="deletePatientAlergicDrug")
@@ -498,23 +540,27 @@ public class ConsultationController {
         @RequestMapping(value="getProgrammedVaccine")
         public @ResponseBody JsonPack<Patientvaccine> getProgrammedVaccine(){
             Date currentDate = new Date();
-            List<Patientvaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            
+            List<Patientvaccine>  pv = pvService.getPatientVaccineByPatient(patient.getIdPatient());
+            
             //Check if any vaccine is outdated
             for(Patientvaccine vaccine: pv){
                 //check if there's a programmed date
                 if(vaccine.getProgramedDate() != null){
                     //check if not applied
                     if(vaccine.getApplicationDate() == null){
-                        if(!(vaccine.getSuspended() > 0)){
-                            if(vaccine.getProgramedDate().compareTo(currentDate) < 1 ){
-                                vaccine.setSuspended((short)2);
+                        //Check if not alreadey suspended or outdated
+                        if( ( vaccine.getSuspended() == 0 ) ){
+                            //check if vaccine is outdated 
+                            if( vaccine.getProgramedDate().compareTo( currentDate ) < 1 ){
+                                vaccine.setSuspended(2);
                                 pvService.updateItem(vaccine);
                             }
                         }
                     }
                 }
             }
-            pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            
             return new JsonPack<Patientvaccine>(pv);
         }
         
@@ -522,30 +568,36 @@ public class ConsultationController {
         @RequestMapping(value="getExpiredVaccine")
         public @ResponseBody JsonPack<Patientvaccine> getExpiredVaccine(){
             
-            List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+2);
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE suspended="+2+" AND patient.idPatient="+patient.getIdPatient());
+            for(Patientvaccine pv:pvList){
+                pv.getVaccine().setVaccineList(null);
+                pv.getVaccine().setVaccineList1(null);
+            }
             return new JsonPack<Patientvaccine>(pvList);
         }
         
         @RequestMapping(value="getSuspendedVaccine")
         public @ResponseBody JsonPack<Patientvaccine> getSuspendedVaccine(){
             
-            List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE suspended="+1);
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE suspended="+1+" AND patient.idPatient="+patient.getIdPatient());
+            for(Patientvaccine pv:pvList){
+                pv.getVaccine().setVaccineList(null);
+                pv.getVaccine().setVaccineList1(null);
+            }
+            
             return new JsonPack<Patientvaccine>(pvList);
         }
         
         @RequestMapping(value="getAvaibleVaccine")
         public @ResponseBody JsonPack<Vaccine> getAvaibleVaccine(){
-            List<Vaccine> vaccineList = vaccineService.getAll("Vaccine");
-            List<Patientvaccine> pvList = pvService.getAll("PatientVaccine");
+            List<Vaccine> vaccineList = vaccineService.getAllActiveVaccines();
+            List<Patientvaccine> pvList = pvService.getPatientVaccineByPatient(patient.getIdPatient());
             List<Vaccine> remove = new ArrayList<Vaccine>();
-            for(Vaccine vaccine: vaccineList){
-                for(Patientvaccine pv: pvList){
-                    if(pv.getVaccine().getIdVaccine() == vaccine.getIdVaccine()){
-                        //this vaccine has already been programmed
-                        remove.add(vaccine);
-                    }
-                }
+            
+            for(Patientvaccine pv: pvList){
+                remove.add(pv.getVaccine());
             }
+            
             vaccineList.removeAll(remove);
             return new JsonPack<Vaccine>(vaccineList);
         }
@@ -581,24 +633,23 @@ public class ConsultationController {
         }
         
         @RequestMapping(value="deleteProgrammedVaccine")
-        public @ResponseBody String deleteProgrammedVaccine(int idVaccine){
+        public @ResponseBody void deleteProgrammedVaccine(int idVaccine){
             Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
             pvService.delete(pv);
-            List<Appointmentvaccine> result = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+idVaccine);
+            
+            List<Appointmentvaccine> result = avService.getListOfItem("FROM Appointmentvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+idVaccine);
             if(!result.isEmpty()){
                 Appointment ap = result.get(0).getAppointment();
-                ap.setIdStatus(apsService.getById(11));
+                ap.setIdStatus(apsService.getById(3));
                 appointmentService.updateItem(ap);
             }
-            
-            return "success";
         }
         
         @RequestMapping(value="suspendProgrammedVaccine")
         public @ResponseBody String suspendProgrammedVaccine(int idVaccine){
             Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
-            pv.setSuspended((short)1);
-            pv.setProgramManual((short)1);
+            pv.setSuspended(1);
+            pv.setProgramManual(1);
             pv.setSuspensionDate(new Date());
             pvService.updateItem(pv);
             return "success";
@@ -607,8 +658,8 @@ public class ConsultationController {
         @RequestMapping(value="retriveProgrammedVaccine")
         public @ResponseBody String retriveProgrammedVaccine(int idVaccine){
             Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
-            pv.setSuspended((short)2);
-            pv.setProgramManual((short)1);
+            pv.setSuspended(2);
+            pv.setProgramManual(1);
             pv.setSuspensionDate(null);
             pvService.updateItem(pv);
             return "success";
@@ -617,7 +668,7 @@ public class ConsultationController {
         
         //This method generates automatically the appointments for the vaccine application and the chkbx are the options
         @RequestMapping(value="programVaccines")
-        public @ResponseBody String programVaccines(boolean a,boolean b,boolean c,boolean d,boolean e,boolean f ){
+        public @ResponseBody void programVaccines(boolean a,boolean b,boolean c,boolean d,boolean e,boolean f ){
             /*options:
              * a - No programar fechas en sabados
              * b - No programar fechas en domingos
@@ -631,8 +682,8 @@ public class ConsultationController {
             Calendar cal = Calendar.getInstance();
             cal.setTime(patient.getBirthday());
             Date currentDate = new Date();
-            List<Vaccine> vaccines = vaccineService.getAll("Vaccine");
-            List<Holyday> holydays = holydayService.getAll("Holyday");
+            List<Vaccine> vaccines = vaccineService.getAllActiveVaccines();
+            List<Holyday> holydays = holydayService.getAll("");
               
             for(Vaccine vaccine: vaccines){
                 if(vaccine.getActive() ==1){
@@ -676,8 +727,8 @@ public class ConsultationController {
                     }
 
                     //Check if there are previous appointments or programmed vaccines
-                    List<Patientvaccine> pvList = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
-                    List<Appointmentvaccine> appointments = avService.getListOfItem("FROM AppointmentVaccine WHERE idPatient="+1+" AND idVaccine="+vaccine.getIdVaccine());
+                    List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
+                    List<Appointmentvaccine> appointments = avService.getListOfItem("FROM Appointmentvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
 
                     if(pvList.isEmpty()){
                         if(appointments.isEmpty()){
@@ -691,16 +742,16 @@ public class ConsultationController {
                             //Check if the vaccine must be suspended
                             if(cal.getTime().compareTo(currentDate) <= 0){
                                 if(e){
-                                    newPV.setSuspended((short)1);
+                                    newPV.setSuspended(1);
                                     newPV.setSuspensionDate(currentDate);
                                     newPV.setNotes("Suspendida por el sistema");
                                 }else{
-                                    newPV.setSuspended((short)2);
+                                    newPV.setSuspended(2);
                                 }
 
                                 //If the vaccine has been suspended , dont program an appointment
                             }else{
-                                newPV.setSuspended((short)0);
+                                newPV.setSuspended(0);
                                 //Program a new appointment for each vaccine
                                 Appointment newAppointment = new Appointment();
 
@@ -709,11 +760,11 @@ public class ConsultationController {
                                     newAppointment.setStartTime(timeFormat.parse("09:00:00"));
                                     newAppointment.setIdPatient(patient);
                                     newAppointment.setMotive(vaccine.getVaccine());
-                                    newAppointment.setIdStatus(apsService.getById(9));
+                                    newAppointment.setIdStatus(apsService.getById(2));
                                     newAppointment.setRegisteredBy(doctor);
                                     newAppointment.setIdDoctor(doctor);
                                     newAppointment.setImmunization(1);
-                                    newAppointment.setProgrammedBySystem((short)1);
+                                    newAppointment.setProgrammedBySystem(1);
                                 }catch(ParseException p){
                                     p.printStackTrace();
                                 }
@@ -754,13 +805,13 @@ public class ConsultationController {
                                     if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
                                         Appointment currentAppointment = appointments.get(0).getAppointment();
                                         currentAppointment.setNotes("Cancelada por el sistema");
-                                        currentAppointment.setIdStatus(apsService.getById(11));
+                                        currentAppointment.setIdStatus(apsService.getById(3));
                                         appointmentService.updateItem(currentAppointment);
                                     }
                                 }else{
                                     Appointment currentAppointment = appointments.get(0).getAppointment();
                                     currentAppointment.setNotes("Cancelada por el sistema");
-                                    currentAppointment.setIdStatus(apsService.getById(11));
+                                    currentAppointment.setIdStatus(apsService.getById(3));
                                     appointmentService.updateItem(currentAppointment);
                                 }
 
@@ -772,13 +823,13 @@ public class ConsultationController {
                                     if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
                                         Appointment currentAppointment = appointments.get(0).getAppointment();
                                         currentAppointment.setDate(cal.getTime());
-                                        currentAppointment.setIdStatus(apsService.getById(9));
+                                        currentAppointment.setIdStatus(apsService.getById(2));
                                         appointmentService.updateItem(currentAppointment);
                                     }
                                 }else{
                                     Appointment currentAppointment = appointments.get(0).getAppointment();
                                     currentAppointment.setDate(cal.getTime());
-                                    currentAppointment.setIdStatus(apsService.getById(9));
+                                    currentAppointment.setIdStatus(apsService.getById(2));
                                     appointmentService.updateItem(currentAppointment);
                                 }
                             }
@@ -821,7 +872,7 @@ public class ConsultationController {
                                         newAppointment.setStartTime(timeFormat.parse("09:00:00"));
                                         newAppointment.setIdPatient(patient);
                                         newAppointment.setMotive(vaccine.getVaccine());
-                                        newAppointment.setIdStatus(apsService.getById(9));
+                                        newAppointment.setIdStatus(apsService.getById(2));
                                         newAppointment.setRegisteredBy(doctor);
                                         newAppointment.setIdDoctor(doctor);
                                         newAppointment.setImmunization(1);
@@ -862,13 +913,13 @@ public class ConsultationController {
                                         if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
                                             Appointment currentAppointment = appointments.get(0).getAppointment();
                                             currentAppointment.setNotes("Cancelada por el sistema");
-                                            currentAppointment.setIdStatus(apsService.getById(11));
+                                            currentAppointment.setIdStatus(apsService.getById(3));
                                             appointmentService.updateItem(currentAppointment);
                                         }
                                     }else{
                                         Appointment currentAppointment = appointments.get(0).getAppointment();
                                         currentAppointment.setNotes("Cancelada por el sistema");
-                                        currentAppointment.setIdStatus(apsService.getById(11));
+                                        currentAppointment.setIdStatus(apsService.getById(3));
                                         appointmentService.updateItem(currentAppointment);
                                     }
 
@@ -881,13 +932,13 @@ public class ConsultationController {
                                         if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
                                             Appointment currentAppointment = appointments.get(0).getAppointment();
                                             currentAppointment.setDate(cal.getTime());
-                                            currentAppointment.setIdStatus(apsService.getById(9));
+                                            currentAppointment.setIdStatus(apsService.getById(2));
                                             appointmentService.updateItem(currentAppointment);
                                         }
                                     }else{
                                         Appointment currentAppointment = appointments.get(0).getAppointment();
                                         currentAppointment.setDate(cal.getTime());
-                                        currentAppointment.setIdStatus(apsService.getById(9));
+                                        currentAppointment.setIdStatus(apsService.getById(2));
                                         appointmentService.updateItem(currentAppointment);
                                     }
 
@@ -898,12 +949,10 @@ public class ConsultationController {
                     }
                 }
             }
-            
-            return "ProgramVaccinesFinished";
         }
         
         @RequestMapping(value="editProgrammedVaccine")
-        public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
+        public @ResponseBody void editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
             
             PatientvaccinePK id = new PatientvaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
             Patientvaccine currentPV = pvService.getById(id);
@@ -944,27 +993,34 @@ public class ConsultationController {
             }
 
             pvService.updateItem(pv);
-            
-            return "";
         }
         
         //Section: Measures
         
         @RequestMapping(value="getMeasuresCatalog")
         public @ResponseBody JsonPack<Measures> getMeasuresCatalog(){
-            List<Measures> catalog = measuresService.getListOfItem("FROM Measures WHERE idUser="+doctor.getIdUser());
+            List<Measures> catalog = measuresService.getAllActiveItems();
             
             return new JsonPack<Measures>(catalog); 
             
         }
         
         @RequestMapping(value="saveNewMeasure")
-        public @ResponseBody String saveMeasure(String measure,String units){
-            //Measures newMeasure = new Measures(measure, units,doctor);
-            //measuresService.create(newMeasure);
-            
-            return "";
-            
+        public @ResponseBody void saveMeasure(@RequestParam Map<String,String> params){
+            measuresService.create(new Measures(params.get("itemName"), params.get("unit"),
+                    params.get("include").equalsIgnoreCase("true")?1:0,
+                    params.get("active").equalsIgnoreCase("true")?1:0));
+              
+        }
+        
+        
+        //Section: Consultation
+        @RequestMapping(value="cancelConsultation")
+        public @ResponseBody void cancelConsultaion(){
+            appointment.setIdStatus(apsService.getById(1));
+            String notes = appointment.getNotes() + "\n.Consulta cancelada";
+            appointment.setNotes(notes);
+            appointmentService.mergeItem(appointment);
         }
         
         /*
@@ -974,10 +1030,11 @@ public class ConsultationController {
         
         */
         @RequestMapping(value="saveConsultation")
-        public @ResponseBody String saveConsultation(@RequestParam Map<String,String> parameters){
+        public @ResponseBody void saveConsultation(@RequestParam Map<String,String> parameters){
             
             //As the DB is programmed with the consultation as foreign key, first the consultation must be created
             Consultation consultation = filterConsultation(parameters);
+            
             //Save the diagnostic
             List<Diagnostic> diagnostic = filterDiagnostic(parameters);
             List<Consultationactivity> caList = new ArrayList<Consultationactivity>();
@@ -986,10 +1043,11 @@ public class ConsultationController {
             Integer activitySize = Integer.parseInt(parameters.get("activitySize"));
             consultation.setIdAppointment(appointment);
             
-            for(Diagnostic d: diagnostic){
-                consultation.getDiagnosticList().add(d);
-            }
-            
+            //for(Diagnostic d: diagnostic){
+           //consultation.getDiagnosticList().add(d);
+            //}
+            consultation.setDiagnosticList(diagnostic);
+            consultation.setType(ctService.getById(1));
             consultationService.create(consultation);
             
             Integer measureSize = Integer.parseInt(parameters.get("measureSize"));
@@ -997,8 +1055,8 @@ public class ConsultationController {
             for(int i=0; i < measureSize; i++){
                 ConsultationmeasurePK cmPK = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
                 Consultationmeasure cm = new Consultationmeasure(cmPK, parameters.get("mValue"+i));
-                
-                cmList.add(cm);
+                cmService.create(cm);
+                //cmList.add(cm);
 
             }
             
@@ -1006,16 +1064,24 @@ public class ConsultationController {
                 Activity a = activityService.getById(Integer.parseInt(parameters.get("activity"+i)));
                 ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
                 Consultationactivity ca = new Consultationactivity(caPK, Double.parseDouble(parameters.get("activityPrice"+i)), Integer.parseInt(parameters.get("activityInclude"+i)));
-                caList.add(ca);
+                //caList.add(ca);
+                caService.create(ca);
             }
 
-            consultation.setConsultationactivityList(caList);
+            //consultation.setConsultationmeasureList(cmList);
+            //consultation.setConsultationactivityList(caList);
 
-            consultationService.updateItem(consultation);
+            //consultationService.updateItem(consultation);
+            
+            //consultationService.create(consultation);
             //Update the appointment status
             appointment.setIdStatus(apsService.getById(1));
             appointmentService.mergeItem(appointment);
-            return "patients/file/"+patient.getIdPatient();
+            int pNumber = doctor.getIdStaffMember().getPresciptionNumber()+1;
+            Staffmember st = doctor.getIdStaffMember();
+            st.setPresciptionNumber(pNumber);
+            staffService.mergeItem(st);
+            //return "patients/file/"+patient.getIdPatient();
             
         }
         
@@ -1033,7 +1099,8 @@ public class ConsultationController {
                                 if(!entry.getValue().isEmpty()){
                                     if( m.getName().equalsIgnoreCase("setPeea") ||
                                             m.getName().equalsIgnoreCase("setEf") || 
-                                                m.getName().equalsIgnoreCase("setPrescription")){
+                                                m.getName().equalsIgnoreCase("setPrescription") ||
+                                                    m.getName().equalsIgnoreCase("setAbstract1")){
                                         m.invoke(consultation,entry.getValue());
                                     }else if(m.getName().equalsIgnoreCase("setPrescriptionNumber")){
                                         m.invoke(m.getName(), Integer.parseInt(entry.getValue()));
@@ -1048,10 +1115,18 @@ public class ConsultationController {
                     e.printStackTrace();
                 }
             }
-
+            //Calculate BMI
+            double weigth = Double.parseDouble(params.get("weigth"));
+            double size = !params.get("size").isEmpty()? Double.parseDouble(params.get("size")):0;
+            if(size > 0){
+                consultation.setBmi((weigth/size/size)*10000);
+            }else{
+                consultation.setBmi(0.0);
+            }
+            consultation.setPrescriptionNumber(doctor.getIdStaffMember().getPresciptionNumber());
             consultation.setIdDoctor(doctor);
             consultation.setIdPatient(patient);
-            //consultation.setIdAppointment(appointmentService.getById(idAppointment));
+            consultation.setIdAppointment(appointment);
             
             return consultation;
         }
@@ -1085,12 +1160,18 @@ public class ConsultationController {
                     //dt
                     diagnostic.setIdCIE10(cie10Service.getById(Integer.parseInt(d)));
                     diagnostic.setIdTreatment(treatmentService.getById(Integer.parseInt(t)));
+                    Cie10doctorPK cdPK = new Cie10doctorPK(Integer.parseInt(d), doctor.getIdUser());
+                    Cie10doctor updateCie10 = new Cie10doctor(cdPK, new Date());
+                    c10dService.updateItem(updateCie10);
                 }else{
                     if(n.isEmpty()){
                         //dtm
                         diagnostic.setIdCIE10(cie10Service.getById(Integer.parseInt(d)));
                         diagnostic.setIdTreatment(treatmentService.getById(Integer.parseInt(t)));
                         diagnostic.setIdMedecine(drugService.getById(Integer.parseInt(m)));
+                        Cie10doctorPK cdPK = new Cie10doctorPK(Integer.parseInt(d), doctor.getIdUser());
+                        Cie10doctor updateCie10 = new Cie10doctor(cdPK, new Date());
+                        c10dService.updateItem(updateCie10);
                     }else{
                         //dtmn
                         diagnostic.setIdCIE10(cie10Service.getById(Integer.parseInt(d)));

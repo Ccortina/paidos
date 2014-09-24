@@ -18,6 +18,8 @@
 
 <c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
 
+<c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
+
 <c:url var="relativeHomeJS" value="/resources/js/RelativeHome/RelativeHome.js" />
 <c:url var="newRelativeTabJS" value="/resources/js/RelativeHome/NewRelativeTab.js" />
 <c:url var="modifyRelativeTabJS" value="/resources/js/RelativeHome/ModifyRelativeTab.js" />
@@ -50,7 +52,10 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="cols-sm-2">
+                        <div class="col-sm-2">
+                            <input type="button" value="Nuevo Familiar" onclick="newRelative()" class="btn btn-primary" />
+                        </div>
+                        <div class="col-sm-2">
                             <input type="button" value="Modificar Familiar" onclick="modifyRelative()" class="btn btn-primary" />
                         </div>
                     </div>
@@ -74,6 +79,8 @@
 <script src="${bvJs}" type="text/javascript"></script>
 
 <script src="${bootboxJs}" type="text/javascript"></script>
+
+<script src="${utilityJs}" type="text/javascript"></script>
 
 <script src="${relativeHomeJS}" type="text/javascript"></script>
 <script src="${newRelativeTabJS}" type="text/javascript"></script>

@@ -28,11 +28,18 @@
 <c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
 <c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
 
+<c:url var="flotJs" value="/resources/js/JQueryPlugins/Flot/jquery.flot.min.js" />
+<c:url var="navigateJs" value="/resources/js/JQueryPlugins/Flot/jquery.flot.navigate.min.js" />
+<c:url var="tooltipJs" value="/resources/js/JQueryPlugins/Flot/jquery.flot.tooltip.min.js" />
+<c:url var="navControlJs" value="/resources/js/JQueryPlugins/Flot/jquery.flot.navigationControl.js" />
+<c:url var="axisLabelsJs" value="/resources/js/JQueryPlugins/Flot/jquery.flot.axislabels.js" />
+
 <c:url var="newAppointmentJs" value="/resources/js/Appointment/Tabs/NewAppointment.js" />
 <c:url var="relativesJS" value="/resources/js/Appointment/Tabs/Relatives.js" />
 <c:url var="inmunizationJS" value="/resources/js/Appointment/Tabs/Inmunization.js" />
 <c:url var="appListJS" value="/resources/js/Appointment/Tabs/AppointmentsList.js" />
 <c:url var="modAppJS" value="/resources/js/Appointment/Tabs/ModifyAppointment.js" />
+<c:url var="mainAppJS" value="/resources/js/Appointment/Tabs/AppointmentMain.js" />
 
 <link href="${fullcalendarCss}" rel="stylesheet" />
 <link href="${dataTablesCSS}" rel="stylesheet" />
@@ -175,8 +182,17 @@
 <script src="${relativesJS}" type="text/javascript"></script>
 <script src="${inmunizationJS}" type="text/javascript"></script>
 <script src="${bvJs}" type="text/javascript"></script>
+
+<script src="${flotJs}" type="text/javascript"></script>
+<script src="${navigateJs}" type="text/javascript"></script>
+<script src="${tooltipJs}" type="text/javascript"></script>
+<script src="${navControlJs}" type="text/javascript"></script>
+<script src="${axisLabelsJs}" type="text/javascript"></script>
+
+<script src="${mainAppJS}" type="text/javascript"></script>
 <script src="${appListJS}" type="text/javascript"></script>
 <script src="${inputmaskJs}" type="text/javascript"></script>
 <script src="${inputmaskDateJs}" type="text/javascript"></script>
 <script src="${inputmaskRegexJs}" type="text/javascript"></script>
 <script src="${modAppJS}" type="text/javascript"></script>
+

@@ -32,6 +32,8 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Dosecalculationcriteria.findAll", query = "SELECT d FROM Dosecalculationcriteria d")})
 public class Dosecalculationcriteria implements Serializable {
+    @Column(name = "tempClaveCriterio")
+    private Integer tempClaveCriterio;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,6 +108,14 @@ public class Dosecalculationcriteria implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Dosecalculationcriteria[ idDoseCalculationCriteria=" + idDoseCalculationCriteria + " ]";
+    }
+
+    public Integer getTempClaveCriterio() {
+        return tempClaveCriterio;
+    }
+
+    public void setTempClaveCriterio(Integer tempClaveCriterio) {
+        this.tempClaveCriterio = tempClaveCriterio;
     }
     
 }

@@ -16,14 +16,13 @@ function modifyPatient(){
             type: "POST",
             success:function(response){
                 $("#inputModifyPatientName").val(response['firstName']);
-                $("#inputModifyPatientSName").val(response['secondName']);
                 $("#inputModifyPatientFLName").val(response['fatherLastName']);
                 $("#inputModifyPatientMLName").val(response['motherLastName']);
-                $("#inputModifyPatientBirthday").val(response['birthday']);
+                $("#inputModifyPatientBirthday").val(moment(response['birthday']).format('DD/MM/YYYY'));
                 $("#inputModifyPatientCurp").val(response['curp']);
                 $("#inputModifyPatientNotes").val(response['notes']);
                 $("option",$("#inputModifyPatientGender")).each(function(){
-                       if(this.value === response['sex']){this.selected=true;}
+                       if(this.value === response['sex']['idGender']){this.selected=true;}
                     });
                 $("option",$("#inputModifyPatientMDoctor")).each(function(){
                        if(this.value == response['idDoctor']['idStaffMember']){this.selected=true;}

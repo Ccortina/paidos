@@ -74,5 +74,15 @@ public class DocumentServiceImp implements DocumentService{
     public List<Documents> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Documents> getDocumentByType(int idType) {
+        return dao.getDocumentByType(idType);
+    }
+
+    @Override
+    public List<Documents> getDocumentByPatient(int idPatient) {
+        return dao.getDocumentByPatient(idPatient);
+    }
     
 }

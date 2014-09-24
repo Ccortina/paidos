@@ -58,7 +58,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-9">
-                        <h3>${patient.firstName} ${patient.secondName} ${patient.fatherLastName} ${patient.motherLastName}</h3>
+                        <h3>${patient.firstName} ${patient.fatherLastName} ${patient.motherLastName}</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -66,7 +66,7 @@
                         <h4>Criterios para el manejo de fechas</h4>
                     </div>
                 </div>
-                <form role="form" id="formConsultationProgramVaccineOptions" method="POST" action="/demo/consultation/programVaccines">    
+                <form role="form" id="formConsultationProgramVaccineOptions" method="POST" action="/demo/patients/programVaccines">    
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="checkbox">
@@ -194,7 +194,7 @@
                         </form>
                     </div>
                 </div>
-                <form role="form" id="formEditPVPatientVaccineSection" method="POST" action="editProgrammedVaccine">
+                <form role="form" id="formEditPVPatientVaccineSection">
                     <input type="hidden" name="pvvaccine" />
                     <div class="panel panel-info">
                         <div class="panel-heading">
@@ -312,7 +312,7 @@
 
 <!-- Modal suspend programmed vaccine -->
 <div class="modal fade" id="modalConsultationPatientSuspendPV" tabindex="-1" role="dialog" aria-labelledby="modalConsultationPatientSuspendPV" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                     <h4 class="modal-title">Suspender vacunas vencidas</h4>
@@ -364,7 +364,7 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-sm-6">
-                        <input type="button" class="btn btn-danger" data-dismiss="modal" value="Cancelar" />
+                        <input type="button" class="btn btn-danger" data-dismiss="modal" value="Cerrar" />
                     </div>
                 </div>
             </div>

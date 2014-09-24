@@ -54,6 +54,15 @@
     <class>com.carloscortina.demo.model.Incompatibledrugs</class>
     <class>com.carloscortina.demo.model.Drug</class>
     <class>com.carloscortina.demo.model.Consultationtype</class>
+    <class>com.carloscortina.demo.model.Drugrisk</class>
+    <class>com.carloscortina.demo.model.Agesize0to240</class>
+    <class>com.carloscortina.demo.model.Ageweight0to240</class>
+    <class>com.carloscortina.demo.model.Sizeweight</class>
+    <class>com.carloscortina.demo.model.Heightweight</class>
+    <class>com.carloscortina.demo.model.Agepc</class>
+    <class>com.carloscortina.demo.model.Agebmi</class>
+    <class>com.carloscortina.demo.model.Agesize0to36</class>
+    <class>com.carloscortina.demo.model.Agesize24to240</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

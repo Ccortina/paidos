@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface ActivityService extends GenericService<Activity> {
 
-    public List<Activity> getActivitiesByUser(int idUser);
+    public List<Activity> getActiveActivities();
     public List<Activity> getAllActivities();
 }

@@ -40,8 +40,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @NamedQueries({
     @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p")})
 public class Patient implements Serializable {
-    @Column(name = "tempClavePaciente")
-    private Integer tempClavePaciente;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,6 +115,8 @@ public class Patient implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPatient")
     private List<Record> recordList;
+    @Column(name = "tempClavePaciente")
+    private Integer tempClavePaciente;
 
     public Patient() {
     }

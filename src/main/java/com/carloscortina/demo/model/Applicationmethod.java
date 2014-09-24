@@ -32,6 +32,8 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Applicationmethod.findAll", query = "SELECT a FROM Applicationmethod a")})
 public class Applicationmethod implements Serializable {
+    @Column(name = "tempClaveAplicacion")
+    private Integer tempClaveAplicacion;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,6 +126,14 @@ public class Applicationmethod implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Applicationmethod[ idApplicationMethod=" + idApplicationMethod + " ]";
+    }
+
+    public Integer getTempClaveAplicacion() {
+        return tempClaveAplicacion;
+    }
+
+    public void setTempClaveAplicacion(Integer tempClaveAplicacion) {
+        this.tempClaveAplicacion = tempClaveAplicacion;
     }
     
 }

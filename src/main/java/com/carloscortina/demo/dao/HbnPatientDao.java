@@ -75,7 +75,7 @@ public class HbnPatientDao extends GenericHbnDao<Patient> implements PatientDao 
     public List<Patient> getPatientByLaboratoryTest(int idLaboratory) {
         String hql = "SELECT new Patient(p.firstName,p.fatherLastName,"
                 + "p.motherLastName) FROM Patient as p JOIN p.laboratorytestresultList l"
-                +" WHERE l.idLaboratoryTestResult=:idLaboratory";
+                +" WHERE l.idLaboratoryTest.idLaboratoryTest=:idLaboratory";
         Query query = getSession().createQuery(hql);
         query.setParameter("idLaboratory", idLaboratory);
         return query.list();

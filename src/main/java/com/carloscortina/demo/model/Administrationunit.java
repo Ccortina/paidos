@@ -32,6 +32,8 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Administrationunit.findAll", query = "SELECT a FROM Administrationunit a")})
 public class Administrationunit implements Serializable {
+    @Column(name = "tempClaveAdministracion")
+    private Integer tempClaveAdministracion;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,6 +126,14 @@ public class Administrationunit implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Administrationunit[ idAdministrationUnit=" + idAdministrationUnit + " ]";
+    }
+
+    public Integer getTempClaveAdministracion() {
+        return tempClaveAdministracion;
+    }
+
+    public void setTempClaveAdministracion(Integer tempClaveAdministracion) {
+        this.tempClaveAdministracion = tempClaveAdministracion;
     }
     
 }

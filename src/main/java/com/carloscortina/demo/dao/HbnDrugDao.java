@@ -55,9 +55,8 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
     public List<Drug> getDrugByPresentationAndUser(int presentationId, int userId) {
         String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,"
                 + "drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.administrationUnitId) FROM Drug as drug"
-                + " JOIN drug.userList u WHERE u.idUser=:idUser AND drug.drugPresentationId.drugPresentationId=:presentationId";
+                + " WHERE drug.drugPresentationId.drugPresentationId=:presentationId";
         Query query = getSession().createQuery(hql);
-        query.setParameter("idUser",userId);
         query.setParameter("presentationId",presentationId);
         
         return query.list();
@@ -67,9 +66,8 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
     public List<Drug> getDrugByApplicationMethodAndUser(int applicationId, int userId) {
         String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,"
                 + "drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.administrationUnitId) FROM Drug as drug"
-                + " JOIN drug.userList u WHERE u.idUser=:idUser AND drug.applicationMethodId.idApplicationMethod=:applicationId";
+                + " WHERE drug.applicationMethodId.idApplicationMethod=:applicationId";
         Query query = getSession().createQuery(hql);
-        query.setParameter("idUser",userId);
         query.setParameter("applicationId",applicationId);
         
         return query.list();
@@ -79,9 +77,8 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
     public List<Drug> getDrugByAdministrationUnitAndUser(int unitId, int userId) {
         String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,"
                 + "drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.administrationUnitId) FROM Drug as drug"
-                + " JOIN drug.userList u WHERE u.idUser=:idUser AND drug.administrationUnitId.idAdministrationUnit=:unitId";
+                + " WHERE drug.administrationUnitId.idAdministrationUnit=:unitId";
         Query query = getSession().createQuery(hql);
-        query.setParameter("idUser",userId);
         query.setParameter("unitId",unitId);
         
         return query.list();

@@ -102,9 +102,9 @@ function initiliazeAppointmentFormValidation(){
 function initializeappointmentDayTable(){
   
     $("#tblAppointmentsDay").DataTable({
-        "scrollY": "150px",
+        "scrollY": "200px",
         "ordering":false,
-        "scrollCollapse": true,
+        "scrollCollapse": false,
         "paging": false,
         "info":false,
         "language": {

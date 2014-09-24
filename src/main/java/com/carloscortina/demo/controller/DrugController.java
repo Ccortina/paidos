@@ -13,6 +13,8 @@ import com.carloscortina.demo.model.Commercialname;
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Drugdose;
 import com.carloscortina.demo.model.Drugpresentation;
+import com.carloscortina.demo.model.Drugrisk;
+import com.carloscortina.demo.model.DrugriskPK;
 import com.carloscortina.demo.model.Incompatibledrugs;
 import com.carloscortina.demo.model.IncompatibledrugsPK;
 import com.carloscortina.demo.model.Treatment;
@@ -22,6 +24,7 @@ import com.carloscortina.demo.service.ApplicationMethodService;
 import com.carloscortina.demo.service.CommercialNameService;
 import com.carloscortina.demo.service.DoseCalculationCriteriaService;
 import com.carloscortina.demo.service.DrugDoseService;
+import com.carloscortina.demo.service.DrugRiskService;
 import com.carloscortina.demo.service.DrugService;
 import com.carloscortina.demo.service.IncompatibleDrugsService;
 import com.carloscortina.demo.service.ServiceDrugPresentation;
@@ -67,6 +70,8 @@ public class DrugController {
     private DrugDoseService drugDoseService;
     @Autowired
     private IncompatibleDrugsService incompatibleService;
+    @Autowired
+    private DrugRiskService drService;
      
     private User loggedUser;
     
@@ -154,31 +159,43 @@ public class DrugController {
             
             drugService.create(newDrug);
             
+            //Relate new drug incompatibilities
             for(int i = 0 ; i < Integer.parseInt(params.get("iCont")); i++){
                 Commercialname cn = commercialNameService.getById(Integer.parseInt(params.get("incompatibleCN"+i)));
                 IncompatibledrugsPK incompatiblePK = new IncompatibledrugsPK(newDrug.getIdDrug(), cn.getIdcommercialName());
                 Incompatibledrugs incompatible = new Incompatibledrugs(incompatiblePK);
-                
-                for(int j = 0; j < Integer.parseInt(params.get("rCont")); j++){
-                    if(Integer.parseInt(params.get("riskDrug"+j)) == cn.getDrugId().getIdDrug()){
-                        incompatible.setRisk(params.get("risk"+j));
-                    } 
-                }
 
                 incompatibleService.create(incompatible);
+            }
+            
+            //Realte new drug risks qith incompatible drugs
+            for(int i =0; i < Integer.parseInt(params.get("rCont"));i++){
+                DrugriskPK dr = new DrugriskPK(newDrug.getIdDrug(), Integer.parseInt(params.get("riskDrug"+i)));
+                Drugrisk risk = new Drugrisk(dr, params.get("risk"+i));
+                
+                drService.create(risk);
             }
                     
             //Add Drug dose
             for(int i = 0 ; i < Integer.parseInt(params.get("doseCont")); i++){
                 Drugdose dd = new Drugdose();
-                if(params.get("criteria"+i).isEmpty()){
+                switch(Integer.parseInt(params.get("doseCalculationCriteriaId"))){
+                    case 4:
+                            dd = new Drugdose(0, Float.parseFloat(params.get("dose"+i)), newDrug);
+                        break;
+                    case 5:
+                            dd = new Drugdose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
+                        break;
+                }
+                /*if(params.get("doseCalculationCriteriaId").isEmpty()){
                     dd = new Drugdose(0, Float.parseFloat(params.get("dose"+i)), newDrug);
                 }else{
                     dd = new Drugdose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
-                }
+                }*/
                 drugDoseService.create(dd);
             }
             
+            //Create new Drug commercial names
             for(int i = 0 ; i < Integer.parseInt(params.get("cnCont")); i++){
                 Commercialname ncn = new Commercialname(params.get("commercialName"+i),  newDrug);
                 commercialNameService.create(ncn);

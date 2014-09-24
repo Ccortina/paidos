@@ -6,7 +6,10 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationDao;
 import com.carloscortina.demo.model.Consultation;
+import com.carloscortina.demo.model.Patient;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +90,31 @@ public class ConsultationServiceImp implements ConsultationService{
     @Override
     public List<Consultation> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Consultation> getConsultationByActivity(int idActivity) {
+        return consultationDao.getConsultationByActivity(idActivity);
+    }
+
+    @Override
+    public List<Consultation> getConsultationMeasureHistory(int idPatient) {
+        return consultationDao.getConsultationMeasureHistory(idPatient);
+    }
+
+    @Override
+    public Map<Patient, Long> getPatientsConsultationNumber() {
+        return consultationDao.getPatientsConsultationNumber();
+    }
+
+    @Override
+    public Map<Date, Long> getConsultsOfMonthPerDay(int month, int year) {
+        return consultationDao.getConsultsOfMonthPerDay(month,year);
+    }
+
+    @Override
+    public Map<Integer, Long> getConsultsOfMonthByYear(int year) {
+        return consultationDao.getConsultsOfMonthByYear(year);
     }
     
 }

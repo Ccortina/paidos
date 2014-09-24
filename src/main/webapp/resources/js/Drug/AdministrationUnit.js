@@ -62,6 +62,7 @@ function initializeDrugAUTable(){
         "createdRow": function( row, data, dataIndex ) {
             if(data.active !== 1){
                 $(row).css({"background-color":"#FDFD96"});
+                $(row).addClass("vpSuspended");
             }
         }
     });

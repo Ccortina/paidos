@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -42,6 +43,7 @@ public class Consultationtype implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "type")
     private String type;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "type")
     private List<Consultation> consultationList;
 

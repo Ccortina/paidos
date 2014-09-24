@@ -6,8 +6,10 @@
 
 package com.carloscortina.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +34,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Consultationmotive.findAll", query = "SELECT c FROM Consultationmotive c")})
 public class Consultationmotive implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +51,8 @@ public class Consultationmotive implements Serializable {
     @Column(name = "lastUsed")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUsed;
+    @Column(name = "tempClaveMotivo")
+    private Integer tempClaveMotivo;
 
     public Consultationmotive() {
     }
@@ -109,5 +115,13 @@ public class Consultationmotive implements Serializable {
     public String toString() {
         return "com.carloscortina.demo.model.Consultationmotive[ idconsultationmotive=" + idconsultationmotive + " ]";
     }
-    
+
+    public Integer getTempClaveMotivo() {
+        return tempClaveMotivo;
+    }
+
+    public void setTempClaveMotivo(Integer tempClaveMotivo) {
+        this.tempClaveMotivo = tempClaveMotivo;
+    }
+
 }

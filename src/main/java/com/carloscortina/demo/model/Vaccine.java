@@ -92,6 +92,7 @@ public class Vaccine implements Serializable {
     @ManyToMany
     private List<Vaccine> vaccineList;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(mappedBy = "vaccineList")
     private List<Vaccine> vaccineList1;
     @JsonIgnore

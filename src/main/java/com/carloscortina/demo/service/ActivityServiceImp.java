@@ -65,8 +65,8 @@ public class ActivityServiceImp implements ActivityService{
     }
 
     @Override
-    public List<Activity> getActivitiesByUser(int idUser) {
-        return activityDao.getActivitiesByUser(idUser);
+    public List<Activity> getActiveActivities(){
+        return activityDao.getActiveActivities();
     }
 
     @Override

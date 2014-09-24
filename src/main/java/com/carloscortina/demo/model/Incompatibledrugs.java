@@ -29,9 +29,6 @@ public class Incompatibledrugs implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected IncompatibledrugsPK incompatibledrugsPK;
-    @Size(max = 65535)
-    @Column(name = "risk")
-    private String risk;
     @JoinColumn(name = "idIncompatibleDrug", referencedColumnName = "idcommercialName", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Commercialname commercialname;
@@ -56,14 +53,6 @@ public class Incompatibledrugs implements Serializable {
 
     public void setIncompatibledrugsPK(IncompatibledrugsPK incompatibledrugsPK) {
         this.incompatibledrugsPK = incompatibledrugsPK;
-    }
-
-    public String getRisk() {
-        return risk;
-    }
-
-    public void setRisk(String risk) {
-        this.risk = risk;
     }
 
     public Commercialname getCommercialname() {

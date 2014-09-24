@@ -20,6 +20,8 @@ $(document).ready(function(){
         $("#tblPatientRelativesList").DataTable().columns.adjust().draw();
     });
     
+    initializeAvaibleAppointmentsTable();
+    
     //$('.inputNormal').inputmask('Regex',{regex:'[A-Za-z0-9-]{1}[" "A-Za-z0-9-αινσϊρ@]*'});
 });
 
@@ -38,6 +40,7 @@ function initializeSibilingsTable()
             {"render":function(data,row,full){
                     return (full["firstName"]+" "+full["fatherLastName"]+" "+full["motherLastName"]);
             }},
+            {"data":"birthday"},
             {"render":function(data,row,full){
                     return getAge(full["birthday"],new Date());
             }}
@@ -201,7 +204,7 @@ function initializePatientFamilyAllRelativesTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
-        "ajax":"../getAllRelatives",
+        "ajax":"/demo/patients/getAllRelatives",
         "columns":[
             {"data":"fatherLastName"},
             {"data":"motherLastName"},
@@ -252,13 +255,11 @@ function initializePatientFamilyPatientRelativesTable(){
             }
         },
         "columns":[
-            {"data":"id",
-                "visible":false},
-            {"data":"fatherLastName"},
-            {"data":"motherLastName"},
-            {"data":"firstName"},
-            {"data":"rfc"},
-            {"data":"patientRelative.0.idRelationship.relationship"}]
+            {"data":"relative.fatherLastName"},
+            {"data":"relative.motherLastName"},
+            {"data":"relative.firstName"},
+            {"data":"relative.rfc"},
+            {"data":"idRelationship.relationship"}]
     });
     
 }
@@ -267,7 +268,8 @@ function unrelateRelative(row){
     
     var rowData = $('#tblPatientRelativesList').DataTable().row($(row).parent().parent()[0]).data();
     var idPatient = $('#hiddenPatientFileId').val();
-    var idRelative = rowData["id"];
+    var idPatient = rowData["patient"]["idPatient"];
+    var idRelative = rowData["relative"]["idRelative"];
     var idRelationship = rowData["idRelationship"]["idRelationship"];
     var data = {idPatient:idPatient,idRelative:idRelative,idRelationship:idRelationship};
     
@@ -283,6 +285,7 @@ function unrelateRelative(row){
                                 $('#tblPatientRelativesList').DataTable().ajax.reload();
                                 var node =$('#tblPatientRelativesList').DataTable().row(0).node();
                                 $(node).click();
+                                displaySuccessAlert("La operacion ha tenido exito");
                             }
                         });
                     }
@@ -384,9 +387,104 @@ $.fn.serializeObject = function()
 };
 
 function consultPatient(){
-    $.post("/demo/patients/patientConsultation?idPatient=" + $('#hiddenPatientFileId').val());
+       
+    //$.post("/demo/patients/patientConsultation?idPatient=" + $('#hiddenPatientFileId').val());
+    bootbox.confirm("Quiere realizar una consulta?", function(result) {
+            if(result){
+                $("#modalAvaibleAppointment").modal('show');
+            //$.post("/demo/patients/patientConsultation?idPatient=" + $('#hiddenPatientFileId').val());    
+        }
+    });
+    
+}
+
+function closeFile(){
+    
+    bootbox.confirm("Quiere salir del expediente del paciente?", function(result) {
+        if(result){ 
+            window.location.href ="/demo/patients/home";
+        }
+    });
+}
+
+function addPatientRelative(){
+    ///demo/patients/addPatientFamilyRelative
+    var row = $("#tblPatientFamilyAllRelatives").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+        var data =[];
+        data.push({name:"idRelative",value:row["idRelative"]});
+        data.push({name:"idRelationship",value:$("#selectAddPatientFamilyRelationship").val()});
+        
+        $.ajax({
+        url:"/demo/patients/addPatientFamilyRelative",
+        data: data,
+        type:"POST",
+        success:function(response){
+            $('#tblPatientFamilyPatientRelatives').DataTable().ajax.reload(); 
+            $('#tblPatientRelativesList').DataTable().ajax.reload();
+            displaySuccessAlert("La operacion se ha realizado con exito");
+        },
+        error: function(response){
+                displayDangerAlert("Ha ocurrido un error: "+response);
+        }
+    });
+        
+    }else{
+        displayWarningAlert("No ha seleccionado un familiar");
+    }
+}
+
+function initializeAvaibleAppointmentsTable(){
+    $('#tblAvaibleAppointments').DataTable({
+        "scrollY": "300px",
+        "scrollCollapse": false,
+        "paging": false,
+        "info":false,
+        "searching":false,
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar"
+        },
+        "ajax":"/demo/patients/getAvaibleAppointment",
+        "columns":[
+            {"render":function(data,row,full){
+                    return ( moment( full['date'] ).format( "DD/MM/YYYY" ) ); 
+            }},
+            {"data":"startTime"},
+            {"data":"motive"},
+            {"data":"idStatus.status"}
+        ],
+        "initComplete":function(settings,json){
+
+            $('#tblAvaibleAppointments tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblAvaibleAppointments').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                });
+            }
+    });
+    
+}
+
+function continueConsultation(){
+    var row = $("#tblAvaibleAppointments").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+        window.location.href ="/demo/consultation/"+row["idAppointment"];
+    }else{
+        displayWarningAlert("No se ha seleccionado una cita");
+    }
+    
+}
+
+function goNewConsultation(){
     $.ajax({
-        url:"../patientConsultation",
+        url:"/demo/patients/patientConsultation",
         data: {idPatient:$('#hiddenPatientFileId').val()},
         type:"POST",
         success:function(response){

@@ -37,6 +37,8 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a")})
 public class Appointment implements Serializable {
+    @Column(name = "tempClaveConsulta")
+    private Integer tempClaveConsulta;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -329,6 +331,14 @@ public class Appointment implements Serializable {
 
     public void setTempClaveCita(Integer tempClaveCita) {
         this.tempClaveCita = tempClaveCita;
+    }
+
+    public Integer getTempClaveConsulta() {
+        return tempClaveConsulta;
+    }
+
+    public void setTempClaveConsulta(Integer tempClaveConsulta) {
+        this.tempClaveConsulta = tempClaveConsulta;
     }
     
 }

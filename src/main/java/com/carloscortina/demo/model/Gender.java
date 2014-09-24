@@ -32,6 +32,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Gender.findAll", query = "SELECT g FROM Gender g")})
 public class Gender implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +47,31 @@ public class Gender implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sex")
     private List<Patient> patientList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Ageweight0to240> ageweight0to240List;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Sizeweight> sizeweightList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Heightweight> heightweightList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Agebmi> agebmiList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Agepc> agepcList;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Agesize24to240> agesize24to240List;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    private List<Agesize0to36> agesize0to36List;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "active")
+    private int active;
 
     public Gender() {
     }
@@ -106,6 +132,70 @@ public class Gender implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Gender[ idGender=" + idGender + " ]";
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public List<Ageweight0to240> getAgeweight0to240List() {
+        return ageweight0to240List;
+    }
+
+    public void setAgeweight0to240List(List<Ageweight0to240> ageweight0to240List) {
+        this.ageweight0to240List = ageweight0to240List;
+    }
+
+    public List<Sizeweight> getSizeweightList() {
+        return sizeweightList;
+    }
+
+    public void setSizeweightList(List<Sizeweight> sizeweightList) {
+        this.sizeweightList = sizeweightList;
+    }
+
+    public List<Heightweight> getHeightweightList() {
+        return heightweightList;
+    }
+
+    public void setHeightweightList(List<Heightweight> heightweightList) {
+        this.heightweightList = heightweightList;
+    }
+
+    public List<Agebmi> getAgebmiList() {
+        return agebmiList;
+    }
+
+    public void setAgebmiList(List<Agebmi> agebmiList) {
+        this.agebmiList = agebmiList;
+    }
+
+    public List<Agepc> getAgepcList() {
+        return agepcList;
+    }
+
+    public void setAgepcList(List<Agepc> agepcList) {
+        this.agepcList = agepcList;
+    }
+
+    public List<Agesize24to240> getAgesize24to240List() {
+        return agesize24to240List;
+    }
+
+    public void setAgesize24to240List(List<Agesize24to240> agesize24to240List) {
+        this.agesize24to240List = agesize24to240List;
+    }
+
+    public List<Agesize0to36> getAgesize0to36List() {
+        return agesize0to36List;
+    }
+
+    public void setAgesize0to36List(List<Agesize0to36> agesize0to36List) {
+        this.agesize0to36List = agesize0to36List;
     }
     
 }

@@ -7,6 +7,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Documents;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ import com.carloscortina.demo.model.Documents;
  */
 public interface DocumentDao extends GenericDao<Documents>{
     
+    List<Documents> getDocumentByType(int idType);
+    public List<Documents> getDocumentByPatient(int idPatient);
 }

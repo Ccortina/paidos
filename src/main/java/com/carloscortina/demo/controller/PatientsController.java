@@ -4,23 +4,21 @@ import com.carloscortina.demo.json.JsonPack;
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Appointmentstatus;
 import com.carloscortina.demo.model.Appointmentvaccine;
+import com.carloscortina.demo.model.AppointmentvaccinePK;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationmotive;
 import com.carloscortina.demo.model.Documents;
+import com.carloscortina.demo.model.Holyday;
 import com.carloscortina.demo.model.Laboratorytest;
 import com.carloscortina.demo.model.Laboratorytestresult;
 import com.carloscortina.demo.model.Patient;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,15 +31,18 @@ import com.carloscortina.demo.model.Record;
 import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.model.Vaccine;
 import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.AppointmentStatusService;
 import com.carloscortina.demo.service.AppointmentVaccineService;
 import com.carloscortina.demo.service.BirthmethodService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.ConsultationmotiveService;
+import com.carloscortina.demo.service.ConsultationtypeService;
 import com.carloscortina.demo.service.DocumentService;
 import com.carloscortina.demo.service.DocumentcategoryService;
 import com.carloscortina.demo.service.GenderService;
+import com.carloscortina.demo.service.HolydayService;
 import com.carloscortina.demo.service.LaboratoryTestResultService;
 import com.carloscortina.demo.service.LaboratoryTestService;
 import com.carloscortina.demo.service.PatientRelativeService;
@@ -56,14 +57,15 @@ import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import com.carloscortina.demo.service.VaccineTypeService;
-import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +73,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -134,6 +140,10 @@ public class PatientsController {
         AppointmentStatusService apsService;
         @Autowired
         GenderService genderService;
+        @Autowired
+        HolydayService holydayService;
+        @Autowired
+        ConsultationtypeService ctService;
         
         private Patient patient;
         private User doctor;
@@ -158,9 +168,10 @@ public class PatientsController {
                 
                 model.addAttribute("user",doctor.getIdUser());
                 model.addAttribute("doctors",userService.getUserByRole(2));
-                model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
-                model.addAttribute("appointmentStatus",appointmentStatusService.getAll("AppointmentStatus"));
+                model.addAttribute("relationshipType",relationshipService.getAllActiveItems());
+                model.addAttribute("appointmentStatus",appointmentStatusService.getAllActiveItems());
                 model.addAttribute("religions",religionService.getAllReligions());
+                model.addAttribute("genders",genderService.getAllActiveItems());
                 
 		return ( "patients/patientHome" );
 	}
@@ -175,6 +186,45 @@ public class PatientsController {
                 
 		return ( "patients/ImmunizationHome" );
 	}
+        
+        /*
+         * This method renders the patient file, based on the patient. This is 
+         * mainly when the user is looking info of the patient only.
+         */
+        @RequestMapping(value="file/{idPatient}",method= RequestMethod.GET)
+        public String patientFile(Model model,@PathVariable int idPatient,HttpSession session){
+            
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            doctor = userService.getUserByUsername(auth.getName());
+            patient = patientService.getById( idPatient );
+            
+            session.setAttribute("patientForGraph", patient);
+            
+            Record record = recordService.getByPatientId( patient );
+            
+            Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
+            String[] age = calculateAge(patient.getBirthday()).split("-");
+            
+            model.addAttribute("birthday",formatDate(patient.getBirthday()));
+            model.addAttribute("father",getFather(patient.getPatientRelativeList()));
+            model.addAttribute("mother",getMother(patient.getPatientRelativeList()));
+            model.addAttribute("age",age);
+            model.addAttribute("date",getCurrentDate());
+            model.addAttribute("patient",patient);
+            model.addAttribute("record",record);
+            model.addAttribute("perBackNoPat",perBackNoPat);
+            model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
+            model.addAttribute("religionType", religionService.getAllReligions());
+            model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
+            model.addAttribute("jsFile","patientFile.js");
+            model.addAttribute("documentCategories",dcService.getAll("Documentcategory"));
+            model.addAttribute("consultationTypes",ctService.getAll(""));
+            model.addAttribute("staff",doctor.getIdStaffMember());
+            model.addAttribute("doctors",userService.getUserByRole(2));
+            model.addAttribute("appointmentStatus",appointmentStatusService.getAllActiveItems());
+            
+            return("patients/PatientFile");
+        }
         
         @RequestMapping(value="getPatientsByDoctor")
         public @ResponseBody JsonPack<Patient> getAllPatientsByDoctor(){
@@ -197,6 +247,7 @@ public class PatientsController {
                         params.get("curp"), birthday, params.get("notes"), genderService.getById(Integer.parseInt(params.get("gender"))));
                 newPatient.setIdDoctor(userService.getById(Integer.parseInt(params.get("doctor"))).getIdStaffMember());
                 newPatient.setActive( 1 );
+                newPatient.setAddedDate(new java.util.Date());
                 patientService.create(newPatient);
                 for(int i = 0; i < Integer.parseInt(params.get("relativesCounter"));i++ ){
                     PatientRelativePK rPK = new PatientRelativePK(newPatient.getIdPatient(), Integer.parseInt(params.get("idRelative"+(i+1))));
@@ -218,6 +269,7 @@ public class PatientsController {
         
         @RequestMapping(value="deletePatient")
         public @ResponseBody String deletePatient(int idPatient){
+            
             Patient patientDelete = patientService.getById(idPatient);
             patientDelete.setActive((short)0);
             List<Appointment> appointments = appointmentService.getListOfItem("FROM Appointment a WHERE a.idPatient.idPatient="+patientDelete.getIdPatient());
@@ -351,6 +403,15 @@ public class PatientsController {
             return new JsonPack<Appointment>(apppointments);
         }
         
+        @RequestMapping(value="getAvaibleAppointment", produces = "application/json")
+        public @ResponseBody JsonPack<Appointment> getAvaibleAppointmentsByPatient(){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, 1); //minus number would decrement the days
+            
+            return new JsonPack<Appointment>(appointmentService.getAvaibleAppointmentsByPatient(new Date(), cal.getTime(), patient.getIdPatient()));
+        }
+        
         @RequestMapping(value="getAppointmentsByPatient", produces = "application/json")
         public @ResponseBody JsonPack<Appointment> getAppointmentsByPatient(String patient){
             List<Appointment> apppointments = new ArrayList<Appointment>();
@@ -361,14 +422,92 @@ public class PatientsController {
             return new JsonPack<Appointment>(apppointments);
         }
         
-        @RequestMapping(value="getConsultationsByPatient", produces = "application/json")
-        public @ResponseBody JsonPack<Consultation> getConsultationsByPatien(String patient){
-            List<Consultation> consultations = new ArrayList<Consultation>();
+        @RequestMapping(value="getAppointmentsFileByPatient", produces = "application/json")
+        public @ResponseBody JsonPack<Appointment> getAppointmentsFileByPatient(){
+            List<Appointment> apppointments = new ArrayList<Appointment>();
             try{
-                consultations = consultationService.getConsultationsByPatient(Integer.parseInt(patient));
+                apppointments = appointmentService.getAppointmentsByPatient( patient.getIdPatient() );
             }catch (Exception e){ e.printStackTrace(); }
             
+            return new JsonPack<Appointment>(apppointments);
+        }
+        
+        @RequestMapping(value="modifyAppointment")
+        public @ResponseBody void modifyAppointment(@RequestParam Map<String,String> params){
+            SimpleDateFormat stf = new SimpleDateFormat("kk:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+           
+            Appointment appointment = appointmentService.getById(Integer.parseInt(params.get("idAppointment")));
+            Date date = new Date();
+            Date time = new Date();
+            try{
+                date = sdf.parse(params.get("date"));
+                time = stf.parse(params.get("startTime"));
+            }catch(Exception e){ e.printStackTrace(); } 
+            
+                appointment.setDate(date);
+                appointment.setStartTime(time);
+                appointment.setMotive(params.get("motive"));
+                appointment.setIdDoctor(userService.getById(Integer.parseInt(params.get("idDoctor"))));
+                appointment.setIdStatus(apsService.getById(Integer.parseInt(params.get("idStatus"))));
+                appointment.setImmunization(params.get("immunization").equalsIgnoreCase("true")? 1:0);
+                appointment.setNotes(params.get("notes"));
+                if(!params.get("pc").isEmpty()){appointment.setPc(Double.parseDouble(params.get("pc")));}
+                if(!params.get("size").isEmpty()){appointment.setSize(Double.parseDouble(params.get("size")));}
+                if(!params.get("ta").isEmpty()){appointment.setTa(Double.parseDouble(params.get("ta")));}
+                if(!params.get("ta2").isEmpty()){appointment.setTa2(Double.parseDouble(params.get("ta2")));}
+                if(!params.get("taAverage").isEmpty()){appointment.setTaAverage(Double.parseDouble(params.get("taAverage")));}
+                if(!params.get("temperature").isEmpty()){appointment.setTemperature(Double.parseDouble(params.get("temperature")));}
+                if(!params.get("weight").isEmpty()){appointment.setWeight(Double.parseDouble(params.get("weight")));}
+                
+                Consultationmotive cm = cmService.getMotiveByName(params.get("motive"));
+                if( cm != null){
+                    cm.setLastUsed(new Date());
+                    cmService.updateItem(cm);
+                }
+                
+                appointmentService.updateItem(appointment);
+        }
+        
+        @RequestMapping(value="deleteSystemProgrammedAppointments")
+        public @ResponseBody void deleteSystemProgrammedAppointments(){
+            //First get patient vaccine
+            List<Patientvaccine> pvList = pvService.getPatientVaccineSystemProgrammedByPatient(patient.getIdPatient());
+            List<Appointment> appointmentList = new ArrayList();
+            //Patient vaccine
+            List<Appointmentvaccine> avList = avService.getListOfItem("FROM Appointmentvaccine WHERE idPatient="+patient.getIdPatient());
+            for(Appointmentvaccine av: avList){
+                for(Patientvaccine pv : pvList){
+                    if(pv.getPatientvaccinePK().getIdVaccine() == av.getAppointmentvaccinePK().getIdVaccine()){
+                        appointmentList.add(av.getAppointment());
+                        avService.delete(av);
+                    }
+                }
+            }
+            
+            for(Patientvaccine pv : pvList){
+                pvService.delete(pv);
+            }
+            
+            for(Appointment ap: appointmentList){
+                appointmentService.delete(ap);
+            }
+            
+        }
+        
+        @RequestMapping(value="getConsultationsByPatient", produces = "application/json")
+        public @ResponseBody JsonPack<Consultation> getConsultationsByPatien(int patient){
+            List<Consultation> consultations = new ArrayList<Consultation>();
+            
+            consultations = consultationService.getConsultationsByPatient(patient);
+            
             return new JsonPack<Consultation>(consultations);
+        }
+        
+        @RequestMapping(value="getConsultationsByPatientFile", produces = "application/json")
+        public @ResponseBody JsonPack<Consultation> getConsultationsByPatientFile(){
+
+            return new JsonPack<Consultation>( consultationService.getConsultationsByPatient( patient.getIdPatient() ) );
         }
         
         @RequestMapping(value="savePatientAppointment")
@@ -413,9 +552,9 @@ public class PatientsController {
         }
         
         @RequestMapping(value="getPatientProgrammedVaccine")
-        public @ResponseBody JsonPack<Patientvaccine> getPatientProgrammedVaccine(){
+        public @ResponseBody JsonPack<Patientvaccine> getPatientProgrammedVaccine(int idPatient){
             Date currentDate = new Date();
-            List<Patientvaccine>  pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            List<Patientvaccine>  pv = pvService.getPatientVaccineByPatient(idPatient);
             //Check if any vaccine is outdated
             for(Patientvaccine vaccine: pv){
                 //check if there's a programmed date
@@ -431,31 +570,109 @@ public class PatientsController {
                     }
                 }
             }
-            pv = pvService.getListOfItem("FROM PatientVaccine WHERE idPatient="+patient.getIdPatient());
+            //pv = pvService.getListOfItem("FROM Patientvaccine WHERE idPatient="+idPatient);
             return new JsonPack<Patientvaccine>(pv);
+        }
+        
+        @RequestMapping(value="getPatientFileProgrammedVaccine")
+        public @ResponseBody JsonPack<Patientvaccine> getPatientProgrammedVaccine(){
+            Date currentDate = new Date();
+            
+            List<Patientvaccine>  pv = pvService.getPatientVaccineByPatient(patient.getIdPatient());
+            
+            //Check if any vaccine is outdated
+            for(Patientvaccine vaccine: pv){
+                //check if there's a programmed date
+                if(vaccine.getProgramedDate() != null){
+                    //check if not applied
+                    if(vaccine.getApplicationDate() == null){
+                        //Check if not alreadey suspended or outdated
+                        if( ( vaccine.getSuspended() == 0 ) ){
+                            //check if vaccine is outdated 
+                            if( vaccine.getProgramedDate().compareTo( currentDate ) < 1 ){
+                                vaccine.setSuspended(2);
+                                pvService.updateItem(vaccine);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return new JsonPack<Patientvaccine>(pv);
+        }
+        
+        @RequestMapping(value="getExpiredVaccine")
+        public @ResponseBody JsonPack<Patientvaccine> getExpiredVaccine(){
+            
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE suspended="+2+" AND patient.idPatient="+patient.getIdPatient());
+            for(Patientvaccine pv:pvList){
+                pv.getVaccine().setVaccineList(null);
+                pv.getVaccine().setVaccineList1(null);
+            }
+            return new JsonPack<Patientvaccine>(pvList);
+        }
+        
+        @RequestMapping(value="getSuspendedVaccine")
+        public @ResponseBody JsonPack<Patientvaccine> getSuspendedVaccine(){
+            
+            List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE suspended="+1+" AND patient.idPatient="+patient.getIdPatient());
+            for(Patientvaccine pv:pvList){
+                pv.getVaccine().setVaccineList(null);
+                pv.getVaccine().setVaccineList1(null);
+            }
+            
+            return new JsonPack<Patientvaccine>(pvList);
+        }
+        
+        @RequestMapping(value="getAvaibleVaccine")
+        public @ResponseBody JsonPack<Vaccine> getAvaibleVaccine(){
+            List<Vaccine> vaccineList = vaccineService.getAllActiveVaccines();
+            List<Patientvaccine> pvList = pvService.getPatientVaccineByPatient(patient.getIdPatient());
+            List<Vaccine> remove = new ArrayList<Vaccine>();
+            
+            for(Patientvaccine pv: pvList){
+                remove.add(pv.getVaccine());
+            }
+            
+            vaccineList.removeAll(remove);
+            return new JsonPack<Vaccine>(vaccineList);
+        }
+        
+        @RequestMapping(value="deleteProgrammedVaccine")
+        public @ResponseBody void deleteProgrammedVaccine(int idVaccine){
+            
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
+            pvService.delete(pv);
+            
+            List<Appointmentvaccine> result = avService.getListOfItem("FROM Appointmentvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+idVaccine);
+            if(!result.isEmpty()){
+                Appointment ap = result.get(0).getAppointment();
+                ap.setIdStatus(apsService.getById(3));
+                appointmentService.updateItem(ap);
+            }
         }
         
         @RequestMapping(value="editProgrammedVaccine",method=RequestMethod.POST)
         public @ResponseBody String editPatientProgrammedVaccine(@RequestParam Map<String,String> params){
             
-            PatientvaccinePK id = new PatientvaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("pvvaccine")));
+            PatientvaccinePK id = new PatientvaccinePK(patient.getIdPatient(),Integer.parseInt(params.get("idVaccine")));
             Patientvaccine currentPV = pvService.getById(id);
-            
-            
+
             Patientvaccine pv = new Patientvaccine();
             pv.setPatientvaccinePK(id);
+            
             try{
                 Date applicationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("applicationDate"));
-                Date programmedDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("programedDate"));
-                Date expirationDate = (params.get("applicationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("expirationDate"));
+                Date programmedDate = (params.get("programedDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("programedDate"));
+                Date expirationDate = (params.get("expirationDate").isEmpty()) ? null : new SimpleDateFormat("dd/MM/yyyy").parse(params.get("expirationDate"));
                 pv.setApplicationDate(applicationDate);
                 pv.setProgramedDate(programmedDate);
                 pv.setBatch(params.get("batch"));
                 pv.setName(params.get("name"));
                 pv.setExpirationDate(expirationDate);
-                pv.setProgramManual((short)1);
-                if(params.get("suspended") != null){
-                    pv.setSuspended((short)1);
+                pv.setProgramManual(1);
+                if( params.get("suspended").compareToIgnoreCase("ture") != 0 ){
+                    pv.setSuspended(1);
                 }else{
                     pv.setSuspended(currentPV.getSuspended());
                 }
@@ -481,86 +698,23 @@ public class PatientsController {
             return "";
         }
 	
+        //Get neares appointment that has not been used or create a new appointment
         @RequestMapping(value="patientConsultation")
         public @ResponseBody String patientConsultation(int idPatient){
+            
             SimpleDateFormat stf = new SimpleDateFormat("kk:mm");
             Appointment appointment = new Appointment();
             //Create a default appointment
             try{
                 appointment = new Appointment(new Date(), stf.parse("09:00"), "Consulta",
                     "Programada pro el sistema", 0,0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1 , doctor,
-                        doctor, appointmentStatusService.getById(3),patientService.getById(idPatient));
+                        doctor, appointmentStatusService.getById(10),patientService.getById(idPatient));
             }catch(Exception e){ e.printStackTrace(); }
             appointmentService.create(appointment);
             
             return (appointment.getIdAppointment().toString());
         }
 
-        
-        /*
-         * This method renders the patient file, based on the patient. This is 
-         * mainly when the user is looking info of the patient only.
-         */
-        @RequestMapping(value="file/{idPatient}",method= RequestMethod.GET)
-        public String patientFile(Model model,@PathVariable int idPatient){
-            patient = patientService.getById( idPatient );
-            
-            Record record = recordService.getByPatientId( patient );
-            
-            Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
-            String[] age = calculateAge(patient.getBirthday()).split("-");
-            
-            model.addAttribute("birthday",formatDate(patient.getBirthday()));
-            model.addAttribute("father",getFather(patient.getPatientRelativeList()));
-            model.addAttribute("mother",getMother(patient.getPatientRelativeList()));
-            model.addAttribute("age",age);
-            model.addAttribute("date",getCurrentDate());
-            model.addAttribute("patient",patient);
-            model.addAttribute("record",record);
-            model.addAttribute("perBackNoPat",perBackNoPat);
-            model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
-            model.addAttribute("religionType", religionService.getAllReligions());
-            model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
-            model.addAttribute("jsFile","patientFile.js");
-            model.addAttribute("documentCategories",dcService.getAll("Documentcategory"));
-            
-            return("patients/PatientFile");
-        }
-        
-        
-        /*
-         * This method renders the patient file based on a appointment, this is done, so
-         * a appointment can be related to a consultation, even if a patient is new.
-         */
-        @RequestMapping(value="file/appointment/{idAppointment}",method= RequestMethod.GET)
-        public String patientFileBasedOnAppointment(Model model,@PathVariable int idAppointment){
-            Appointment appointment = appointmentService.getById(idAppointment);
-            patient = appointment.getIdPatient();
-            Record record = recordService.getByPatientId(patient);
-            Perbacknopat perBackNoPat = record.getIdPerBackNoPat();
-            String[] age = calculateAge(patient.getBirthday()).split("-");
-            List<Relative> sibilings = getSibilings(patient.getPatientRelativeList());
-            
-            model.addAttribute("birthday",formatDate(patient.getBirthday()));
-            model.addAttribute("father",getFather(patient.getPatientRelativeList()));
-            model.addAttribute("mother",getMother(patient.getPatientRelativeList()));
-            model.addAttribute("age",age);
-            model.addAttribute("date",getCurrentDate());
-            model.addAttribute("patient",patient);
-            model.addAttribute("record",record);
-            model.addAttribute("perBackNoPat",perBackNoPat);
-            model.addAttribute("sibilings",sibilings );
-            model.addAttribute("relationshipType",relationshipService.getAll("Relationship"));
-            model.addAttribute("religionType", religionService.getAllReligions());
-            model.addAttribute("birthMethods",birthMethodService.getAll("Birthmethod"));
-            model.addAttribute("jsFile","patientFileOnAppointment.js");
-            model.addAttribute("idAppointment",appointment.getIdAppointment());
-            
-            return("patients/PatientFile");
-        }
-        
-        
-        
         /*
          * Query methods
          * This section contains mainly methods that run querys on the database.
@@ -572,17 +726,11 @@ public class PatientsController {
         @RequestMapping(value="getPatientSibilings")
         public @ResponseBody JsonPack<Patient> getPatientSibilings(){
             
-            List<Patient> relatives = new ArrayList();
-            
-            /*for(PatientRelative r: patient.getPatientRelativeList())
-            {
-                if(r.getRelative().getIdPatient() != null){
-                    relatives.add(r.getRelative().getIdPatient());
-                }
-            }*/
-
-            return new JsonPack<Patient>(relatives);
-            
+            List<Patient> sibilings = new ArrayList<Patient>();
+            for(PatientRelative pr: prService.getSibilingsByPatient(patient.getIdPatient())){
+                sibilings.add(patientService.getById(pr.getPatientRelativePK().getIdPatient()));
+            }
+            return new JsonPack<Patient>(sibilings);   
         }
         
         /*
@@ -619,15 +767,17 @@ public class PatientsController {
          * This method sets a relationship between a patient and a relative.
          */
         @RequestMapping(value="addPatientFamilyRelative")
-	public @ResponseBody String addPatientFamilyRelative(@RequestParam(value="idPatient")int idPatient,
+	public @ResponseBody String addPatientFamilyRelative(//@RequestParam(value="idPatient")int idPatient,
                                                              @RequestParam(value="idRelative")int idRelative,
                                                              @RequestParam(value="idRelationship")int idRelationship)
 	{
 		PatientRelative patientRelative = new PatientRelative();
-                PatientRelativePK id = new PatientRelativePK(idPatient, idRelative);
+                //PatientRelativePK id = new PatientRelativePK(idPatient, idRelative);
+                PatientRelativePK id = new PatientRelativePK(patient.getIdPatient(), idRelative);
                 patientRelative.setPatientRelativePK(id);
                 patientRelative.setIdRelationship(relationshipService.getById(idRelationship));
-                patientRelative.setPatient(patientService.getById(idPatient));
+                //patientRelative.setPatient(patientService.getById(idPatient));
+                patientRelative.setPatient(patient);
                 patientRelative.setRelative(relativeService.getRelative(idRelative));
                 
 
@@ -721,25 +871,29 @@ public class PatientsController {
             return "";
         }
         
-        @RequestMapping(value="uploadFile",method=RequestMethod.POST)
+        //Section: Documents
+        @RequestMapping(value="uploadFile",method=RequestMethod.POST,produces = "application/json")
         public @ResponseBody String uploadFile(MultipartHttpServletRequest request){
             InputStream inputStream = null;
             OutputStream outputStream = null;
-            
-            
+                       
             Iterator<String> itr = request.getFileNames();
             MultipartFile file = request.getFile(itr.next());
             
             String fileName = file.getOriginalFilename();
-            System.out.println(fileName);
+            String filePath = "";
 
             try{
                 inputStream = file.getInputStream();
                 File newFolder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
-                newFolder.mkdir();
+                if(!newFolder.exists()){
+                    newFolder.mkdir();
+                }
                 File newFile = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient()+"/"+fileName);
                 if(!newFile.exists()){
                     newFile.createNewFile();
+                }else{
+                    return ("FAE"); //El archivo ya existe
                 }
                 outputStream = new FileOutputStream(newFile);
                 int read =0;
@@ -748,117 +902,489 @@ public class PatientsController {
                 while((read = inputStream.read(bytes)) != -1){
                     outputStream.write(bytes,0,read);
                 }
+                filePath = newFile.getAbsolutePath();
             } catch(IOException e){
                 e.printStackTrace();
             }
             
+            return (filePath);
+        }
+        
+        @RequestMapping(value="uploadFileAdditionalInfo",method=RequestMethod.POST,produces = "application/json")
+        public @ResponseBody String uploadFileAdditionalInfo(@RequestParam Map<String,String>params){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date uDate = new Date();
+            try{
+                uDate = sdf.parse(params.get("date"));
+            }catch(Exception e){  e.printStackTrace(); }
             
+            Documents document = new Documents(params.get("description"), params.get("notes"),
+                    params.get("path"), patient, dcService.getById( Integer.parseInt( params.get("category") ) ),
+                    uDate, new Date());
+            
+            documentService.create(document);
             return "";
+        }
+        
+        @RequestMapping(value="modifyFileAdditionalInfo",method=RequestMethod.POST)
+        public @ResponseBody void modifyFileAdditionalInfo(@RequestParam Map<String,String>params){
+            Documents document = documentService.getById(Integer.parseInt(params.get("idDocument")));
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date uDate = new Date();
+            try{
+                uDate = sdf.parse(params.get("date"));
+            }catch(Exception e){  e.printStackTrace(); }
+            
+            document.setDate(uDate);
+            document.setDescription( params.get("description") );
+            document.setNotes( params.get("notes") );
+            document.setIdDocumentCategory( dcService.getById( Integer.parseInt( params.get( "category" ) ) ) );
+            
+            documentService.updateItem(document);
+            
         }
 	
         @RequestMapping(value="getPatientDocument")
-        public @ResponseBody JsonPack<Documents> getDocuments(){
-
-            File folder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
-            if(!folder.exists()){
-                return new JsonPack<Documents>(null);
-            }
-            File[] listOfFiles = folder.listFiles();
-            List<Documents> documents = new ArrayList<Documents>();
-            
-            
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                   
-                    Documents doc = new Documents();
-                    //doc.setName(listOfFiles[i].getName());
-                    //doc.setDeleteBtn("<button type='button' class='btn btn-danger' onclick='deleteDocument(this);'>Eliminar</button>");
-                    documents.add(doc);
-                    
-                } else if (listOfFiles[i].isDirectory()) {
-                    System.out.println("Directory " + listOfFiles[i].getName());
-                }
-            }
-            
-            //JsonPack<Document> result = new JsonPack<Document>(documents);
-            
-            return new JsonPack<Documents>(null);
+        public @ResponseBody JsonPack<Documents> getDocuments(){             
+            return new JsonPack<Documents>(documentService.getDocumentByPatient(patient.getIdPatient()));
         }
         
         @RequestMapping(value="deletePatientDocument")
-        public @ResponseBody String delteDocument(@RequestParam(value="file")String file){
+        public @ResponseBody void deleteDocument(int idDocument){
+            Documents document = documentService.getById(idDocument);
+            
             try{
-                File fileDelete = new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+file);
+                File fileDelete = new File(document.getPath());
                 fileDelete.delete();
                 
             }catch(Exception e){
                 e.printStackTrace();
             }
-            return "";
+            documentService.delete(document);
         }
         
-        @RequestMapping(value="openPatientDocument")
-        public @ResponseBody String openDocument(@RequestParam(value="file")String file){
-            try{
-                if(Desktop.isDesktopSupported()){
-                    Desktop.getDesktop().open(new File("/Volumes/2nd_HDD/Documents/test/Files/paciente"+patient.getIdPatient()+"/"+file));
-                }
-            }catch (IOException ioe){
-                ioe.printStackTrace();
+        @RequestMapping(value = "openFile", method = RequestMethod.GET)
+        @ResponseBody void downloadFile(int idDocument,HttpServletRequest request, HttpServletResponse response) throws IOException{
+            ServletContext context = request.getSession().getServletContext();
+            
+            Documents document = documentService.getById(idDocument);
+            
+            File file = new File(document.getPath());
+            FileInputStream inputStream = new FileInputStream(file);
+            
+            String mimeType = context.getMimeType(document.getPath());
+            if (mimeType == null) {
+                // set to binary type if MIME mapping not found
+                mimeType = "application/octet-stream";
             }
             
-            return "";
+            response.setContentType(mimeType);
+            response.setContentLength((int) file.length());
+            
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"",file.getName());
+            response.setHeader(headerKey, headerValue);
+            
+            OutputStream outStream = response.getOutputStream();
+ 
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, bytesRead);
+            }
+ 
+            inputStream.close();
+            outStream.close();   
+        }
+        
+        //Section: Vaccine
+        @RequestMapping(value="suspendProgrammedVaccine")
+        public @ResponseBody void suspendProgrammedVaccine(@RequestParam Map<String,String> params){
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK( patient.getIdPatient(), Integer.parseInt( params.get( "idDocument" ) ) ) );
+            pv.setSuspended(1);
+            pv.setProgramManual(1);
+            pv.setSuspensionDate(new Date());
+            pv.setNotes(params.get("motive"));
+            pvService.updateItem(pv);
+            
+        }
+        
+        @RequestMapping(value="retriveProgrammedVaccine")
+        public @ResponseBody String retriveProgrammedVaccine(int idVaccine){
+            Patientvaccine pv = pvService.getById(new PatientvaccinePK(patient.getIdPatient(), idVaccine));
+            pv.setSuspended(2);
+            pv.setProgramManual(1);
+            pv.setSuspensionDate(null);
+            pvService.updateItem(pv);
+            return "success";
+        }
+        
+        
+        //This method generates automatically the appointments for the vaccine application and the chkbx are the options
+        @RequestMapping(value="programVaccines")
+        public @ResponseBody String programVaccines(boolean a,boolean b,boolean c,boolean d,boolean e,boolean f ){
+            /*options:
+             * a - No programar fechas en sabados
+             * b - No programar fechas en domingos
+             * c - No programar fechas en dias no habiles
+             * d - No modificar vacunas editadas y/o modificadas
+             * e - Suspender vacunas cuya fecha de aplicacion haya pasado
+             * f - No reprogramar citas de vacunas editadas y/o modificadas
+             */
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(patient.getBirthday());
+            Date currentDate = new Date();
+            List<Vaccine> vaccines = vaccineService.getAllActiveVaccines();
+            List<Holyday> holydays = holydayService.getAll("");
+              
+            for(Vaccine vaccine: vaccines){
+                if(vaccine.getActive() ==1){
+                    cal.setTime(patient.getBirthday());
+
+                    //Add the date of the vaccine apply date
+                    cal.add(Calendar.DAY_OF_MONTH, vaccine.getDayApply());
+                    cal.add(Calendar.MONTH, vaccine.getMonthApply());
+                    cal.add(Calendar.YEAR, vaccine.getYearApply());
+
+                    //If the appointment is sunday move it to monday and the option is true
+                    if(cal.get(Calendar.DAY_OF_WEEK) == 1 && a){ 
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+
+                    //If the appointment is saturday move it to monday and the option is true
+                    if(cal.get(Calendar.DAY_OF_WEEK) == 7 && b){
+                        cal.add(Calendar.DAY_OF_MONTH,2);
+                    }
+
+                    //If appointment is on a holyday, move to the next avaible day
+                    if(c){
+                        boolean checkedHolydays = false; 
+                        do{
+                            for(Holyday holyday: holydays){
+                                checkedHolydays = true;
+                                if( (cal.get(Calendar.MONTH)+1) == holyday.getMont() && cal.get(Calendar.DAY_OF_MONTH) == holyday.getDay()){
+                                    cal.add(Calendar.DAY_OF_MONTH, 1);
+
+                                    //Check if didnt land on saturday or sunday    
+                                    if(cal.get(Calendar.DAY_OF_WEEK) == 1){ 
+                                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                                    }else if(cal.get(Calendar.DAY_OF_WEEK) == 7){
+                                        cal.add(Calendar.DAY_OF_MONTH,2);
+                                    }
+                                    checkedHolydays = false;
+                                    break;
+                                }
+                            }
+                        }while(!checkedHolydays);
+                    }
+
+                    //Check if there are previous appointments or programmed vaccines
+                    List<Patientvaccine> pvList = pvService.getListOfItem("FROM Patientvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
+                    List<Appointmentvaccine> appointments = avService.getListOfItem("FROM Appointmentvaccine WHERE idPatient="+patient.getIdPatient()+" AND idVaccine="+vaccine.getIdVaccine());
+
+                    if(pvList.isEmpty()){
+                        if(appointments.isEmpty()){
+                            //If there are no previous inmunization appopintments or programmed vaccines
+                            //Create new Programmed Vaccines
+                            Patientvaccine newPV = new Patientvaccine();
+                            PatientvaccinePK newPVPK = new PatientvaccinePK();
+                            newPV.setProgramedDate(cal.getTime());
+                            newPV.setProgramManual((short)0);
+
+                            //Check if the vaccine must be suspended
+                            if(cal.getTime().compareTo(currentDate) <= 0){
+                                if(e){
+                                    newPV.setSuspended(1);
+                                    newPV.setSuspensionDate(currentDate);
+                                    newPV.setNotes("Suspendida por el sistema");
+                                }else{
+                                    newPV.setSuspended(2);
+                                }
+
+                                //If the vaccine has been suspended , dont program an appointment
+                            }else{
+                                newPV.setSuspended(0);
+                                //Program a new appointment for each vaccine
+                                Appointment newAppointment = new Appointment();
+
+                                try{
+                                    newAppointment.setDate(cal.getTime());
+                                    newAppointment.setStartTime(timeFormat.parse("09:00:00"));
+                                    newAppointment.setIdPatient(patient);
+                                    newAppointment.setMotive(vaccine.getVaccine());
+                                    newAppointment.setIdStatus(apsService.getById(2));
+                                    newAppointment.setRegisteredBy(doctor);
+                                    newAppointment.setIdDoctor(doctor);
+                                    newAppointment.setImmunization(1);
+                                    newAppointment.setProgrammedBySystem(1);
+                                }catch(ParseException p){
+                                    p.printStackTrace();
+                                }
+                                //Register the appointment
+                                appointmentService.create(newAppointment);
+                                AppointmentvaccinePK apvPK = new AppointmentvaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
+                                Appointmentvaccine newAV = new Appointmentvaccine(apvPK);
+                                avService.create(newAV);
+
+                            }
+                            //Register the programmed vaccine
+                            newPVPK.setIdPatient(patient.getIdPatient());
+                            newPVPK.setIdVaccine(vaccine.getIdVaccine());
+                            newPV.setPatientvaccinePK(newPVPK);
+                            pvService.create(newPV);
+                        }else{ // End (pv,empty),(av,empty)
+
+                            //If there are appointments but no programmed vaccines
+                            //Update appointments and create programmed vaccines
+                            Patientvaccine newPV = new Patientvaccine();
+                            PatientvaccinePK newPVPK = new PatientvaccinePK();
+                            newPV.setProgramedDate(cal.getTime());
+                            newPV.setProgramManual((short)0);
+
+                            //Check if the vaccine must be suspended
+                            if(cal.getTime().compareTo(currentDate) <= 0){
+                                if(e){
+                                    newPV.setSuspended((short)1);
+                                    newPV.setSuspensionDate(currentDate);
+                                    newPV.setNotes("Suspendida por el sistema");
+                                }else{
+                                    newPV.setSuspended((short)2);
+                                }
+
+                                //If the vaccine has been suspended , dont program an appointment
+                                //Cancel the previous appointment if not programmed by user
+                                if(f){
+                                    if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
+                                        Appointment currentAppointment = appointments.get(0).getAppointment();
+                                        currentAppointment.setNotes("Cancelada por el sistema");
+                                        currentAppointment.setIdStatus(apsService.getById(3));
+                                        appointmentService.updateItem(currentAppointment);
+                                    }
+                                }else{
+                                    Appointment currentAppointment = appointments.get(0).getAppointment();
+                                    currentAppointment.setNotes("Cancelada por el sistema");
+                                    currentAppointment.setIdStatus(apsService.getById(3));
+                                    appointmentService.updateItem(currentAppointment);
+                                }
+
+                            }else{
+                                newPV.setSuspended((short)0);
+
+                                //if theres a previous appointment update it, if hasnt been modified or added by a user.
+                                if(f){
+                                    if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
+                                        Appointment currentAppointment = appointments.get(0).getAppointment();
+                                        currentAppointment.setDate(cal.getTime());
+                                        currentAppointment.setIdStatus(apsService.getById(2));
+                                        appointmentService.updateItem(currentAppointment);
+                                    }
+                                }else{
+                                    Appointment currentAppointment = appointments.get(0).getAppointment();
+                                    currentAppointment.setDate(cal.getTime());
+                                    currentAppointment.setIdStatus(apsService.getById(2));
+                                    appointmentService.updateItem(currentAppointment);
+                                }
+                            }
+                            newPVPK.setIdPatient(patient.getIdPatient());
+                            newPVPK.setIdVaccine(vaccine.getIdVaccine());
+                            newPV.setPatientvaccinePK(newPVPK);
+                            pvService.create(newPV);
+                        }
+                    }else{ // End (pv,empty),(av,not empty)
+                        //If there are previous programmed vaccines 
+
+                        if(appointments.isEmpty()){
+                            //if there are programmed vaccine but no appointments
+                            //Update the programmed vaccine
+                            //if the programmed vaccine has been edited or modified by a user, dont modify
+
+                            if(pvList.get(0).getProgramManual() != 1 || !d){
+                                Patientvaccine currentPv = pvList.get(0);
+                                currentPv.setProgramedDate(cal.getTime());
+                                if(cal.getTime().compareTo(currentDate) <= 0){
+                                    if(e){
+                                        currentPv.setSuspended((short)1);
+                                        currentPv.setSuspensionDate(currentDate);
+                                        currentPv.setNotes("Suspendida por el sistema");
+                                    }else{
+                                        currentPv.setSuspended((short)2);
+                                        currentPv.setSuspensionDate(null);
+                                        currentPv.setNotes("");
+                                    }
+
+                                }else{
+                                    currentPv.setSuspended((short)0);
+                                    currentPv.setSuspensionDate(null);
+                                    currentPv.setNotes("");
+                                    //Program a new appointment
+                                    Appointment newAppointment = new Appointment();
+
+                                    try{
+                                        newAppointment.setDate(cal.getTime());
+                                        newAppointment.setStartTime(timeFormat.parse("09:00:00"));
+                                        newAppointment.setIdPatient(patient);
+                                        newAppointment.setMotive(vaccine.getVaccine());
+                                        newAppointment.setIdStatus(apsService.getById(2));
+                                        newAppointment.setRegisteredBy(doctor);
+                                        newAppointment.setIdDoctor(doctor);
+                                        newAppointment.setImmunization(1);
+                                        newAppointment.setProgrammedBySystem((short)1);
+                                    }catch(ParseException p){
+                                        p.printStackTrace();
+                                    }
+                                    //Register the appointment
+                                    appointmentService.create(newAppointment);
+                                    AppointmentvaccinePK apvPK = new AppointmentvaccinePK(newAppointment.getIdAppointment(), vaccine.getIdVaccine(), patient.getIdPatient());
+                                    Appointmentvaccine newAV = new Appointmentvaccine(apvPK);
+                                    avService.create(newAV);
+
+                                }
+
+                                pvService.updateItem(currentPv);
+
+                            } 
+                        }else{
+                            //if there are previous programmed vaccine and previous appointment
+                            //update both
+                            if(pvList.get(0).getProgramManual() != 1 || !d){
+                                Patientvaccine currentPv = pvList.get(0);
+                                currentPv.setProgramedDate(cal.getTime());
+                                if(cal.getTime().compareTo(currentDate) <= 0){
+                                    if(e){
+                                        currentPv.setSuspended((short)1);
+                                        currentPv.setSuspensionDate(currentDate);
+                                        currentPv.setNotes("Suspendida por el sistema");
+                                    }else{
+                                        currentPv.setSuspended((short)2);
+                                        currentPv.setSuspensionDate(null);
+                                        currentPv.setNotes("");
+                                    }
+
+                                    if(f){
+                                        //If the appointment was not programmed by a user , cancel it
+                                        if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
+                                            Appointment currentAppointment = appointments.get(0).getAppointment();
+                                            currentAppointment.setNotes("Cancelada por el sistema");
+                                            currentAppointment.setIdStatus(apsService.getById(3));
+                                            appointmentService.updateItem(currentAppointment);
+                                        }
+                                    }else{
+                                        Appointment currentAppointment = appointments.get(0).getAppointment();
+                                        currentAppointment.setNotes("Cancelada por el sistema");
+                                        currentAppointment.setIdStatus(apsService.getById(3));
+                                        appointmentService.updateItem(currentAppointment);
+                                    }
+
+                                }else{
+                                    currentPv.setSuspended((short)0);
+                                    currentPv.setSuspensionDate(null);
+                                    currentPv.setNotes("");
+                                    if(f){
+                                        //Update appointment
+                                        if(appointments.get(0).getAppointment().getProgrammedBySystem() == 1){
+                                            Appointment currentAppointment = appointments.get(0).getAppointment();
+                                            currentAppointment.setDate(cal.getTime());
+                                            currentAppointment.setIdStatus(apsService.getById(2));
+                                            appointmentService.updateItem(currentAppointment);
+                                        }
+                                    }else{
+                                        Appointment currentAppointment = appointments.get(0).getAppointment();
+                                        currentAppointment.setDate(cal.getTime());
+                                        currentAppointment.setIdStatus(apsService.getById(2));
+                                        appointmentService.updateItem(currentAppointment);
+                                    }
+
+                                }
+                                pvService.updateItem(currentPv);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return "ProgramVaccinesFinished";
+        }
+        
+        @RequestMapping(value="addProgrammedVaccine")
+        public @ResponseBody void addProgrammedVaccine(int idVaccine){
+            Vaccine vaccine = vaccineService.getById(idVaccine);
+            Patientvaccine patientVaccine = new Patientvaccine(patient.getIdPatient(), idVaccine);
+            patientVaccine.setPatient(patient);
+            patientVaccine.setVaccine(vaccine);
+            patientVaccine.setProgramManual((short)1);
+            //Add the date of the vaccine apply date
+            Calendar cal = Calendar.getInstance();
+            Date currentDay = new Date();
+            cal.setTime(patient.getBirthday());
+            cal.add(Calendar.DAY_OF_MONTH, vaccine.getDayApply());
+            cal.add(Calendar.MONTH, vaccine.getMonthApply());
+            cal.add(Calendar.YEAR, vaccine.getYearApply());
+            patientVaccine.setProgramedDate(cal.getTime());
+            
+            //Check if the vaccine must be suspended
+            if(cal.getTime().compareTo(currentDay) <= 0){
+                patientVaccine.setSuspended((short)2);
+                patientVaccine.setSuspensionDate(currentDay);
+                patientVaccine.setNotes("Vencida cuando se programo");
+            }
+           
+            pvService.create(patientVaccine);
         }
         
         //Laboratory Tests
         
+        @RequestMapping(value="getLaboratoryTests")
+        public @ResponseBody JsonPack<Laboratorytest> getAllLaboratoryTest(){
+            return new JsonPack<Laboratorytest> (labService.getAllActiveItems());
+        
+        }
+        
         @RequestMapping(value="getLaboratoryTestsPatientData")
         public @ResponseBody JsonPack<Laboratorytestresult> getLaboratoryTestByPatient(){
             
-            String query = "FROM LaboratoryTestResult l where l.idPatient="+patient.getIdPatient();
+            String query = "FROM Laboratorytestresult l where l.idPatient="+patient.getIdPatient();
             List<Laboratorytestresult> ret = labResService.getListOfItem(query);
             
             return new JsonPack<Laboratorytestresult>(ret);
         }
         
         @RequestMapping(value="saveLaboratoryTestResult")
-        public @ResponseBody String saveLaboratoryTestResult(String date,int idLaboratoryTest,String testResult){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        public @ResponseBody void saveLaboratoryTestResult(String date,int idLaboratoryTest,String result){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date fDate = new Date();
             try{
-                Date fDate = sdf.parse(date);
-                Laboratorytest lab = labService.getById(idLaboratoryTest);
-                System.out.println(fDate);
-                Laboratorytestresult labRes = new Laboratorytestresult(testResult, fDate, patient, lab);
-                labResService.create(labRes);
-                
-            }catch (Exception e){ e.printStackTrace();}
+                sdf.parse(date);   
+            }catch (Exception e){ e.printStackTrace();
+            }
+            Laboratorytest lab = labService.getById(idLaboratoryTest);
+            Laboratorytestresult labRes = new Laboratorytestresult(result, fDate, patient, lab);
+            labResService.create(labRes);
 
-            return "Se ha guardado la informacion correctamente";
         }
         
         @RequestMapping(value="editLaboratoryTestResult")
-        public @ResponseBody String editLaboratoryTestResult(int idLaboratoryTestResult,String date,int idLaboratoryTest,String result){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        public @ResponseBody void editLaboratoryTestResult(int idLaboratoryTestResult,String date,String result){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+            Date fDate = new Date();
             try{
-                Date fDate = sdf.parse(date);
-                Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
-                labRes.setDate(fDate);
-                labRes.setIdLaboratoryTest(labService.getById(idLaboratoryTest));
-                labRes.setResult(result);
-                
-                labResService.updateItem(labRes);
-                
+                sdf.parse(date);
             }catch (Exception e){ e.printStackTrace();}
+            Laboratorytestresult labRes = labResService.getById(idLaboratoryTestResult);
+            labRes.setDate(fDate);
+            labRes.setResult(result);
 
-            return "Se ha guardado la informacion correctamente";
+            labResService.updateItem(labRes);
         }
         
         @RequestMapping(value="deleteLaboratoryTestResult")
-        public @ResponseBody String delteLaboratoryTestResult(int idResult){
+        public @ResponseBody void delteLaboratoryTestResult(int idResult){
             Laboratorytestresult labRes = labResService.getById(idResult);
             labResService.delete(labRes);
             
-            return "Se ha borrado la informacion correctamente";
         }
         
         @RequestMapping(value="previousConsultation")
@@ -866,6 +1392,96 @@ public class PatientsController {
             
             return new JsonPack<Consultation>(consultationService.getListOfItem("FROM Consultation c where idPatient="+patient.getIdPatient()));
 
+        }
+        
+        @RequestMapping(value="saveNewConsultation")
+        public @ResponseBody void saveNewConsultation(@RequestParam Map<String,String> params){
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat timeFormat = new SimpleDateFormat("H:mm");
+            Date date = new Date();
+            Date time = new Date();
+            try{
+                date = format.parse(params.get("date"));
+                time = timeFormat.parse("09:00");
+            }catch(Exception e){ e.printStackTrace(); }
+
+            Appointment appointment = new Appointment(date, time, params.get("motive"), "", 0,
+                    params.get("weight").isEmpty()? 0:Double.parseDouble(params.get("weight")),
+                    params.get("temperature").isEmpty()? 0:Double.parseDouble(params.get("temperature")),
+                    params.get("size").isEmpty()? 0:Double.parseDouble(params.get("size")),
+                    params.get("ta").isEmpty()? 0:Double.parseDouble(params.get("ta")),
+                    params.get("ta2").isEmpty()? 0:Double.parseDouble(params.get("ta2")),
+                    params.get("taaverage").isEmpty()? 0:Double.parseDouble(params.get("taaverage")),
+                    params.get("pc").isEmpty()? 0:Double.parseDouble(params.get("pc")), 0,
+                    doctor, doctor, appointmentStatusService.getById(1), patient);
+            appointmentService.create(appointment);
+            
+            Consultation consultation = new Consultation(
+                    params.get("weight").isEmpty()? 0:Double.parseDouble(params.get("weight")),
+                    params.get("size").isEmpty()? 0:Double.parseDouble(params.get("size")),
+                    params.get("bmi").isEmpty()? 0:Double.parseDouble(params.get("bmi")),
+                    params.get("temperature").isEmpty()? 0:Double.parseDouble(params.get("temperature")),
+                    params.get("pc").isEmpty()? 0:Double.parseDouble(params.get("pc")),
+                    params.get("ta").isEmpty()? 0:Double.parseDouble(params.get("ta")),
+                    params.get("ta2").isEmpty()? 0:Double.parseDouble(params.get("ta2")),
+                    params.get("taaverage").isEmpty()? 0:Double.parseDouble(params.get("taaverage")),
+                    params.get("peea"), params.get("ef"), params.get("prescription"), doctor.getIdStaffMember().getPresciptionNumber(),
+                    ctService.getById(Integer.parseInt(params.get("type"))), params.get("abstract"), patient, doctor, appointment);
+            consultationService.create(consultation);
+            
+            //update prescription numbers
+            Staffmember staff = doctor.getIdStaffMember();
+            int pn = staff.getPresciptionNumber()+1;
+            staff.setPresciptionNumber(pn);
+            staffService.updateItem(staff);
+            
+            Consultationmotive cm = cmService.getMotiveByName(params.get("motive"));
+            if(cm != null){
+                cm.setLastUsed(new Date());
+                cmService.updateItem(cm);
+            }
+            
+        }
+        
+        @RequestMapping(value="saveModifyConsultation")
+        public @ResponseBody void saveModifyConsultation(@RequestParam Map<String,String> params){
+            Consultation consultation = consultationService.getById(Integer.parseInt(params.get("idConsultation")));
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            try{
+                date = format.parse(params.get("date"));
+            }catch(Exception e){ e.printStackTrace(); }
+            Appointment appointment = consultation.getIdAppointment();
+            appointment.setDate(date);
+            appointment.setWeight(params.get("weight").isEmpty()? 0:Double.parseDouble(params.get("weight")));
+            appointment.setSize(params.get("size").isEmpty()? 0:Double.parseDouble(params.get("size")));
+            appointment.setPc(params.get("pc").isEmpty()? 0:Double.parseDouble(params.get("pc")));
+            appointment.setTa(params.get("ta").isEmpty()? 0:Double.parseDouble(params.get("ta")));
+            appointment.setTa2(params.get("ta2").isEmpty()? 0:Double.parseDouble(params.get("ta2")));
+            appointment.setTaAverage(params.get("taaverage").isEmpty()? 0:Double.parseDouble(params.get("taaverage")));
+            appointment.setMotive(params.get("motive"));
+            appointmentService.updateItem(appointment);
+            
+            consultation.setWeigth(params.get("weight").isEmpty()? 0:Double.parseDouble(params.get("weight")));
+            consultation.setSize(params.get("size").isEmpty()? 0:Double.parseDouble(params.get("size")));
+            consultation.setBmi(params.get("bmi").isEmpty()? 0:Double.parseDouble(params.get("bmi")));
+            consultation.setPc(params.get("pc").isEmpty()? 0:Double.parseDouble(params.get("pc")));
+            consultation.setTa(params.get("ta").isEmpty()? 0:Double.parseDouble(params.get("ta")));
+            consultation.setTa2(params.get("ta2").isEmpty()? 0:Double.parseDouble(params.get("ta2")));
+            consultation.setTaAverage(params.get("taaverage").isEmpty()? 0:Double.parseDouble(params.get("taaverage")));
+            consultation.setPeea(params.get("peea"));
+            consultation.setEf(params.get("ef"));
+            consultation.setPrescription(params.get("prescription"));
+            consultation.setType(ctService.getById(Integer.parseInt(params.get("type"))));
+            consultation.setAbstract1(params.get("abstract"));
+            consultationService.updateItem(consultation);
+            
+            Consultationmotive cm = cmService.getMotiveByName(params.get("motive"));
+            if(cm != null){
+                cm.setLastUsed(new Date());
+                cmService.updateItem(cm);
+            }
+            
         }
         
         /*

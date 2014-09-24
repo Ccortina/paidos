@@ -91,11 +91,14 @@ function initializeAdditionalInfoTable(){
         "ordering":false,
         "scrollY": "300px",
         "scrollCollapse": true,
-        "paging": false,
-        "info":false,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar"
+            "search": "Buscar",
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+            "paginate": {
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
         },
         "ajax":{
             "url":"/demo/catalogs/getActivityRelatedInfo",
@@ -104,11 +107,24 @@ function initializeAdditionalInfoTable(){
             }
         },
         "columns":[
-            {"data":"date"},
-            {"data":"startTime"},
-            {"data":"idPatient.fatherLastName"},
-            {"data":"idPatient.motherLastName"},
-            {"data":"idPatient.firstName"}
+            {"render":function(data,fow,full){
+                    if(full["0"].idAppointment === null){
+                        return "No definido";
+                    }else{
+                        return full["0"].idAppointment.date;
+                    }
+            }},
+            {"render":function(data,fow,full){
+                    if(full["0"].idAppointment === null){
+                        return "No definido";
+                    }else{
+                        return full["0"].idAppointment.startTime;
+                    }
+            }},
+            {"data":"0.idPatient.fatherLastName"},
+            {"data":"0.idPatient.motherLastName"},
+            {"data":"0.idPatient.firstName"},
+            {"data":"1.activity.activity"}
         ]
     });
 }

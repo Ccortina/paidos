@@ -82,6 +82,15 @@ public class Activity implements Serializable {
         this.active = active;
     }
 
+    public Activity(Integer idActivity, String activity, double activityCost, int consultationDefault, int active, Activitytype idActivityType) {
+        this.idActivity = idActivity;
+        this.activity = activity;
+        this.activityCost = activityCost;
+        this.consultationDefault = consultationDefault;
+        this.active = active;
+        this.idActivityType = idActivityType;
+    }
+
     public Activity(String activity, double activityCost, int consultationDefault, int active, Vaccine idVaccine, Activitytype idActivityType) {
         this.activity = activity;
         this.activityCost = activityCost;

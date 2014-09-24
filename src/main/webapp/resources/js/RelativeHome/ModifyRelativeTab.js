@@ -14,8 +14,19 @@ function modifyRelative(){
         $("#formModifyRelative :input").each(function(){
             if(this.name === 'religion'){
                 $("option",$("#inputModifyRelativeReligionApp")).each(function(){
-                   if(this.value == data['religion']['id']){this.selected=true;}
+                   var check = parseInt(this.value) === data['religion']['idReligion'];
+                   console.log(check);
+                   if( check ){
+                       console.log("value of check:"+check);
+                       $(this).attr('selected','selected');
+                   }
                 });
+            }if( this.name === 'active' ){
+                if(data["active"] == 1 ){
+                    $("#inputModifyRelativeActive").prop('checked',true);
+                }else{
+                    $("#inputModifyRelativeActive").prop('checked',false);
+                }
             }else{
                 $(this).val(data[this.name]);
             }
@@ -64,7 +75,11 @@ function saveModifyRelative(){
     
     //Collect form data
     inputs.each(function() {
-        data.push({name:this.name,value:$(this).val()});  
+        if( this.name === "active" ){
+            data.push({name:this.name,value:$(this).prop('checked')});  
+        }else{
+            data.push({name:this.name,value:$(this).val()});  
+        }
     });
 
     //Send to controller
@@ -75,6 +90,8 @@ function saveModifyRelative(){
         success:function(response){
             //Reload the patient table
             $("#tblRelative").DataTable().ajax.reload();
+            $('#relativesTabMenu a[href="#tabMain"]').tab('show');
+            displaySuccessAlert("Operacion exitosa");
         },
         error: function(data, status, error) {
             displayDangerAlert("error");

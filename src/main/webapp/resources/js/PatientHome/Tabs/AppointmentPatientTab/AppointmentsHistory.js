@@ -55,9 +55,11 @@ function initializeAppointmentHistoryTable(){
             switch(data.idStatus.status){
                 case 'Completa':
                     $(row).css({'background-color':'#5BAA3A'});
+                    $(row).addClass("vpNormal");
                     break;
                 case 'Cancelada':
                     $(row).css({'background-color':'#E04747'});
+                    $(row).addClass("vpExpired");
                     break;    
             }
         },

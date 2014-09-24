@@ -37,8 +37,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "drug")
 @NamedQueries({
     @NamedQuery(name = "Drug.findAll", query = "SELECT d FROM Drug d")})
-public class Drug implements Serializable {
-    
+public class Drug implements Serializable { 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,12 +88,24 @@ public class Drug implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Incompatibledrugs> incompatibledrugsList;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "patientdrugalergic", joinColumns = {
         @JoinColumn(name = "idDrug", referencedColumnName = "idDrug")}, inverseJoinColumns = {
         @JoinColumn(name = "idPatient", referencedColumnName = "idPatient")})
     @ManyToMany
     @JsonIgnore
     private List<Patient> patientList;
+    @Column(name = "tempClaveMedicamento")
+    private Integer tempClaveMedicamento;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drugId")
+    private List<Commercialname> commercialnameList;    //Incompatible commercialNames
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug")
+    private List<Drugrisk> drugriskList;    //Drug that present some risk
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drug1")
+    private List<Drugrisk> drugriskList1; //Drug that present some risk
 
     public Drug() {
     }
@@ -112,6 +123,15 @@ public class Drug implements Serializable {
     public Drug(Integer idDrug, int active) {
         this.idDrug = idDrug;
         this.active = active;
+    }
+
+    public Drug(Integer idDrug, String drug, Double concentration, Drugpresentation drugPresentationId, Dosecalculationcriteria doseCalculationCriteriaId, Administrationunit administrationUnitId) {
+        this.idDrug = idDrug;
+        this.drug = drug;
+        this.concentration = concentration;
+        this.drugPresentationId = drugPresentationId;
+        this.doseCalculationCriteriaId = doseCalculationCriteriaId;
+        this.administrationUnitId = administrationUnitId;
     }
 
     public Drug(Integer idDrug, String drug, Double concentration, Integer treatmentDays, String applicationSchedule, Integer dailyFrequency, String notes, int active, Drugpresentation drugPresentationId, Dosecalculationcriteria doseCalculationCriteriaId, Applicationmethod applicationMethodId, Administrationunit administrationUnitId) {
@@ -280,6 +300,38 @@ public class Drug implements Serializable {
 
     public void setTreatmentList(List<Treatment> treatmentList) {
         this.treatmentList = treatmentList;
+    }
+
+    public Integer getTempClaveMedicamento() {
+        return tempClaveMedicamento;
+    }
+
+    public void setTempClaveMedicamento(Integer tempClaveMedicamento) {
+        this.tempClaveMedicamento = tempClaveMedicamento;
+    }
+
+    public List<Commercialname> getCommercialnameList() {
+        return commercialnameList;
+    }
+
+    public void setCommercialnameList(List<Commercialname> commercialnameList) {
+        this.commercialnameList = commercialnameList;
+    }
+
+    public List<Drugrisk> getDrugriskList() {
+        return drugriskList;
+    }
+
+    public void setDrugriskList(List<Drugrisk> drugriskList) {
+        this.drugriskList = drugriskList;
+    }
+
+    public List<Drugrisk> getDrugriskList1() {
+        return drugriskList1;
+    }
+
+    public void setDrugriskList1(List<Drugrisk> drugriskList1) {
+        this.drugriskList1 = drugriskList1;
     }
     
 }

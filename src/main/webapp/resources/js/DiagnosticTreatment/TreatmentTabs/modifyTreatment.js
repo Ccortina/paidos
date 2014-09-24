@@ -211,6 +211,7 @@ function saveModifyTreatment(){
         data:data,
         success:function(response,textStatus,jqXHR){
             displaySuccessAlert("Se ha modificado el tratamiento correctamente");
+            $("#tblTreatment").DataTable().ajax.reload();
             $("#tblAsociatedDiagnostic2").DataTable().clear().draw();
             $("#tblAsociatedDrug2").DataTable().clear().draw();
             $("#formModifyTreatment").data('bootstrapValidator').resetForm();

@@ -89,6 +89,11 @@ public class VaccineServiceImp implements VaccineService{
         return vaccineDao.getAllActiveVaccines();
     }
 
+    @Override
+    public List<Vaccine> getAvaibleVaccinesForPatient(int idPatient) {
+        return vaccineDao.getAvaibleVaccinesForPatient(idPatient);
+    }
+
   
     
 }

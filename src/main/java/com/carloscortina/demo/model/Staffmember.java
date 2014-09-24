@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,26 +23,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
- * @author Ccortina_Mac
+ * @author Carlos Cortina
  */
 @Entity
 @Table(name = "staffmember")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Staffmember.findAll", query = "SELECT s FROM Staffmember s"),
-    @NamedQuery(name = "Staffmember.findByIdStaffMember", query = "SELECT s FROM Staffmember s WHERE s.idStaffMember = :idStaffMember"),
-    @NamedQuery(name = "Staffmember.findByName", query = "SELECT s FROM Staffmember s WHERE s.name = :name"),
-    @NamedQuery(name = "Staffmember.findByLastName", query = "SELECT s FROM Staffmember s WHERE s.lastName = :lastName"),
-    @NamedQuery(name = "Staffmember.findByPhone", query = "SELECT s FROM Staffmember s WHERE s.phone = :phone"),
-    @NamedQuery(name = "Staffmember.findByCellPhone", query = "SELECT s FROM Staffmember s WHERE s.cellPhone = :cellPhone"),
-    @NamedQuery(name = "Staffmember.findByProfessionalNumber", query = "SELECT s FROM Staffmember s WHERE s.professionalNumber = :professionalNumber"),
-    @NamedQuery(name = "Staffmember.findByAddedDate", query = "SELECT s FROM Staffmember s WHERE s.addedDate = :addedDate"),
-    @NamedQuery(name = "Staffmember.findByPresciptionNumber", query = "SELECT s FROM Staffmember s WHERE s.presciptionNumber = :presciptionNumber")})
+    @NamedQuery(name = "Staffmember.findAll", query = "SELECT s FROM Staffmember s")})
 public class Staffmember implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,27 +42,34 @@ public class Staffmember implements Serializable {
     @Column(name = "idStaffMember")
     private Integer idStaffMember;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "Name")
     private String name;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "LastName")
     private String lastName;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 45)
     @Column(name = "Phone")
     private String phone;
+    @Size(max = 45)
     @Column(name = "CellPhone")
     private String cellPhone;
+    @Size(max = 45)
     @Column(name = "ProfessionalNumber")
     private String professionalNumber;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "AddedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedDate;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "presciptionNumber")
     private int presciptionNumber;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
-    private List<Consultation> consultationList;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
     private List<Patient> patientList;
@@ -156,16 +156,6 @@ public class Staffmember implements Serializable {
         this.presciptionNumber = presciptionNumber;
     }
 
-    @XmlTransient
-    public List<Consultation> getConsultationList() {
-        return consultationList;
-    }
-
-    public void setConsultationList(List<Consultation> consultationList) {
-        this.consultationList = consultationList;
-    }
-
-    @XmlTransient
     public List<Patient> getPatientList() {
         return patientList;
     }
@@ -174,7 +164,6 @@ public class Staffmember implements Serializable {
         this.patientList = patientList;
     }
 
-    @XmlTransient
     public List<User> getUserList() {
         return userList;
     }
@@ -205,7 +194,7 @@ public class Staffmember implements Serializable {
 
     @Override
     public String toString() {
-        return "pruebas1.Staffmember[ idStaffMember=" + idStaffMember + " ]";
+        return "com.carloscortina.demo.model.Staffmember[ idStaffMember=" + idStaffMember + " ]";
     }
     
 }

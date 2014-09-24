@@ -16,5 +16,7 @@ public interface PatientVaccineDao extends GenericDao<Patientvaccine>{
 
     public Patientvaccine getById(PatientvaccinePK id);
     public List<Patientvaccine> getPatientVaccineByVaccine(int idVaccine);
+    public List<Patientvaccine> getPatientVaccineByPatient(int idPatient);
+    public List<Patientvaccine> getPatientVaccineSystemProgrammedByPatient(int idPatient);
     public List<Patientvaccine> getAllPV();
 }
