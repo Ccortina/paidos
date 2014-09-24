@@ -37,7 +37,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @NamedQueries({
     @NamedQuery(name = "Consultation.findAll", query = "SELECT c FROM Consultation c")})
 public class Consultation implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,6 +104,9 @@ public class Consultation implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
     private List<Consultationmeasure> consultationmeasureList;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idConsultation")
+    private List<Consultationcostabstract> consultationcostabstractList;
 
     public Consultation() {
     }
@@ -373,6 +376,14 @@ public class Consultation implements Serializable {
 
     public void setBmi(Double bmi) {
         this.bmi = bmi;
+    }
+
+    public List<Consultationcostabstract> getConsultationcostabstractList() {
+        return consultationcostabstractList;
+    }
+
+    public void setConsultationcostabstractList(List<Consultationcostabstract> consultationcostabstractList) {
+        this.consultationcostabstractList = consultationcostabstractList;
     }
     
 }

@@ -39,6 +39,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @NamedQueries({
     @NamedQuery(name = "Relative.findAll", query = "SELECT r FROM Relative r")})
 public class Relative implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -131,6 +132,11 @@ public class Relative implements Serializable {
     @JoinColumn(name = "Religion", referencedColumnName = "idReligion")
     @ManyToOne(optional = false)
     private Religion religion;
+    @Column(name = "tempClaveFamiliar")
+    private Integer tempClaveFamiliar;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idRelative")
+    private List<Consultationpaymentreceipt> consultationpaymentreceiptList;
 
     public Relative() {
     }
@@ -398,6 +404,22 @@ public class Relative implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Relative[ idRelative=" + idRelative + " ]";
+    }
+
+    public Integer getTempClaveFamiliar() {
+        return tempClaveFamiliar;
+    }
+
+    public void setTempClaveFamiliar(Integer tempClaveFamiliar) {
+        this.tempClaveFamiliar = tempClaveFamiliar;
+    }
+
+    public List<Consultationpaymentreceipt> getConsultationpaymentreceiptList() {
+        return consultationpaymentreceiptList;
+    }
+
+    public void setConsultationpaymentreceiptList(List<Consultationpaymentreceipt> consultationpaymentreceiptList) {
+        this.consultationpaymentreceiptList = consultationpaymentreceiptList;
     }
     
 }
