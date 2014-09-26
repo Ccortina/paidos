@@ -8,6 +8,7 @@ package com.carloscortina.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -22,6 +23,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -57,12 +59,18 @@ public class Consultationcostabstract implements Serializable {
     @JoinColumn(name = "idConsultationPaymentStatus", referencedColumnName = "idConsultationPaymentEstatus")
     @ManyToOne(optional = false)
     private Consultationpaymentestatus idConsultationPaymentStatus;
+    @JsonIgnore
     @JoinColumn(name = "idConsultation", referencedColumnName = "idConsultation")
     @ManyToOne
     private Consultation idConsultation;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConsultationCostAbstract")
     private List<Consultationpayment> consultationpaymentList;
+    //Auxiliar Fields not originally from the DataBase
+    @Transient
+    private Date consultationDate;
+    @Transient
+    private Patient consultationPatient;
 
     public Consultationcostabstract() {
     }
@@ -139,6 +147,22 @@ public class Consultationcostabstract implements Serializable {
 
     public void setConsultationpaymentList(List<Consultationpayment> consultationpaymentList) {
         this.consultationpaymentList = consultationpaymentList;
+    }
+
+    public Date getConsultationDate() {
+        return consultationDate;
+    }
+
+    public void setConsultationDate(Date consultationDate) {
+        this.consultationDate = consultationDate;
+    }
+
+    public Patient getConsultationPatient() {
+        return consultationPatient;
+    }
+
+    public void setConsultationPatient(Patient consultationPatient) {
+        this.consultationPatient = consultationPatient;
     }
 
     @Override

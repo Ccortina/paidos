@@ -41,6 +41,16 @@ body {
                         <ul class="nav navbar-nav">
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Ingresos<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/income/consultations">Consultas</a></li>
+                                    <li><a href="${contextPath}/income/payment">Pagos</a></li>
+                                    <li><a href="${contextPath}/income/recepit">Recibos</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                         Pacientes<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
