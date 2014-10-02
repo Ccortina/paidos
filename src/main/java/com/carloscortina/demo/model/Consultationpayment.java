@@ -95,6 +95,22 @@ public class Consultationpayment implements Serializable {
         this.date = date;
     }
 
+    public Consultationpayment(Date date, Double cash, Double check, String checkDigits, Double card, String cardDigits, Double other, String otherDescription, Double paymentTotal, Double change, String note, Consultationpaymenttype idPaymentType, Consultationcostabstract idConsultationCostAbstract) {
+        this.date = date;
+        this.cash = cash;
+        this.check = check;
+        this.checkDigits = checkDigits;
+        this.card = card;
+        this.cardDigits = cardDigits;
+        this.other = other;
+        this.otherDescription = otherDescription;
+        this.paymentTotal = paymentTotal;
+        this.change = change;
+        this.note = note;
+        this.idPaymentType = idPaymentType;
+        this.idConsultationCostAbstract = idConsultationCostAbstract;
+    }
+
     public Integer getIdConsultationPayment() {
         return idConsultationPayment;
     }

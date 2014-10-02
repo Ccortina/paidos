@@ -115,6 +115,13 @@ public class Consultation implements Serializable {
         this.idConsultation = idConsultation;
     }
 
+    public Consultation(Integer idConsultation, Patient idPatient, User idDoctor, List<Consultationactivity> consultationactivityList) {
+        this.idConsultation = idConsultation;
+        this.idPatient = idPatient;
+        this.idDoctor = idDoctor;
+        this.consultationactivityList = consultationactivityList;
+    }
+
     public Consultation(Double weigth, Double size, Double bmi, Double temperature, Double pc, Patient idPatient, Appointment idAppointment) {
         this.weigth = weigth;
         this.size = size;

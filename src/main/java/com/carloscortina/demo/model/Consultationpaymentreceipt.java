@@ -117,6 +117,32 @@ public class Consultationpaymentreceipt implements Serializable {
         this.idConsultationPaymentReceipt = idConsultationPaymentReceipt;
     }
 
+    public Consultationpaymentreceipt(Date date, Integer receiptNumber, Double total, Integer retention, 
+            Double isr, String totalText, String payerName, String street, String colony, String city, 
+            String state, String country, String rfc, String concept, String notes, Thirdpartypayer idThirdPartyPayer,
+            Relative idRelative, Consultationpayment idPayment, User idExpeditor, Consultationpaymentreceipttype idConsultatioPaymentReceiptType) {
+        this.date = date;
+        this.receiptNumber = receiptNumber;
+        this.total = total;
+        this.retention = retention;
+        this.isr = isr;
+        this.totalText = totalText;
+        this.payerName = payerName;
+        this.street = street;
+        this.colony = colony;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.rfc = rfc;
+        this.concept = concept;
+        this.notes = notes;
+        this.idThirdPartyPayer = idThirdPartyPayer;
+        this.idRelative = idRelative;
+        this.idPayment = idPayment;
+        this.idExpeditor = idExpeditor;
+        this.idConsultatioPaymentReceiptType = idConsultatioPaymentReceiptType;
+    }
+
     public Date getDate() {
         return date;
     }

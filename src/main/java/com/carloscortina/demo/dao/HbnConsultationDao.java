@@ -29,6 +29,28 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
     }
     
     @Override
+    public Consultation getConsultationActivitiesById(int id){
+        Query query = getSession().createQuery("SELECT new Consultation(c.idConsultation,"
+                + "c.idPatient,c.idDoctor,c.consultationactivityList) FROM Consultation c "
+                + "WHERE c.idConsultation=:idConsultation");
+        query.setParameter("idConsultation", id);
+        Consultation consultation = (Consultation) query.uniqueResult();
+        
+        
+        Query query2 = getSession().createQuery("SELECT new Consultationactivity(c.cost,c.activity,c.includeInBill) FROM Consultationactivity c"
+            + " WHERE c.consultation.idConsultation=:idConsultation");
+        query2.setParameter("idConsultation", id);
+
+        List<Consultationactivity> temp = query2.list();
+        for(Consultationactivity ca: temp){
+            ca.getActivity().setIdVaccine(null);
+        }
+        consultation.setConsultationactivityList(temp);
+        
+        return consultation;
+    }
+    
+    @Override
     public List<Consultation> getConsultationsByPatient(int idPatient){
         Query query = getSession().createQuery("SELECT new Consultation(c.idConsultation,c.weigth,c.size,c.bmi,c.temperature,c.pc,"
                 + "c.ta,c.ta2,c.taAverage,c.peea,c.ef,c.prescription,c.idAppointment,c.abstract1,c.type,c.prescriptionNumber) FROM Consultation c "
@@ -45,10 +67,6 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
                 ca.getActivity().setIdVaccine(null);
             }
             c.setConsultationactivityList(temp);
-        }
-        
-        for(Consultation c: consultations){
-            
         }
         return consultations;
     }

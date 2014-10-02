@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationcostabstract;
 import java.util.List;
 import org.hibernate.Query;
@@ -26,6 +27,12 @@ public class HbnConsultationCostAbstracDao extends GenericHbnDao<Consultationcos
         for(Consultationcostabstract cca: ccaList){
                 cca.setConsultationDate(cca.getIdConsultation().getIdAppointment().getDate());
                 cca.setConsultationPatient(cca.getIdConsultation().getIdAppointment().getIdPatient());
+                
+                for(Consultationactivity ca: cca.getIdConsultation().getConsultationactivityList()){
+                    ca.getActivity().setIdVaccine(null);
+                    ca.setConsultation(null);
+                }
+                cca.setActivities(cca.getIdConsultation().getConsultationactivityList());
         }
         
         return ccaList;

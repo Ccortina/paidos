@@ -15,7 +15,8 @@ tr.vpSuspended:hover,tr.vpSuspended.selected{
 }
     
 tr.vpExpired:hover,tr.vpExpired.selected{
-    background-color:#C23B22!important;
+    //background-color:#C23B22!important;
+    background-color:#cc213b!important;
 }
 
 

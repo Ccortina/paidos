@@ -71,6 +71,8 @@ public class Consultationcostabstract implements Serializable {
     private Date consultationDate;
     @Transient
     private Patient consultationPatient;
+    @Transient
+    private List<Consultationactivity> activities;
 
     public Consultationcostabstract() {
     }
@@ -83,6 +85,23 @@ public class Consultationcostabstract implements Serializable {
         this.idConsultationCostAbstract = idConsultationCostAbstract;
         this.total = total;
         this.rest = rest;
+    }
+
+    public Consultationcostabstract(double total, double rest, String concept, Consultationpaymentestatus idConsultationPaymentStatus, Consultation idConsultation) {
+        this.total = total;
+        this.rest = rest;
+        this.concept = concept;
+        this.idConsultationPaymentStatus = idConsultationPaymentStatus;
+        this.idConsultation = idConsultation;
+    }
+    
+    public Consultationcostabstract(double total, double rest, String concept, Consultationpaymentestatus idConsultationPaymentStatus, Consultation idConsultation,List<Consultationactivity> activities) {
+        this.total = total;
+        this.rest = rest;
+        this.concept = concept;
+        this.idConsultationPaymentStatus = idConsultationPaymentStatus;
+        this.idConsultation = idConsultation;
+        this.activities = activities;
     }
 
     public Integer getIdConsultationCostAbstract() {
@@ -163,6 +182,14 @@ public class Consultationcostabstract implements Serializable {
 
     public void setConsultationPatient(Patient consultationPatient) {
         this.consultationPatient = consultationPatient;
+    }
+
+    public List<Consultationactivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Consultationactivity> activities) {
+        this.activities = activities;
     }
 
     @Override

@@ -116,5 +116,10 @@ public class ConsultationServiceImp implements ConsultationService{
     public Map<Integer, Long> getConsultsOfMonthByYear(int year) {
         return consultationDao.getConsultsOfMonthByYear(year);
     }
+
+    @Override
+    public Consultation getConsultationActivitiesById(int id) {
+        return consultationDao.getConsultationActivitiesById(id);
+    }
     
 }

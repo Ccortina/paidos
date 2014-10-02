@@ -71,7 +71,10 @@ import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.VaccineService;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.ConsultationactivityPK;
+import com.carloscortina.demo.model.Consultationcostabstract;
 import com.carloscortina.demo.model.Staffmember;
+import com.carloscortina.demo.service.ConsultationCostAbstractService;
+import com.carloscortina.demo.service.ConsultationPaymentStatusService;
 import com.carloscortina.demo.service.ConsultationactivityService;
 import com.carloscortina.demo.service.ConsultationtypeService;
 import com.carloscortina.demo.service.DocumentService;
@@ -160,6 +163,10 @@ public class ConsultationController {
         ConsultationtypeService ctService;
         @Autowired
         StaffMemberService staffService;
+        @Autowired
+        private ConsultationCostAbstractService ccaService;
+        @Autowired
+        private ConsultationPaymentStatusService cpsService;
 
         
         private Appointment appointment;
@@ -1034,6 +1041,7 @@ public class ConsultationController {
             
             //As the DB is programmed with the consultation as foreign key, first the consultation must be created
             Consultation consultation = filterConsultation(parameters);
+            double activitiesTotalCost = 0;
             
             //Save the diagnostic
             List<Diagnostic> diagnostic = filterDiagnostic(parameters);
@@ -1066,14 +1074,10 @@ public class ConsultationController {
                 Consultationactivity ca = new Consultationactivity(caPK, Double.parseDouble(parameters.get("activityPrice"+i)), Integer.parseInt(parameters.get("activityInclude"+i)));
                 //caList.add(ca);
                 caService.create(ca);
+                
+                activitiesTotalCost += Double.parseDouble(parameters.get("activityPrice"+i));
             }
 
-            //consultation.setConsultationmeasureList(cmList);
-            //consultation.setConsultationactivityList(caList);
-
-            //consultationService.updateItem(consultation);
-            
-            //consultationService.create(consultation);
             //Update the appointment status
             appointment.setIdStatus(apsService.getById(1));
             appointmentService.mergeItem(appointment);
@@ -1081,7 +1085,9 @@ public class ConsultationController {
             Staffmember st = doctor.getIdStaffMember();
             st.setPresciptionNumber(pNumber);
             staffService.mergeItem(st);
-            //return "patients/file/"+patient.getIdPatient();
+            
+            //create Consultation Cost abstract
+            ccaService.create(new Consultationcostabstract(activitiesTotalCost, activitiesTotalCost, "Consulta", cpsService.getById(1), consultation));
             
         }
         
