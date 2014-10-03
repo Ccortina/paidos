@@ -17,8 +17,10 @@ import com.carloscortina.demo.model.Relative;
 import com.carloscortina.demo.model.Thirdpartypayer;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.ConsultationCostAbstractService;
+import com.carloscortina.demo.service.ConsultationPaymentReceiptService;
 import com.carloscortina.demo.service.ConsultationPaymentReceiptTypeService;
 import com.carloscortina.demo.service.ConsultationPaymentService;
+import com.carloscortina.demo.service.ConsultationPaymentStatusService;
 import com.carloscortina.demo.service.ConsultationPaymentTypeService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.PatientService;
@@ -64,6 +66,10 @@ public class IncomeController {
     private RelativeService relativeService;
     @Autowired
     private ConsultationPaymentReceiptTypeService cprtService; 
+    @Autowired
+    private ConsultationPaymentReceiptService cprService;
+    @Autowired
+    private ConsultationPaymentStatusService cpsService;
     
     private User loggedUser;
     
@@ -125,6 +131,9 @@ public class IncomeController {
         
         if(Integer.parseInt(params.get("paymentType")) == 1){ //If total payment
             change = totalCost - totalPayment;
+            cca.setIdConsultationPaymentStatus(cpsService.getById(1));
+        }else{
+            cca.setIdConsultationPaymentStatus(cpsService.getById(2));
         }
 
         //Save the payment
@@ -132,10 +141,10 @@ public class IncomeController {
                 card, params.get("cardD"), other, params.get("otherD"), totalPayment , change, params.get("notes"),
                 cptService.getById(Integer.parseInt(params.get("paymentType"))), cca);
         
-        //cpService.create(cp);
+        cpService.create(cp);
+        ccaService.updateItem(cca);
         
-        //return cp.getIdConsultationPayment();
-        return 115;
+        return cp.getIdConsultationPayment();
     }
     
     @RequestMapping(value="saveReceipt")
@@ -155,13 +164,14 @@ public class IncomeController {
         }
         Consultationcostabstract cca=ccaService.getById(Integer.parseInt(params.get("ccaId")));
         
-        Consultationpaymentreceipt cpr = new Consultationpaymentreceipt(new Date(), Integer.parseInt(params.get("receiptNumber")), Double.parseDouble(params.get("receiptTotal")),
+        Consultationpaymentreceipt cpr = new Consultationpaymentreceipt(new Date(), cca.getIdConsultation().getIdDoctor().getIdStaffMember().getReceiptNumber(), Double.parseDouble(params.get("receiptTotal")),
                 params.get("ret").equals("true")? 1:0, Double.parseDouble(params.get("isr")), numberToText(params.get("receiptTotal")),
                 params.get("payerName"), params.get("street"), params.get("colony"), params.get("city"), params.get("state"), params.get("country"), params.get("rfc"),
                 params.get("concept"), params.get("notes"), tpp, relative, cpService.getById(Integer.parseInt(params.get("payment"))),
                 cca.getIdConsultation().getIdDoctor(), cprtService.getById(1));
+        cprService.create(cpr);
         
-        return 1;
+        return cpr.getIdConsultationPaymentReceipt();
     }
     
     @RequestMapping(value="getPatientRelatives", produces = "application/json")
@@ -175,9 +185,12 @@ public class IncomeController {
     }
     
     private String numberToText(String number){
-        System.out.println(number);
-        System.out.println(number);
-        String[] strNumber = number.split(".");
+        String[] strNumber = new String[2];
+        if(number.indexOf((46)) > -1){
+            strNumber = number.split(".");
+        }else{
+            strNumber[0] = number;
+        }
         
         switch(strNumber[0].length()){
             case 1:
