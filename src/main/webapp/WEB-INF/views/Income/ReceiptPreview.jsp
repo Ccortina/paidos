@@ -6,7 +6,14 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<jsp:include page="../Includes/header.jsp"/>
+<c:url var="cssUrl" value="/resources/CSS/bootstrap.min.css" />
+<c:url var="jsUrl" value="/resources/js/bootstrap.min.js" />
+<c:url var="jqueryUrl" value="/resources/js/jquery-2-1.0.3.js" />
+
+<script src="${jqueryUrl}" type="text/javascript"></script>
+<script src="${jsUrl}" type="text/javascript"></script>
+
+<link href="${cssUrl}" rel="stylesheet" />
 
 <div class="row">
     <div class="col-sm-offset-3 col-sm-6">
@@ -17,7 +24,7 @@
             RFC: ${rfc}
         </div>
         <div class="row">
-            Neto Recibido: $ ${net}
+            ${net}
         </div>
         <div class="row">
             ${totalStr}

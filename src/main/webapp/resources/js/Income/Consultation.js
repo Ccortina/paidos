@@ -579,7 +579,8 @@ function saveReceipt(){
         url:"/demo/income/saveReceipt",
         data:data,
         success:function(response){
-            window.open('/demo/income/receipt/'+response);
+            window.open('/demo/income/receiptPreview/'+response);
+            $("#receiptModal").modal('hide');
         },
         error:function(){
             

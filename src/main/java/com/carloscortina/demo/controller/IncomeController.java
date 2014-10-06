@@ -12,8 +12,10 @@ import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationcostabstract;
 import com.carloscortina.demo.model.Consultationpayment;
 import com.carloscortina.demo.model.Consultationpaymentreceipt;
+import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.PatientRelative;
 import com.carloscortina.demo.model.Relative;
+import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.Thirdpartypayer;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.ConsultationCostAbstractService;
@@ -25,8 +27,10 @@ import com.carloscortina.demo.service.ConsultationPaymentTypeService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.PatientService;
 import com.carloscortina.demo.service.RelativeService;
+import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.ThirdPartyPayersService;
 import com.carloscortina.demo.service.UserService;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +74,8 @@ public class IncomeController {
     private ConsultationPaymentReceiptService cprService;
     @Autowired
     private ConsultationPaymentStatusService cpsService;
+    @Autowired
+    private StaffMemberService smService;
     
     private User loggedUser;
     
@@ -82,13 +88,48 @@ public class IncomeController {
         return ( "Income/Consultation" );
     }
     
-    @RequestMapping(value="receiptPreview/{ccaId}")
-    public String receiptPreview(Model model,@PathVariable int ccaId){
+    @RequestMapping(value="payment")
+    public String consultationPaymentHome(Model model){
         //Get logged User
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         loggedUser = userService.getUserByUsername(auth.getName());
-        Consultationcostabstract cca =  ccaService.getById(ccaId);
         
+        return ( "Income/Payment" );
+    }
+    
+    @RequestMapping(value="receipt")
+    public String consultationReceiptHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "Income/Receipt" );
+    }
+    
+    @RequestMapping(value="receiptPreview/{cprId}")
+    public String receiptPreview(Model model,@PathVariable int cprId){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        Consultationpaymentreceipt cpr =  cprService.getById(cprId);
+        Patient patient = cpr.getIdPayment().getIdConsultationCostAbstract().getIdConsultation().getIdPatient();
+        
+        model.addAttribute("name", cpr.getPayerName());
+        model.addAttribute("rfc",cpr.getRfc());
+        if(cpr.getRetention() > 0){
+            model.addAttribute("net", "Honorarios: $ "+ (cpr.getTotal()+cpr.getIsr()) 
+                    + " Retencion ISR: $ "+cpr.getIsr()+" Neto recibido: $ "+cpr.getTotal());
+        }else{
+            model.addAttribute("net","Neto recibido: $ "+cpr.getTotal());
+        }
+        model.addAttribute("totalStr",cpr.getTotalText());
+        model.addAttribute("address",cpr.getStreet());
+        model.addAttribute("address2",cpr.getColony()+" " +cpr.getCity()+" , "+
+                cpr.getState()+" , "+cpr.getCountry()+" , "+cpr.getZip());
+        model.addAttribute("patient",patient.getFirstName()+" "+patient.getFatherLastName()+" "+patient.getMotherLastName());
+        model.addAttribute("concept",cpr.getConcept());
+        
+        model.addAttribute("date",cpr.getDate());
         
         return ( "Income/ReceiptPreview" );
     }
@@ -97,6 +138,28 @@ public class IncomeController {
     public @ResponseBody JsonPack<Consultationcostabstract> getConsultationCostAbstract(){
         
        return new JsonPack<Consultationcostabstract>(ccaService.getConsultationCostAbstractSmall()); 
+    }
+    
+    @RequestMapping(value="getConsultationPaymentReceipt")
+    public @ResponseBody JsonPack<Consultationpaymentreceipt> getConsultationPaymentReceipt(){
+       List<Consultationpaymentreceipt> all = new ArrayList<Consultationpaymentreceipt>(cprService.getAll("")); 
+       for(Consultationpaymentreceipt cpr: all){
+           cpr.setPatient(cpr.getIdPayment().getIdConsultationCostAbstract().getIdConsultation().getIdPatient());
+       }
+       
+       return new JsonPack<Consultationpaymentreceipt>(all); 
+    }
+    
+    @RequestMapping(value="getConsultationPayment")
+    public @ResponseBody JsonPack<Consultationpayment> getConsultationPayment(){
+        
+       List<Consultationpayment> result = cpService.getAll("");
+       
+       for(Consultationpayment cp: result){
+           cp.setPatient(cp.getIdConsultationCostAbstract().getIdConsultation().getIdPatient());
+       }
+       
+       return new JsonPack<Consultationpayment>(result); 
     }
     
     @RequestMapping(value="getConsultationActivities")
@@ -131,9 +194,11 @@ public class IncomeController {
         
         if(Integer.parseInt(params.get("paymentType")) == 1){ //If total payment
             change = totalCost - totalPayment;
-            cca.setIdConsultationPaymentStatus(cpsService.getById(1));
+            cca.setIdConsultationPaymentStatus(cpsService.getById(3));
+            cca.setRest(0.0);
         }else{
             cca.setIdConsultationPaymentStatus(cpsService.getById(2));
+            cca.setRest(totalCost - totalPayment);
         }
 
         //Save the payment
@@ -151,25 +216,100 @@ public class IncomeController {
     public @ResponseBody int saveReceipt(@RequestParam Map<String,String> params){
         Thirdpartypayer tpp = new Thirdpartypayer();
         Relative relative = new Relative();
+        Consultationpaymentreceipt cpr = new Consultationpaymentreceipt();
+        
+        Consultationcostabstract cca=ccaService.getById(Integer.parseInt(params.get("ccaId")));
+        
+        Staffmember consultationDoctor = cca.getIdConsultation().getIdDoctor().getIdStaffMember();
+        
+        String totalStr = numberToText(params.get("receiptTotal"));
+        String[] strNumber = new String[2];
+        if(params.get("receiptTotal").indexOf((46)) > -1){
+            strNumber = params.get("receiptTotal").split(".");
+            totalStr = totalStr + " "+strNumber[1]+"/100 M.N";
+        }else{
+            totalStr = totalStr + " 00/100 M.N";
+        }
         
         if( params.get("relative").isEmpty() ){
             if( !params.get("thirdPayer").isEmpty() ){
                 tpp = tppService.getById(Integer.parseInt(params.get("thirdPayer")));
+                cpr = new Consultationpaymentreceipt(new Date(), consultationDoctor.getReceiptNumber(), Double.parseDouble(params.get("receiptTotal")),
+                params.get("ret").equals("true")? 1:0, Double.parseDouble(params.get("isr")), totalStr,
+                params.get("payerName"), params.get("street"), params.get("colony"), params.get("city"), params.get("state"), params.get("country"), params.get("rfc"),
+                params.get("concept"), params.get("notes"), tpp, cpService.getById(Integer.parseInt(params.get("payment"))),
+                cca.getIdConsultation().getIdDoctor(), cprtService.getById(1));
             }else{
-                tpp = null;
-                relative = null;
+                cpr = new Consultationpaymentreceipt(new Date(), consultationDoctor.getReceiptNumber(), Double.parseDouble(params.get("receiptTotal")),
+                params.get("ret").equals("true")? 1:0, Double.parseDouble(params.get("isr")), totalStr,
+                params.get("payerName"), params.get("street"), params.get("colony"), params.get("city"), params.get("state"), params.get("country"), params.get("rfc"),
+                params.get("concept"), params.get("notes"), cpService.getById(Integer.parseInt(params.get("payment"))),
+                cca.getIdConsultation().getIdDoctor(), cprtService.getById(1));
             }
         }else{
             relative = relativeService.getRelative(Integer.parseInt(params.get("relative")));
-        }
-        Consultationcostabstract cca=ccaService.getById(Integer.parseInt(params.get("ccaId")));
-        
-        Consultationpaymentreceipt cpr = new Consultationpaymentreceipt(new Date(), cca.getIdConsultation().getIdDoctor().getIdStaffMember().getReceiptNumber(), Double.parseDouble(params.get("receiptTotal")),
-                params.get("ret").equals("true")? 1:0, Double.parseDouble(params.get("isr")), numberToText(params.get("receiptTotal")),
+                cpr = new Consultationpaymentreceipt(new Date(), consultationDoctor.getReceiptNumber(), Double.parseDouble(params.get("receiptTotal")),
+                params.get("ret").equals("true")? 1:0, Double.parseDouble(params.get("isr")), totalStr,
                 params.get("payerName"), params.get("street"), params.get("colony"), params.get("city"), params.get("state"), params.get("country"), params.get("rfc"),
-                params.get("concept"), params.get("notes"), tpp, relative, cpService.getById(Integer.parseInt(params.get("payment"))),
+                params.get("concept"), params.get("notes"),relative, cpService.getById(Integer.parseInt(params.get("payment"))),
                 cca.getIdConsultation().getIdDoctor(), cprtService.getById(1));
+        }
+
         cprService.create(cpr);
+        
+        int receiptNum = consultationDoctor.getReceiptNumber();
+        consultationDoctor.setReceiptNumber(receiptNum+1);
+        
+        smService.updateItem(consultationDoctor);
+        
+        return cpr.getIdConsultationPaymentReceipt();
+    }
+    
+    @RequestMapping(value="updateReceipt")
+    public @ResponseBody int updateReceipt(@RequestParam Map<String,String> params){
+        Thirdpartypayer tpp = new Thirdpartypayer();
+        Relative relative = new Relative();
+        Consultationpaymentreceipt cpr = cprService.getById(Integer.parseInt(params.get("cprId")));
+        
+        if( params.get("relative").isEmpty() ){
+            if( !params.get("thirdPayer").isEmpty() ){
+                tpp = tppService.getById(Integer.parseInt(params.get("thirdPayer")));
+                cpr.setPayerName(params.get("payerName"));
+                cpr.setStreet(params.get("street"));
+                cpr.setColony(params.get("colony"));
+                cpr.setCity(params.get("city"));
+                cpr.setState(params.get("state"));
+                cpr.setCountry(params.get("country"));
+                cpr.setRfc(params.get("rfc"));
+                cpr.setConcept(params.get("concept"));
+                cpr.setNotes(params.get("notes"));
+                cpr.setIdThirdPartyPayer(tpp);
+            }else{
+                cpr.setPayerName(params.get("payerName"));
+                cpr.setStreet(params.get("street"));
+                cpr.setColony(params.get("colony"));
+                cpr.setCity(params.get("city"));
+                cpr.setState(params.get("state"));
+                cpr.setCountry(params.get("country"));
+                cpr.setRfc(params.get("rfc"));
+                cpr.setConcept(params.get("concept"));
+                cpr.setNotes(params.get("notes"));
+            }
+        }else{
+            relative = relativeService.getRelative(Integer.parseInt(params.get("relative")));
+            cpr.setPayerName(params.get("payerName"));
+            cpr.setStreet(params.get("street"));
+            cpr.setColony(params.get("colony"));
+            cpr.setCity(params.get("city"));
+            cpr.setState(params.get("state"));
+            cpr.setCountry(params.get("country"));
+            cpr.setRfc(params.get("rfc"));
+            cpr.setConcept(params.get("concept"));
+            cpr.setNotes(params.get("notes"));
+            cpr.setIdRelative(relative);
+        }
+
+        cprService.updateItem(cpr);
         
         return cpr.getIdConsultationPaymentReceipt();
     }

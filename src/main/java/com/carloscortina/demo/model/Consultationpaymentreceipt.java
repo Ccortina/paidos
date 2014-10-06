@@ -21,7 +21,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -101,7 +103,9 @@ public class Consultationpaymentreceipt implements Serializable {
     @JoinColumn(name = "idConsultatioPaymentReceiptType", referencedColumnName = "idConsultationPaymentReceipttype")
     @ManyToOne(optional = false)
     private Consultationpaymentreceipttype idConsultatioPaymentReceiptType;
-
+    @Transient
+    private Patient patient;
+    
     public Consultationpaymentreceipt() {
     }
 
@@ -119,7 +123,31 @@ public class Consultationpaymentreceipt implements Serializable {
 
     public Consultationpaymentreceipt(Date date, Integer receiptNumber, Double total, Integer retention, 
             Double isr, String totalText, String payerName, String street, String colony, String city, 
-            String state, String country, String rfc, String concept, String notes, Thirdpartypayer idThirdPartyPayer,
+            String state, String country, String rfc, String concept, String notes,
+            Consultationpayment idPayment, User idExpeditor, Consultationpaymentreceipttype idConsultatioPaymentReceiptType) {
+        this.date = date;
+        this.receiptNumber = receiptNumber;
+        this.total = total;
+        this.retention = retention;
+        this.isr = isr;
+        this.totalText = totalText;
+        this.payerName = payerName;
+        this.street = street;
+        this.colony = colony;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.rfc = rfc;
+        this.concept = concept;
+        this.notes = notes;
+        this.idPayment = idPayment;
+        this.idExpeditor = idExpeditor;
+        this.idConsultatioPaymentReceiptType = idConsultatioPaymentReceiptType;
+    }
+    
+    public Consultationpaymentreceipt(Date date, Integer receiptNumber, Double total, Integer retention, 
+            Double isr, String totalText, String payerName, String street, String colony, String city, 
+            String state, String country, String rfc, String concept, String notes,
             Relative idRelative, Consultationpayment idPayment, User idExpeditor, Consultationpaymentreceipttype idConsultatioPaymentReceiptType) {
         this.date = date;
         this.receiptNumber = receiptNumber;
@@ -136,8 +164,32 @@ public class Consultationpaymentreceipt implements Serializable {
         this.rfc = rfc;
         this.concept = concept;
         this.notes = notes;
-        this.idThirdPartyPayer = idThirdPartyPayer;
         this.idRelative = idRelative;
+        this.idPayment = idPayment;
+        this.idExpeditor = idExpeditor;
+        this.idConsultatioPaymentReceiptType = idConsultatioPaymentReceiptType;
+    }
+    
+    public Consultationpaymentreceipt(Date date, Integer receiptNumber, Double total, Integer retention, 
+            Double isr, String totalText, String payerName, String street, String colony, String city, 
+            String state, String country, String rfc, String concept, String notes,
+            Thirdpartypayer thirdpartypayer, Consultationpayment idPayment, User idExpeditor, Consultationpaymentreceipttype idConsultatioPaymentReceiptType) {
+        this.date = date;
+        this.receiptNumber = receiptNumber;
+        this.total = total;
+        this.retention = retention;
+        this.isr = isr;
+        this.totalText = totalText;
+        this.payerName = payerName;
+        this.street = street;
+        this.colony = colony;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.rfc = rfc;
+        this.concept = concept;
+        this.notes = notes;
+        this.idThirdPartyPayer = thirdpartypayer;
         this.idPayment = idPayment;
         this.idExpeditor = idExpeditor;
         this.idConsultatioPaymentReceiptType = idConsultatioPaymentReceiptType;
@@ -342,6 +394,14 @@ public class Consultationpaymentreceipt implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Consultationpaymentreceipt[ idConsultationPaymentReceipt=" + idConsultationPaymentReceipt + " ]";
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
     
 }

@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -45,13 +46,13 @@ public class Consultationpayment implements Serializable {
     private Integer idConsultationPayment;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "date")
+    @Column(name = "`date`")
     @Temporal(TemporalType.DATE)
     private Date date;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "cash")
     private Double cash;
-    @Column(name = "check")
+    @Column(name = "`check`")
     private Double check;
     @Size(max = 45)
     @Column(name = "checkDigits")
@@ -68,7 +69,7 @@ public class Consultationpayment implements Serializable {
     private String otherDescription;
     @Column(name = "paymentTotal")
     private Double paymentTotal;
-    @Column(name = "change")
+    @Column(name = "`change`")
     private Double change;
     @Size(max = 255)
     @Column(name = "note")
@@ -82,6 +83,8 @@ public class Consultationpayment implements Serializable {
     @JoinColumn(name = "idConsultationCostAbstract", referencedColumnName = "idConsultationCostAbstract")
     @ManyToOne(optional = false)
     private Consultationcostabstract idConsultationCostAbstract;
+    @Transient
+    private Patient patient;
 
     public Consultationpayment() {
     }
@@ -121,6 +124,14 @@ public class Consultationpayment implements Serializable {
 
     public Date getDate() {
         return date;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public void setDate(Date date) {
