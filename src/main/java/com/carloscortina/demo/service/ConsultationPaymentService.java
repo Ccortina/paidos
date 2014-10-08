@@ -7,11 +7,15 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Consultationpayment;
+import com.carloscortina.demo.model.Consultationpaymentreceipt;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface ConsultationPaymentService extends GenericService<Consultationpayment>{
-    
+
+    public List<Consultationpayment> getConsultationPAymentByDateRange(Date start,Date end);
 }

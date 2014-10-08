@@ -105,6 +105,8 @@ public class Consultationpaymentreceipt implements Serializable {
     private Consultationpaymentreceipttype idConsultatioPaymentReceiptType;
     @Transient
     private Patient patient;
+    @Transient
+    private Date consultationDate;
     
     public Consultationpaymentreceipt() {
     }
@@ -209,6 +211,14 @@ public class Consultationpaymentreceipt implements Serializable {
 
     public void setReceiptNumber(Integer receiptNumber) {
         this.receiptNumber = receiptNumber;
+    }
+
+    public Date getConsultationDate() {
+        return consultationDate;
+    }
+
+    public void setConsultationDate(Date consultationDate) {
+        this.consultationDate = consultationDate;
     }
 
     public Double getTotal() {

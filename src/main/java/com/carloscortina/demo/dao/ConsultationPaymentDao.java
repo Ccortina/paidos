@@ -7,11 +7,14 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationpayment;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface ConsultationPaymentDao extends GenericDao<Consultationpayment>{
-    
+
+    public List<Consultationpayment> getConsultationPAymentByDateRange(Date start,Date end);
 }

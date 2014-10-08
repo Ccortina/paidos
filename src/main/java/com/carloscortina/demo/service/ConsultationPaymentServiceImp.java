@@ -8,6 +8,7 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationPaymentDao;
 import com.carloscortina.demo.model.Consultationpayment;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -74,6 +75,11 @@ public class ConsultationPaymentServiceImp implements ConsultationPaymentService
     @Override
     public List<Consultationpayment> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Consultationpayment> getConsultationPAymentByDateRange(Date start, Date end) {
+        return dao.getConsultationPAymentByDateRange(start, end);
     }
     
 }

@@ -85,6 +85,18 @@ public class Consultationpayment implements Serializable {
     private Consultationcostabstract idConsultationCostAbstract;
     @Transient
     private Patient patient;
+    @Transient
+    private Date consultationDate;
+    @Transient
+    private double rest;
+    @Transient
+    private double consultationTotal;
+    @Transient
+    private double consultationCAT;
+    @Transient
+    private double consultationEAT;
+    @Transient
+    private List<Consultationactivity> activities; 
 
     public Consultationpayment() {
     }
@@ -126,6 +138,14 @@ public class Consultationpayment implements Serializable {
         return date;
     }
 
+    public Date getConsultationDate() {
+        return consultationDate;
+    }
+
+    public void setConsultationDate(Date consultationDate) {
+        this.consultationDate = consultationDate;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -136,6 +156,46 @@ public class Consultationpayment implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public double getRest() {
+        return rest;
+    }
+
+    public void setRest(double rest) {
+        this.rest = rest;
+    }
+
+    public double getConsultationTotal() {
+        return consultationTotal;
+    }
+
+    public void setConsultationTotal(double consultationTotal) {
+        this.consultationTotal = consultationTotal;
+    }
+
+    public double getConsultationCAT() {
+        return consultationCAT;
+    }
+
+    public void setConsultationCAT(double consultationCAT) {
+        this.consultationCAT = consultationCAT;
+    }
+
+    public double getConsultationEAT() {
+        return consultationEAT;
+    }
+
+    public void setConsultationEAT(double consultationEAT) {
+        this.consultationEAT = consultationEAT;
+    }
+
+    public List<Consultationactivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Consultationactivity> activities) {
+        this.activities = activities;
     }
 
     public Double getCash() {
