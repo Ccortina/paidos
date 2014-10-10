@@ -23,7 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -107,6 +106,14 @@ public class Consultationpaymentreceipt implements Serializable {
     private Patient patient;
     @Transient
     private Date consultationDate;
+    @Transient
+    private int fromReceiptNumber;
+    @Transient
+    private int toReceiptNumber;
+    @Transient
+    private double sumTotal;
+    @Transient
+    private int totalReceipts;
     
     public Consultationpaymentreceipt() {
     }
@@ -121,6 +128,13 @@ public class Consultationpaymentreceipt implements Serializable {
 
     public void setIdConsultationPaymentReceipt(Integer idConsultationPaymentReceipt) {
         this.idConsultationPaymentReceipt = idConsultationPaymentReceipt;
+    }
+
+    public Consultationpaymentreceipt(User idExpeditor, int fromReceiptNumber, int toReceiptNumber, double sumTotal) {
+        this.idExpeditor = idExpeditor;
+        this.fromReceiptNumber = fromReceiptNumber;
+        this.toReceiptNumber = toReceiptNumber;
+        this.sumTotal = sumTotal;
     }
 
     public Consultationpaymentreceipt(Date date, Integer receiptNumber, Double total, Integer retention, 
@@ -213,12 +227,44 @@ public class Consultationpaymentreceipt implements Serializable {
         this.receiptNumber = receiptNumber;
     }
 
+    public int getTotalReceipts() {
+        return totalReceipts;
+    }
+
+    public void setTotalReceipts(int totalReceipts) {
+        this.totalReceipts = totalReceipts;
+    }
+
     public Date getConsultationDate() {
         return consultationDate;
     }
 
     public void setConsultationDate(Date consultationDate) {
         this.consultationDate = consultationDate;
+    }
+
+    public double getFromReceiptNumber() {
+        return fromReceiptNumber;
+    }
+
+    public void setFromReceiptNumber(int fromReceiptNumber) {
+        this.fromReceiptNumber = fromReceiptNumber;
+    }
+
+    public double getToReceiptNumber() {
+        return toReceiptNumber;
+    }
+
+    public void setToReceiptNumber(int toReceiptNumber) {
+        this.toReceiptNumber = toReceiptNumber;
+    }
+
+    public double getSumTotal() {
+        return sumTotal;
+    }
+
+    public void setSumTotal(double sumTotal) {
+        this.sumTotal = sumTotal;
     }
 
     public Double getTotal() {

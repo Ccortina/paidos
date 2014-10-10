@@ -49,8 +49,8 @@
                         <option value="2">Uso de diagnosticos</option>
                         <option value="3">Relacion Consultas</option>
                         <option value="4">Ingresos</option>
-                        <option value="5"></option>
-                        <option value="6"></option>
+                        <option value="5">Relacion de recibos</option>
+                        <option value="6">Resumen global ingresos</option>
                     </select>
                 </div>
             </div>
@@ -107,10 +107,29 @@
         </div>
     </div>
 </div>
-<div class="row forHiding" id="divTable">
+<div class="row forHiding" id="divTable3">
     <div class="col-sm-12">
-        <table id="tblReport">
-        </table>
+        <table id="tblReport3"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable4">
+    <div class="col-sm-12">
+        <table id="tblReport4"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable41">
+    <div class="col-sm-12">
+        <table id="tblReport41"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable5">
+    <div class="col-sm-12">
+        <table id="tblReport5" class="row-border hover"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable6">
+    <div class="col-sm-12">
+        <table id="tblReport6" class="row-border hover"></table>
     </div>
 </div>
 <div class="row forHiding" id="divGraph">

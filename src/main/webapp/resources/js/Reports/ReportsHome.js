@@ -37,16 +37,24 @@ function showReport(){
             renderReport2();
             break;
         case '3':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
             $(".forHiding").hide();
             $("#divTableReportsOptions").show();
-            $("#divTable").show();
+            $("#divTable3").show();
             break;
         case '4':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
             $(".forHiding").hide();
             $("#divTableReportsOptions").show();
-            $("#divTable").show();
+            $("#divTable4").show();
             $("#divReport4Options").show();
-            break;    
+            break;
+        case '5':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
+            $(".forHiding").hide();
+            $("#divTableReportsOptions").show();
+            $("#divTable5").show();
+            break;   
     }
 }
 
@@ -230,106 +238,241 @@ function initializeDateRangeForm(){
 }
 
 function renderTableReports(){
+    
     switch($("#selectReport").val()){
         case '3':   //Relacion Consultas
             renderReport3();
             break;
         case '4':   //Ingresos
             renderReport4();
-            break;    
+            break;
+        case '5':   //Ingresos
+            renderReport5();
+            break; 
     }
 }
 
 function renderReport3(){
-    $("#tblReport").append($('<tfoot><tr><td></td><td><b>Totales:</b></td>\n\
+    $("#tblReport3").append('<tfoot><tr><td></td><td><b>Totales:</b></td>\n\
                                 <td></td><td></td><td></td><td></td><td></td>\n\
-                                <td></td><td></td><td></td><td></td></tr></tfoot>'));
+                                <td></td><td></td><td></td><td></td></tr></tfoot>');
     
-    
-    $('#tblReport').DataTable({
-        "destroy": true,
-        "scrollY": "400px",
-        "order":[0,'desc'],
-        "scrollCollapse": true,
-        "paging": true,
-        "info": true,
-        "searching": false,
-        "dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
-        },
-        "language": {
-            "emptyTable": "No hay informacion en la tabla.",
-            "search": "Buscar",
-            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
-             "paginate": {
-                  "next": "Siguiente",
-                  "previous": "Anterior"
-              }
-        },
-        "ajax":{
-            "url":"/demo/reports/getConsultationPayments",
-            "data":{
-                "start":$( "#inputBeginingDate" ).val(),
-                "end":$( "#inputEndingDate" ).val()
-            }
-        },
-        "columns":[
-            {"title": "Fecha","render":function(row, data, dataIndex){
-                return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
-            }},
-            {"title": "Familia","render":function(row, data, dataIndex){
-                return dataIndex.patient.fatherLastName + " " + dataIndex.patient.motherLastName;
-            }},
-            {"title": "Efectivo","data":"cash"},
-            {"title": "Cheque","data":"check"},
-            {"title": "Tarjeta","data":"card"},
-            {"title": "Otro","data":"other"},
-            {"title": "Total Pago","data":"paymentTotal"},
-            {"title": "Resta","data":"rest"},
-            {"title": "Total Consulta","data":"consultationTotal"},
-            {"title": "A. Consultorio","data":"consultationCAT"},
-            {"title": "A. Externas","data":"consultationEAT"}
-        ],
-        "initComplete":function(settings,json){
+        $('#tblReport3').DataTable({
+            "destroy": true,
+            "scrollY": "400px",
+            "order":[0,'desc'],
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "searching": false,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+            },
+            "language": {
+                "emptyTable": "No hay informacion en la tabla.",
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                 "paginate": {
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  }
+            },
+            "ajax":{
+                "url":"/demo/reports/getConsultationPayments",
+                "data":{
+                    "start":$( "#inputBeginingDate" ).val(),
+                    "end":$( "#inputEndingDate" ).val()
+                }
+            },
+            "columns":[
+                {"title": "Fecha","render":function(row, data, dataIndex){
+                    return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
+                }},
+                {"title": "Familia","render":function(row, data, dataIndex){
+                    return dataIndex.patient.fatherLastName + " " + dataIndex.patient.motherLastName;
+                }},
+                {"title": "Efectivo","data":"cash"},
+                {"title": "Cheque","data":"check"},
+                {"title": "Tarjeta","data":"card"},
+                {"title": "Otro","data":"other"},
+                {"title": "Total Pago","data":"paymentTotal"},
+                {"title": "Resta","data":"rest"},
+                {"title": "Total Consulta","data":"consultationTotal"},
+                {"title": "A. Consultorio","data":"consultationCAT"},
+                {"title": "A. Externas","data":"consultationEAT"}
+            ],
+            "initComplete":function(settings,json){
 
-            $('#tblReport tbody').on( 'click', 'tr', function (e) {
-                var table = $('#tblReport').DataTable();
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                }else{
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }   
-            });
-        },
-        "footerCallback":function( tfoot, data, start, end, display ) {
-             var api = this.api(), data;
-             
-             // Total over all pages
-             var total = 0.0;
-             for(var i =2; i < 11; i++){
-                total = 0.0; 
-                data = api.column( i ).data();
-                total = data.length ?
-                data.reduce( function (a, b) {
-                        return a + b;
-                } ) :
-                0;
-                // Update footer
-                $( api.column( i ).footer() ).html('$'+ total);
-             }
-        }
-    });
+                $('#tblReport tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblReport').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }   
+                });
+            },
+            "footerCallback":function( tfoot, data, start, end, display ) {
+                 var api = this.api(), data;
+
+                 // Total over all pages
+                 var total = 0.0;
+                 for(var i =2; i < 11; i++){
+                    total = 0.0; 
+                    data = api.column( i ).data();
+                    total = data.length ?
+                    data.reduce( function (a, b) {
+                            return a + b;
+                    } ) :
+                    0;
+                    // Update footer
+                    $( api.column( i ).footer() ).html('$'+ total);
+                 }
+            }
+        });
 }
 
 function renderReport4(){
-    /*$("#tblReport").append($('<tfoot><tr><td></td><td><b>Totales:</b></td>\n\
-                                <td></td><td></td><td></td><td></td><td></td>\n\
-                                <td></td><td></td><td></td><td></td></tr></tfoot>'));*/
+    if(parseInt($('input[name="radioOptionR4"]:checked').val()) === 1){
+        $("#tblReport4").append('<tfoot><tr><td></td><td></td><td></td><td><b>Totales</b></td>\n\
+                                        <td></td><td></td><td></td></tr></tfoot>');
+        $('#tblReport4').DataTable({
+            "destroy": true,
+            "scrollY": "400px",
+            "order":[0,'desc'],
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "searching": false,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+            },
+            "language": {
+                "emptyTable": "No hay informacion en la tabla.",
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                 "paginate": {
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  }
+            },
+            "ajax":{
+                "url":"/demo/reports/getConsultationReceipts",
+                "data":{
+                    "start":$( "#inputBeginingDate" ).val(),
+                    "end":$( "#inputEndingDate" ).val()
+                }
+            },
+            "columns":[
+                {"title": "Folio","data":"receiptNumber"},
+                {"title": "Fecha Emision","render":function(row, data, dataIndex){
+                    return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
+                }},
+                {"title": "Fecha Cita","render":function(row, data, dataIndex){
+                    return moment(dataIndex.date).format("DD/MM/YYYY");
+                }},
+                {"title": "A favor de","data":"payerName"},
+                {"title": "Valor","data":"idPayment.paymentTotal"},
+                {"title": "Retencion","data":"isr"},
+                {"title": "Neto","data":"total"}
+            ],
+            "initComplete":function(settings,json){
+
+                $('#tblReport tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblReport').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }   
+                });
+            },
+            "footerCallback":function( tfoot, data, start, end, display ) {
+                 var api = this.api(), data;
+
+                 // Total over all pages
+                 var total = 0.0;
+                 for(var i =4; i < 7; i++){
+                    total = 0.0; 
+                    data = api.column( i ).data();
+                    console.log(data);
+                    total = data.length ?
+                    data.reduce( function (a, b) {
+                            return a + b;
+                    } ) :
+                    0;
+                    // Update footer
+                    $( api.column( i ).footer() ).html('$'+ total);
+                 }
+            }
+        });
+    }else{
+        $('#tblReport4').DataTable({
+            "destroy": true,
+            "scrollY": "400px",
+            "order":[0,'desc'],
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "searching": false,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+            },
+            "language": {
+                "emptyTable": "No hay informacion en la tabla.",
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                 "paginate": {
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  }
+            },
+            "ajax":{
+                "url":"/demo/reports/getConsultationReceiptsTotals",
+                "data":{
+                    "start":$( "#inputBeginingDate" ).val(),
+                    "end":$( "#inputEndingDate" ).val()
+                }
+            },
+            "columns":[
+                {"title": "Expedidor","data":"idExpeditor.idStaffMember.name"},
+                {"title": "Desde","render":function(row, data, dataIndex){
+                    return $( "#inputBeginingDate" ).val();
+                }},
+                {"title": "Hasta","render":function(row, data, dataIndex){
+                    return $( "#inputEndingDate" ).val();
+                }},
+                {"title": "Recibos","data":"totalReceipts"},
+                {"title": "Desde","data":"fromReceiptNumber"},
+                {"title": "Hasta","data":"toReceiptNumber"},
+                {"title": "Valor","data":"sumTotal"}
+            ],
+            "initComplete":function(settings,json){
+
+                $('#tblReport tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblReport').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }   
+                });
+            }
+        });    
+    }
+}
+
+function renderReport5(){
     
-    
-    $('#tblReport').DataTable({
+    $("#tblReport5").append('<tfoot><tr><td></td><td></td><td></td><td></td>\n\
+                                        <td></td><td></td><td></td></tr></tfoot>');
+    $('#tblReport5').DataTable({
         "destroy": true,
         "scrollY": "400px",
         "order":[0,'desc'],
@@ -362,14 +505,16 @@ function renderReport4(){
             {"title": "Fecha Emision","render":function(row, data, dataIndex){
                 return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
             }},
-            {"title": "Fecha Cita","data":"date"},
             {"title": "A favor de","data":"payerName"},
-            {"title": "Valor","data":"total"}
+            {"title": "RFC","data":"rfc"},
+            {"title": "Valor","data":"idPayment.paymentTotal"},
+            {"title": "Retencion","data":"isr"},
+            {"title": "Neto","data":"total"}
         ],
         "initComplete":function(settings,json){
 
-            $('#tblReport tbody').on( 'click', 'tr', function (e) {
-                var table = $('#tblReport').DataTable();
+            $('#tblReport5 tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblReport5').DataTable();
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
                 }else{
@@ -377,13 +522,13 @@ function renderReport4(){
                     $(this).addClass('selected');
                 }   
             });
-        }/*,
+        },
         "footerCallback":function( tfoot, data, start, end, display ) {
              var api = this.api(), data;
-             
+
              // Total over all pages
              var total = 0.0;
-             for(var i =2; i < 11; i++){
+             for(var i =4; i < 7; i++){
                 total = 0.0; 
                 data = api.column( i ).data();
                 total = data.length ?
@@ -394,7 +539,82 @@ function renderReport4(){
                 // Update footer
                 $( api.column( i ).footer() ).html('$'+ total);
              }
-        }*/
+        }
+    });
+}
+
+function renderReport6(){
+    
+    $("#tblReport6").append('<tfoot><tr><td></td><td></td><td></td><td></td>\n\
+                                        <td></td><td></td><td></td></tr></tfoot>');
+    $('#tblReport6').DataTable({
+        "destroy": true,
+        "scrollY": "400px",
+        "order":[0,'desc'],
+        "scrollCollapse": true,
+        "paging": true,
+        "info": true,
+        "searching": false,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+        },
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar",
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+             "paginate": {
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+        },
+        "ajax":{
+            "url":"/demo/reports/getConsultationReceipts",
+            "data":{
+                "start":$( "#inputBeginingDate" ).val(),
+                "end":$( "#inputEndingDate" ).val()
+            }
+        },
+        "columns":[
+            {"title": "Folio","data":"receiptNumber"},
+            {"title": "Fecha Emision","render":function(row, data, dataIndex){
+                return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
+            }},
+            {"title": "A favor de","data":"payerName"},
+            {"title": "RFC","data":"rfc"},
+            {"title": "Valor","data":"idPayment.paymentTotal"},
+            {"title": "Retencion","data":"isr"},
+            {"title": "Neto","data":"total"}
+        ],
+        "initComplete":function(settings,json){
+
+            $('#tblReport6 tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblReport6').DataTable();
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }   
+            });
+        },
+        "footerCallback":function( tfoot, data, start, end, display ) {
+             var api = this.api(), data;
+
+             // Total over all pages
+             var total = 0.0;
+             for(var i =4; i < 7; i++){
+                total = 0.0; 
+                data = api.column( i ).data();
+                total = data.length ?
+                data.reduce( function (a, b) {
+                        return a + b;
+                } ) :
+                0;
+                // Update footer
+                $( api.column( i ).footer() ).html('$'+ total);
+             }
+        }
     });
 }
 

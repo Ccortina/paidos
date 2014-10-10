@@ -6,7 +6,11 @@
 
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.model.Vaccine;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -26,4 +30,16 @@ public class HbnConsultationactivityDao extends GenericHbnDao<Consultationactivi
 
         return query.list();
     }
+    
+        
+    /*@Override
+    public List<Consultationactivity> getPeriodActivities(Date start, Date end,User user){
+        Query query = getSession().createQuery("FROM Consultationactivity a WHERE a.consultation.idAppointment.date >= :start ANDa.consultation.idAppointment.date <= :end "
+                + " AND user.idUser=:idUser group by a.activity.idActivityType.idActivityType");
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("idUser", user.getIdUser());
+        
+
+    }*/
 }

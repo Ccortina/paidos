@@ -11,17 +11,22 @@ import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Consultationpayment;
 import com.carloscortina.demo.model.Consultationpaymentreceipt;
+import com.carloscortina.demo.model.ReceiptTotal;
 import com.carloscortina.demo.model.ReportDiagnosticAuxiliar;
+import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.ConsultationPaymentReceiptService;
 import com.carloscortina.demo.service.ConsultationPaymentService;
 import com.carloscortina.demo.service.ConsultationService;
 import com.carloscortina.demo.service.DiagnosticService;
+import com.carloscortina.demo.service.UserService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +49,10 @@ public class ReportsController {
     private ConsultationPaymentService cpService;
     @Autowired
     private ConsultationPaymentReceiptService cprService;
+    @Autowired
+    private UserService userService;
+    
+    private User loggedUser;
     
     /**
      *
@@ -52,7 +61,9 @@ public class ReportsController {
      */
     @RequestMapping(value = "")
     public String home(Model model){
-        
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
         return "Reports/ReportsHome";
     }
     
@@ -137,7 +148,7 @@ public class ReportsController {
        }catch(Exception err){
            err.printStackTrace();
        }
-       List<Consultationpaymentreceipt> result = cprService.getConsultationPAymentByDateRange(s, e);
+       List<Consultationpaymentreceipt> result = cprService.getConsultationPAymentByDateRange(s, e, loggedUser);
        
        for(Consultationpaymentreceipt cpr: result){
            cpr.setConsultationDate(cpr.getIdPayment().getIdConsultationCostAbstract().getIdConsultation().getIdAppointment().getDate());
@@ -145,5 +156,24 @@ public class ReportsController {
        
        return new JsonPack<Consultationpaymentreceipt>(result); 
     }
+    
+    @RequestMapping(value="getConsultationReceiptsTotals")
+    public @ResponseBody JsonPack<Consultationpaymentreceipt> getConsultationReceiptsTotals(@RequestParam String start, @RequestParam String end){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+
+       return new JsonPack<Consultationpaymentreceipt>(cprService.getConsultationPaymentReceiptTotals(s, e, loggedUser));
+       
+
+    }
+    
     
 }
