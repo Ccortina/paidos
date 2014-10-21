@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -44,12 +45,38 @@ public class Consultationactivity implements Serializable {
     @JoinColumn(name = "idActivity", referencedColumnName = "IdActivity", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Activity activity;
+    @Transient
+    private double globalConsultorySum;
+    @Transient
+    private double globalExternalSum;
+    @Transient
+    private double globalTotal;
+    @Transient
+    private long count;
 
     public Consultationactivity() {
     }
 
     public Consultationactivity(ConsultationactivityPK consultationactivityPK) {
         this.consultationactivityPK = consultationactivityPK;
+    }
+
+    public Consultationactivity(Activity activity, double globalTotal, long count) {
+        this.activity = activity;
+        this.globalTotal = globalTotal;
+        this.count = count;
+    }
+
+    public Consultationactivity(double globalConsultorySum, double globalExternalSum, double globalTotal) {
+        this.globalConsultorySum = globalConsultorySum;
+        this.globalExternalSum = globalExternalSum;
+        this.globalTotal = globalTotal;
+    }
+
+    public Consultationactivity(double cost, Consultation consultation, Activity activity) {
+        this.cost = cost;
+        this.consultation = consultation;
+        this.activity = activity;
     }
 
     public Consultationactivity(double cost, Activity activity, int includeInBill) {
@@ -106,6 +133,38 @@ public class Consultationactivity implements Serializable {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public double getGlobalConsultorySum() {
+        return globalConsultorySum;
+    }
+
+    public void setGlobalConsultorySum(double globalConsultorySum) {
+        this.globalConsultorySum = globalConsultorySum;
+    }
+
+    public double getGlobalExternalSum() {
+        return globalExternalSum;
+    }
+
+    public void setGlobalExternalSum(double globalExternalSum) {
+        this.globalExternalSum = globalExternalSum;
+    }
+
+    public double getGlobalTotal() {
+        return globalTotal;
+    }
+
+    public void setGlobalTotal(double globalTotal) {
+        this.globalTotal = globalTotal;
     }
 
     @Override

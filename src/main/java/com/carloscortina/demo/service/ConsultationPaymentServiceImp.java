@@ -8,6 +8,7 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationPaymentDao;
 import com.carloscortina.demo.model.Consultationpayment;
+import com.carloscortina.demo.model.User;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
@@ -80,6 +81,11 @@ public class ConsultationPaymentServiceImp implements ConsultationPaymentService
     @Override
     public List<Consultationpayment> getConsultationPAymentByDateRange(Date start, Date end) {
         return dao.getConsultationPAymentByDateRange(start, end);
+    }
+
+    @Override
+    public List<Consultationpayment> getConsultationPaymentByDateRange(Date start, Date end, User doctor) {
+        return dao.getConsultationPaymentByDateRange(start, end, doctor);
     }
     
 }

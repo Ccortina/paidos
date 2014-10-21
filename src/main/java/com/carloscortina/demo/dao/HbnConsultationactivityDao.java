@@ -6,10 +6,8 @@
 
 package com.carloscortina.demo.dao;
 
-import com.carloscortina.demo.model.Activity;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.User;
-import com.carloscortina.demo.model.Vaccine;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -32,14 +30,51 @@ public class HbnConsultationactivityDao extends GenericHbnDao<Consultationactivi
     }
     
         
-    /*@Override
-    public List<Consultationactivity> getPeriodActivities(Date start, Date end,User user){
-        Query query = getSession().createQuery("FROM Consultationactivity a WHERE a.consultation.idAppointment.date >= :start ANDa.consultation.idAppointment.date <= :end "
-                + " AND user.idUser=:idUser group by a.activity.idActivityType.idActivityType");
+    @Override
+    public List<Consultationactivity> getGlobalReport(Date start, Date end,User user){
+        Query query = getSession().createQuery("FROM Consultationactivity a WHERE a.consultation.idAppointment.date >= :start AND a.consultation.idAppointment.date <= :end "
+                + " AND consultation.idAppointment.idDoctor.idUser=:idUser ");
         query.setParameter("start", start);
         query.setParameter("end", end);
         query.setParameter("idUser", user.getIdUser());
         
+        return query.list();
+    }
 
-    }*/
+    @Override
+    public List<Consultationactivity> getIncomeByActivityTotals(Date start, Date end, User user,int type) {
+        Query query = getSession().createQuery("SELECT new Consultationactivity(a.activity,SUM(a.cost),COUNT(*)) FROM "
+                + "Consultationactivity a "
+                + "INNER JOIN a.consultation.consultationcostabstractList liq "
+                + "INNER JOIN a.consultation.consultationactivityList act "
+                + "WHERE a.consultation.idAppointment.date >= :start AND a.consultation.idAppointment.date <= :end "
+                + "AND a.consultation.idDoctor.idUser=:idUser "
+                + "AND liq.idConsultationPaymentStatus.idConsultationPaymentEstatus = 3 "
+                + "AND act.activity.idActivityType.idActivityType = :type "
+                + "GROUP BY a.activity.idActivity");
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("idUser", user.getIdUser());
+        query.setParameter("type", type);
+        
+        return query.list();
+    }
+    
+    @Override
+    public List<Consultationactivity> getIncomeByActivityDetails(Date start, Date end, User user,int type) {
+        Query query = getSession().createQuery("SELECT new Consultationactivity(a.cost,a.consultation,a.activity) "
+                + "FROM Consultationactivity a "
+                + "INNER JOIN a.consultation.consultationcostabstractList liq "
+                + "INNER JOIN a.consultation.consultationactivityList act "
+                + "WHERE a.consultation.idAppointment.date >= :start AND a.consultation.idAppointment.date <= :end "
+                + "AND a.consultation.idDoctor.idUser=:idUser "
+                + "AND liq.idConsultationPaymentStatus.idConsultationPaymentEstatus = 3 "
+                + "AND act.activity.idActivityType.idActivityType = :type ");
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("idUser", user.getIdUser());
+        query.setParameter("type", type);
+        
+        return query.list();
+    }
 }

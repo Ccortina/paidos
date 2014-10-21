@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.carloscortina.demo.model.Appointment;
+import com.carloscortina.demo.model.User;
 import java.util.Date;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -103,6 +104,11 @@ public class AppointmentServiceImp implements AppointmentService {
     @Override
     public List<Appointment> getAvaibleAppointmentsByPatient(Date start, Date end, int idPatient) {
         return appointmentDao.getAvaibleAppointmentsByPatient(start, end, idPatient);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByDateRange(Date start, Date end, User doctor) {
+        return appointmentDao.getAppointmentsByDateRange(start, end, doctor);
     }
 
 }

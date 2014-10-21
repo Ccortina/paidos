@@ -26,6 +26,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -64,6 +66,7 @@ public class Consultationcostabstract implements Serializable {
     @ManyToOne
     private Consultation idConsultation;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConsultationCostAbstract")
     private List<Consultationpayment> consultationpaymentList;
     //Auxiliar Fields not originally from the DataBase

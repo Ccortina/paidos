@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -52,12 +53,19 @@ public class Diagnostic implements Serializable {
     @JoinColumn(name = "idCIE10", referencedColumnName = "idCIE10")
     @ManyToOne
     private Cie10 idCIE10;
+    @Transient
+    private long count;
 
     public Diagnostic() {
     }
 
     public Diagnostic(Integer idDiagnostic) {
         this.idDiagnostic = idDiagnostic;
+    }
+
+    public Diagnostic(Cie10 idCIE10, long count) {
+        this.idCIE10 = idCIE10;
+        this.count = count;
     }
 
     public Integer getIdDiagnostic() {
@@ -106,6 +114,14 @@ public class Diagnostic implements Serializable {
 
     public void setIdCIE10(Cie10 idCIE10) {
         this.idCIE10 = idCIE10;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     @Override

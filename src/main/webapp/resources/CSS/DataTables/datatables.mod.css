@@ -19,6 +19,10 @@ tr.vpExpired:hover,tr.vpExpired.selected{
     background-color:#cc213b!important;
 }
 
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
 
 
 

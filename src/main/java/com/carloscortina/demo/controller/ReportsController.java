@@ -7,16 +7,21 @@
 package com.carloscortina.demo.controller;
 
 import com.carloscortina.demo.json.JsonPack;
+import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.Consultationcostabstract;
 import com.carloscortina.demo.model.Consultationpayment;
 import com.carloscortina.demo.model.Consultationpaymentreceipt;
-import com.carloscortina.demo.model.ReceiptTotal;
+import com.carloscortina.demo.model.Diagnostic;
+import com.carloscortina.demo.model.Report7Helper;
 import com.carloscortina.demo.model.ReportDiagnosticAuxiliar;
 import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.service.AppointmentService;
 import com.carloscortina.demo.service.ConsultationPaymentReceiptService;
 import com.carloscortina.demo.service.ConsultationPaymentService;
 import com.carloscortina.demo.service.ConsultationService;
+import com.carloscortina.demo.service.ConsultationactivityService;
 import com.carloscortina.demo.service.DiagnosticService;
 import com.carloscortina.demo.service.UserService;
 import java.text.SimpleDateFormat;
@@ -50,7 +55,11 @@ public class ReportsController {
     @Autowired
     private ConsultationPaymentReceiptService cprService;
     @Autowired
+    private ConsultationactivityService caService;
+    @Autowired
     private UserService userService;
+    @Autowired
+    private AppointmentService appointmentService;
     
     private User loggedUser;
     
@@ -111,7 +120,7 @@ public class ReportsController {
        }
        List<Consultationpayment> result = cpService.getConsultationPAymentByDateRange(s, e);
        double cac = 0.0 , cec = 0.0;
-       
+       int cont =0;
        for(Consultationpayment cp: result){
            cac = 0.0;
            cec = 0.0;
@@ -171,9 +180,124 @@ public class ReportsController {
        }
 
        return new JsonPack<Consultationpaymentreceipt>(cprService.getConsultationPaymentReceiptTotals(s, e, loggedUser));
-       
-
     }
     
+    @RequestMapping(value="getGlobalIncomeReport")
+    public @ResponseBody JsonPack<Consultationactivity> getGlobalIncomeReport(@RequestParam String start, @RequestParam String end){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+       double consultoryTotal=0.0,externalTotal=0.0;
+       
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+       List<Consultationactivity> result = caService.getGlobalReport(s, e, loggedUser);
+       for(Consultationactivity ca : result){
+           if(ca.getActivity().getIdActivityType().getIdActivityType() == 3){   //External
+               externalTotal = externalTotal + ca.getCost();
+           }else{
+               consultoryTotal = consultoryTotal + ca.getCost();
+           }
+       }
+       List<Consultationactivity> totals = new ArrayList<Consultationactivity>();
+       totals.add(new Consultationactivity(consultoryTotal, externalTotal, externalTotal+consultoryTotal));
+       return new JsonPack<Consultationactivity>(totals);
+    }
     
+    @RequestMapping(value="getIncomeByActivity")
+    public @ResponseBody JsonPack<Report7Helper> getGlobalIncomeReport(@RequestParam String start, @RequestParam String end,@RequestParam int level,@RequestParam int type){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+       
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+       
+       //List<Consultationpayment> cpList = cpService.getConsultationPaymentByDateRange(s, e, loggedUser);
+       List<Consultationactivity> caList ;
+       List<Report7Helper> result = new ArrayList<Report7Helper>();
+       
+       if( type == 1){
+           caList = caService.getIncomeByActivityDetails(s, e, loggedUser,4);
+           
+       }else{
+           caList = caService.getIncomeByActivityDetails(s, e, loggedUser,3);
+       }
+       
+       for(Consultationactivity ca: caList){
+           for(Consultationcostabstract cc: ca.getConsultation().getConsultationcostabstractList()){
+               for(Consultationpayment cp: cc.getConsultationpaymentList()){
+                   if(cp.getIdPaymentType().getIdConsultationPaymentType() == 1){
+                       result.add(new Report7Helper(ca.getActivity(), ca.getConsultation().getIdPatient(), 
+                        ca.getConsultation().getIdAppointment().getDate(), 
+                        cp.getDate(), ca.getCost()));
+                   }
+               }
+           }
+       }
+       
+       return new JsonPack<Report7Helper>(result);
+    }
+    
+    @RequestMapping(value="getIncomeByActivityTotals")
+    public @ResponseBody JsonPack<Consultationactivity> getGlobalIncomeReportTotals(@RequestParam String start, @RequestParam String end,@RequestParam int level,@RequestParam int type){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+       
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+       
+       if(type == 1){
+            return new JsonPack<Consultationactivity>(caService.getIncomeByActivityTotals(s, e, loggedUser,4));
+       }else{
+            return new JsonPack<Consultationactivity>(caService.getIncomeByActivityTotals(s, e, loggedUser,3));
+       }
+    }
+    
+    @RequestMapping(value="getDiagnosticsUseTable")
+    public @ResponseBody JsonPack<Diagnostic> getDiagnosticsUseTable(@RequestParam String start, @RequestParam String end){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+       
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+       
+       return new JsonPack<Diagnostic>(diagnosticService.getDiagnosticsUseByRange(s, e, loggedUser));
+       
+    }
+    
+    @RequestMapping(value="getAppointmentsRelation")
+    public @ResponseBody JsonPack<Appointment> getAppointmentsRelation(@RequestParam String start, @RequestParam String end){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+       Date s = new Date();
+       Date e = new Date();
+       
+       try{
+           s = sdf.parse(start);
+           e = sdf.parse(end);
+       }catch(Exception err){
+           err.printStackTrace();
+       }
+       
+       return new JsonPack<Appointment>(appointmentService.getAppointmentsByDateRange(s, e, loggedUser));
+       
+    }
 }

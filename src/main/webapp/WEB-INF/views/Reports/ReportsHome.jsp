@@ -51,6 +51,9 @@
                         <option value="4">Ingresos</option>
                         <option value="5">Relacion de recibos</option>
                         <option value="6">Resumen global ingresos</option>
+                        <option value="7">Ingresos por actividad</option>
+                        <option value="8">Estadisticas de diagnosticos</option>
+                        <option value="9">Relacion pacientes consultas</option>
                     </select>
                 </div>
             </div>
@@ -105,6 +108,64 @@
                 </div>
             </form>
         </div>
+        <div class="row forHiding" id="divReport7Options">
+            <form id="formOptionR7">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Nivel</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="resetForm" name="radioOptionR7" value="1" checked>
+                                    Detalles
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="resetForm" name="radioOptionR7" value="2">
+                                    Totales
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Tipo</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="resetForm" name="radioOptionR71" value="1" checked>
+                                    Consultorio
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="resetForm" name="radioOptionR71" value="2">
+                                    Externo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <div class="row forHiding" id="divTable3">
@@ -132,6 +193,27 @@
         <table id="tblReport6" class="row-border hover"></table>
     </div>
 </div>
+<div class="row forHiding" id="divTable7">
+    <div class="col-sm-12">
+        <table id="tblReport7" class="row-border hover"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable71">
+    <div class="col-sm-12">
+        <table id="tblReport71" class="row-border hover"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable8">
+    <div class="col-sm-12">
+        <table id="tblReport8" class="row-border hover"></table>
+    </div>
+</div>
+<div class="row forHiding" id="divTable9">
+    <div class="col-sm-12">
+        <table id="tblReport9" class="row-border hover"></table>
+    </div>
+</div>
+
 <div class="row forHiding" id="divGraph">
     <div class="col-sm-12">
         <div id="tooltip"></div>

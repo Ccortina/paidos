@@ -6,6 +6,9 @@ package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Diagnostic;
+import com.carloscortina.demo.model.User;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +18,5 @@ import java.util.Map;
 public interface DiagnosticDao extends GenericDao<Diagnostic>{
     
     public Map<Cie10,Long> getDiagnosticsUse();
+    public List<Diagnostic> getDiagnosticsUseByRange(Date start,Date end,User doctor);
 }

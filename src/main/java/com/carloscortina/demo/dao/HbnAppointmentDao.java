@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.carloscortina.demo.model.Appointment;
 import com.carloscortina.demo.model.Patient;
+import com.carloscortina.demo.model.User;
 import java.util.Date;
 import org.hibernate.Query;
 
@@ -83,6 +84,33 @@ public class HbnAppointmentDao extends GenericHbnDao<Appointment> implements App
     public List<Appointment> getAppointmentsByStatus(int idStatus) {
         Query query = getSession().createQuery("FROM Appointment a WHERE a.idStatus.idAppointmentStatus=:idStatus");
         query.setParameter("idStatus", idStatus);
+        return query.list();
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByDateRange(Date start, Date end, User doctor) {
+        Query query;
+        if(doctor == null){
+            query = getSession().createQuery("SELECT new Appointment(a.date,a.startTime,a.idStatus,a.idPatient) "
+                + "FROM Appointment a "
+                + "WHERE a.date >= :start AND "
+                + "a.date <= :end ");
+            
+            query.setParameter("start", start);
+            query.setParameter("end", end);
+            return query.list();
+        }
+        
+        query = getSession().createQuery("SELECT new Appointment(a.date,a.startTime,a.idStatus,a.idPatient) "
+        + "FROM Appointment a "
+        + "INNER JOIN a.consultationList cons "
+        + "WHERE a.date >= :start AND "
+        + "a.date <= :end AND "
+        + "cons.idDoctor.idUser = :doctor");
+        
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("doctor", doctor.getIdUser());
         return query.list();
     }
 }

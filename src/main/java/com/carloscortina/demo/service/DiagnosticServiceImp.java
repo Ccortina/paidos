@@ -7,6 +7,8 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.dao.DiagnosticDao;
 import com.carloscortina.demo.model.Cie10;
 import com.carloscortina.demo.model.Diagnostic;
+import com.carloscortina.demo.model.User;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.criterion.Criterion;
@@ -79,5 +81,10 @@ public class DiagnosticServiceImp implements DiagnosticService{
     @Override
     public Map<Cie10, Long> getDiagnosticsUse() {
         return dao.getDiagnosticsUse();
+    }
+
+    @Override
+    public List<Diagnostic> getDiagnosticsUseByRange(Date start, Date end, User doctor) {
+        return dao.getDiagnosticsUseByRange(start, end, doctor);
     }
 }

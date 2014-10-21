@@ -191,7 +191,7 @@ function openPaymentModal(){
             }else{
                 $('#tblRelatives').DataTable().ajax.reload();
             }
-            
+            //Load third party payer for the receipt
             if ( ! $.fn.DataTable.isDataTable( '#tblThirdPartyPayers' ) ) {
               initializeThirdPartyPayersTable();
             }else{
@@ -203,6 +203,7 @@ function openPaymentModal(){
     }
 }
 
+//Table that will have the activities of the consultation
 function initializeConsultationActivityTable(){
     
     $('#tblConsultationActivity').DataTable({
@@ -229,6 +230,7 @@ function initializeConsultationActivityTable(){
     });
 }
 
+//Bootstrap validator iniazilitazion for the payment
 function initializePaymentFormValidator(){
     $('#formPayment').bootstrapValidator({
         feedbackIcons: {
@@ -328,7 +330,7 @@ function savePayment(){
     var data =[];
     //Save if its total or partial payment
     data.push({name:"paymentType",value:$("#formPayment [name='paymentType']").val()});
-    if(parseInt($("#formPayment [name='paymentType']").val()) === 1){
+    if(parseInt($("#formPayment [name='paymentType']:checked").val()) === 1){
         prType = "Liquidacion";
     }else{
         prType= "Pago Parcial";

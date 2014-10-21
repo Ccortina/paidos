@@ -7,7 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.model.Consultationpayment;
-import com.carloscortina.demo.model.Consultationpaymentreceipt;
+import com.carloscortina.demo.model.User;
 import java.util.Date;
 import java.util.List;
 
@@ -18,4 +18,5 @@ import java.util.List;
 public interface ConsultationPaymentService extends GenericService<Consultationpayment>{
 
     public List<Consultationpayment> getConsultationPAymentByDateRange(Date start,Date end);
+    public List<Consultationpayment> getConsultationPaymentByDateRange(Date start,Date end,User doctor);
 }

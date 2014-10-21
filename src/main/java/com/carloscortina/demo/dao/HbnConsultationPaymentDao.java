@@ -7,6 +7,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationpayment;
+import com.carloscortina.demo.model.User;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -26,6 +27,19 @@ public class HbnConsultationPaymentDao extends GenericHbnDao<Consultationpayment
                 + "cp.idConsultationCostAbstract.idConsultation.idAppointment.date <= :eDate");
         query.setParameter("bDate", start);
         query.setParameter("eDate", end);
+        
+        return query.list();
+    }
+
+    @Override
+    public List<Consultationpayment> getConsultationPaymentByDateRange(Date start, Date end, User doctor) {
+        Query query = getSession().createQuery("FROM Consultationpayment cp WHERE cp.idConsultationCostAbstract.idConsultation.idAppointment.date >= :bDate AND "
+                + "cp.idConsultationCostAbstract.idConsultation.idAppointment.date <= :eDate "
+                + "AND cp.idConsultationCostAbstract.idConsultation.idDoctor.idUser=:idUser AND "
+                + "idConsultationCostAbstract.idConsultationPaymentStatus.idConsultationPaymentEstatus=3");
+        query.setParameter("bDate", start);
+        query.setParameter("eDate", end);
+        query.setParameter("idUser", doctor.getIdUser());
         
         return query.list();
     }

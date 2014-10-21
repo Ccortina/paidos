@@ -8,6 +8,8 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationactivityDao;
 import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.User;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -79,6 +81,21 @@ public class ConsultationactivityServiceImp implements ConsultationactivityServi
     @Override
     public List<Consultationactivity> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Consultationactivity> getGlobalReport(Date start, Date end, User user) {
+        return caDao.getGlobalReport(start, end, user);
+    }
+
+    @Override
+    public List<Consultationactivity> getIncomeByActivityTotals(Date start, Date end, User user,int type) {
+        return caDao.getIncomeByActivityTotals(start, end, user,type);
+    }
+
+    @Override
+    public List<Consultationactivity> getIncomeByActivityDetails(Date start, Date end, User user, int type) {
+        return caDao.getIncomeByActivityDetails(start, end, user, type);
     }
     
 }

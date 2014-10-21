@@ -7,6 +7,8 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationactivity;
+import com.carloscortina.demo.model.User;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +18,7 @@ import java.util.List;
 public interface ConsultationactivityDao extends GenericDao<Consultationactivity>{
 
     public List<Consultationactivity> getConsultationsByActivity(int idActivity);
+    public List<Consultationactivity> getGlobalReport(Date start, Date end,User user);
+    public List<Consultationactivity> getIncomeByActivityTotals(Date start, Date end,User user,int type);
+    public List<Consultationactivity> getIncomeByActivityDetails(Date start, Date end, User user,int type);
 }

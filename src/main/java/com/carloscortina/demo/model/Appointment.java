@@ -120,6 +120,13 @@ public class Appointment implements Serializable {
         this.programmedBySystem = programmedBySystem;
     }
 
+    public Appointment(Date date, Date startTime, Appointmentstatus idStatus, Patient idPatient) {
+        this.date = date;
+        this.startTime = startTime;
+        this.idStatus = idStatus;
+        this.idPatient = idPatient;
+    }
+
     public Appointment(Date date, Date startTime, String motive, String notes, int immunization, Double weight, Double temperature, Double size, Double ta, Double ta2, Double taAverage, Double pc, int programmedBySystem, User idDoctor, User registeredBy, Appointmentstatus idStatus, Patient idPatient) {
         this.date = date;
         this.startTime = startTime;

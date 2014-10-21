@@ -105,6 +105,7 @@ public class Consultation implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultation")
     private List<Consultationmeasure> consultationmeasureList;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "idConsultation")
     private List<Consultationcostabstract> consultationcostabstractList;
 

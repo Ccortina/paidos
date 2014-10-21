@@ -7,6 +7,7 @@ package com.carloscortina.demo.dao;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Patient;
+import com.carloscortina.demo.model.User;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -179,4 +180,5 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
         
         return result;
     }
+
 }

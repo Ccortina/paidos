@@ -10,6 +10,10 @@ $(document).ready(function(){
     $("#selectReport").on("change",function(){
         showReport();
     });
+    
+    $(".resetForm").on("change",function(){
+        $("#formDateRange").data('bootstrapValidator').resetForm();
+    });
 
     for (var i = new Date().getFullYear(); i > 1900; i--)
     {
@@ -54,7 +58,31 @@ function showReport(){
             $(".forHiding").hide();
             $("#divTableReportsOptions").show();
             $("#divTable5").show();
-            break;   
+            break;
+        case '6':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
+            $(".forHiding").hide();
+            $("#divTableReportsOptions").show();
+            $("#divTable6").show();
+            break;
+        case '7':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
+            $(".forHiding").hide();
+            $("#divTableReportsOptions").show();
+            $("#divReport7Options").show();
+            break;
+        case '8':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
+            $(".forHiding").hide();
+            $("#divTableReportsOptions").show();
+            $("#divTable8").show();
+            break;
+        case '9':
+            $("#formDateRange").data('bootstrapValidator').resetForm();
+            $(".forHiding").hide();
+            $("#divTableReportsOptions").show();
+            $("#divTable9").show();
+            break; 
     }
 }
 
@@ -248,7 +276,17 @@ function renderTableReports(){
             break;
         case '5':   //Ingresos
             renderReport5();
-            break; 
+            break;
+        case '6':   //Ingresos
+            renderReport6();
+            break;
+        case '7':   //Ingresos
+        renderReport7();
+        case '8':   //Ingresos
+        renderReport8();
+        case '9':   //Ingresos
+        renderReport9();
+        break;
     }
 }
 
@@ -544,9 +582,7 @@ function renderReport5(){
 }
 
 function renderReport6(){
-    
-    $("#tblReport6").append('<tfoot><tr><td></td><td></td><td></td><td></td>\n\
-                                        <td></td><td></td><td></td></tr></tfoot>');
+
     $('#tblReport6').DataTable({
         "destroy": true,
         "scrollY": "400px",
@@ -569,22 +605,16 @@ function renderReport6(){
               }
         },
         "ajax":{
-            "url":"/demo/reports/getConsultationReceipts",
+            "url":"/demo/reports/getGlobalIncomeReport",
             "data":{
                 "start":$( "#inputBeginingDate" ).val(),
                 "end":$( "#inputEndingDate" ).val()
             }
         },
         "columns":[
-            {"title": "Folio","data":"receiptNumber"},
-            {"title": "Fecha Emision","render":function(row, data, dataIndex){
-                return moment(dataIndex.consultationDate).format("DD/MM/YYYY");
-            }},
-            {"title": "A favor de","data":"payerName"},
-            {"title": "RFC","data":"rfc"},
-            {"title": "Valor","data":"idPayment.paymentTotal"},
-            {"title": "Retencion","data":"isr"},
-            {"title": "Neto","data":"total"}
+            {"title": "Consultorio","data":"globalConsultorySum"},
+            {"title": "Externa","data":"globalExternalSum"},
+            {"title": "Total","data":"globalTotal"}
         ],
         "initComplete":function(settings,json){
 
@@ -597,24 +627,311 @@ function renderReport6(){
                     $(this).addClass('selected');
                 }   
             });
-        },
-        "footerCallback":function( tfoot, data, start, end, display ) {
-             var api = this.api(), data;
+        }
+    });
+}
 
-             // Total over all pages
-             var total = 0.0;
-             for(var i =4; i < 7; i++){
-                total = 0.0; 
-                data = api.column( i ).data();
+function renderReport7(){
+
+    if(parseInt($('input[name="radioOptionR7"]:checked').val()) === 1){
+        $("#divTable7").show();
+        $("#divTable71").hide();
+        $("#tblReport7").append('<tfoot><tr><td></td><td><b>Total registros:</b></td><td></td><td><b>Total:</b></td>\n\
+                                                <td></td></tr></tfoot>');
+        $('#tblReport7').DataTable({
+            "destroy": true,
+            "scrollY": "400px",
+            "order":[0,'desc'],
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "searching": false,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+            },
+            "language": {
+                "emptyTable": "No hay informacion en la tabla.",
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                 "paginate": {
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  }
+            },
+            "ajax":{
+                "url":"/demo/reports/getIncomeByActivity",
+                "data":{
+                    "start":$( "#inputBeginingDate" ).val(),
+                    "end":$( "#inputEndingDate" ).val(),
+                    "level":$('input[name="radioOptionR7"]:checked').val(),
+                    "type":$('input[name="radioOptionR71"]:checked').val(),
+                }
+            },
+            "columns":[
+                {"title": "Actividad","data":"activity.activity"},
+                {"title": "Paciente","render":function(row, data, dataIndex){
+                    return dataIndex.patient.fatherLastName+" "+dataIndex.patient.motherLastName+" "+dataIndex.patient.firstName; 
+                }},
+                {"title": "Fecha Cita","data":"consutlationDate"},
+                {"title": "Fecha Pago","data":"paymentDate"},
+                {"title": "Valor","data":"value"}
+            ],
+            "initComplete":function(settings,json){
+
+                $('#tblReport7 tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblReport7').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }   
+                });
+            },
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        $(rows).eq( i ).before(
+                            '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                } );
+            },
+            "footerCallback":function( tfoot, data, start, end, display ) {
+                var api = this.api(), data;
+
+                // Total over all pages 
+                var total = 0.0; 
+                data = api.column( 4 ).data();
                 total = data.length ?
                 data.reduce( function (a, b) {
                         return a + b;
                 } ) :
                 0;
                 // Update footer
-                $( api.column( i ).footer() ).html('$'+ total);
-             }
-        }
+                $( api.column( 4 ).footer() ).html('$'+ total);
+                $( api.column( 2 ).footer() ).html($('#tblReport7').DataTable().column( 0 ).data().length);
+
+            }
+        });
+    }else{
+        $("#divTable71").show();
+        $("#divTable7").hide();
+        $("#tblReport71").append('<tfoot><tr>\n\
+                                    <td><b>Total:</b></td>\n\
+                                    <td></td>\n\
+                                    <td></td>\n\
+                                    </tr></tfoot>');
+        $('#tblReport71').DataTable({
+            "destroy": true,
+            "scrollY": "400px",
+            "order":[0,'desc'],
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "searching": false,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+            },
+            "language": {
+                "emptyTable": "No hay informacion en la tabla.",
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                 "paginate": {
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  }
+            },
+            "ajax":{
+                "url":"/demo/reports/getIncomeByActivityTotals",
+                "data":{
+                    "start":$( "#inputBeginingDate" ).val(),
+                    "end":$( "#inputEndingDate" ).val(),
+                    "level":$('input[name="radioOptionR7"]:checked').val(),
+                    "type":$('input[name="radioOptionR71"]:checked').val(),
+                }
+            },
+            "columns":[
+                {"title": "Actividad","data":"activity.activity"},
+                {"title": "Cantidad","data":"count"},
+                {"title": "Valor","data":"globalTotal"}
+            ],
+            "initComplete":function(settings,json){
+
+                $('#tblReport71 tbody').on( 'click', 'tr', function (e) {
+                    var table = $('#tblReport71').DataTable();
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }else{
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }   
+                });
+            },
+            "footerCallback":function( tfoot, data, start, end, display ) {
+                var api = this.api(), data;
+
+                // Total over all pages 
+                var total = 0.0; 
+                data = api.column( 2 ).data();
+                total = data.length ?
+                data.reduce( function (a, b) {
+                        return a + b;
+                } ) :
+                0;
+                // Update footer
+                $( api.column( 2 ).footer() ).html('$'+ total);
+
+            }
+        });
+    }
+}
+
+function renderReport8(){
+    
+    $("#tblReport8").append('<tfoot><tr>\n\
+                                    <td><b>Total:</b></td>\n\
+                                    <td></td>\n\
+                                    </tr></tfoot>');
+    $('#tblReport8').DataTable({
+        "destroy": true,
+        "scrollY": "400px",
+        "order":[0,'desc'],
+        "scrollCollapse": true,
+        "paging": true,
+        "info": true,
+        "searching": true,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+        },
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar",
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+             "paginate": {
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+        },
+        "ajax":{
+            "url":"/demo/reports/getDiagnosticsUseTable",
+            "data":{
+                "start":$( "#inputBeginingDate" ).val(),
+                "end":$( "#inputEndingDate" ).val()
+            }
+        },
+        "columns":[
+            {"title": "Diagnostico","data":"idCIE10.diagnostic"},
+            {"title": "Ocurrencias","data":"count"}
+        ],
+        "initComplete":function(settings,json){
+
+            $('#tblReport8 tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblReport8').DataTable();
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }   
+            });
+        },
+        "footerCallback":function( tfoot, data, start, end, display ) {
+                var api = this.api(), data;
+
+                // Total over all pages 
+                var total = 0.0; 
+                data = api.column( 1 ).data();
+                total = data.length ?
+                data.reduce( function (a, b) {
+                        return a + b;
+                } ) :
+                0;
+                // Update footer
+                $( api.column( 1 ).footer() ).html( total );
+            }
+    });
+}
+
+function renderReport9(){
+    
+    $('#tblReport9').DataTable({
+        "destroy": true,
+        "scrollY": "400px",
+        "order":[0,'desc'],
+        "scrollCollapse": true,
+        "paging": true,
+        "info": true,
+        "searching": true,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/demo/resources/js/BootstrapPlugins/DataTables/copy_csv_xls_pdf.swf"
+        },
+        "language": {
+            "emptyTable": "No hay informacion en la tabla.",
+            "search": "Buscar",
+            "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+             "paginate": {
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              }
+        },
+        "ajax":{
+            "url":"/demo/reports/getAppointmentsRelation",
+            "data":{
+                "start":$( "#inputBeginingDate" ).val(),
+                "end":$( "#inputEndingDate" ).val()
+            }
+        },
+        "columns":[
+            {"title": "OrgDate","data":"date","visible":false},
+            {"title": "Fecha","render":function(row, data, dataIndex){
+                return moment(dataIndex.date).format("DD/MM/YYYY");
+            }},
+            {"title": "Hora","data":"startTime"},
+            {"title": "Paciente","render":function(row, data, dataIndex){
+                return (dataIndex.idPatient.firstName + " " +
+                        dataIndex.idPatient.fatherLastName + " " +
+                        dataIndex.idPatient.motherLastName );
+            }},
+            {"title": "Estatus","data":"idStatus.status"}
+        ],
+        "initComplete":function(settings,json){
+
+            $('#tblReport9 tbody').on( 'click', 'tr', function (e) {
+                var table = $('#tblReport9').DataTable();
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }else{
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }   
+            });
+        },
+        "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        $(rows).eq( i ).before(
+                            '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                } );
+         }
     });
 }
 
