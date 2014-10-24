@@ -22,9 +22,9 @@ $(document).ready(function(){
     
     $("#receiptModal").on("shown.bs.modal",function(){
         clearFormInputTextFields('formReceiptPayer');
-        $("#formReceiptPayer [name='receiptTotal']").val($("#inputTotal").val());
+        $("#formReceiptPayer [name='receiptTotal']").val($("#paymentTotal").val());
         $("#formReceiptPayer [name='isr']").val("0.0");
-        $("#formReceiptPayer [name='receiptSum']").val($("#inputTotal").val());
+        $("#formReceiptPayer [name='receiptSum']").val($("#paymentTotal").val());
         $("#formReceiptPayer [name='receiptNumber']").val(
                 $('#tblConsultationCostAbstract').DataTable().row('.selected').data()["consultationPatient"]["idDoctor"]["receiptNumber"]);
         $("#receiptStatus").html(prType);
@@ -146,7 +146,7 @@ function initializeCCATable(){
                     $(row).addClass("vpExpired");
                     break;
                 case 2:
-                    $(row).css({'background-color':'#5BAA3A'});//Patialy Paid
+                    $(row).css({'background-color':'#feffa3'});//Patialy Paid
                     $(row).addClass("vpSuspended");
                     break;
                 case 3:
@@ -168,18 +168,18 @@ function openPaymentModal(){
         }else{
             $('#tblConsultationActivity').DataTable().clear();
             row["activities"].forEach(function(entry){
-                $('#tblConsultationActivity').DataTable().row.add(entry).draw();
-                if(entry.includeInBill === 1){
-                    if(parseInt(entry.activity.idActivityType.idActivityType) === 3){
-                        eTotal += entry.cost;
-                    }else{
-                        cTotal += entry.cost;
-                    }
+                $('#tblConsultationActivity').DataTable().row.add(entry).draw();    //Add the consultation activity to the table
+                //if(entry.includeInBill === 1){
+                if(parseInt(entry.activity.idActivityType.idActivityType) === 3){
+                    eTotal += entry.cost;   //External activity total
+                }else{
+                    cTotal += entry.cost;   //Consultory activity total
                 }
+                //}
             });
-            total = eTotal + cTotal;
+            //total = eTotal + cTotal;
             
-            $("#inputTotal").val(total);
+            $("#inputTotal").val( row["rest"] );
             $("#inputTotalConsultory").val(cTotal);
             $("#inputTotalExternal").val(eTotal);
             $("#paymentModal").modal('show');
@@ -329,7 +329,7 @@ function initializePaymentFormValidator(){
 function savePayment(){
     var data =[];
     //Save if its total or partial payment
-    data.push({name:"paymentType",value:$("#formPayment [name='paymentType']").val()});
+    data.push({name:"paymentType",value:$("#formPayment [name='paymentType']:checked").val()});
     if(parseInt($("#formPayment [name='paymentType']:checked").val()) === 1){
         prType = "Liquidacion";
     }else{
@@ -583,6 +583,7 @@ function saveReceipt(){
         success:function(response){
             window.open('/demo/income/receiptPreview/'+response);
             $("#receiptModal").modal('hide');
+            $('#tblConsultationCostAbstract').DataTable().ajax.reload();
         },
         error:function(){
             

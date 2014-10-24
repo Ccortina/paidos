@@ -187,9 +187,9 @@ public class IncomeController {
         
         //Calculate the total cost
         for( Consultationactivity ca: cca.getIdConsultation().getConsultationactivityList()){
-            if(ca.getIncludeInBill() == 1){
-                totalCost += ca.getCost();
-            }
+            
+            totalCost += ca.getCost();
+            
         }
         
         if(Integer.parseInt(params.get("paymentType")) == 1){ //If total payment
@@ -198,7 +198,7 @@ public class IncomeController {
             cca.setRest(0.0);
         }else{
             cca.setIdConsultationPaymentStatus(cpsService.getById(2));
-            cca.setRest(totalCost - totalPayment);
+            cca.setRest(cca.getRest() - totalPayment);
         }
 
         //Save the payment
@@ -210,6 +210,35 @@ public class IncomeController {
         ccaService.updateItem(cca);
         
         return cp.getIdConsultationPayment();
+    }
+    
+    @RequestMapping(value="cancelPayment")
+    public @ResponseBody void cancelPayment(@RequestParam int payment){
+        Consultationpayment cp = cpService.getById(payment);
+        List<Consultationpaymentreceipt> cprList = cp.getConsultationpaymentreceiptList();
+        Consultationcostabstract cca = cp.getIdConsultationCostAbstract();
+        
+        //Return payment to consultation cost and if it was total then change the status
+        cca.setRest(cp.getPaymentTotal() + cca.getRest());
+        if(cp.getIdPaymentType().getIdConsultationPaymentType() == 1){
+            cca.setIdConsultationPaymentStatus(cpsService.getById(1)); //Not paid
+        }else{
+            cca.setIdConsultationPaymentStatus(cpsService.getById(2)); //Partially paid
+        }
+        
+        ccaService.updateItem(cca);
+        
+        //Update the receipt type to cancelled
+        for(Consultationpaymentreceipt cpr : cprList){
+            cpr.setIdConsultatioPaymentReceiptType(cprtService.getById(3));
+            cpr.setNotes("Recibo Cancelado");
+            cpr.setConcept(cpr.getConcept()+"\nRecibo Cancelado");
+            cprService.updateItem(cpr);
+        }
+        
+        //update consultation payment to cancelled
+        cp.setIdPaymentType(cptService.getById(3));
+        cpService.updateItem(cp);
     }
     
     @RequestMapping(value="saveReceipt")

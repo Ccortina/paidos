@@ -28,6 +28,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -75,6 +77,7 @@ public class Consultationpayment implements Serializable {
     @Column(name = "note")
     private String note;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPayment")
     private List<Consultationpaymentreceipt> consultationpaymentreceiptList;
     @JoinColumn(name = "idPaymentType", referencedColumnName = "idConsultationPaymentType")

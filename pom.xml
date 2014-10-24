@@ -12,7 +12,8 @@
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
-	 <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+                <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -27,43 +28,8 @@
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jdmk</groupId>
-					<artifactId>jmxtools</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jmx</groupId>
-					<artifactId>jmxri</artifactId>
-				</exclusion>
-			</exclusions>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -208,6 +174,11 @@
 	  <groupId>commons-io</groupId>
 	  <artifactId>commons-io</artifactId>
 	  <version>2.4</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-log4j12</artifactId>
+	  <version>1.7.7</version>
 	 </dependency>
 	</dependencies>
     <build>

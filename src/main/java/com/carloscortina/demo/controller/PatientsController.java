@@ -704,9 +704,10 @@ public class PatientsController {
             
             SimpleDateFormat stf = new SimpleDateFormat("kk:mm");
             Appointment appointment = new Appointment();
+
             //Create a default appointment
             try{
-                appointment = new Appointment(new Date(), stf.parse("09:00"), "Consulta",
+                appointment = new Appointment(new Date(), new Date(), "Consulta",
                     "Programada pro el sistema", 0,0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1 , doctor,
                         doctor, appointmentStatusService.getById(10),patientService.getById(idPatient));
             }catch(Exception e){ e.printStackTrace(); }

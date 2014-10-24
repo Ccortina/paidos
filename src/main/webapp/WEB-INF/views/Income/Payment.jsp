@@ -50,10 +50,10 @@
         <button type="button" class="btn btn-primary" onclick="showDetails();">Detalles</button>
     </div>
     <div class="col-sm-3">
-        <button type="button" class="btn btn-primary" onclick="cancel();">Imprimir</button>
+        <button type="button" class="btn btn-danger" onclick="cancel();">Cancelar</button>
     </div>
     <div class="col-sm-3">
-        <button type="button" class="btn btn-danger" onclick="specialPayment();">Imprimir</button>
+        <button type="button" class="btn btn-primary" onclick="specialPayment();">Pago especial</button>
     </div>
 </div>
 

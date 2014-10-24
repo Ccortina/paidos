@@ -51,6 +51,12 @@ function initializeCPTable(){
                     $(this).addClass('selected');
                 }   
             });
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if(data.idPaymentType.idConsultationPaymentType === 3){
+                $(row).css({'background-color':'#FF2A4A'});//Cancelled
+                $(row).addClass("vpExpired");
+            }
         }
     });
 }
@@ -89,3 +95,29 @@ function showDetails(){
     }
 }
 
+function cancel(){
+    var row = $("#tblPayment").DataTable().row('.selected').data();
+    
+    if(checkNotUndefined(row)){
+        bootbox.confirm("Esta seguro de cancelar este pago?", function(result) {
+            if(result){
+                var data =[];
+                data.push({name:"payment",value:row["idConsultationPayment"]});
+                $.ajax({
+                    url:"/demo/income/cancelPayment",
+                    data:data,
+                    success:function(response){
+                        $("#tblPayment").DataTable().ajax.reload();
+                    },
+                    error:function(){
+
+                    }
+                });
+                
+            }
+        });
+    }else{
+        displayWarningAlert("No se ha seleccionado un pago");
+    }
+    
+}

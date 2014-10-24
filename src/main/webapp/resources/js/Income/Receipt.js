@@ -79,6 +79,12 @@ function initializeCPRTable(){
                     $(this).addClass('selected');
                 }   
             });
+        },
+        "createdRow": function( row, data, dataIndex ) {
+            if(data.idConsultatioPaymentReceiptType.idConsultationPaymentReceipttype === 3){
+                $(row).css({'background-color':'#FF2A4A'});//Cancelled
+                $(row).addClass("vpExpired");
+            }
         }
     });
 }
