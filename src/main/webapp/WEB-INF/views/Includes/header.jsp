@@ -95,10 +95,18 @@ body {
                                     <li role="presentation" class="divider"></li>
                                     <li><a href="${contextPath}/catalogs/directoryHome">Directorio</a></li>
                                     <li role="presentation" class="divider"></li>
-                                    <li><a href="${contextPath}/catalogs/userHome">Usuario</a></li>
                                 </ul>
                             </li>
                             <li><a href="${contextPath}/reports">Reportes</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Administracion<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="${contextPath}/administration/userHome">Usuario</a></li>
+                                    <li><a href="${contextPath}/administration/permissionsHome">Permisos</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </sec:authorize>
 
@@ -117,11 +125,11 @@ body {
                                     <sec:authentication property="principal.username" />
                                 </div>
                             </li>
-                            <li><a href="${logoutUrl}">Logout</a></li>
+                            <li><a href="${logoutUrl}">Cerrar Sesion</a></li>
                         </sec:authorize>
                         <sec:authorize access="isAnonymous()">
                             <c:url var="loginUrl" value="/login" />
-                            <li class="active"><a href="${loginUrl}">Login</a></li>
+                            <li class="active"><a href="${loginUrl}">Iniciar Sesion</a></li>
                         </sec:authorize>
                     </ul>
                 </div>

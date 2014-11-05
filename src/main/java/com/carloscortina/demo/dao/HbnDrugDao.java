@@ -24,7 +24,7 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
                 + "drug.active,drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.applicationMethodId,drug.administrationUnitId) FROM Drug as drug";
         Query query = getSession().createQuery(hql);
         
-        List<Drug> result = query.list();
+        List<Drug> result = (List<Drug>) query.list();
         
         for(Drug temp: result){
             List<Drugdose> drugDoseList = getSession().createQuery("SELECT new Drugdose(dose.idDrugDose,dose.age,dose.dose) "
@@ -46,7 +46,7 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         Query query = getSession().createQuery(hql);
         query.setParameter("idTreatment",treatmentId);
         
-        List<Drug> result = query.list();
+        List<Drug> result = (List<Drug>)query.list();
         
         return result;
     }
@@ -59,7 +59,7 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         Query query = getSession().createQuery(hql);
         query.setParameter("presentationId",presentationId);
         
-        return query.list();
+        return (List<Drug>) query.list();
     }
     
     @Override
@@ -70,7 +70,7 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         Query query = getSession().createQuery(hql);
         query.setParameter("applicationId",applicationId);
         
-        return query.list();
+        return (List<Drug>) query.list();
     }
 
     @Override
@@ -81,12 +81,12 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
         Query query = getSession().createQuery(hql);
         query.setParameter("unitId",unitId);
         
-        return query.list();
+        return (List<Drug>) query.list();
     }
 
     @Override
     public List<Drug> getAllActiveDrugBasicInfo() {
-        return getSession().createQuery("SELECT new Drug(drug.idDrug,drug.drug,drug.drugPresentationId) FROM Drug drug "
+        return (List<Drug>) getSession().createQuery("SELECT new Drug(drug.idDrug,drug.drug,drug.drugPresentationId) FROM Drug drug "
                 + "WHERE drug.active=1").list();
     }
  }

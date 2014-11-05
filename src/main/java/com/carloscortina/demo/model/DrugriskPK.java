@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class DrugriskPK implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idDrug")

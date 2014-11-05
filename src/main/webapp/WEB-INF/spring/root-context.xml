@@ -55,7 +55,8 @@
 		<prop key="hibernate.dialect">
 			org.hibernate.dialect.MySQL5InnoDBDialect
 		</prop>
-		<prop key="hibernate.show_sql">false</prop>		
+		<prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.generate_statistics">true</prop>		
 	</util:properties>		
 	
 	<!-- SessionFactory for services -->

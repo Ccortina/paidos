@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class Cie10doctorPK implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idCIE10")

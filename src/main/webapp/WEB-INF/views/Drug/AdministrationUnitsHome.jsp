@@ -4,7 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page contentType="text/html" pageEncoding="windows-1252"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
 <jsp:include page="../Includes/header.jsp"/>
@@ -39,7 +39,7 @@
         <div class="col-sm-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Medicamentos - Unidades de administración</h3>
+                    <h3 class="panel-title">Medicamentos - Unidades de administraciÃ³n</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">

@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class AppointmentvaccinePK implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idAppointment")
@@ -67,9 +68,9 @@ public class AppointmentvaccinePK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idAppointment;
-        hash += (int) idVaccine;
-        hash += (int) idPatient;
+        hash += idAppointment;
+        hash += idVaccine;
+        hash += idPatient;
         return hash;
     }
 
