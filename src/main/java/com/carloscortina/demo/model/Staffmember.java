@@ -3,15 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.carloscortina.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,17 +23,13 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author Carlos Cortina
+ * @author Carlos
  */
 @Entity
 @Table(name = "staffmember")
 @NamedQueries({
     @NamedQuery(name = "Staffmember.findAll", query = "SELECT s FROM Staffmember s")})
 public class Staffmember implements Serializable {
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "receiptNumber")
-    private int receiptNumber;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,12 +65,10 @@ public class Staffmember implements Serializable {
     @NotNull
     @Column(name = "presciptionNumber")
     private int presciptionNumber;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDoctor")
-    private List<Patient> patientList;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStaffMember")
-    private List<User> userList;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "receiptNumber")
+    private int receiptNumber;
 
     public Staffmember() {
     }
@@ -88,12 +77,13 @@ public class Staffmember implements Serializable {
         this.idStaffMember = idStaffMember;
     }
 
-    public Staffmember(Integer idStaffMember, String name, String lastName, Date addedDate, int presciptionNumber) {
+    public Staffmember(Integer idStaffMember, String name, String lastName, Date addedDate, int presciptionNumber, int receiptNumber) {
         this.idStaffMember = idStaffMember;
         this.name = name;
         this.lastName = lastName;
         this.addedDate = addedDate;
         this.presciptionNumber = presciptionNumber;
+        this.receiptNumber = receiptNumber;
     }
 
     public Integer getIdStaffMember() {
@@ -160,20 +150,12 @@ public class Staffmember implements Serializable {
         this.presciptionNumber = presciptionNumber;
     }
 
-    public List<Patient> getPatientList() {
-        return patientList;
+    public int getReceiptNumber() {
+        return receiptNumber;
     }
 
-    public void setPatientList(List<Patient> patientList) {
-        this.patientList = patientList;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setReceiptNumber(int receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
 
     @Override
@@ -199,14 +181,6 @@ public class Staffmember implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Staffmember[ idStaffMember=" + idStaffMember + " ]";
-    }
-
-    public int getReceiptNumber() {
-        return receiptNumber;
-    }
-
-    public void setReceiptNumber(int receiptNumber) {
-        this.receiptNumber = receiptNumber;
     }
     
 }
