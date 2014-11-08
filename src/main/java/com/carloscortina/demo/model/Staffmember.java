@@ -35,6 +35,10 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Staffmember.findAll", query = "SELECT s FROM Staffmember s")})
 public class Staffmember implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "receiptNumber")
+    private int receiptNumber;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -195,6 +199,14 @@ public class Staffmember implements Serializable {
     @Override
     public String toString() {
         return "com.carloscortina.demo.model.Staffmember[ idStaffMember=" + idStaffMember + " ]";
+    }
+
+    public int getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(int receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
     
 }
