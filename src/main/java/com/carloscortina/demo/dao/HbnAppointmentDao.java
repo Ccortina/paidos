@@ -31,15 +31,10 @@ public class HbnAppointmentDao extends GenericHbnDao<Appointment> implements App
         List<Appointment> appointmentList = query.list();
         
         for(Appointment a: appointmentList){
-            /*Query subQuery = getSession().createQuery("SELECT new Patient(p.idPatient,p.firstName,p.fatherLastName,"
-                + "p.motherLastName,p.sex,p.birthday,p.active,p.idDoctor) FROM Patient as p"
-                + " WHERE p.isUser=:idPatient");
-            subQuery.setParameter("idPatient", a.getIdPatient().getIdPatient());*/
             Patient patient = new Patient(a.getIdPatient().getIdPatient(), a.getIdPatient().getFirstName(),
                     a.getIdPatient().getFatherLastName(), a.getIdPatient().getMotherLastName(),
                     a.getIdPatient().getSex(), a.getIdPatient().getBirthday(), a.getIdPatient().getActive(),
                     a.getIdPatient().getIdDoctor());
-            //a.setIdPatient((Patient)subQuery.uniqueResult());
             a.setIdPatient(patient);
         }
         return appointmentList;
