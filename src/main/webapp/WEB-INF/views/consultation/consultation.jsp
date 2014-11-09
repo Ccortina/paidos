@@ -179,7 +179,7 @@
                                 <div id="generales" class="tab-pane active"><jsp:include page="Tabs/generals.jsp"/></div>
                                 <div id="antecedentes" class="tab-pane"><jsp:include page="Tabs/BackgroundTab.jsp"/></div>
                                 <div id="documentos" class="tab-pane"><jsp:include page="Tabs/Files.jsp"/></div>
-                                <div id="graficas" class="tab-pane"></div>
+                                <div id="graficas" class="tab-pane"><jsp:include page="Tabs/graphs.jsp"/></div>
                                 <div id="inmunizaciones" class="tab-pane"><jsp:include page="Tabs/inmunization.jsp"/></div>
                                 <div id="labGabinetes" class="tab-pane"><jsp:include page="Tabs/LaboratoryTest.jsp"/></div>
                                 <div id="medidas" class="tab-pane"><jsp:include page="Tabs/Measures.jsp"/></div>
@@ -252,12 +252,7 @@
 <script src="${measuresJS}" type="text/javascript"></script>
 <script src="${diagnosticJS}" type="text/javascript"></script>
 <script src="${activitiesJS}" type="text/javascript"></script>
-
-<!--
-
-
 <script src="${graphsJS}" type="text/javascript"></script>
- -->
 
 
 

@@ -31,7 +31,7 @@ public class HomeController {
         * @param model
         * @return 
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = {"/home","/"}, method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
             
             model.addAttribute("doctors",userService.getUserByRole(2));
