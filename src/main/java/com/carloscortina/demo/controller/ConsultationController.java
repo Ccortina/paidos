@@ -457,6 +457,10 @@ public class ConsultationController {
         }
         
         //Section: Graphs/Charts
+        @RequestMapping(value="getConsultationsByPatient",produces = "application/json")
+        public @ResponseBody JsonPack<Consultation> getConsultationsByPatient(){
+            return new JsonPack<Consultation>( consultationService.getConsultationsByPatient( patient.getIdPatient() ) );
+        }
  
         //Section: Laboratory Test Tabs
         
@@ -1051,9 +1055,6 @@ public class ConsultationController {
             Integer activitySize = Integer.parseInt(parameters.get("activitySize"));
             consultation.setIdAppointment(appointment);
             
-            //for(Diagnostic d: diagnostic){
-           //consultation.getDiagnosticList().add(d);
-            //}
             consultation.setDiagnosticList(diagnostic);
             consultation.setType(ctService.getById(1));
             consultationService.create(consultation);
@@ -1064,7 +1065,6 @@ public class ConsultationController {
                 ConsultationmeasurePK cmPK = new ConsultationmeasurePK(consultation.getIdConsultation(), Integer.parseInt(parameters.get("measure"+i)));
                 Consultationmeasure cm = new Consultationmeasure(cmPK, parameters.get("mValue"+i));
                 cmService.create(cm);
-                //cmList.add(cm);
 
             }
             
@@ -1072,7 +1072,6 @@ public class ConsultationController {
                 Activity a = activityService.getById(Integer.parseInt(parameters.get("activity"+i)));
                 ConsultationactivityPK caPK = new ConsultationactivityPK(consultation.getIdConsultation(), a.getIdActivity());
                 Consultationactivity ca = new Consultationactivity(caPK, Double.parseDouble(parameters.get("activityPrice"+i)), Integer.parseInt(parameters.get("activityInclude"+i)));
-                //caList.add(ca);
                 caService.create(ca);
                 
                 activitiesTotalCost += Double.parseDouble(parameters.get("activityPrice"+i));

@@ -18,24 +18,16 @@
 		appropiate role.The intercept url is applied in order of precedence only applying the first
 		occurence, and at the end the rule /** applies for anything that didn't match the previous -->
 
-	<http use-expressions="true" >
-		<!--<intercept-url pattern="/" access="permitAll"/>	
-		<intercept-url pattern="/login/*" access="permitAll"/>
-		<intercept-url pattern="/logout" access="permitAll"/>
-		<intercept-url pattern="/consultation/*" access="permitAll"/>
-		<intercept-url pattern="/signup/*" access="hasRole('Administrador')"/>
-		<intercept-url pattern="/patients/*" access="permitAll"/>
-		<intercept-url pattern="/relatives/*" access="hasRole('Doctor')"/>-->		
+	<http use-expressions="true" >	
+                <intercept-url pattern="/login*" access="isAnonymous()" />
 		<intercept-url pattern="/**" access="isAuthenticated()"/> <!-- All URLs will check if user is authenticated -->
-                <form-login/>
-                <logout logout-url="/logout"  logout-success-url="/loginForm" />	
-		<!--<form-login 
-			login-page="/login/form"
-			login-processing-url="/login"
+                <form-login 
+		    login-page="/login" 
+		    default-target-url="/home" 
+			authentication-failure-url="/login?error" 
 			username-parameter="username"
-			password-parameter="password"
-			authentication-failure-url="/login/form?error" />-->
-		
+			password-parameter="password" />
+                <logout logout-success-url="/login?logout" />		
 	</http>
 	
 	<!-- This is how Spring authenticates the user, currently using an in memory data -->

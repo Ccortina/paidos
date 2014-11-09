@@ -63,7 +63,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -874,7 +876,7 @@ public class PatientsController {
         
         //Section: Documents
         @RequestMapping(value="uploadFile",method=RequestMethod.POST,produces = "application/json")
-        public @ResponseBody String uploadFile(MultipartHttpServletRequest request){
+        public @ResponseBody String uploadFile(MultipartHttpServletRequest request) throws UnsupportedEncodingException{
             InputStream inputStream = null;
             OutputStream outputStream = null;
                        
@@ -883,14 +885,28 @@ public class PatientsController {
             
             String fileName = file.getOriginalFilename();
             String filePath = "";
-
+            //Get Application path
+            String path = this.getClass().getClassLoader().getResource("").getPath();
+            String fullPath = URLDecoder.decode(path, "UTF-8");
+            
+            String pathArr[] = fullPath.split("classes/");
+            fullPath = pathArr[0];
             try{
+                //Verify if the Files Folder exists
                 inputStream = file.getInputStream();
-                File newFolder = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient());
+                File newFolder = new File(fullPath+"\\Files");
                 if(!newFolder.exists()){
                     newFolder.mkdir();
                 }
-                File newFile = new File("E:\\Documents\\Paidos\\test\\Files\\paciente"+patient.getIdPatient()+"/"+fileName);
+                
+                //Check if the patient already has a folder
+                newFolder = new File(fullPath+"\\Files\\paciente"+patient.getIdPatient());
+                if(!newFolder.exists()){
+                    newFolder.mkdir();
+                }
+                
+                //Check if that file already exist
+                File newFile = new File(fullPath+"\\Files\\paciente"+patient.getIdPatient()+"/"+fileName);
                 if(!newFile.exists()){
                     newFile.createNewFile();
                 }else{

@@ -125,7 +125,7 @@ body {
                                     <sec:authentication property="principal.username" />
                                 </div>
                             </li>
-                            <li><a href="${logoutUrl}">Cerrar Sesion</a></li>
+                            <li><a href="<c:url value="/j_spring_security_logout" />">Cerrar Sesion</a></li>
                         </sec:authorize>
                         <sec:authorize access="isAnonymous()">
                             <c:url var="loginUrl" value="/login" />
