@@ -32,7 +32,10 @@ public class UserDetailsAdapter implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		String role = user.getIdRole().getRole();
-		System.out.println("--------------------------------------------------"+role);
+		if(role.equals("Asistente")){
+                    
+                }
+                
 		authorities.add(new SimpleGrantedAuthority(role)); 
 		return authorities;
 	}

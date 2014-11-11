@@ -4,15 +4,11 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    initializeModifyUserForm();
+    initializeNewUserForm();
 });
 
-function modifyUser(){
-    $('#userTabs a[href="#editUserInfo"]').tab('show');
-}
-
-function initializeModifyUserForm(){
-    $("#formModifyUser").bootstrapValidator({
+function initializeNewUserForm(){
+    $("#formNewUser").bootstrapValidator({
         excluded: [':disabled'],
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -38,6 +34,9 @@ function initializeModifyUserForm(){
                 validators: {
                     notEmpty: {
                         message: 'Este campo no puede estar vacio'
+                    },
+                    digits:{
+                        message: 'Deben ser numeros'
                     }
                 }
             },
@@ -45,19 +44,27 @@ function initializeModifyUserForm(){
                 validators: {
                     notEmpty: {
                         message: 'Este campo no puede estar vacio'
+                    },
+                    digits:{
+                        message: 'Deben ser numeros'
                     }
                 }
             },
-            receiptNumber: {
+            receiptsNumber: {
                 validators: {
+                    digits:{
+                        message: 'Deben ser numeros'
+                    },
                     notEmpty: {
                         message: 'Este campo no puede estar vacio'
                     }
                 }
             },
             password: {
-                enabled: false,
                 validators: {
+                    notEmpty: {
+                        message: 'Este campo no puede estar vacio'
+                    },
                     identical: {
                         field: 'confirm_password',
                         message: 'La contraseña y su confirmacion deben ser iguales'
@@ -70,7 +77,6 @@ function initializeModifyUserForm(){
                 }
             },
             confirm_password: {
-                enabled: false,
                 validators: {
                     notEmpty: {
                         message: 'La confirmacion de la contraseña no puede estar vacia'
@@ -98,21 +104,17 @@ function initializeModifyUserForm(){
                 }
             }
         },
-        submitButtons: 'button[type="submit"]',
+        submitButtons: 'button[type="submit"]'
         
     })
-    // Enable the password/confirm password validators if the password is not empty
-    .on('keyup', '[name="password"]', function() {
-        var isEmpty = $(this).val() == '';
-        $('#formModifyUser')
-                .bootstrapValidator('enableFieldValidators', 'password', !isEmpty)
-                .bootstrapValidator('enableFieldValidators', 'confirm_password', !isEmpty);
-
-        // Revalidate the field when user start typing in the password field
-        if ($(this).val().length == 1) {
-            $('#formModifyUser').bootstrapValidator('validateField', 'password')
-                            .bootstrapValidator('validateField', 'confirm_password');
-        }
+    .on('change', '[name="role"]', function() {
+        console.log("valor=" + $(this).val());
+        console.log("wtf");
+        var isEmpty = parseInt($(this).val()) !== 3;
+        $('#formNewUser')
+                .bootstrapValidator('enableFieldValidators', 'professionalNumber', isEmpty)
+                .bootstrapValidator('enableFieldValidators', 'prescriptionNumber', isEmpty)
+                .bootstrapValidator('enableFieldValidators', 'receiptsNumber', isEmpty);
     })
     .on('success.form.bv', function(e) {
             // Prevent form submission
@@ -127,15 +129,21 @@ function initializeModifyUserForm(){
             // Use Ajax to submit form data
             $.ajax({
               type: "POST",
-              url: contextPath+"/administration/modifyUser",
+              url: contextPath+"/administration/addUser",
               data: $form.serialize(),
-              success: function(){
-                displaySuccessAlert("El usuario se ha modificado correctamente");
-                window.open (contextPath+'/j_spring_security_logout','_self',false);
+              success: function(response,status,jhqr){
+                  if(response.status === "Error"){
+                    displayDangerAlert(response.msg);
+                  }else{
+                    displaySuccessAlert("El usuario se ha agregado correctamente");
+                        clearFormInputTextFields("formNewUser");
+                        $form.data('bootstrapValidator').resetForm();
+                  }   
               },
               error:function(){
                 displayDangerAlert("Ha habido un error en la operacion");
               }
             });
-        });;
+        });
 }
+

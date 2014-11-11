@@ -3,7 +3,7 @@
     Created on : Oct 25, 2014, 7:33:12 PM
     Author     : Carlos Cortina
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="row">
     <div class="col-sm-6">

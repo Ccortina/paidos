@@ -4,7 +4,7 @@
     Author     : Carlos Cortina
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="row">
     <form id="formModifyUser">
@@ -21,7 +21,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Contraseña</label>
-                    <input type="password" class="form-control" name="npassword" value="" autocomplete="off"/>
+                    <input type="password" class="form-control" name="password" value="" autocomplete="off"/>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Repetir Contraseña</label>
-                    <input type="password" class="form-control" name="rpassword" value="" autocomplete="off"/>
+                    <input type="password" class="form-control" name="confirm_password" value="" autocomplete="off"/>
                 </div>
             </div>
         </div>        
@@ -43,7 +43,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <button type="button" class="btn btn-primary" onclick="modifyUserData()">Guardar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </div>

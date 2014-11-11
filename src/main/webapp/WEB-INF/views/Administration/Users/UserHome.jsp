@@ -3,21 +3,14 @@
     Created on : Oct 25, 2014, 3:44:27 PM
     Author     : Carlos Cortina
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <jsp:include page="../../Includes/header.jsp"/>
 
-<!-- Files for data tables function-->
-<c:url var="dataTablesJS" value="/resources/js/jquery.dataTables.min.js" />
-<c:url var="dataTablesCSS" value="/resources/CSS/jquery.dataTables.min.css" />
-<c:url var="dtModCSS" value="/resources/CSS/DataTables/datatables.mod.css" />
-
-<c:url var="momentJs" value="/resources/js/JQueryPlugins/Fullcalendar/moment.min.js" />
-
-<c:url var="inputmaskJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.js" />
-<c:url var="inputmaskDateJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.date.extensions.js" />
-<c:url var="inputmaskRegexJs" value="/resources/js/JQueryPlugins/InputMask/jquery.inputmask.regex.extensions.js" />
+<script type="text/javascript">
+    var contextPath='<%=request.getContextPath()%>';
+</script>
 
 <c:url var="bvCSS" value="/resources/CSS/BootstrapValidator/bootstrapValidator.min.css" />
 <c:url var="bvJs" value="/resources/js/BootstrapPlugins/BootstrapValidator/bootstrapValidator.min.js" />
@@ -27,9 +20,6 @@
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
 <c:url var="administrationJs" value="/resources/js/Administration/User/UserHome.js" />
-
-<link href="${dataTablesCSS}" rel="stylesheet" />
-<link href="${dtModCSS}" rel="stylesheet" />
 
 <link href="${bvCSS}" rel="stylesheet" />
 
@@ -50,3 +40,5 @@
 
 <script src="${administrationJs}" type="text/javascript"></script>
 <script src="${bvJs}" type="text/javascript"></script>
+<script src="${bootboxJs}" type="text/javascript"></script> 
+<script src="${utilityJs}" type="text/javascript"></script>

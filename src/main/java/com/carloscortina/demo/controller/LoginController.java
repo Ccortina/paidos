@@ -12,7 +12,8 @@ public class LoginController {
         @RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model,
 		@RequestParam(value = "error", required = false) String error,
-		@RequestParam(value = "logout", required = false) String logout) {
+		@RequestParam(value = "logout", required = false) String logout,
+                @RequestParam(value = "timeout", required = false) String timeout) {
  
 		if (error != null) {
 			model.addAttribute("error", "Nombre de usuario o contraseña invalido!");
@@ -21,7 +22,11 @@ public class LoginController {
 		if (logout != null) {
 			model.addAttribute("msg", "La sesion se ha cerrado correctamente");
 		}
- 
+                
+                if (timeout != null) {
+			model.addAttribute("msg", "La sesion ha expirado");
+		}
+                
 		return "Login/loginForm";
 	}
 }

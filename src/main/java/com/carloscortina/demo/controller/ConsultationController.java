@@ -1026,9 +1026,12 @@ public class ConsultationController {
         
         
         //Section: Consultation
+        /*
+            Cancell the consultation, and change the appointment
+        */
         @RequestMapping(value="cancelConsultation")
         public @ResponseBody void cancelConsultaion(){
-            appointment.setIdStatus(apsService.getById(1));
+            appointment.setIdStatus(apsService.getById(3));
             String notes = appointment.getNotes() + "\n.Consulta cancelada";
             appointment.setNotes(notes);
             appointmentService.mergeItem(appointment);

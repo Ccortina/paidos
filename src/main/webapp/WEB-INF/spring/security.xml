@@ -18,25 +18,25 @@
 		appropiate role.The intercept url is applied in order of precedence only applying the first
 		occurence, and at the end the rule /** applies for anything that didn't match the previous -->
 
-	<http use-expressions="true" >	
-                <intercept-url pattern="/login*" access="isAnonymous()" />
-		<intercept-url pattern="/**" access="isAuthenticated()"/> <!-- All URLs will check if user is authenticated -->
-                <form-login 
-		    login-page="/login" 
-		    default-target-url="/home" 
-			authentication-failure-url="/login?error" 
-			username-parameter="username"
-			password-parameter="password" />
-                <logout logout-success-url="/login?logout" />		
+	<http use-expressions="true" >
+            
+            <session-management invalid-session-url="/login?timeout">
+                <concurrency-control max-sessions="1" expired-url="/login?timeout" />
+            </session-management>
+
+            <form-login 
+                login-page="/login" 
+                default-target-url="/home" 
+                    authentication-failure-url="/login?error" 
+                    username-parameter="username"
+                    password-parameter="password" />
+            <logout logout-success-url="/login?logout" />
+
+            <intercept-url pattern="/login*" access="permitAll()" />
+            <intercept-url pattern="/**" access="isAuthenticated()"/> <!-- All URLs will check if user is authenticated -->		
 	</http>
 	
-	<!-- This is how Spring authenticates the user, currently using an in memory data -->
-	<!--
-	<authentication-manager>
-		<authentication-provider user-service-ref="userDetailsService">
-		</authentication-provider>
-	</authentication-manager>	
-        -->
+	<!-- This is how Spring authenticates the user -->
         <bean:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
             <bean:property name="userDetailsService" ref="userDetailsService"></bean:property> 
         </bean:bean>
@@ -50,8 +50,10 @@
         </bean:bean> 
         
         <authentication-manager>
-            <authentication-provider user-service-ref="userDetailsService"> 
-                <!-- <password-encoder hash="md5"></password-encoder>-->	
+            <authentication-provider user-service-ref="userDetailsService">
+                <password-encoder ref="encoder" /> 
             </authentication-provider>
-        </authentication-manager>		           
+        </authentication-manager>
+        
+        <bean:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>                           		           
 </bean:beans>

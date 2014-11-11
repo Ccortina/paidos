@@ -17,6 +17,7 @@ public class UserServiceImp implements UserService {
     private UserDao dao;
 
     @Override
+    @Transactional(readOnly = false)
     public void create(User item) {
         dao.create(item);
     }
@@ -32,11 +33,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void updateItem(User item) {
         dao.updateItem(item);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void mergeItem(User item) {
         dao.mergeItem(item);
     }

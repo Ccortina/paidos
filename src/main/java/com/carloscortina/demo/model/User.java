@@ -52,7 +52,7 @@ public class User implements Serializable {
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
+    @Size(min = 1, max = 200)
     @Column(name = "Password")
     private String password;
     @JsonIgnore
@@ -110,6 +110,16 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.addedDate = addedDate;
+    }
+
+    public User(String username, String password, String email, Date addedDate, int active, Staffmember idStaffMember, Userrole idRole) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.addedDate = addedDate;
+        this.active = active;
+        this.idStaffMember = idStaffMember;
+        this.idRole = idRole;
     }
 
     public Integer getIdUser() {

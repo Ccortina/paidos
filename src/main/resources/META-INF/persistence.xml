@@ -70,9 +70,10 @@
     <class>com.carloscortina.demo.model.Thirdpartypayer</class>
     <class>com.carloscortina.demo.model.Consultationpaymentreceipttype</class>
     <class>com.carloscortina.demo.model.Consultationpaymentreceipt</class>
+    <class>com.carloscortina.demo.model.Permissions</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="hibernate.generate_statistics">true</property>  
+      <property name="hibernate.generate_statistics">true</property>
       <property name="show_sql">true</property>
       <property name="format_sql">true</property>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo?zeroDateTimeBehavior=convertToNull"/>

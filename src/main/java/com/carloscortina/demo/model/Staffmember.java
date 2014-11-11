@@ -86,6 +86,18 @@ public class Staffmember implements Serializable {
         this.receiptNumber = receiptNumber;
     }
 
+    public Staffmember( String name, String lastName, String phone, String cellPhone, String professionalNumber, Date addedDate, int presciptionNumber, int receiptNumber) {
+        
+        this.name = name;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.cellPhone = cellPhone;
+        this.professionalNumber = professionalNumber;
+        this.addedDate = addedDate;
+        this.presciptionNumber = presciptionNumber;
+        this.receiptNumber = receiptNumber;
+    }
+
     public Integer getIdStaffMember() {
         return idStaffMember;
     }

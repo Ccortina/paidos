@@ -104,6 +104,7 @@ body {
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="${contextPath}/administration/userHome">Usuario</a></li>
+                                    <li><a href="${contextPath}/administration/newUser">Registrar Nuevo Usuario</a></li>
                                     <li><a href="${contextPath}/administration/permissionsHome">Permisos</a></li>
                                 </ul>
                             </li>
