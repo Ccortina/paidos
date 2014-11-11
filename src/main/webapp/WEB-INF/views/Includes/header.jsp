@@ -22,6 +22,17 @@ body {
 	padding-top: 60px;
 	/* 60px to make the container go all the way to the bottom of the topbar */
 }
+
+.loader {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url('${pageContext.request.contextPath}/resources/images/loading_1.gif') 50% 50% no-repeat rgb(249,249,249);
+        opacity: .5;
+}
 </style>
 </head>
 
@@ -29,6 +40,7 @@ body {
 <sec:authorize access="authenticated" var="authenticated" />
 
 <body>
+    <div class="loader" id='loadingmessage' style='display:none'></div>
     <nav class="navbar-wrapper navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">

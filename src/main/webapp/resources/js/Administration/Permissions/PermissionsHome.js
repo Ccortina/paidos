@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 $(document).ready(function(){
 
     $(".monitorOP").on("change",function(){
@@ -13,14 +14,16 @@ $(document).ready(function(){
         }else{
             permissionsSum[res[0]] -= res[1];
         }
-        console.log(permissionsSum[res[0]]);
+        //console.log(permissionsSum[res[0]]);
     });
     
     $(".moduleMonitor").on("change",function(){
-        var res = (this).prop('name').split("_");
+       
+        var res = $(this).prop('name').split("_");
         
         if($(this).prop("checked")){
             //The module is activated
+            
             $("#panelBody"+res[0]+" :input").each(function(){
                 $(this).prop("disabled",false);
             });
@@ -33,6 +36,29 @@ $(document).ready(function(){
     });
     
 });
+
+function savePermissions(){
+    var data = [];
+    
+    $.each(permissionsSum, function( index, value ) {
+        alert( index + ": " + value );
+    });
+    //data.push({name:$(this).prop('name'),value:$(this).prop('checked')});
+    
+    /*$('#loadingmessage').show();  // show the loading message
+    $.ajax({url: "/demo/",
+            type: "POST",
+            data: data,
+            success:function(){
+                $('#loadingmessage').hide();  
+                displaySuccessAlert("Se han actualizado los permisos correctamente");
+            },
+            error:function(){
+                $('#loadingmessage').hide();
+                displayDangerAlert("Ha habido un error en la operacion");
+            }
+        });*/
+}
 
 function checkModulePermission( name , value){
     if(parseInt(value) === 1){

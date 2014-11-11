@@ -11,12 +11,20 @@
 
 <c:url var="utilityJs" value="/resources/js/Utility/UtilityMethods.js" />
 
+<c:url var="bootboxJs" value="/resources/js/BootstrapPlugins/Bootbox/bootbox.min.js" />
+
 <c:url var="permissionsJs" value="/resources/js/Administration/Permissions/PermissionsHome.js" />
 
 <div class="container-fluid">
     <form id="formPermissions">
     <div class="row">
         <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-offset-10 col-sm-2">
+                    <button type="button" class="btn btn-primary" onclick="savePermissions();" >Actualizar Permisos</button>
+                </div>
+            </div>
+            <br>
             <c:forEach items="${permissions}" var="module">
                 <c:if test="${module.module == 'Modulo'}">
                     <div class="row">
@@ -26,7 +34,7 @@
                                     <h3 class="panel-title">${module.permission}</h3>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" clas="moduleMonitor" name="${module.permission}_M"> Activo
+                                            <input type="checkbox" class="moduleMonitor" name="${module.permission}_M"> Activo
                                         </label>
                                     </div>
                                 </div>
@@ -79,6 +87,7 @@
     </form>
 </div>
 
+<script src="${bootboxJs}" type="text/javascript"></script> 
 <script src="${permissionsJs}" type="text/javascript"></script> 
 <script src="${utilityJs}" type="text/javascript"></script>
 

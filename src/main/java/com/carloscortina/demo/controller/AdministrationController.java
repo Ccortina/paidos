@@ -13,6 +13,8 @@ import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.UserroleService;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -85,7 +87,7 @@ public class AdministrationController {
         modifyStaff.setReceiptNumber(Integer.parseInt(params.get("receiptsNumber")));
         staffService.updateItem(modifyStaff);
     }
-    
+
     /**
      *
      * @param params
@@ -117,6 +119,20 @@ public class AdministrationController {
         
         return (new AddUserStatus("Se a agregado el usuario correctamente","Success"));
     }
+    
+    @RequestMapping(value="updatePermissions")
+    public @ResponseBody void updatePersmissions(@RequestParam Map<String,Boolean> params){
+        Map<String,Boolean> modules = new HashMap<String, Boolean>();
+        modules.put("Ingresos", params.get("Ingresos_M"));
+        modules.put("Pacientes", params.get("Pacientes_M"));
+        modules.put("Catalogos", params.get("Catalogos_M"));
+        modules.put("Reportes", params.get("Reportes_M"));
+                
+        for(Map.Entry<String,Boolean> permission: params.entrySet()){
+            
+            if(! modules.get(permission.get))
+        }
+    }        
     
     class AddUserStatus{
         private String status;
