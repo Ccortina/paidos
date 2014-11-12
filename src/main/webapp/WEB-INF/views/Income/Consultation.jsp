@@ -46,11 +46,13 @@
         </table>
     </div>
 </div>
+<sec:authorize access="hasAnyRole('Doctor','Ingresos_Consultas_2')">
 <div class="row">
     <div class="col-sm-3">
         <button type="button" class="btn btn-primary" onclick="openPaymentModal();">Pagar/Liquidar</button>
     </div>
 </div>
+</sec:authorize>    
 
 <script src="${dataTablesJS}" type="text/javascript"></script>
 

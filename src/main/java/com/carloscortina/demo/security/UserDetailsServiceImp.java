@@ -39,6 +39,7 @@ public class UserDetailsServiceImp implements UserDetailsService{
             //Populate UserRole
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add(new SimpleGrantedAuthority(user.getIdRole().getRole()));
+            authorities.add(new SimpleGrantedAuthority("Prueba"));
 
             //Create Spring security User object
             org.springframework.security.core.userdetails.User securityUser = new

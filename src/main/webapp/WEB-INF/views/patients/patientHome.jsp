@@ -40,9 +40,14 @@
                 <div class="col-sm-12">
                     <ul id="patientTabMenu" class="nav nav-tabs">
                       <li class="active"><a href="#tabMain" data-toggle="tab">Principal</a></li>
+                      <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_2')">
                       <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                      </sec:authorize>
+                      <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_4')">
                       <li><a href="#tabEdit" data-toggle="tab">Modificar</a></li>
+                      <sec:authorize access="hasAnyRole('Doctor','Pacientes_Citas_2')">
                       <li><a href="#tabAppointment" data-toggle="tab">Cita</a></li>
+                      </sec:authorize>
                     </ul>
                     <div class="tab-content">
                         <div id="tabMain" class="tab-pane active">
@@ -81,23 +86,37 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_2')">
                                 <div class="col-sm-2">
                                     <input type='button' value='Modificar Paciente' class="btn btn-primary" onclick='modifyPatient()'/>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Citas_2')">
                                 <div class="col-sm-2">
                                     <input type='button' value='Agendar Cita' class="btn btn-primary" onclick='appointPatient()'/>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_4')">
                                 <div class="col-sm-2">
                                     <input type='button' value='Ver Expediente' class="btn btn-primary" onclick='openPatientFile()'/>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_8')">
                                 <div class="col-sm-2">
                                     <input type='button' value='Deshabilitar Paciente' class="btn btn-danger" onclick='deletePatient()'/>
                                 </div>
+                                </sec:authorize>
                             </div>
                         </div>
+                        <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_2')">
                         <div id="tabNew" class="tab-pane"><jsp:include page="PatientHomeTabs/NewPatientTab.jsp" /></div>
+                        </sec:authorize>
+                        <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_4')">
                         <div id="tabEdit" class="tab-pane"><jsp:include page="PatientHomeTabs/ModifyPatientTab.jsp" /></div>
+                        </sec:authorize>
+                        <sec:authorize access="hasAnyRole('Doctor','Pacientes_Citas_2')">
                         <div id="tabAppointment" class="tab-pane"><jsp:include page="PatientHomeTabs/AppointmentPatientTab.jsp" /></div>
+                        </sec:authorize>
                     </div>
                 </div>
             </div>

@@ -46,9 +46,11 @@
     </div>
 </div>
 <div class="row">
+    <sec:authorize access="hasAnyRole('Doctor','Ingresos_Recibos_4')">
     <div class="col-sm-3">
         <button type="button" class="btn btn-primary" onclick="editReceipt();">Modificar</button>
     </div>
+    </sec:authorize>
     <div class="col-sm-3">
         <button type="button" class="btn btn-primary" onclick="printReceipt();">Imprimir</button>
     </div>

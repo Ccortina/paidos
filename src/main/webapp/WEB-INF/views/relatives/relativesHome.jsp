@@ -34,8 +34,12 @@
         <div class="col-sm-12">
             <ul id="relativesTabMenu" class="nav nav-tabs">
               <li class="active"><a href="#tabMain" data-toggle="tab">Familiares</a></li>
+              <sec:authorize access="hasAnyRole('Doctor','Pacientes_Familiares_2')">
               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+              </sec:authorize>
+              <sec:authorize access="hasAnyRole('Doctor','Pacientes_Familiares_4')">
               <li><a href="#tabEdit" data-toggle="tab">Modificar</a></li>
+              </sec:authorize>
             </ul>
             <div class="tab-content">
                 <div id="tabMain" class="tab-pane active">
@@ -60,8 +64,12 @@
                         </div>
                     </div>
                 </div>
+                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Familiares_2')">
                 <div id="tabNew" class="tab-pane"><jsp:include page="Tabs/NewRelative.jsp" /></div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('Doctor','Pacientes_Familiares_4')">
                 <div id="tabEdit" class="tab-pane"><jsp:include page="Tabs/ModifyRelative.jsp" /></div>
+                </sec:authorize>
         </div>
     </div>
 </div>

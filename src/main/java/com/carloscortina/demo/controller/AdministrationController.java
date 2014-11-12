@@ -6,6 +6,7 @@
 
 package com.carloscortina.demo.controller;
 
+import com.carloscortina.demo.model.Permissions;
 import com.carloscortina.demo.model.Staffmember;
 import com.carloscortina.demo.model.User;
 import com.carloscortina.demo.service.PermissionsService;
@@ -14,7 +15,6 @@ import com.carloscortina.demo.service.UserService;
 import com.carloscortina.demo.service.UserroleService;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -121,16 +121,43 @@ public class AdministrationController {
     }
     
     @RequestMapping(value="updatePermissions")
-    public @ResponseBody void updatePersmissions(@RequestParam Map<String,Boolean> params){
+    public @ResponseBody void updatePersmissions(@RequestParam Map<String,String> params){
+        
         Map<String,Boolean> modules = new HashMap<String, Boolean>();
-        modules.put("Ingresos", params.get("Ingresos_M"));
-        modules.put("Pacientes", params.get("Pacientes_M"));
-        modules.put("Catalogos", params.get("Catalogos_M"));
-        modules.put("Reportes", params.get("Reportes_M"));
-                
-        for(Map.Entry<String,Boolean> permission: params.entrySet()){
+        //Check if the modules are active (1) or not (0)
+        
+        modules.put("Ingresos", params.get("27").equals("1"));
+        modules.put("Pacientes", params.get("28").equals("1"));
+        modules.put("Diagnosticos", params.get("29").equals("1"));
+        modules.put("Catalogos", params.get("30").equals("1"));
+        modules.put("Reportes", params.get("31").equals("1"));
+        
+        Permissions current ;
+        int pv =0;
+        for(Map.Entry<String,String> permission: params.entrySet()){
+            //Get the objet of the current permission
+            current = permissionsService.getById(Integer.parseInt(permission.getKey())); 
             
-            if(! modules.get(permission.get))
+            //Get the current status of the module
+            if( !current.getModule().equals("Modulo") && modules.get(current.getModule())  ){
+                //current permission module is active
+                pv = Integer.parseInt(permission.getValue());
+                
+                if(current.getValue() != pv){
+                    //if the value changed , update it
+                    current.setValue(pv);
+                    permissionsService.updateItem(current);
+                }
+            }
+        }
+        //Update modules
+        for(int i=27; i<= 31; i++){
+            current = permissionsService.getById(i);
+            pv = Integer.parseInt(params.get(Integer.toString(i)));
+            if( pv != current.getValue()){
+                current.setValue(pv);
+                permissionsService.updateItem(current);
+            }
         }
     }        
     

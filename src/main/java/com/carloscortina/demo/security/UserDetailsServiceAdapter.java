@@ -7,12 +7,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.carloscortina.demo.model.User;
+import com.carloscortina.demo.service.PermissionsService;
 import com.carloscortina.demo.service.UserService;
 
 @Service("userDetailsService")
 public class UserDetailsServiceAdapter implements UserDetailsService{
 
-	@Autowired UserService userService;
+	@Autowired 
+        private UserService userService;
+        @Autowired
+        private PermissionsService permissionsService;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username)
@@ -26,8 +30,13 @@ public class UserDetailsServiceAdapter implements UserDetailsService{
 			throw new UsernameNotFoundException("User " + username + "has no authorities");
 		}
 		
-		UserDetailsAdapter newUser = new UserDetailsAdapter(user); 
-		
+                UserDetailsAdapter newUser;
+                if(user.getIdRole().getRole().equals("Asistente")){
+                   newUser = new UserDetailsAdapter(user,permissionsService.getAll(""));
+                }else{
+                   newUser = new UserDetailsAdapter(user);
+                }
+                
 		return newUser;
 	}
 

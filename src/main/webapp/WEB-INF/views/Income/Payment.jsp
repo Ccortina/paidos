@@ -49,12 +49,16 @@
     <div class="col-sm-3">
         <button type="button" class="btn btn-primary" onclick="showDetails();">Detalles</button>
     </div>
+    <sec:authorize access="hasAnyRole('Doctor','Ingresos_Pagos_8')">
     <div class="col-sm-3">
         <button type="button" class="btn btn-danger" onclick="cancel();">Cancelar</button>
     </div>
+    </sec:authorize>
+    <sec:authorize access="hasAnyRole('Doctor','Ingresos_Pagos_2')">
     <div class="col-sm-3">
         <button type="button" class="btn btn-primary" onclick="specialPayment();">Pago especial</button>
     </div>
+    </sec:authorize>
 </div>
 
 <script src="${dataTablesJS}" type="text/javascript"></script>

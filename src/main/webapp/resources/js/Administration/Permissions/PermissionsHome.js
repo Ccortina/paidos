@@ -19,17 +19,19 @@ $(document).ready(function(){
     
     $(".moduleMonitor").on("change",function(){
        
-        var res = $(this).prop('name').split("_");
+        //var res = $(this).prop('name').split("_");
+        var name = $(this).prop('name');
         
         if($(this).prop("checked")){
             //The module is activated
-            
-            $("#panelBody"+res[0]+" :input").each(function(){
+            permissionsSum[name] = 1;
+            $("#panelBody"+name+" :input").each(function(){
                 $(this).prop("disabled",false);
             });
         }else{
             //The module is deactivated
-            $("#panelBody"+res[0]+" :input").each(function(){
+            permissionsSum[name] = 0;
+            $("#panelBody"+name+" :input").each(function(){
                 $(this).prop("disabled",true);
             });
         }
@@ -41,12 +43,14 @@ function savePermissions(){
     var data = [];
     
     $.each(permissionsSum, function( index, value ) {
-        alert( index + ": " + value );
+        if(checkNotUndefined(index) && checkNotUndefined(value)){
+            data.push({name:index,value:value});
+        }
     });
-    //data.push({name:$(this).prop('name'),value:$(this).prop('checked')});
     
-    /*$('#loadingmessage').show();  // show the loading message
-    $.ajax({url: "/demo/",
+    
+    $('#loadingmessage').show();  // show the loading message
+    $.ajax({url: contextPath+"/administration/updatePermissions",
             type: "POST",
             data: data,
             success:function(){
@@ -57,14 +61,14 @@ function savePermissions(){
                 $('#loadingmessage').hide();
                 displayDangerAlert("Ha habido un error en la operacion");
             }
-        });*/
+        });
 }
 
 function checkModulePermission( name , value){
     if(parseInt(value) === 1){
-        $("#formPermissions [name='"+name+"_M']").prop("checked",true);
+        $("#formPermissions [name='"+name+"']").prop("checked",true);
     }else{
-        $("#formPermissions [name='"+name+"_M']").prop("checked",false);
+        $("#formPermissions [name='"+name+"']").prop("checked",false);
         $("#panelBody"+name+" :input").each(function(){
             $(this).prop("disabled",true);
         });

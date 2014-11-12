@@ -4,6 +4,7 @@
     Author     : Carlos
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -34,11 +35,11 @@
                                     <h3 class="panel-title">${module.permission}</h3>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" class="moduleMonitor" name="${module.permission}_M"> Activo
+                                            <input type="checkbox" class="moduleMonitor" name="${module.idPermission}"> Activo
                                         </label>
                                     </div>
                                 </div>
-                                <div class="panel-body" id="panelBody${module.permission}">
+                                <div class="panel-body" id="panelBody${module.idPermission}">
                                     <c:forEach items="${permissions}" var="permission">
                                         <c:if test="${permission.module == module.permission}">
                                             <div class="row">
@@ -96,7 +97,7 @@
     var permissionsSum = [];
     <c:forEach items="${permissions}" var="permission">
         <c:if test="${permission.module == 'Modulo'}" >
-            checkModulePermission( '<c:out value="${permission.permission}" />',
+            checkModulePermission( '<c:out value="${permission.idPermission}" />',
                                     <c:out value="${permission.value}" />);
         </c:if>
         permissionsSum['<c:out value="${permission.idPermission}" />'] =<c:out value="${permission.value}" /> ;
