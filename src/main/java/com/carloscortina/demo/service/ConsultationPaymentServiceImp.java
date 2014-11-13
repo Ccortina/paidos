@@ -87,5 +87,10 @@ public class ConsultationPaymentServiceImp implements ConsultationPaymentService
     public List<Consultationpayment> getConsultationPaymentByDateRange(Date start, Date end, User doctor) {
         return dao.getConsultationPaymentByDateRange(start, end, doctor);
     }
+
+    @Override
+    public List<Consultationpayment> getConsultationPaymentByUser(User current) {
+        return dao.getConsultationPaymentByUser(current);
+    }
     
 }

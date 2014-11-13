@@ -4,6 +4,7 @@
     Author     : Ccortina_Mac
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <jsp:include page="../Includes/header.jsp"/>
@@ -126,11 +127,13 @@
         <div class="col-sm-2"><!--Cuarta columna botones -->
             <div class="row">
                 <div class="col-sm-12">
+                    <sec:authorize access="hasAnyRole('Doctor')"> 
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="button" class="btn btn-primary" value="Consultar" onclick="consultPatient();"/>
                         </div>
                     </div>
+                    </sec:authorize>
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="button" class="btn btn-danger" value="Cerrar" onclick="closeFile()"/>

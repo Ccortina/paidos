@@ -104,8 +104,10 @@
                     <option value="${doctor.idUser}"><c:out value="${doctor.idStaffMember.name} ${doctor.idStaffMember.lastName}" /></option>
                 </c:forEach>
             </select>
-          </div>    
+          </div>
+          <sec:authorize access="hasAnyRole('Doctor','Pacientes_Citas_4')">
           <button type="submit" class="btn btn-primary">Modificar</button>
+          </sec:authorize>
           </form>
     </div>
     <div class="col-sm-3">

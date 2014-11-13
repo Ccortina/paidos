@@ -7,7 +7,6 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationpaymentreceipt;
-import com.carloscortina.demo.model.ReceiptTotal;
 import com.carloscortina.demo.model.User;
 import java.util.Date;
 import java.util.List;
@@ -20,4 +19,5 @@ public interface ConsultationPaymentReceiptDao extends GenericDao<Consultationpa
  
     public List<Consultationpaymentreceipt> getConsultationPAymentByDateRange(Date start,Date end,User user);
     public List<Consultationpaymentreceipt> getConsultationPaymentReceiptTotals(Date start,Date end,User user);
+    public List<Consultationpaymentreceipt> getCPRByUserRole(User current);
 }

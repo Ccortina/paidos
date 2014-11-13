@@ -6,9 +6,6 @@
 $(document).ready(function(){
     initializeImmunizationTable();
     
-    $('.inputDate').inputmask("dd/mm/yyyy",{ "clearIncomplete": true });
-    
-    $('.inputInteger').inputmask("99");
     $("input:checkbox").click(function() {
         if ($(this).is(":checked")) {
             var group = "input:checkbox[name='" + $(this).attr("name") + "']";
@@ -18,47 +15,6 @@ $(document).ready(function(){
             $(this).prop("checked", false);
         }
     });
-    
-    //Custom filtering for the immunization table date range
-    $.fn.dataTable.ext.search.push(
-        function( settings, data, dataIndex ) {
-
-            if( checkNotEmptyString($("#inputProgrammedDateStart").val()) && checkNotEmptyString($("#inputProgrammedDateEnd").val()) ){
-                var start = moment($("#inputProgrammedDateStart").val(),"DD/MM/YYYY");
-                var end = moment($("#inputProgrammedDateEnd").val(),"DD/MM/YYYY");
-                var range = moment().range(start, end);
-                var date = moment(data[6]);
-                if(date.within(range)){
-                    return true;
-                }else{
-                    return false;
-                }
-
-            }else{
-                return true;
-            }
-        }
-    );
-    
-    $.fn.dataTable.ext.search.push(
-        function( settings, data, dataIndex ) {
-
-            if( checkNotEmptyString($("#inputBirthdayStart").val()) && checkNotEmptyString($("#inputBirthdayEnd").val()) ){
-                var start = moment($("#inputBirthdayStart").val(),"DD/MM/YYYY");
-                var end = moment($("#inputBirthdayEnd").val(),"DD/MM/YYYY");
-                var range = moment().range(start, end);
-                var date = moment(data[3],"DD/MM/YYYY");
-                if(date.within(range)){
-                    return true;
-                }else{
-                    return false;
-                }
-
-            }else{
-                return true;
-            }
-        }
-    );
     
     addFormValidator();
     initializeFiltersForm();
@@ -151,7 +107,13 @@ function initializeImmunizationTable(){
 
 function filterTable(){
     var table = $("#tblImmunization").DataTable();
+    var byPD = $("#checkProgrammedDatesRange").prop("checked"); //Filter By Programmed Dates range
+    var byBD = $("#checkBirthdayRange").prop("checked"); //Filter By Birthdays range
+    var byIm = $("#checkByInmunization").prop("checked"); //Filter By inmunization
+    var byIT = $("#checkBytype").prop("checked"); //Filter By inmunization type
+    var byAR = $("#checkAgesRange").prop("checked"); //Filter By age range
     
+    /*
     //Filter by applied or not
     if($("input[type='checkbox']:checked").val() === "1"){
         table.column( 8 ).search('');
@@ -177,12 +139,11 @@ function filterTable(){
         table.column( 5 ).search( $( "#selectVaccineType option:selected" ).text() ).draw();
     }else{
         table.column( 5 ).search('').draw();
-    }
+    }*/
 }
 
 function initializeFiltersForm(){
     $('#formFilters').bootstrapValidator({
-        live:"disabled",
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -190,14 +151,55 @@ function initializeFiltersForm(){
         },
         fields: {
             inputProgrammedDateStart: {
-                enabled:false
+                enabled:false,
+                validators:{
+                    date:{
+                        format:"DD/MM/YYYY",
+                        message:"No es una fecha valida"
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    }
+                }
             },
             inputProgrammedDateEnd: {
                 enabled:false,
                 validators: {
-                    validateDateRange: {
-                        message: 'La fecha de inicio no puede ser mayor',
-                        firstField: 'inputProgrammedDateStart'
+                    date:{
+                        format:"DD/MM/YYYY",
+                        message:"No es una fecha valida"
+                    },
+                    validateDateRange:{
+                        firstField:"inputProgrammedDateStart",
+                        message:"Esta fecha no puede ser menor"
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    }
+                }
+            },
+            inputBirthdayStart: {
+                enabled:false,
+                validators:{
+                    date:{
+                        format:"DD/MM/YYYY",
+                        message:"No es una fecha valida"
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    }
+                }
+            },
+            inputBirthdayEnd: {
+                enabled:false,
+                validators: {
+                    date:{
+                        format:"DD/MM/YYYY",
+                        message:"No es una fecha valida"
+                    },
+                    validateDateRange:{
+                        firstField:"inputBirthdayStart",
+                        message:"Esta fecha no puede ser menor"
                     },
                     notEmpty: {
                         message: 'No puede estar vacio'
@@ -205,7 +207,15 @@ function initializeFiltersForm(){
                 }
             },
             inputAgeBeginYear: {
-                enabled:false
+                enabled:false,
+                validators:{
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
+                    }
+                }
             },
             inputAgeEndYear: {
                 enabled:false,
@@ -213,11 +223,25 @@ function initializeFiltersForm(){
                     validateValueGreater: {
                         message: 'Este valor debe ser mayor',
                         firstField: 'inputAgeBeginYear'
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
                     }
                 }
             },
             inputAgeBeginMonth: {
-                enabled:false
+                enabled:false,
+                validators:{
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
+                    }
+                }
             },
             inputAgeEndMonth: {
                 enabled:false,
@@ -225,11 +249,25 @@ function initializeFiltersForm(){
                     validateValueGreater: {
                         message: 'Este valor debe ser mayor',
                         firstField: 'inputAgeBeginMonth'
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
                     }
                 }
             },
             inputAgeBeginDay: {
-                enabled:false
+                enabled:false,
+                validators:{
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
+                    }
+                }
             },
             inputAgeEndDay: {
                 enabled:false,
@@ -237,45 +275,41 @@ function initializeFiltersForm(){
                     validateValueGreater: {
                         message: 'Este valor debe ser mayor',
                         firstField: 'inputAgeBeginDay'
+                    },
+                    notEmpty: {
+                        message: 'No puede estar vacio'
+                    },
+                    digits: {
+                        message: 'Solo numeros'
                     }
                 }
             }
         },
         submitButtons: 'button[type="submit"]'
-    }).on('success.form.bv', function(e) {
+    })
+    .on('success.form.bv', function(e) {
         e.preventDefault();
         filterTable();
-    });
-    
-    //Initialize validator if date is not empty
-    $('#formFilters').find('[name="inputProgrammedDateStart"]').blur(function(){
-        var isEmpty = $(this).val() == '';
-        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputProgrammedDateStart', !isEmpty)
-                        .bootstrapValidator('enableFieldValidators', 'inputProgrammedDateEnd', !isEmpty);
-    });
-    
-    $('#formFilters').find('[name="inputBirthdayStart"]').blur(function(){
-        var isEmpty = $(this).val() == '';
-        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputBirthdayStart', !isEmpty)
-                        .bootstrapValidator('enableFieldValidators', 'inputBirthdayEnd', !isEmpty);
-    });
-    
-    $('#formFilters').find('[name="inputAgeEndYear"]').blur(function(){
-        var isEmpty = $(this).val() == '';
-        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputAgeBeginYear', !isEmpty)
-                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndYear', !isEmpty);
-    });
-    
-    $('#formFilters').find('[name="inputAgeEndMonth"]').blur(function(){
-        var isEmpty = $(this).val() == '';
-        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputAgeBeginMonth', !isEmpty)
-                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndMonth', !isEmpty);
-    });
-    
-    $('#formFilters').find('[name="inputAgeEndDay"]').blur(function(){
-        var isEmpty = $(this).val() == '';
-        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputAgeBeginDay', !isEmpty)
-                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndDay', !isEmpty);
+    })
+    .on('change','[name="checkProgrammedDatesRange"]',function(){
+        var value = $(this).prop('checked');
+        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputProgrammedDateStart', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputProgrammedDateEnd', value);
+    })
+    .on('change','[name="checkAgesRange"]',function(){
+        var value = $(this).prop('checked');
+        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputAgeBeginYear', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndYear', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputAgeBeginMonth', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndMonth', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputAgeBeginDay', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputAgeEndDay', value);        
+                
+    })
+    .on('change','[name="checkBirthdayRange"]',function(){
+        var value = $(this).prop('checked');
+        $('#formFilters').bootstrapValidator('enableFieldValidators', 'inputBirthdayStart', value)
+                        .bootstrapValidator('enableFieldValidators', 'inputBirthdayEnd', value);
     });
 }
 
@@ -289,17 +323,14 @@ function addFormValidator(){
          */
         validate: function(validator, $field, options) {
             // Get the field value
-            var endDate = moment($field.val(),"DD/MM/YYYY");
-            var beginDate = moment( $( "#"+options.firstField ).val(),"DD/MM/YYYY" );
-           
-            if( new Date(beginDate.format("YYYY-MM-DD")) <= new Date(endDate.format("YYYY-MM-DD")) ){
-                return true;
-            }
-            return false;
+            var d1 = $( "#"+options.firstField ).val().split("/");
+            var d2 = $field.val().split("/");
+            return moment( new Date(d1[2], d1[1]-1, d1[0])).isBefore(new Date(d2[2],d2[1]-1,d2[0])); 
         }
     };
+}
     
-    $.fn.bootstrapValidator.validators.validateValueGreater = {
+$.fn.bootstrapValidator.validators.validateValueGreater = {
         /**
          * @param {BootstrapValidator} validator The validator plugin instance
          * @param {jQuery} $field The jQuery object represents the field element
@@ -318,4 +349,44 @@ function addFormValidator(){
            return false;
         }
     };
-}
+
+//Custom filtering for the immunization table date range
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+
+        if( checkNotEmptyString($("#inputProgrammedDateStart").val()) && checkNotEmptyString($("#inputProgrammedDateEnd").val()) ){
+            var start = moment($("#inputProgrammedDateStart").val(),"DD/MM/YYYY");
+            var end = moment($("#inputProgrammedDateEnd").val(),"DD/MM/YYYY");
+            var range = moment().range(start, end);
+            var date = moment(data[6]);
+            if(date.within(range)){
+                return true;
+            }else{
+                return false;
+            }
+
+        }else{
+            return true;
+        }
+    }
+);
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+
+        if( checkNotEmptyString($("#inputBirthdayStart").val()) && checkNotEmptyString($("#inputBirthdayEnd").val()) ){
+            var start = moment($("#inputBirthdayStart").val(),"DD/MM/YYYY");
+            var end = moment($("#inputBirthdayEnd").val(),"DD/MM/YYYY");
+            var range = moment().range(start, end);
+            var date = moment(data[3],"DD/MM/YYYY");
+            if(date.within(range)){
+                return true;
+            }else{
+                return false;
+            }
+
+        }else{
+            return true;
+        }
+    }
+);

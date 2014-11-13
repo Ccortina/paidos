@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="../Includes/header.jsp"/>
 
 <!-- Files for data tables function -->
@@ -45,6 +46,7 @@
                       </sec:authorize>
                       <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_4')">
                       <li><a href="#tabEdit" data-toggle="tab">Modificar</a></li>
+                      </sec:authorize>
                       <sec:authorize access="hasAnyRole('Doctor','Pacientes_Citas_2')">
                       <li><a href="#tabAppointment" data-toggle="tab">Cita</a></li>
                       </sec:authorize>

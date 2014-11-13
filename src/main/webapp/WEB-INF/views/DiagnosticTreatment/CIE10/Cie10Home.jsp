@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 
@@ -51,11 +52,13 @@
                             </table> 
                         </div>
                     </div>
+                    <sec:authorize access="hasAnyRole('Doctor','Diagnoticos_CIE_2')">
                     <div class="row">
                         <div class="col-sm-2">
                             <input type="button" class="btn btn-primary" value="Agregar Diagnóstico" onclick="addCie()" />
                         </div>
                     </div>
+                    </sec:authorize>    
                 </div>
             </div>
         </div>

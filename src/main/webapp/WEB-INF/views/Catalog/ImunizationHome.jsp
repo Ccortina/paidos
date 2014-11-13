@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 
@@ -46,8 +47,12 @@
                         <div class="col-sm-12">
                             <ul id="mainTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#tabMain" data-toggle="tab">Inmunizaciones</a></li>
+                              <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_2')">
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                              </sec:authorize>
+                              <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_4')">
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
+                              </sec:authorize>
                               <li><a href="#tabRelatedInfo" data-toggle="tab">Informacion asociadad</a></li>
                               <li><a href="#tabPatientWOVaccine" data-toggle="tab">Pacientes sin la inmunizacion</a></li>
                             </ul>
@@ -68,12 +73,16 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_2')">
                                         <div class="col-sm-3">
                                             <input type="button" class="btn btn-primary" value="Nueva Inmunizacion" onclick="newItem()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_4')">
                                         <div class="col-sm-3">
                                             <input type="button" class="btn btn-primary" value="Modificar Inmunizacion" onclick="modifyItem()" />
                                         </div>
+                                        </sec:authorize>
                                         <div class="col-sm-3">
                                             <input type="button" class="btn btn-primary" value="Informacion asociada" onclick="additionalInfo()" />
                                         </div>
@@ -82,6 +91,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_2')">
                                 <div id="tabNew" class="tab-pane">
                                     <form role="form" id="formNewItem">
                                     <div class="row">
@@ -173,6 +183,8 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Catalogos_Inmunizaciones_4')">
                                 <div id="tabModify" class="tab-pane">
                                     <form role="form" id="formModifyItem">
                                     <input type="hidden" id="inputIdItem" value=""/>
@@ -266,6 +278,7 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
                                 <div id="tabRelatedInfo" class="tab-pane">
                                     <h4>Pacientes que tienen asociada la vacuna</h4>
                                     <table id="tblAdditionalInfo" class="hover row-border">

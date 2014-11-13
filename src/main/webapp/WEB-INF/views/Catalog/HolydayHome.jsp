@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 
@@ -44,8 +45,12 @@
                         <div class="col-sm-12">
                             <ul id="mainTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#tabMain" data-toggle="tab">Dias inhabiles</a></li>
+                              <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_2')">
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                              </sec:authorize>
+                              <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_4')">
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
+                              </sec:authorize>
                             </ul>
                             <div class="tab-content">
                                 <div id="tabMain" class="tab-pane active">
@@ -61,17 +66,24 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_2')">
                                         <div class="col-sm-3">
                                             <input type="button" class="btn btn-primary" value="Nuevo Dia festivo" onclick="newItem()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_4')">
                                         <div class="col-sm-3">
                                             <input type="button" class="btn btn-primary" value="Modificar dia festivo" onclick="modifyItem()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_8')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-danger" value="Borrar" onclick="deleteItem()" />
                                         </div>
+                                        </sec:authorize>
                                     </div>
                                 </div>
+                                <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_2')">
                                 <div id="tabNew" class="tab-pane">
                                     <form role="form" id="formNewItem">
                                     <div class="row">
@@ -108,6 +120,8 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Catalogos_Dias no habiles_4')">
                                 <div id="tabModify" class="tab-pane">
                                     <form role="form" id="formModifyItem">
                                     <input type="hidden" id="inputIdItem" value=""/>
@@ -145,6 +159,7 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
                             </div>
                         </div>
                     </div>

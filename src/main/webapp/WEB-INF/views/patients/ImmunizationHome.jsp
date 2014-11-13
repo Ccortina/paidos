@@ -65,18 +65,26 @@
                         <div class="col-sm-4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label>Entre rango de fechas programadas</label>
+                                    <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox" id="checkProgrammedDatesRange"  name="checkProgrammedDatesRange"> Entre rango de fechas programadas
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6"><label>Desde</label><input type="text" class="form-control inputDate" id="inputProgrammedDateStart" name="inputProgrammedDateStart"/></div>
-                                <div class="col-sm-6"><label>Hasta</label><input type="text" class="form-control inputDate" id="inputProgrammedDateEnd" name="inputProgrammedDateEnd"/></div>
+                                <div class="col-sm-6"><label>Desde</label><input type="text" class="form-control" id="inputProgrammedDateStart" name="inputProgrammedDateStart"/></div>
+                                <div class="col-sm-6"><label>Hasta</label><input type="text" class="form-control" id="inputProgrammedDateEnd" name="inputProgrammedDateEnd"/></div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label>Por inmunizacion</label>
+                                    <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox" id="checkByInmunization" name="checkByInmunization"> Por Inmunizacion
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -112,7 +120,11 @@
                         <div class="col-sm-4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label>Entre rangos de edad de aplicacion</label>
+                                    <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox" id="checkAgesRange" name="checkAgesRange"> Entre rangos de edad de aplicacion
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -122,13 +134,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Años" class="form-control inputInteger" id="inputAgeBeginYear" name="inputAgeBeginYear"/>
+                                            <input type="text" placeholder="Años" class="form-control" id="inputAgeBeginYear" name="inputAgeBeginYear" value="0"/>
                                         </div>
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Meses" class="form-control inputInteger" id="inputAgeBeginMonth" name="inputAgeBeginMonth"/>
+                                            <input type="text" placeholder="Meses" class="form-control" id="inputAgeBeginMonth" name="inputAgeBeginMonth" value="0"/>
                                         </div>
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Dias" class="form-control inputInteger" id="inputAgeBeginDay" name="inputAgeBeginDay"/>
+                                            <input type="text" placeholder="Dias" class="form-control" id="inputAgeBeginDay" name="inputAgeBeginDay" value="0"/>
                                         </div>
                                     </div>
                                 </div>
@@ -138,13 +150,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Años" class="form-control inputInteger" id="inputAgeEndYear" name="inputAgeEndYear"/>
+                                            <input type="text" placeholder="Años" class="form-control" id="inputAgeEndYear" name="inputAgeEndYear" value="0"/>
                                         </div>
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Meses" class="form-control inputInteger" id="inputAgeEndMonth" name="inputAgeEndMonth"/>
+                                            <input type="text" placeholder="Meses" class="form-control" id="inputAgeEndMonth" name="inputAgeEndMonth" value="0"/>
                                         </div>
                                         <div class="col-sm-4">
-                                            <input type="text" placeholder="Dias" class="form-control inputInteger" id="inputAgeEndDay" name="inputAgeEndDay"/>
+                                            <input type="text" placeholder="Dias" class="form-control" id="inputAgeEndDay" name="inputAgeEndDay" value="0"/>
                                         </div>
                                     </div>
                                 </div>
@@ -155,18 +167,26 @@
                         <div class="col-sm-4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label>Entre rango de fechas nacimiento</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="checkBirthdayRange" name="checkBirthdayRange">Entre rango de fechas nacimiento
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6"><label>Desde</label><input type="text" class="form-control inputDate" id="inputBirthdayStart" name="inputBirthdayStart"/></div>
-                                <div class="col-sm-6"><label>Hasta</label><input type="text" class="form-control inputDate" id="inputBirthdayEnd" name="inputBirthdayEnd"/></div>
+                                <div class="col-sm-6"><label>Desde</label><input type="text" class="form-control" id="inputBirthdayStart" name="inputBirthdayStart"/></div>
+                                <div class="col-sm-6"><label>Hasta</label><input type="text" class="form-control" id="inputBirthdayEnd" name="inputBirthdayEnd"/></div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row"><br></div>
                             <div class="row">
-                                <label>Por tipo</label>
+                                <div class="checkbox">
+                                    <label>
+                                      <input type="checkbox" id="checkBytype" name="checkBytype"> Por tipo
+                                    </label>
+                                </div>
                             </div>
                             <div class="row">
                                 <select class="form-control" id="selectVaccineType" name="doctor">
@@ -186,7 +206,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <input type="submit" class="btn btn-primary" value="Filtrar" />
+                                    <button type="submit" class="btn btn-primary" >Filtrar</button>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="button" class="btn btn-danger" value="Quitar filtros" onclick="quitFilters()"/>

@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 
@@ -48,8 +49,12 @@
                         <div class="col-sm-12">
                             <ul id="treatmentTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#tabMain" data-toggle="tab">Tratamientos</a></li>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_2')">
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                              </sec:authorize>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_4')">
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
+                              </sec:authorize>
                               <li><a href="#tabAdditionalInfo" data-toggle="tab">Informacion asociada</a></li>
                             </ul>
                             <div class="tab-content">
@@ -66,23 +71,31 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_2')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Agregar Nuevo Tratamiento" onclick="newTreatment()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_4')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Modificar Tratamiento" onclick="modifyTreatment()" />
                                         </div>
+                                        </sec:authorize>
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Informacion Asociada" onclick="getAdditionalInfo()" />
                                         </div>
                                     </div>
                                 </div>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_2')">
                                 <div id="tabNew" class="tab-pane">
                                     <jsp:include page="Tabs/NewTreatment.jsp"></jsp:include>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Tratamientos_2')">
                                 <div id="tabModify" class="tab-pane">
                                     <jsp:include page="Tabs/ModifyTreatment.jsp"></jsp:include>
                                 </div>
+                                </sec:authorize>
                                 <div id="tabAdditionalInfo" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-12">

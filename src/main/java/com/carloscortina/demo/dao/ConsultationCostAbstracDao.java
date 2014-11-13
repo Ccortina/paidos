@@ -7,6 +7,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Consultationcostabstract;
+import com.carloscortina.demo.model.User;
 import java.util.List;
 
 /**
@@ -15,5 +16,6 @@ import java.util.List;
  */
 public interface ConsultationCostAbstracDao extends GenericDao<Consultationcostabstract>{
     
-    public List<Consultationcostabstract> getConsultationCostAbstractSmall();
+    public List<Consultationcostabstract> getConsultationCostAbstractSmall(User current);
+    public List<Consultationcostabstract> getALLCCASmall(User current);
 }

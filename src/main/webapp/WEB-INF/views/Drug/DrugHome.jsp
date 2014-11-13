@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 
@@ -49,8 +50,12 @@
                         <div class="col-sm-12">
                             <ul id="drugTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#tabMain" data-toggle="tab">Medicamentos</a></li>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_2')">
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                              </sec:authorize>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_4')">
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
+                              </sec:authorize>
                               <li><a href="#tabAdditionalInfo" data-toggle="tab">Informacion Relacionada</a></li>
                             </ul>
                             <div class="tab-content">
@@ -70,22 +75,32 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_2')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Nuevo medicamento" onclick="newDrug()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_4')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Modificar medicamento" onclick="modifyDrug()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_8')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-danger" value="Borrar medicamento" onclick="deleteDrug()" />
                                         </div>
+                                        </sec:authorize>
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Informacion Asociada" onclick="additionalInfo()" />
                                         </div>
                                     </div>
                                 </div>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_2')">
                                 <div id="tabNew" class="tab-pane"><jsp:include page="DrugTabs/NewDrug.jsp" ></jsp:include></div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Medicamentos_4')">
                                 <div id="tabModify" class="tab-pane"><jsp:include page="DrugTabs/ModifyDrug.jsp" ></jsp:include></div>
+                                </sec:authorize>
                                 <div id="tabAdditionalInfo" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-12">

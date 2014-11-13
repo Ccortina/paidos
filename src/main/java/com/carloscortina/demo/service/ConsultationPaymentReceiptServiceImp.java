@@ -8,7 +8,6 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationPaymentReceiptDao;
 import com.carloscortina.demo.model.Consultationpaymentreceipt;
-import com.carloscortina.demo.model.ReceiptTotal;
 import com.carloscortina.demo.model.User;
 import java.util.Date;
 import java.util.List;
@@ -87,6 +86,11 @@ public class ConsultationPaymentReceiptServiceImp implements ConsultationPayment
     @Override
     public List<Consultationpaymentreceipt> getConsultationPaymentReceiptTotals(Date start, Date end, User user) {
         return dao.getConsultationPaymentReceiptTotals(start, end, user);
+    }
+
+    @Override
+    public List<Consultationpaymentreceipt> getCPRByUserRole(User current) {
+        return dao.getCPRByUserRole(current);
     }
     
 }

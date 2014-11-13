@@ -3,7 +3,7 @@
     Created on : Sep 4, 2014, 10:42:09 AM
     Author     : Carlos Cortina
 --%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 <div class="row">
@@ -60,12 +60,16 @@
             </table>
         </div>
         <div class="row">
+            <sec:authorize access="hasAnyRole('Doctor')">
             <div class="col-sm-3">
                 <button type="button" class="btn btn-primary" onclick="consult()">Ir a consulta</button>
             </div>
+            </sec:authorize>
+            <sec:authorize access="hasAnyRole('Doctor','Pacientes_Pacientes_4')">
             <div class="col-sm-2">
                 <button type="button" class="btn btn-primary" onclick="patientFile()">Ir al expediente</button>
             </div>
+            </sec:authorize>
         </div>
     </div>
     <div class="col-sm-4">

@@ -43,4 +43,17 @@ public class HbnConsultationPaymentDao extends GenericHbnDao<Consultationpayment
         
         return query.list();
     }
+
+    @Override
+    public List<Consultationpayment> getConsultationPaymentByUser(User current) {
+        if(current.getIdRole().getRole().equals("Doctor")){
+            Query query = getSession().createQuery("FROM Consultationpayment cp "
+                    + "WHERE cp.idConsultationCostAbstract.idConsultation.idDoctor.idUser=:doctor");
+            return query.list();
+        }else{
+            Query query = getSession().createQuery("FROM Consultationpayment");
+            return query.list();
+        }
+    }
+    
 }

@@ -8,6 +8,7 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.ConsultationCostAbstracDao;
 import com.carloscortina.demo.model.Consultationcostabstract;
+import com.carloscortina.demo.model.User;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -77,8 +78,13 @@ public class ConsultationCostAbstractServiceImp implements ConsultationCostAbstr
     }
 
     @Override
-    public List<Consultationcostabstract> getConsultationCostAbstractSmall() {
-        return dao.getConsultationCostAbstractSmall();
+    public List<Consultationcostabstract> getConsultationCostAbstractSmall(User current) {
+        return dao.getConsultationCostAbstractSmall(current);
+    }
+
+    @Override
+    public List<Consultationcostabstract> getALLCCASmall(User current) {
+        return dao.getALLCCASmall(current);
     }
     
 }

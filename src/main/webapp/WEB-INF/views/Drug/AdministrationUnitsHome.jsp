@@ -4,6 +4,7 @@
     Author     : Carlos Cortina
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -46,8 +47,12 @@
                         <div class="col-sm-12">
                             <ul id="drugAUTabMenu" class="nav nav-tabs">
                               <li class="active"><a href="#tabMain" data-toggle="tab">Unidades</a></li>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_2')">
                               <li><a href="#tabNew" data-toggle="tab">Nuevo</a></li>
+                              </sec:authorize>
+                              <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_4')">
                               <li><a href="#tabModify" data-toggle="tab">Modificar</a></li>
+                              </sec:authorize>
                               <li><a href="#tabAdditionalInfo" data-toggle="tab">Informacion Relacionada</a></li>
                             </ul>
                             <div class="tab-content">
@@ -63,17 +68,22 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_2')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Nueva unidad de administracion" onclick="newAU()" />
                                         </div>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_4')">
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Modificar unidad de administracion" onclick="modifyAU()" />
                                         </div>
+                                        </sec:authorize>
                                         <div class="col-sm-2">
                                             <input type="button" class="btn btn-primary" value="Informacion Asociada" onclick="additionalInfo()" />
                                         </div>
                                     </div>
                                 </div>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_2')">
                                 <div id="tabNew" class="tab-pane">
                                     <form role="form" id="formNewAU">
                                     <div class="row">
@@ -104,6 +114,8 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
+                                <sec:authorize access="hasAnyRole('Doctor','Diagnosticos_Unidades de Administracion_4')">
                                 <div id="tabModify" class="tab-pane">
                                     <form role="form" id="formModifyAU">
                                     <input type="hidden" id="inputIdAU" value=""/>
@@ -135,6 +147,7 @@
                                     </div>
                                     </form>
                                 </div>
+                                </sec:authorize>
                                 <div id="tabAdditionalInfo" class="tab-pane">
                                     <div class="row">
                                         <div class="col-sm-12">

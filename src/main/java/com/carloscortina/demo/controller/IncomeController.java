@@ -30,6 +30,7 @@ import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.ThirdPartyPayersService;
 import com.carloscortina.demo.service.UserService;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -137,7 +138,12 @@ public class IncomeController {
     @RequestMapping(value="getConsultationCostAbstract")
     public @ResponseBody JsonPack<Consultationcostabstract> getConsultationCostAbstract(){
         
-       return new JsonPack<Consultationcostabstract>(ccaService.getConsultationCostAbstractSmall()); 
+       return new JsonPack<Consultationcostabstract>(ccaService.getConsultationCostAbstractSmall(loggedUser)); 
+    }
+    
+    @RequestMapping(value="getAllCCA")
+    public @ResponseBody JsonPack<Consultationcostabstract> getAllCCADoctor(){
+       return new JsonPack<Consultationcostabstract>(ccaService.getALLCCASmall(loggedUser)); 
     }
     
     @RequestMapping(value="getConsultationPaymentReceipt")
@@ -153,13 +159,13 @@ public class IncomeController {
     @RequestMapping(value="getConsultationPayment")
     public @ResponseBody JsonPack<Consultationpayment> getConsultationPayment(){
         
-       List<Consultationpayment> result = cpService.getAll("");
+       List<Consultationpayment> list = cpService.getConsultationPaymentByUser(loggedUser);
        
-       for(Consultationpayment cp: result){
+       for(Consultationpayment cp: list){
            cp.setPatient(cp.getIdConsultationCostAbstract().getIdConsultation().getIdPatient());
        }
        
-       return new JsonPack<Consultationpayment>(result); 
+       return new JsonPack<Consultationpayment>(list); 
     }
     
     @RequestMapping(value="getConsultationActivities")
