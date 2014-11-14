@@ -123,6 +123,12 @@ public class Consultation implements Serializable {
         this.consultationactivityList = consultationactivityList;
     }
 
+    public Consultation(Patient idPatient, Appointment idAppointment) {
+        this.idPatient = idPatient;
+        this.idAppointment = idAppointment;
+    }
+
+    
     public Consultation(Double weigth, Double size, Double bmi, Double temperature, Double pc, Patient idPatient, Appointment idAppointment) {
         this.weigth = weigth;
         this.size = size;

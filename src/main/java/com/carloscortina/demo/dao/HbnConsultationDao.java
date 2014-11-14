@@ -7,7 +7,6 @@ package com.carloscortina.demo.dao;
 import com.carloscortina.demo.model.Consultation;
 import com.carloscortina.demo.model.Consultationactivity;
 import com.carloscortina.demo.model.Patient;
-import com.carloscortina.demo.model.User;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,7 +89,9 @@ public class HbnConsultationDao extends  GenericHbnDao<Consultation> implements 
     
     @Override
     public List<Consultation> getConsultationByActivity(int idActivity){
-        Query query = getSession().createQuery("FROM Consultation c JOIN c.consultationactivityList d"
+        Query query = getSession().createQuery("SELECT new Consultation(c.idPatient,"
+                + "c.idAppointment) "
+                + "FROM Consultation c JOIN c.consultationactivityList d"
                 + " WHERE d.activity.idActivity=:idActivity");
         query.setParameter("idActivity", idActivity);
         return query.list();

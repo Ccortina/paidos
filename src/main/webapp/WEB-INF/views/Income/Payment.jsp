@@ -82,12 +82,7 @@
         <h4 class="modal-title">Pago</h4>
       </div>
       <form id="formPayment">  
-      <div class="modal-body">  
-          <div class="row">
-              <div class="col-sm-offset-3 col-sm-6">
-                  <h4 id="paymentTypeTitle"></h4>
-              </div>
-          </div>
+      <div class="modal-body"> 
           <div class="row">
               <div class="col-sm-12">
                   <div class="row">
@@ -150,12 +145,6 @@
                       <input type="text" class="form-control" name="paymentTotal" id="paymentTotal" value="0.0" readonly="true"/>
                   </div>
               </div>
-              <div class="col-sm-6">
-                  <div class="form-group">
-                      <label>Cambio:</label>
-                      <input type="text" class="form-control" name="change" id="paymentChange" value="0.0" readonly="true"/>
-                  </div>
-              </div>
           </div>
           <div class="row">
               <div class="col-sm-12">
@@ -174,6 +163,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar pago</button>
       </div>
       </form>  
     </div><!-- /.modal-content -->

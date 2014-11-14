@@ -90,7 +90,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Inmunizacion</label>
-                                    <select class="form-control" id="selectVaccine" name="doctor">
+                                    <select class="form-control" id="selectVaccine" name="selectVaccine">
                                         <option value="0">Cualquiera</option>
                                         <c:forEach var="vaccine" items="${vaccines}">
                                             <option value="${vaccine.idVaccine}"><c:out value="${vaccine.vaccine}" /></option>
@@ -105,13 +105,13 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <div class="col-sm-2"><input type="checkbox" class="radio" value="1" name="fooby[1][]" /></div>
+                                        <div class="col-sm-2"><input type="radio" name="applied" id="optionApplied1" value="1" checked /></div>
                                         <div class="col-sm-10"><label>Solo no aplicadas</label></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <div class="col-sm-2"><input type="checkbox" class="radio" value="2" name="fooby[1][]" /></div>
+                                        <div class="col-sm-2"><input type="radio" name="applied" id="optionApplied2" value="2"/></div>
                                         <div class="col-sm-10"><label>Solo aplicadas</label></div>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <label>Desde</label>
+                                        <label>Desde (A  - M - D)</label>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <label>Hasta</label>
+                                        <label>Hasta  (A  - M - D)</label>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -189,7 +189,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <select class="form-control" id="selectVaccineType" name="doctor">
+                                <select class="form-control" id="selectVaccineType" name="vaccineType">
                                     <option value="0">Cualquiera</option>
                                     <c:forEach var="vaccineType" items="${vaccineTypes}">
                                         <option value="${vaccineType.idvaccineType}"><c:out value="${vaccineType.type}" /></option>

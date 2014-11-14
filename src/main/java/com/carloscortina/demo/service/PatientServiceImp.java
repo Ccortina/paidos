@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carloscortina.demo.dao.PatientDao;
 import com.carloscortina.demo.model.Patient;
+import java.util.Date;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 
@@ -106,6 +107,11 @@ public class PatientServiceImp implements PatientService {
     @Override
     public List<Patient> getPatientWithoutVaccine(int idVaccine) {
         return patientDao.getPatientWithoutVaccine(idVaccine);
+    }
+
+    @Override
+    public List<Patient> getPatientsByBirthdayRange(int month) {
+        return patientDao.getPatientsByBirthdayRange(month);
     }
 	
 	

@@ -30,7 +30,7 @@ import com.carloscortina.demo.service.RelativeService;
 import com.carloscortina.demo.service.StaffMemberService;
 import com.carloscortina.demo.service.ThirdPartyPayersService;
 import com.carloscortina.demo.service.UserService;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +105,15 @@ public class IncomeController {
         loggedUser = userService.getUserByUsername(auth.getName());
         
         return ( "Income/Receipt" );
+    }
+    
+    @RequestMapping(value="thirdPayers")
+    public String thirdPartyPayersHome(Model model){
+        //Get logged User
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = userService.getUserByUsername(auth.getName());
+        
+        return ( "Income/ThirdPartyPayer" );
     }
     
     @RequestMapping(value="receiptPreview/{cprId}")
@@ -357,6 +366,67 @@ public class IncomeController {
     @RequestMapping(value="getThirdPartyPayer")
     public @ResponseBody JsonPack<Thirdpartypayer> getThirdPartyPayer(){
         return new JsonPack<Thirdpartypayer>(tppService.getAllActiveItems());
+    }
+    
+    @RequestMapping(value="getAllThirdPartyPayer")
+    public @ResponseBody JsonPack<Thirdpartypayer> getAllThirdPartyPayer(){
+        return new JsonPack<Thirdpartypayer>(tppService.getAll(""));
+    }
+    
+    @RequestMapping(value="saveNewTPP")
+    public @ResponseBody void saveNewThirdPartyPayer(@RequestParam Map<String,String> params){
+        try {
+            Class c = Thirdpartypayer.class;
+            Method method;
+            Thirdpartypayer newTPP = new Thirdpartypayer();
+            String[] fields = {"Name","Street","Colony","City","State","Zip","Country","Rfc"};
+            
+            for(String field: fields){
+                method = c.getMethod("set"+field,String.class);
+                method.invoke(newTPP, params.get(field.toLowerCase()));
+            }
+            
+            newTPP.setActive(1);
+            
+            tppService.create(newTPP);
+        } catch (Throwable e) {
+            System.err.println(e);
+        }
+    }
+    
+    @RequestMapping(value="saveModifyTPP")
+    public @ResponseBody void saveModifyThirdPartyPayer(@RequestParam Map<String,String> params){
+        try {
+            Class c = Thirdpartypayer.class;
+            Thirdpartypayer modifyTPP = tppService.getById(Integer.parseInt(params.get("idThirdPartyPayer")));
+            String[] fields = {"Name","Street","Colony","City","State","Zip","Country","Rfc"};
+            Method method;
+            
+            for(String field: fields){
+                method = c.getMethod("get"+field);
+                if( !method.invoke(modifyTPP).equals(params.get(field.toLowerCase())) ){
+                    method = c.getMethod("set"+field,String.class);
+                    method.invoke(modifyTPP,params.get(field.toLowerCase()));
+                } 
+            }
+            
+            if( Integer.parseInt(params.get("active")) != modifyTPP.getActive()){
+                modifyTPP.setActive(Integer.parseInt(params.get("active")));
+            }
+            
+            tppService.updateItem(modifyTPP);
+        } catch (Throwable e) {
+            System.err.println(e);
+        }
+    }
+    
+    @RequestMapping(value="suspendTPP")
+    public @ResponseBody void suspendTPP(@RequestParam int id){
+        Thirdpartypayer tpp = tppService.getById(id);
+        
+        tpp.setActive(0);
+        
+        tppService.updateItem(tpp);
     }
     
     private String numberToText(String number){

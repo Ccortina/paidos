@@ -7,6 +7,7 @@ package com.carloscortina.demo.service;
 import com.carloscortina.demo.model.Patientvaccine;
 import com.carloscortina.demo.model.PatientvaccinePK;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -19,4 +20,5 @@ public interface PatientVaccineService extends GenericService<Patientvaccine>{
     public List<Patientvaccine> getPatientVaccineByPatient(int idPatient);
     public List<Patientvaccine> getPatientVaccineSystemProgrammedByPatient(int idPatient);
     public List<Patientvaccine> getAllPV();
+    public List<Patientvaccine> getAllPVByFilter(Map<String, String> params);
 }

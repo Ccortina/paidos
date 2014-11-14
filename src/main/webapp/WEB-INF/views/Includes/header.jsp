@@ -56,9 +56,18 @@
                                         Ingresos<span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
+                                        <sec:authorize access="hasAnyRole('Doctor','Ingresos_Consultas_1')">
                                         <li><a href="${contextPath}/income/consultations">Consultas</a></li>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Ingresos_Pagos_1')">
                                         <li><a href="${contextPath}/income/payment">Pagos</a></li>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Ingresos_Recibos_1')">
                                         <li><a href="${contextPath}/income/receipt">Recibos</a></li>
+                                        </sec:authorize>
+                                        <sec:authorize access="hasAnyRole('Doctor','Ingresos_Pagadores Terceros_1')">
+                                        <li><a href="${contextPath}/income/thirdPayers">Terceros Pagadores</a></li>
+                                        </sec:authorize>
                                     </ul>
                                 </li>
                             </sec:authorize>
@@ -81,6 +90,7 @@
                                             <li role="presentation" class="divider"></li>
                                             <li><a href="${contextPath}/patients/immunizationHome">Inmunizaciones</a></li>
                                             </sec:authorize>
+                                            <li><a href="${contextPath}/patients/birthdays">Cumpleaños del mes</a></li>
                                     </ul>
                                 </li>
                             </sec:authorize>

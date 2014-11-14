@@ -189,6 +189,23 @@ public class PatientsController {
 		return ( "patients/ImmunizationHome" );
 	}
         
+        @RequestMapping(value="birthdays")
+	public String birthdays(Model model){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                doctor = userService.getUserByUsername(auth.getName());
+                
+		return ( "patients/Birthdays" );
+	}
+        
+        @RequestMapping(value="getMonthsBirthdays")
+	public @ResponseBody JsonPack<Patient> getMonthsBirthdays(Model model){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                doctor = userService.getUserByUsername(auth.getName());
+                Calendar current= Calendar.getInstance();
+
+		return ( new JsonPack<Patient>(patientService.getPatientsByBirthdayRange(current.get(Calendar.MONTH)+1)) );
+	}
+        
         /*
          * This method renders the patient file, based on the patient. This is 
          * mainly when the user is looking info of the patient only.
@@ -1504,11 +1521,10 @@ public class PatientsController {
         /*
         * Method to get a list of all the programmed vaccines
         */
-        @RequestMapping(value="getAllPatientImmunization")
-        public @ResponseBody JsonPack<Patientvaccine> getImmunization(){
+        @RequestMapping(value="getAllPatientsImmunization")
+        public @ResponseBody JsonPack<Patientvaccine> getImmunization(@RequestParam Map<String,String> params){
             
-            return new JsonPack<Patientvaccine>(pvService.getAllPV());
-
+            return new JsonPack<Patientvaccine>(pvService.getAllPVByFilter(params));
         }
         
         //Generic Methods

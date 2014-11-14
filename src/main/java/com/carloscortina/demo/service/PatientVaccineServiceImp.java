@@ -8,6 +8,7 @@ import com.carloscortina.demo.dao.PatientVaccineDao;
 import com.carloscortina.demo.model.Patientvaccine;
 import com.carloscortina.demo.model.PatientvaccinePK;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,11 @@ public class PatientVaccineServiceImp implements PatientVaccineService{
     @Override
     public List<Patientvaccine> getPatientVaccineSystemProgrammedByPatient(int idPatient) {
         return pvDao.getPatientVaccineSystemProgrammedByPatient(idPatient);
+    }
+
+    @Override
+    public List<Patientvaccine> getAllPVByFilter(Map<String, String> params) {
+        return pvDao.getAllPVByFilter(params);
     }
     
     

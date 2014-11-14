@@ -17,6 +17,7 @@ function newItem(){
 
 function additionalInfo(){
     if(checkNotUndefined($("#tblMain").DataTable().row('.selected').data())){
+        $("#activityNameTitle").text($("#tblMain").DataTable().row('.selected').data()["activity"]);
         if (  $.fn.DataTable.isDataTable( "#tblAdditionalInfo" ) ) {
           $('#tblAdditionalInfo').DataTable().ajax.reload();
         }else{
@@ -88,7 +89,7 @@ function initializeMainTable(){
 
 function initializeAdditionalInfoTable(){
         $("#tblAdditionalInfo").DataTable({
-        "ordering":false,
+        "ordering":true,
         "scrollY": "300px",
         "scrollCollapse": true,
         "language": {
@@ -108,23 +109,23 @@ function initializeAdditionalInfoTable(){
         },
         "columns":[
             {"render":function(data,fow,full){
-                    if(full["0"].idAppointment === null){
+                    if(full.idAppointment === null){
                         return "No definido";
                     }else{
-                        return full["0"].idAppointment.date;
+                        return full.idAppointment.date;
                     }
             }},
             {"render":function(data,fow,full){
-                    if(full["0"].idAppointment === null){
+                    if(full.idAppointment === null){
                         return "No definido";
                     }else{
-                        return full["0"].idAppointment.startTime;
+                        return full.idAppointment.startTime;
                     }
             }},
-            {"data":"0.idPatient.fatherLastName"},
-            {"data":"0.idPatient.motherLastName"},
-            {"data":"0.idPatient.firstName"},
-            {"data":"1.activity.activity"}
+            {"data":"idPatient.fatherLastName"},
+            {"data":"idPatient.motherLastName"},
+            {"data":"idPatient.firstName"}
+            //{"data":"1.activity.activity"}
         ]
     });
 }

@@ -88,7 +88,7 @@ public class Patientvaccine implements Serializable {
         this.vaccine = vaccine;
         this.patient = patient;
     }
-
+    
     public Patientvaccine(PatientvaccinePK patientvaccinePK, Date programedDate, Vaccine vaccine, Patient patient, int suspended, Date suspensionDate,String notes,String name,String batch,Date expirationDate) {
         this.patientvaccinePK = patientvaccinePK;
         this.programedDate = programedDate;

@@ -384,6 +384,7 @@ public class CatalogController {
     @RequestMapping(value="getActivityRelatedInfo")
     public @ResponseBody JsonPack<Consultation> getActivityRelatedInfo(int id){
         
+        //List<Consultation> list = consultationService.getConsultationByActivity(id);
         return (new JsonPack<Consultation>(consultationService.getConsultationByActivity(id)));
     }
     

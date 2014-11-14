@@ -2,6 +2,7 @@ package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Patient;
 import com.carloscortina.demo.model.PatientRelative;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -102,6 +103,15 @@ public class HbnPatientDao extends GenericHbnDao<Patient> implements PatientDao 
         result.removeAll(query.list());
         
         return result;
+    }
+
+    @Override
+    public List<Patient> getPatientsByBirthdayRange(int month) {
+        Query query = getSession().createQuery("SELECT new Patient(p.firstName,p.fatherLastName,p.motherLastName,p.birthday) FROM Patient p "
+                + "WHERE MONTH(p.birthday)=:month AND p.active = 1");
+        query.setParameter("month", month);
+        
+        return query.list();
     }
     
 }

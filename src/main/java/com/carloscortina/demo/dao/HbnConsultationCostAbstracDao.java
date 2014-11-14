@@ -23,11 +23,12 @@ public class HbnConsultationCostAbstracDao extends GenericHbnDao<Consultationcos
 
     @Override
     public List<Consultationcostabstract> getConsultationCostAbstractSmall(User current){
-        List<Consultationcostabstract> ccaList = new ArrayList<Consultationcostabstract>();
+        List<Consultationcostabstract> ccaList;
+        
         if(current.getIdRole().getRole().equals("Doctor")){
             Query query = getSession().createQuery("FROM Consultationcostabstract ca "
                     + "WHERE ca.idConsultationPaymentStatus.idConsultationPaymentEstatus < 3 AND "
-                    + "WHERE ca.idConsultation.idDoctor.idUser=:doctor");
+                    + "ca.idConsultation.idDoctor.idUser=:doctor");
             query.setParameter("doctor", current.getIdUser());
             ccaList = query.list();
         }else{

@@ -121,3 +121,7 @@ function cancel(){
     }
     
 }
+
+function specialPayment(){
+    $("#paymentModal").modal('show');
+}

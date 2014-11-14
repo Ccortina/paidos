@@ -4,37 +4,28 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    initializeImmunizationTable();
-    
-    $("input:checkbox").click(function() {
-        if ($(this).is(":checked")) {
-            var group = "input:checkbox[name='" + $(this).attr("name") + "']";
-            $(group).prop("checked", false);
-            $(this).prop("checked", true);
-        } else {
-            $(this).prop("checked", false);
-        }
-    });
-    
-    addFormValidator();
     initializeFiltersForm();
+    addFormValidator();
 });
 
-function initializeImmunizationTable(){
+function initializeImmunizationTable( data ){
         
     $("#tblImmunization").DataTable({
         "scrollY": "400px",
         "scrollCollapse": true,
         "deferRender": true,
+        "destroy":true,
         "language": {
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar",
             "info": "Mostrando pagina _PAGE_ de _PAGES_"
         },
-        "ajax":{url:"/demo/patients/getAllPatientImmunization",
+        "ajax":{
+            url:"/demo/patients/getAllPatientsImmunization",
             data:function(){
-               return {idPatient:$("#inputIdPatientApp").val()} 
-            }},
+                return data;
+            }
+        },
         "columns":[
             {"data":"patient.fatherLastName"},
             {"data":"patient.motherLastName"},
@@ -46,8 +37,7 @@ function initializeImmunizationTable(){
             {"data":"vaccine.idVaccineType.type"},
             {"data":"programedDate"},
             {"render":function(data, type, full, meta){
-                
-                return (full.vaccine.dayApply+" D "+full.vaccine.monthApply+" M "+full.vaccine.yearApply+" A");
+                return ( full.vaccine.yearApply+" A"+full.vaccine.monthApply+" M "+full.vaccine.dayApply+" D ");
             }},
             {"render":function(data, type, full, meta){
                 if(full.applicationDate === null){
@@ -106,40 +96,50 @@ function initializeImmunizationTable(){
 
 
 function filterTable(){
-    var table = $("#tblImmunization").DataTable();
+
     var byPD = $("#checkProgrammedDatesRange").prop("checked"); //Filter By Programmed Dates range
     var byBD = $("#checkBirthdayRange").prop("checked"); //Filter By Birthdays range
-    var byIm = $("#checkByInmunization").prop("checked"); //Filter By inmunization
+    var byIM = $("#checkByInmunization").prop("checked"); //Filter By inmunization
     var byIT = $("#checkBytype").prop("checked"); //Filter By inmunization type
     var byAR = $("#checkAgesRange").prop("checked"); //Filter By age range
     
-    /*
-    //Filter by applied or not
-    if($("input[type='checkbox']:checked").val() === "1"){
-        table.column( 8 ).search('');
-        table.column( 8 ).search( "Pendiente" ).draw();
-    }else{
-        if($("input[type='checkbox']:checked").val() === "2"){
-            table.column( 8 ).search('');
-            table.column( 8 ).search( "[0-9][0-9][0-9][0-9][\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])" , true, false ).draw();
-        }else{
-            table.column( 8 ).search('').draw();
-        }   
+    var data = [];
+    data.push({name:"immunization",value:byIM});
+    data.push({name:"programmed",value:byPD});
+    data.push({name:"birthday",value:byBD});
+    data.push({name:"type",value:byIT});
+    data.push({name:"age",value:byAR});
+    
+    if(byPD){
+        data.push({name:"PD1",value:$("#inputProgrammedDateStart").val()});
+        data.push({name:"PD2",value:$("#inputProgrammedDateEnd").val()});
     }
-    //Filter By immunization
-    if($("#selectVaccine").val() !== "0"){
-        table.column( 4 ).search('');
-        table.column( 4 ).search( $( "#selectVaccine option:selected" ).text() ).draw();
-    }else{
-        table.column( 4 ).search('').draw();
+    
+    if( byBD ){
+        data.push({name:"BD1",value:$("#inputBirthdayStart").val()});
+        data.push({name:"BD2",value:$("#inputBirthdayEnd").val()});
     }
-    //Filter By Immunization type
-    if($("#selectVaccineType").val() !== "0"){
-        table.column( 5 ).search('');
-        table.column( 5 ).search( $( "#selectVaccineType option:selected" ).text() ).draw();
-    }else{
-        table.column( 5 ).search('').draw();
-    }*/
+    
+    if( byIM ){
+        data.push({name:"IM1",value:$("#selectVaccine").val()});    //Vaccine Name
+        data.push({name:"IM2",value:$("#inputBatch").val()});       //Vaccine batch
+        data.push({name:"IM3",value:$("#formFilters [name='applied']").val()});  //if applied
+    }
+    
+    if( byIT ){
+        data.push({name:"IT1",value:$("#selectVaccineType").val()});
+    }
+    
+    if( byAR ){
+        data.push({name:"AR11",value:$("#inputAgeBeginYear").val()});
+        data.push({name:"AR12",value:$("#inputAgeBeginMonth").val()});
+        data.push({name:"AR13",value:$("#inputAgeBeginDay").val()});
+        data.push({name:"AR21",value:$("#inputAgeEndYear").val()});
+        data.push({name:"AR22",value:$("#inputAgeEndMonth").val()});
+        data.push({name:"AR23",value:$("#inputAgeEndDay").val()});
+    }
+    
+    initializeImmunizationTable( data );
 }
 
 function initializeFiltersForm(){
@@ -349,44 +349,13 @@ $.fn.bootstrapValidator.validators.validateValueGreater = {
            return false;
         }
     };
-
-//Custom filtering for the immunization table date range
-$.fn.dataTable.ext.search.push(
-    function( settings, data, dataIndex ) {
-
-        if( checkNotEmptyString($("#inputProgrammedDateStart").val()) && checkNotEmptyString($("#inputProgrammedDateEnd").val()) ){
-            var start = moment($("#inputProgrammedDateStart").val(),"DD/MM/YYYY");
-            var end = moment($("#inputProgrammedDateEnd").val(),"DD/MM/YYYY");
-            var range = moment().range(start, end);
-            var date = moment(data[6]);
-            if(date.within(range)){
-                return true;
-            }else{
-                return false;
-            }
-
-        }else{
-            return true;
-        }
-    }
-);
-
-$.fn.dataTable.ext.search.push(
-    function( settings, data, dataIndex ) {
-
-        if( checkNotEmptyString($("#inputBirthdayStart").val()) && checkNotEmptyString($("#inputBirthdayEnd").val()) ){
-            var start = moment($("#inputBirthdayStart").val(),"DD/MM/YYYY");
-            var end = moment($("#inputBirthdayEnd").val(),"DD/MM/YYYY");
-            var range = moment().range(start, end);
-            var date = moment(data[3],"DD/MM/YYYY");
-            if(date.within(range)){
-                return true;
-            }else{
-                return false;
-            }
-
-        }else{
-            return true;
-        }
-    }
-);
+    
+function quitFilters(){
+    $("#formFilters").data('bootstrapValidator').resetForm();
+    $("#checkProgrammedDatesRange").prop("checked",false); //Filter By Programmed Dates range
+    $("#checkBirthdayRange").prop("checked",false); //Filter By Birthdays range
+    $("#checkByInmunization").prop("checked",false); //Filter By inmunization
+    $("#checkBytype").prop("checked",false); //Filter By inmunization type
+    $("#checkAgesRange").prop("checked",false); //Filter By age range
+    
+}
