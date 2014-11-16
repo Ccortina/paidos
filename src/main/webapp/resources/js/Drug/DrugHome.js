@@ -63,3 +63,14 @@ function initializeDrugTable(){
 function newDrug(){
     $('#drugTabMenu a[href="#tabNew"]').tab('show');
 }
+
+function modifyDrug(){
+    var row = $("#tblDrug").DataTable().row( '.selected' ).data();
+    
+    if( checkNotUndefined(row) ){
+        loadDrugData( row );
+        $('#drugTabMenu a[href="#tabModify"]').tab('show');
+    }else{
+        displayWarningAlert("No se ha seleccionado un medicamento");
+    }
+}

@@ -19,4 +19,6 @@ public interface DrugDao extends GenericDao<Drug>{
     public List<Drug> getDrugByPresentationAndUser(int presentationId,int userId);
     public List<Drug> getDrugByApplicationMethodAndUser(int applicationId,int userId);
     public List<Drug> getDrugByAdministrationUnitAndUser(int unitId,int userId);
+    public List<Drug> getIncompatibleDrugsBydrug(Drug drug);
+    public List<Drug> getAvaibleDrugsByDrug(Drug drug); //Drugs that area not in the incompatible list or risk
 }

@@ -7,6 +7,7 @@
 package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.DrugRiskDao;
+import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Drugrisk;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
@@ -73,6 +74,11 @@ public class DrugRiskServiceImp implements DrugRiskService{
     @Override
     public List<Drugrisk> getSpecificColumnsList(List<String> columns, LogicalExpression restrictions) {
         return dao.getSpecificColumnsList(columns, restrictions);
+    }
+
+    @Override
+    public List<Drugrisk> getDrugRisksByDrug(Drug drug) {
+        return dao.getDrugRisksByDrug(drug);
     }
     
 }

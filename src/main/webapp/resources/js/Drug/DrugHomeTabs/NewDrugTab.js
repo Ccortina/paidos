@@ -8,8 +8,6 @@ $(document).ready(function(){
     initializeNewDrugCommercialNameTable();
     initializeNewDrugForm();
     loadNewModifyCommercialNameForms();
-    //initializeNewDoseFormWeight();
-    //initializeNewDoseFormAge();
     
     $('.inputDecimal').inputmask('Regex',{regex:"[0-9]+(\.[0-9][0-9]?)?"});
     $('.inputInteger').inputmask('Regex',{regex:"[0-9]+"});
@@ -80,31 +78,6 @@ function loadNewDrugDoseModal(){
 }
 
 function initializeNewDoseFormWeight(){
-    
-        /*$("#formNewDoseByWeight").bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                dose: {
-                    validators: {
-                        notEmpty: {
-                            message: 'La dosis no puede estar vacia'
-                        },
-                        regexp: {
-                            regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
-                            message: 'Formato invalido [0-9].[0-9][09]'
-                        }
-                    }
-                }
-            },
-            submitButtons: 'button[type="submit"]'
-        }).on('success.form.bv', function(e) {
-            e.preventDefault();
-            addDoseByWeight();
-        });*/
         $("#formNewDoseByWeight").bootstrapValidator({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -132,40 +105,6 @@ function initializeNewDoseFormWeight(){
 }
 
 function initializeNewDoseFormAge(){
-    /*$("#formNewDoseByAge").bootstrapValidator({
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            dose: {
-                validators: {
-                    notEmpty: {
-                        message: 'La dosis no puede estar vacia'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+(\.[0-9][0-9]?)?$/i,
-                        message: 'Formato invalido [0-9].[0-9][09]'
-                    }
-                }
-            },
-            criteria: {
-                validators: {
-                    notEmpty: {
-                        message: 'La edad no puede estar vacia'
-                    },
-                    integer: {
-                        message: 'Formato invalido [0-9]'
-                    }
-                }
-            }
-        },
-    submitButtons: 'button[type="submit"]'
-    }).on('success.form.bv', function(e) {
-        e.preventDefault();
-        addDoseByAge();
-    }); */
     $("#formNewDoseByAge").bootstrapValidator({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',

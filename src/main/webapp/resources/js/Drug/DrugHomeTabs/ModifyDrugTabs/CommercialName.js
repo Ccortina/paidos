@@ -3,11 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-function initializeNewDrugCommercialNameTable(){
+$(document).ready(function(){
+    loadModifyNewModifyDrugCNForm();
     
-    $("#tblNewDrugCommercialName").DataTable({
+    $('#modalModifyNewCommercialName').on('show.bs.modal', function (e) {
+        $('#formModifyNewCommercialName').bootstrapValidator('resetForm', true);
+    });
+});
+
+function initializeModifyDrugCommercialNameTable( drug ){
+    var data = [{name:"drugId",value:drug}];
+    
+    $("#tblModifyDrugCommercialName").DataTable({
         "ordering":false,
+        "destroy":true,
         "scrollY": "200px",
         "scrollCollapse": true,
         "paging": false,
@@ -16,17 +25,22 @@ function initializeNewDrugCommercialNameTable(){
             "emptyTable": "No hay informacion en la tabla.",
             "search": "Buscar"
         },
+        "ajax":{
+            "url":contextPath+"/drug/getDrugCommercialNames",
+            "data":function(){
+                return data;
+            }
+        },
         "columns":[
             {"data":"commercialName"}
         ],
         "initComplete":function(settings,json){
-            var table = $('#tblNewDrugCommercialName').DataTable();
             
-            $('#tblNewDrugCommercialName tbody').on( 'click', 'tr', function (e) {
+            $('#tblModifyDrugCommercialName tbody').on( 'click', 'tr', function (e) {
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
                 }else{
-                    table.$('tr.selected').removeClass('selected');
+                    $('#tblModifyDrugCommercialName').DataTable().$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
                 }
             });
@@ -34,9 +48,9 @@ function initializeNewDrugCommercialNameTable(){
     });
 }
 
-//This function intialize bootstrap validator on the new and modify commercial name form
-function loadNewModifyCommercialNameForms(){
-    $("#formNewCommercialName").bootstrapValidator({
+function loadModifyNewModifyDrugCNForm(){
+    
+    $("#formModifyNewCommercialName").bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -54,10 +68,10 @@ function loadNewModifyCommercialNameForms(){
         submitButtons: 'button[type="submit"]'
     }).on('success.form.bv', function(e) {
         e.preventDefault();
-        addCommercialName();
+        modifyAddCommercialName();
     });
     
-    $("#formModifyCommercialName").bootstrapValidator({
+    $("#formModifyModifyCommercialName").bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -75,38 +89,34 @@ function loadNewModifyCommercialNameForms(){
         submitButtons: 'button[type="submit"]'
     }).on('success.form.bv', function(e) {
         e.preventDefault();
-        modifyCommercialName();
+        modifyModifyCommercialName();
     });
 }
 
-
-
-function addCommercialName(){
-    var name = $("#inputNewCommercialName").val();
-    $('#tblNewDrugCommercialName').DataTable().row.add({"commercialName":name}).draw();
-    clearFormInputTextFields("formNewCommercialName");
-    $('#modalNewCommercialName').modal('hide');
+function modifyAddCommercialName(){
+    var name = $("#inputModifyNewCommercialName").val();
+    $('#tblModifyDrugCommercialName').DataTable().row.add({"commercialName":name}).draw();
+    clearFormInputTextFields("formModifyNewCommercialName");
+    $('#modalModifyNewCommercialName').modal('hide');
 }
 
-function removeCommercialName(){
-    $('#tblNewDrugCommercialName').DataTable().row('.selected').remove().draw();
-}
-
-function loadModifyDrugCN(){
-    var row = $('#tblNewDrugCommercialName').DataTable().row('.selected').data();
+function loadModifyModifyDrugCN(){
+    var row = $('#tblModifyDrugCommercialName').DataTable().row('.selected').data();
     
     if(checkNotUndefined(row)){
-        $('#modalModifyCommercialName').modal('show');
-        $("#inputModifyCommercialName").val(row.commercialName);
+        $('#modalModifyModifyCommercialName').modal('show');
+        $("#inputModifyModifyCommercialName").val(row.commercialName);
         
     }else{
         displayWarningAlert("No ha seleccionado un Nombre comercial");
     }
 }
 
-function modifyCommercialName(){
-    $('#tblNewDrugCommercialName').DataTable().row('.selected').data({"commercialName":$("#inputModifyCommercialName").val()}).draw();
-    $('#modalModifyCommercialName').modal('hide');
+function modifyRemoveCommercialName(){
+    $('#tblModifyDrugCommercialName').DataTable().row('.selected').remove().draw();
 }
 
-
+function modifyModifyCommercialName(){
+    $('#tblModifyDrugCommercialName').DataTable().row('.selected').data({"commercialName":$("#inputModifyModifyCommercialName").val()}).draw();
+    $('#modalModifyModifyCommercialName').modal('hide');
+}

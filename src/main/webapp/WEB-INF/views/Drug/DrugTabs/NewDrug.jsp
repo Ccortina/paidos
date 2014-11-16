@@ -83,9 +83,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="inputNewDrugDose">Dosis</label>
-                                        <table class="row-border hover" id="tblNewDrugDose">
+                                        <table class="row-border hover drugDoseTable" id="tblNewDrugDose">
                                             <thead>
-                                                <th>Regla</th>
+                                                <th>Edad</th>
                                                 <th>Dosis</th>
                                             </thead>
                                         </table>    
@@ -97,11 +97,11 @@
                                             <input type="button" class="btn btn-primary" data-toggle="modal" onclick="loadNewDrugDoseModal()" value="Nuevo"/>
                                         </div>                                       
                                     </div>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="col-sm-12">
                                             <input type="button" class="btn btn-primary" onclick="modifyDose()" value="Modificar"/>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <input type="button" class="btn btn-danger" onclick="removeDose()" value="Quitar"/>
@@ -303,6 +303,7 @@
   </div>
 </div>
 
+<!-- add new commercial name modal -->
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNewCommercialName" aria-hidden="true" id="modalNewCommercialName">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -329,6 +330,7 @@
   </div>
 </div>
 
+<!-- Modify Commercial names modal -->
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalModifyCommercialName" aria-hidden="true" id="modalModifyCommercialName">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">

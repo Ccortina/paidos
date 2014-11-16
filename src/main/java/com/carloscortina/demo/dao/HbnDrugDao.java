@@ -6,7 +6,10 @@ package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Drugdose;
+import com.carloscortina.demo.model.Drugrisk;
+import com.carloscortina.demo.model.Incompatibledrugs;
 import com.carloscortina.demo.model.Treatment;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -88,5 +91,21 @@ public class HbnDrugDao extends GenericHbnDao<Drug> implements DrugDao{
     public List<Drug> getAllActiveDrugBasicInfo() {
         return (List<Drug>) getSession().createQuery("SELECT new Drug(drug.idDrug,drug.drug,drug.drugPresentationId) FROM Drug drug "
                 + "WHERE drug.active=1").list();
+    }
+
+    @Override
+    public List<Drug> getIncompatibleDrugsBydrug(Drug drug) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Drug> getAvaibleDrugsByDrug(Drug drug) {
+        String hql = "SELECT new Drug(drug.idDrug,drug.drug,drug.concentration,drug.treatmentDays,drug.applicationSchedule,drug.dailyFrequency,drug.notes,"
+                + "drug.active,drug.drugPresentationId,drug.doseCalculationCriteriaId,drug.applicationMethodId,drug.administrationUnitId) FROM Drug as drug "
+                + "WHERE "
+                + "drug.idDrug not in(SELECT dr.drugriskPK.idDrugIncompatible FROM Drugrisk as dr WHERE dr.drugriskPK.idDrug=:drug ) ";
+        
+        
+        return getSession().createQuery(hql).setParameter("drug", drug.getIdDrug()).list();
     }
  }

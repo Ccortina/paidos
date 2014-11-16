@@ -32,11 +32,19 @@
 <c:url var="newDrugIncompatibilityJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/Incompatibility.js" />
 <c:url var="newDrugTreatmentsJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/Treatments.js" />
 <c:url var="newDrugCNJs" value="/resources/js/Drug/DrugHomeTabs/NewDrugTab/CommercialName.js" />
+<c:url var="modifyDrugJs" value="/resources/js/Drug/DrugHomeTabs/ModifyDrug.js" />
+<c:url var="modifyDrugCNJs" value="/resources/js/Drug/DrugHomeTabs/ModifyDrugTabs/CommercialName.js" />
+<c:url var="modifyDrugIncompatibilityJs" value="/resources/js/Drug/DrugHomeTabs/ModifyDrugTabs/incompatibility.js" />
+
 
 <link href="${dataTablesCSS}" rel="stylesheet" />
 <link href="${dtModCSS}" rel="stylesheet" />
 
 <link href="${bvCSS}" rel="stylesheet" />
+
+<script type="text/javascript">
+    var contextPath='<%=request.getContextPath()%>';
+</script>
 
 <div class="container-fluid">
     <div classs="row">
@@ -146,7 +154,10 @@
 <script src="${utilityJs}" type="text/javascript"></script>
 
 <script src="${drugHomeJs}" type="text/javascript"></script>
+<script src="${modifyDrugJs}" type="text/javascript"></script>
 <script src="${newDrugIncompatibilityJs}" type="text/javascript"></script>
 <script src="${newDrugTreatmentsJs}" type="text/javascript"></script>
 <script src="${newDrugCNJs}" type="text/javascript"></script>
 <script src="${newDrugJs}" type="text/javascript"></script>
+<script src="${modifyDrugCNJs}" type="text/javascript"></script>
+<script src="${modifyDrugIncompatibilityJs}" type="text/javascript"></script>

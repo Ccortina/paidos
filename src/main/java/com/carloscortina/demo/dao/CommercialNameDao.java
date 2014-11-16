@@ -5,6 +5,7 @@
 package com.carloscortina.demo.dao;
 
 import com.carloscortina.demo.model.Commercialname;
+import com.carloscortina.demo.model.Drug;
 import java.util.List;
 
 /**
@@ -14,5 +15,7 @@ import java.util.List;
 public interface CommercialNameDao extends GenericDao<Commercialname>{
 
     public List<Commercialname> getCommercialNameByUser(int id);
-    
+    public List<Commercialname> getCommercialNameByDrug(Drug drug);
+    public List<Commercialname> getAvaibleCommercialNamesForDrug( Drug drug );
+    public List<Commercialname> getIncompatibleCommercialNamesForDrug( Drug drug );
 }

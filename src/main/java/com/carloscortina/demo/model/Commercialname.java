@@ -24,6 +24,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -58,6 +60,7 @@ public class Commercialname implements Serializable {
     @ManyToOne(optional = false)
     private Drug drugId;
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commercialname")
     private List<Incompatibledrugs> incompatibledrugsList;
 

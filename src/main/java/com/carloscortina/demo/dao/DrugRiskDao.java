@@ -6,12 +6,16 @@
 
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Drugrisk;
+import java.util.List;
 
 /**
  *
  * @author Carlos Cortina
  */
 public interface DrugRiskDao extends GenericDao<Drugrisk>{
+    
+    public List<Drugrisk> getDrugRisksByDrug(Drug drug);
     
 }

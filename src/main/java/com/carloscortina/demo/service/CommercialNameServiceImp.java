@@ -6,6 +6,7 @@ package com.carloscortina.demo.service;
 
 import com.carloscortina.demo.dao.CommercialNameDao;
 import com.carloscortina.demo.model.Commercialname;
+import com.carloscortina.demo.model.Drug;
 import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
@@ -77,6 +78,21 @@ public class CommercialNameServiceImp implements CommercialNameService{
     @Override
     public List<Commercialname> getAllActiveItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Commercialname> getCommercialNameByDrug(Drug drug) {
+        return commercialName.getCommercialNameByDrug(drug);
+    }
+
+    @Override
+    public List<Commercialname> getAvaibleCommercialNamesForDrug(Drug drug) {
+        return commercialName.getAvaibleCommercialNamesForDrug(drug);
+    }
+
+    @Override
+    public List<Commercialname> getIncompatibleCommercialNamesForDrug(Drug drug) {
+        return commercialName.getIncompatibleCommercialNamesForDrug(drug);
     }
     
 }

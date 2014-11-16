@@ -126,6 +126,44 @@ public class DrugController {
     {
         return new JsonPack<Commercialname>(commercialNameService.getCommercialNameByUser(loggedUser.getIdUser()));
     }
+
+    /**
+     * This method returns a list for datatables made of the commercial names
+     * avaible for the specified drug. This means elements that doesnt present 
+     * incompatibility or risk with the drug.
+     * @param drugId The id of a valid drug element
+     * @return JsonPack<Comercialname> this element is a encapsulated list for Json
+     */
+    
+    @RequestMapping(value="getAvaibleDrugsCommercialNames")
+    public @ResponseBody JsonPack<Commercialname> getAvaibleDrugsCommercialNames(int drugId)
+    {
+        return new JsonPack<Commercialname>(commercialNameService.getAvaibleCommercialNamesForDrug(drugService.getById(drugId)));
+    }
+    
+    /**
+     * This method returns all the commercial names that are incompatible with
+     * the specified drug.
+     * @param drugId
+     * @return JsonPack<Comercialname> this element is a encapsulated list for Json
+     */
+    @RequestMapping(value="getIncompatibleDrugsCommercialNames")
+    public @ResponseBody JsonPack<Commercialname> getIncompatibleDrugsCommercialNames(int drugId)
+    {
+        return new JsonPack<Commercialname>(commercialNameService.getIncompatibleCommercialNamesForDrug(drugService.getById(drugId)));
+    }
+    
+    /**
+     * This method returns the drug risk of a specific drug
+     * 
+     * @param drugId
+     * @return JsonPack<Drugrisk> this element is a encapsulated list for Json
+     */
+    @RequestMapping(value="getDrugRisks")
+    public @ResponseBody JsonPack<Drugrisk> getDrugRisksByDrug(int drugId)
+    {
+        return new JsonPack<Drugrisk>(drService.getDrugRisksByDrug(drugService.getById(drugId)));
+    }
     
     @RequestMapping(value="getTreatmentsByUser")
     public @ResponseBody JsonPack<Treatment> getTreatmentsByUser()
@@ -187,11 +225,6 @@ public class DrugController {
                             dd = new Drugdose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
                         break;
                 }
-                /*if(params.get("doseCalculationCriteriaId").isEmpty()){
-                    dd = new Drugdose(0, Float.parseFloat(params.get("dose"+i)), newDrug);
-                }else{
-                    dd = new Drugdose(Integer.parseInt(params.get("criteria"+i)), Float.parseFloat(params.get("dose"+i)), newDrug);
-                }*/
                 drugDoseService.create(dd);
             }
             
@@ -206,6 +239,11 @@ public class DrugController {
         }
         
         return "";
+    }
+    
+    @RequestMapping(value="getAvaibleDrugsforDrug")
+    public @ResponseBody JsonPack<Drug> getDrugPresentation(int drugId){
+        return (new JsonPack<Drug> (drugService.getAvaibleDrugsByDrug(drugService.getById(drugId))));
     }
     
     @RequestMapping(value="getDrugPresentation")
@@ -298,5 +336,11 @@ public class DrugController {
     public @ResponseBody JsonPack<Drug> getDrugAdministrationUnitRelatedInfo(int auId){
     
         return (new JsonPack<Drug>(drugService.getDrugByAdministrationUnitAndUser(auId, loggedUser.getIdUser())));
+    }
+    
+    @RequestMapping(value="getDrugCommercialNames")
+    public @ResponseBody JsonPack<Commercialname> getDrugCommercialNames(int drugId){
+    
+        return ( new JsonPack<Commercialname>( commercialNameService.getCommercialNameByDrug( drugService.getById( drugId ) ) ) );
     }
 }

@@ -105,4 +105,9 @@ public class DrugServiceImp implements DrugService
         return drugDao.getAllActiveDrugBasicInfo();
     }
 
+    @Override
+    public List<Drug> getAvaibleDrugsByDrug(Drug drug) {
+        return drugDao.getAvaibleDrugsByDrug(drug);
+    }
+
 }

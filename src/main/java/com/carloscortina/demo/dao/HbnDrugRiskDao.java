@@ -6,7 +6,9 @@
 
 package com.carloscortina.demo.dao;
 
+import com.carloscortina.demo.model.Drug;
 import com.carloscortina.demo.model.Drugrisk;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,5 +17,16 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class HbnDrugRiskDao extends GenericHbnDao<Drugrisk> implements DrugRiskDao{
+
+    @Override
+    public List<Drugrisk> getDrugRisksByDrug(Drug drug) {
+        List<Drugrisk> list = getSession().createQuery("FROM Drugrisk dr WHERE dr.drug.idDrug=:drug").setParameter("drug", drug.getIdDrug()).list();
+        
+        for(Drugrisk d: list){
+            d.getDrug().setIncompatibledrugsList(null);
+            d.getDrug1().setIncompatibledrugsList(null);
+        }
+        return list;
+    }
     
 }
